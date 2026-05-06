@@ -2,7 +2,7 @@
 
 #include "DVH_VAT_API.h"
 #include "Types.h"
-#include <boost/move/unique_ptr.hpp>
+#include <memory> // boost 스마트 포인터 대신 C++ 표준 라이브러리 사용
 #include <vector>
 #include <string>
 
@@ -17,9 +17,13 @@ namespace DVH_VAT
     {
     public:
         AsyncSequenceRunner();
-        ~AsyncSequenceRunner();
+        
+        // 가상 함수가 존재하므로 안전한 상속을 위해 가상 소멸자로 변경하는 것을 권장합니다.
+        virtual ~AsyncSequenceRunner();
 
-        bool Start(boost::unique_ptr<IVatSequence> seq, boost::shared_ptr<VAT_Context> ctx, IVatActuator* actuator);
+        // boost::unique_ptr, boost::shared_ptr -> std::unique_ptr, std::shared_ptr 교체
+        bool Start(std::unique_ptr<IVatSequence> seq, std::shared_ptr<VAT_Context> ctx, IVatActuator* actuator);
+        
         void Abort();
         void Stop();
         bool IsRunning() const;
@@ -31,7 +35,9 @@ namespace DVH_VAT
 
     private:
         struct Impl;
-        boost::scoped_ptr<Impl> m_impl;
+        
+        // boost::scoped_ptr은 소유권 이전이 불가능한 포인터였으나, 모던 C++에서는 std::unique_ptr로 통합하여 대체합니다.
+        std::unique_ptr<Impl> m_impl;
 
         void SendResultToSink(int requestId, const std::vector<std::string>& results);
     };

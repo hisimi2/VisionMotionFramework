@@ -6,13 +6,14 @@
 #include "IVatActuator.h"
 #include "IResultSink.h"
 
-#include <boost/chrono.hpp>
-#include <boost/thread.hpp>
-#include <boost/atomic.hpp>
-#include <boost/move/move.hpp>
-
+// Boost 대신 C++ 표준 라이브러리 사용
+#include <chrono>
+#include <thread>
+#include <atomic>
+#include <memory>
 #include <vector>
 #include <string>
+#include <mutex>
 
 namespace DVH_VAT
 {
@@ -22,10 +23,10 @@ namespace DVH_VAT
         VAT_Context*    m_ctx;
         IVatActuator*   m_act;
 
-        boost::atomic<bool>* m_runningFlag;
+        std::atomic<bool>* m_runningFlag;
         AsyncSequenceRunner* m_runner;
 
-        SequenceThreadFunc(IVatSequence* seq, VAT_Context* ctx, IVatActuator* act, boost::atomic<bool>* runningFlag, AsyncSequenceRunner* runner)
+        SequenceThreadFunc(IVatSequence* seq, VAT_Context* ctx, IVatActuator* act, std::atomic<bool>* runningFlag, AsyncSequenceRunner* runner)
             : m_seq(seq), m_ctx(ctx), m_act(act), m_runningFlag(runningFlag), m_runner(runner)
         {
         }
@@ -72,20 +73,21 @@ namespace DVH_VAT
 
     struct AsyncSequenceRunner::Impl
     {
-        boost::thread                   thread;
-        boost::atomic<bool>             running;
-        mutable boost::mutex               mutex;
+        std::thread                     thread;
+        std::atomic<bool>               running;
+        mutable std::mutex              mutex;
 
-        boost::unique_ptr<IVatSequence> currentSeq;
-		boost::shared_ptr<VAT_Context>  currentCtx;
+        std::unique_ptr<IVatSequence>   currentSeq;
+        std::shared_ptr<VAT_Context>    currentCtx;
 
         IResultSink*                    resultSink;
 
         Impl()
             : running(false)
             , currentSeq()
-            , currentCtx(NULL)
-            , resultSink(NULL)
+            , // C++11: NULL -> nullptr 교체
+              currentCtx(nullptr)
+            , resultSink(nullptr)
         {
         }
 
@@ -100,15 +102,15 @@ namespace DVH_VAT
 
         void setResultSink(IResultSink* sink)
         {
-            LockGuardType lk(mutex);
+            std::lock_guard<std::mutex> lk(mutex); // LockGuardType(boost) -> std::lock_guard 대체
             resultSink = sink;
         }
 
         void sendResultToSink(int requestId, const std::vector<std::string>& results)
         {
-            IResultSink* sink = NULL;
+            IResultSink* sink = nullptr;
             {
-                LockGuardType lk(mutex);
+                std::lock_guard<std::mutex> lk(mutex);
                 sink = resultSink;
             }
             if (sink)
@@ -131,7 +133,7 @@ namespace DVH_VAT
     };
 
     AsyncSequenceRunner::AsyncSequenceRunner()
-        : m_impl(new Impl())
+        : m_impl(std::make_unique<Impl>()) // C++14: std::make_unique 적용
     {
     }
 
@@ -146,7 +148,7 @@ namespace DVH_VAT
                 try { m_impl->thread.join(); } catch (...) {}
             }
             m_impl->currentSeq.reset();
-            m_impl->currentCtx = NULL;
+            m_impl->currentCtx = nullptr;
             m_impl.reset();
         }
     }
@@ -166,15 +168,15 @@ namespace DVH_VAT
         if (m_impl) m_impl->sendResult(requestId, status);
     }
 
-    bool AsyncSequenceRunner::Start(boost::unique_ptr<IVatSequence> seq,
-		                            boost::shared_ptr<VAT_Context> ctx,
+    bool AsyncSequenceRunner::Start(std::unique_ptr<IVatSequence> seq,
+                                    std::shared_ptr<VAT_Context> ctx,
                                     IVatActuator* actuator)
     {
         if (!m_impl) return false;
         if (!seq) return false;
 
         {
-            boost::mutex::scoped_lock lock(m_impl->mutex);
+            std::unique_lock<std::mutex> lock(m_impl->mutex); // scoped_lock -> unique_lock
 
             if (m_impl->running.load()) return false;
 
@@ -186,21 +188,21 @@ namespace DVH_VAT
             }
 
             m_impl->running.store(true);
-            m_impl->currentSeq = boost::move(seq);
+            m_impl->currentSeq = std::move(seq); // boost::move -> std::move
             m_impl->currentCtx = ctx;
         }
 
         try
         {
             SequenceThreadFunc func(m_impl->currentSeq.get(), ctx.get(), actuator, &m_impl->running, this);
-            m_impl->thread = boost::thread(func);
+            m_impl->thread = std::thread(func); // boost::thread -> std::thread
         }
         catch (...)
         {
-            boost::mutex::scoped_lock lock(m_impl->mutex);
+            std::lock_guard<std::mutex> lock(m_impl->mutex);
             m_impl->running.store(false);
             m_impl->currentSeq.reset();
-            m_impl->currentCtx = NULL;
+            m_impl->currentCtx = nullptr;
             return false;
         }
 
@@ -218,14 +220,14 @@ namespace DVH_VAT
         {
             while (m_impl->running.load())
             {
-                boost::this_thread::sleep_for(boost::chrono::milliseconds(pollIntervalMs));
+                std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs)); // boost -> std 지연
             }
         }
         else
         {
             while (m_impl->running.load() && waited < timeoutMs)
             {
-                boost::this_thread::sleep_for(boost::chrono::milliseconds(pollIntervalMs));
+                std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs));
                 waited += pollIntervalMs;
             }
         }
@@ -246,9 +248,9 @@ namespace DVH_VAT
         }
 
         {
-            boost::mutex::scoped_lock lock(m_impl->mutex);
+            std::lock_guard<std::mutex> lock(m_impl->mutex);
             m_impl->currentSeq.reset();
-            m_impl->currentCtx = NULL;
+            m_impl->currentCtx = nullptr;
             m_impl->running.store(false);
         }
 
@@ -280,7 +282,7 @@ namespace DVH_VAT
     void AsyncSequenceRunner::Stop()
     {
         if (!m_impl) return;
-        boost::mutex::scoped_lock lock(m_impl->mutex);
+        std::lock_guard<std::mutex> lock(m_impl->mutex);
         if (m_impl->running.load() && m_impl->currentCtx)
         {
             m_impl->currentCtx->SetStopRequested(true);

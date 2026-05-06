@@ -1,16 +1,22 @@
 ﻿#include "stdafx.h"
 #include "VAT_Context.h"
-#include <boost/thread/thread.hpp> 
-#include <boost/shared_ptr.hpp>
+
+// boost 헤더 및 의존성 삭제
 #include <string>
 #include <algorithm>
+#include <cctype> // std::tolower 목적 명시
+#include <memory>
+#include <thread>
+#include <mutex>
 
 namespace DVH_VAT
 {
+    // C++11 std::tolower의 정확한 사용을 위해 람다(또는 캐스팅) 활용 (로캘 충돌 방지)
     static std::string ToLowerCopy(const std::string& s)
     {
         std::string out = s;
-        std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+        std::transform(out.begin(), out.end(), out.begin(), 
+            [](unsigned char c) { return std::tolower(c); });
         return out;
     }
 
@@ -21,7 +27,8 @@ namespace DVH_VAT
     {
     }
 
-    VAT_Context::~VAT_Context() {}
+    // 소멸자는 헤더 파일에 명시되어 있다면 cpp에 포함하지만 본 파일 구현에서는 간결한 형태로 둡니다
+    VAT_Context::~VAT_Context() = default;
 
     void VAT_Context::SetVisionProcessor(VisionEventHandlerPtr vp)
     {
@@ -43,6 +50,7 @@ namespace DVH_VAT
 
     const std::string& VAT_Context::GetLastError() const
     {
+        // m_lastError 반환 시 동기화 여부는 설계 정책에 따르나, 기본적으로 std::string 참조형이므로 외부에선 주의가 필요합니다.
         return m_lastError; 
     }
 

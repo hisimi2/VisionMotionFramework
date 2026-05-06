@@ -17,7 +17,7 @@ namespace DVH_VAT
     Logger::Logger() 
         : consoleOutput_(true) 
     {
-        ::InitializeCriticalSection(&cs_);
+        // C++11 std::mutex는 자체적으로 초기화되므로 InitializeCriticalSection 불필요
     }
 
     Logger::~Logger()
@@ -26,13 +26,13 @@ namespace DVH_VAT
         {
             ofs_.close();
         }
-
-        ::DeleteCriticalSection(&cs_);
+        // std::mutex는 자동 소멸되므로 DeleteCriticalSection 불필요
     }
 
     void Logger::SetLogFile(const std::string& filePath)
     {
-        ::EnterCriticalSection(&cs_);
+        // Enter/LeaveCriticalSection 대신 RAII 패턴의 std::lock_guard 사용
+        std::lock_guard<std::mutex> lock(mutex_);
         
         if (ofs_.is_open()) {
             ofs_.close();
@@ -46,15 +46,12 @@ namespace DVH_VAT
         {
             std::cerr << "[Logger] Failed to open log file: " << filePath_ << std::endl;
         }
-
-        ::LeaveCriticalSection(&cs_);
     }
 
     void Logger::SetConsoleOutput(bool enable)
     {
-        ::EnterCriticalSection(&cs_);
+        std::lock_guard<std::mutex> lock(mutex_);
         consoleOutput_ = enable;
-        ::LeaveCriticalSection(&cs_);
     }
 
     const char* Logger::GetLevelString(LogLevel level)
@@ -70,7 +67,8 @@ namespace DVH_VAT
 
     std::string Logger::GetCurrentTime()
     {
-        std::time_t t = std::time(NULL);
+        // C++11의 경우 NULL 대신 nullptr 사용 권장
+        std::time_t t = std::time(nullptr);
         char buf[64] = { 0 };
         std::tm tm_storage;
 
@@ -103,7 +101,8 @@ namespace DVH_VAT
     }
 
     void Logger::WriteInternal(LogLevel level, const std::string& message) {
-        ::EnterCriticalSection(&cs_);
+        // 내부 함수 동기화에도 동일하게 표준 lock 적용
+        std::lock_guard<std::mutex> lock(mutex_);
 
         std::string timeStr = GetCurrentTime();
         const char* levelStr = GetLevelString(level);
@@ -118,8 +117,6 @@ namespace DVH_VAT
         {
             ofs_ << "[" << timeStr << "] [" << levelStr << "] " << message << std::endl;
         }
-
-        ::LeaveCriticalSection(&cs_);
     }
 
 } // namespace DVH_VAT

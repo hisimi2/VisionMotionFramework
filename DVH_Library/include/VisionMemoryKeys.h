@@ -1,28 +1,35 @@
 ﻿#pragma once
 
-// Request parameter keys
-#define VAT_VISION_KEY_RECIPE_NAME           "recipe_name"
-#define VAT_VISION_KEY_PCD_MODE              "pcd_mode"
-#define VAT_VISION_KEY_DEVICE_SIZE_X         "device_size_x"
-#define VAT_VISION_KEY_DEVICE_SIZE_Y         "device_size_y"
-#define VAT_VISION_KEY_COK_TYPE              "cok_type"
-#define VAT_VISION_KEY_PICKER_PITCH_X        "picker_pitch_x"
-#define VAT_VISION_KEY_PICKER_PITCH_Y        "picker_pitch_y"
+namespace DVH_VAT
+{
+    namespace VisionKeys
+    {
+        // C++11/14: #define 대신 타입 안정성을 제공하는 constexpr const char* 사용 권장
+        // Request parameter keys
+        constexpr const char* RECIPE_NAME           = "recipe_name";
+        constexpr const char* PCD_MODE              = "pcd_mode";
+        constexpr const char* DEVICE_SIZE_X         = "device_size_x";
+        constexpr const char* DEVICE_SIZE_Y         = "device_size_y";
+        constexpr const char* COK_TYPE              = "cok_type";
+        constexpr const char* PICKER_PITCH_X        = "picker_pitch_x";
+        constexpr const char* PICKER_PITCH_Y        = "picker_pitch_y";
 
-#define VAT_VISION_KEY_CAMERA_ID             "CameraID"
-#define VAT_VISION_KEY_INSPECTION_TYPE       "InspectionType"
-#define VAT_VISION_KEY_MOVE_PART             "nMovePart"
-#define VAT_VISION_KEY_SAVE_IMAGE            "bSaveImage"
-#define VAT_VISION_KEY_FOV_DIRECTION         "nFovDirection"
+        constexpr const char* CAMERA_ID             = "CameraID";
+        constexpr const char* INSPECTION_TYPE       = "InspectionType";
+        constexpr const char* MOVE_PART             = "nMovePart";
+        constexpr const char* SAVE_IMAGE            = "bSaveImage";
+        constexpr const char* FOV_DIRECTION         = "nFovDirection";
 
-// Response/result keys
-#define VAT_VISION_KEY_RESULT                "Result"
-#define VAT_VISION_KEY_SERVER_INDEX          "ServerIndex"
-#define VAT_VISION_KEY_CAM_STATUS            "CamStatus"
-#define VAT_VISION_KEY_CAM_TYPE              "CamType"
+        // Response/result keys
+        constexpr const char* RESULT                = "Result";
+        constexpr const char* SERVER_INDEX          = "ServerIndex";
+        constexpr const char* CAM_STATUS            = "CamStatus";
+        constexpr const char* CAM_TYPE              = "CamType";
 
-#define VAT_VISION_KEY_Z_FOCUS_VALUE         "ZFocusValue"
-#define VAT_VISION_KEY_X_OFFSET              "XOffset"
-#define VAT_VISION_KEY_Y_OFFSET              "YOffset"
-#define VAT_VISION_KEY_ANGLE                 "Angle"
-#define VAT_VISION_KEY_AUTO_VISION_SETTING   "AutoVisionSetting"
+        constexpr const char* Z_FOCUS_VALUE         = "ZFocusValue";
+        constexpr const char* X_OFFSET              = "XOffset";
+        constexpr const char* Y_OFFSET              = "YOffset";
+        constexpr const char* ANGLE                 = "Angle";
+        constexpr const char* AUTO_VISION_SETTING   = "AutoVisionSetting";
+    }
+}

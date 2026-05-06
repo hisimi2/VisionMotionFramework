@@ -6,12 +6,17 @@
 #include "IVatActuator.h"
 #include "IDataRepository.h"
 
+#include <mutex>
+#include <chrono>
+#include <string>
+#include <exception>
+
 namespace DVH_VAT
 {
     /// <summary>
     /// 비동기(비차단) 작업 스텝의 공통 기초 클래스입니다.
     /// 각 스텝은 상태를 가지며 OnInitialize / OnPoll 패턴으로 실행됩니다.
-    /// 스레드 안전을 위해 내부적으로 뮤텍스를 사용하며, 타임아웃(데드라인) 기능을 제공합니다.
+    /// 스레드 안전을 위해 내부적으로 std::mutex를 사용하며, 타임아웃(데드라인) 기능을 제공합니다.
     /// </summary>
     class NonBlockingTaskBase : public ITask
     {
@@ -35,7 +40,7 @@ namespace DVH_VAT
         /// <summary>
         /// 가상 소멸자. 파생 클래스에서 안전하게 파괴될 수 있도록 합니다.
         /// </summary>
-        virtual ~NonBlockingTaskBase() {}
+        ~NonBlockingTaskBase() override = default;
 
         /// <summary>
         /// 스텝 실행 진입점입니다.
@@ -47,9 +52,9 @@ namespace DVH_VAT
         /// <param name="ctx">공유 실행 컨텍스트</param>
         /// <param name="actuator">Actuator 인터페이스 (존재하지 않을 수 있음)</param>
         /// <returns>TaskResult 값</returns>
-        virtual TaskResult Execute(VAT_Context& ctx, IVatActuator* actuator)
+        TaskResult Execute(VAT_Context& ctx, IVatActuator* actuator) override
         {
-            LockGuardType lg(m_mutex_);
+            std::lock_guard<std::mutex> lg(m_mutex_); // boost -> std 동기화 객체 교체
 
             if (ctx.GetStopRequested())
             {
@@ -100,9 +105,9 @@ namespace DVH_VAT
         /// <summary>
         /// 강제 중단을 요청합니다. 내부 상태를 에러 상태로 전환합니다.
         /// </summary>
-        virtual void Abort()
+        void Abort() override
         {
-            LockGuardType lg(m_mutex_);
+            std::lock_guard<std::mutex> lg(m_mutex_);
             m_state_ = CS_ERROR;
         }
 
@@ -110,7 +115,7 @@ namespace DVH_VAT
         /// 지정한 상태로 진입합니다. 데드라인(타임아웃)은 초기화됩니다.
         /// </summary>
         /// <param name="newState">진입할 상태 식별자</param>
-        virtual void EnterState(int newState)
+        void EnterState(int newState) override
         {
             m_state_ = newState;
             m_hasDeadline_ = false;
@@ -119,16 +124,27 @@ namespace DVH_VAT
         /// <summary>
         /// 스텝의 이름을 반환합니다. 파생 클래스에서 구현해야 합니다.
         /// </summary>
-        virtual std::string GetName() const = 0;
+        std::string GetName() const override = 0;
 
         /// <summary>
         /// 외부에서 이 스텝의 뮤텍스를 획득할 수 있게 합니다.
         /// 스레드 동기화를 위해 필요할 때 사용합니다.
         /// </summary>
         /// <returns>내부 뮤텍스 참조</returns>
-        boost::mutex& GetMutex()
+        std::mutex& GetMutex()
         {
             return m_mutex_;
+        }
+
+        /// <summary>
+        /// 오류 메시지를 컨텍스트에 기록하고 지정한 상태로 전이한 후 TR_ERROR를 반환합니다.
+        /// 파생 클래스에서 에러 처리 및 반환을 간단히 하기 위한 헬퍼입니다.
+        /// </summary>
+        TaskResult SetErrorAndReturn(VAT_Context& ctx, const std::string& msg) override
+        {
+            ctx.SetLastError(msg);
+            EnterState(CS_ERROR);
+            return TR_ERROR;
         }
 
     protected:
@@ -171,7 +187,8 @@ namespace DVH_VAT
             }
             else
             {
-                m_deadline_ = boost::chrono::steady_clock::now() + boost::chrono::milliseconds(timeoutMs);
+                // boost::chrono -> std::chrono 로 구현 교체
+                m_deadline_ = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutMs);
                 m_hasDeadline_ = true;
             }
         }
@@ -197,29 +214,17 @@ namespace DVH_VAT
                 return false;
             }
 
-            return boost::chrono::steady_clock::now() >= m_deadline_;
-        }
-
-        /// <summary>
-        /// 오류 메시지를 컨텍스트에 기록하고 지정한 상태로 전이한 후 TR_ERROR를 반환합니다.
-        /// 파생 클래스에서 에러 처리 및 반환을 간단히 하기 위한 헬퍼입니다.
-        /// </summary>
-        /// <param name="ctx">공유 실행 컨텍스트</param>
-        /// <param name="msg">기록할 오류 메시지</param>
-        /// <param name="nextState">전이할 상태 (기본: CS_ERROR)</param>
-        /// <returns>항상 TR_ERROR</returns>
-        virtual TaskResult SetErrorAndReturn(VAT_Context& ctx, const std::string& msg)
-        {
-            ctx.SetLastError(msg);
-            EnterState(CS_ERROR);
-            return TR_ERROR;
+            // boost::chrono -> std::chrono 로 교체
+            return std::chrono::steady_clock::now() >= m_deadline_;
         }
 
     private:
-        int                                     m_state_;
-        bool                                    m_initialized_;
-        bool                                    m_hasDeadline_;
-        mutable boost::mutex                    m_mutex_;
-        boost::chrono::steady_clock::time_point m_deadline_;
+        int                                   m_state_;
+        bool                                  m_initialized_;
+        bool                                  m_hasDeadline_;
+        
+        // 동기화 및 시간 관리 멤버를 C++ 표준 라이브러리로 대체
+        mutable std::mutex                    m_mutex_;
+        std::chrono::steady_clock::time_point m_deadline_;
     };
 }

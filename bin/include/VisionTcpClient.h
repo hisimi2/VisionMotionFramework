@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include <cstdint> // <stdint.h> 대신 권장되는 헤더 사용

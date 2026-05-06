@@ -7,6 +7,8 @@
 
 #include <cstdlib>
 #include <sstream>
+#include <memory> // std::enable_shared_from_this 사용 목적
+#include <mutex>  // std::mutex 사용 목적
 
 namespace DVH_VAT 
 {
@@ -47,7 +49,8 @@ namespace DVH_VAT
                 if (text.empty())
                     return false;
 
-                char* endPtr = NULL;
+                // C++11: NULL -> nullptr
+                char* endPtr = nullptr;
                 const long parsed = std::strtol(text.c_str(), &endPtr, 10);
 
                 if (endPtr == text.c_str() || *endPtr != '\0')
@@ -66,7 +69,8 @@ namespace DVH_VAT
                 if (text.empty())
                     return false;
 
-                char* endPtr = NULL;
+                // C++11: NULL -> nullptr
+                char* endPtr = nullptr;
                 const double parsed = std::strtod(text.c_str(), &endPtr);
 
                 if (endPtr == text.c_str() || *endPtr != '\0')
@@ -123,7 +127,7 @@ namespace DVH_VAT
         {
             static std::string Format(const char* value)
             {
-                return value != NULL ? std::string(value) : std::string();
+                return value != nullptr ? std::string(value) : std::string();
             }
         };
 
@@ -143,9 +147,12 @@ namespace DVH_VAT
         int locateId;
         int visionRequestId;
 
+        // C++11: 멤버 이니셜라이저 리스트로 바로 초기화 가능 (여기서는 생성자 유지)
         VisionPosition() : locateId(0), visionRequestId(0) {}
+        
+        // std::move 를 이용하여 파라미터 복사 오버헤드 축소
         VisionPosition(std::vector<double> _pos, int _locateId, int _visionRequestId)
-            : pos(_pos), locateId(_locateId), visionRequestId(_visionRequestId) {}
+            : pos(std::move(_pos)), locateId(_locateId), visionRequestId(_visionRequestId) {}
     };
 
     struct VatParams
@@ -155,46 +162,32 @@ namespace DVH_VAT
         std::vector<VisionPosition>     visionPositions;
     };
 
-    class DVH_VAT_API VAT_Context : public boost::enable_shared_from_this<VAT_Context>
+    // boost::enable_shared_from_this -> std::enable_shared_from_this
+    class DVH_VAT_API VAT_Context : public std::enable_shared_from_this<VAT_Context>
     {
     public:
         /// <summary>
         /// VAT 실행에 필요한 전체 파라미터 집합을 설정합니다.
         /// </summary>
-        /// <param name="params">시퀀스 파라미터, 비전 파라미터, 비전 위치 목록을 포함한 파라미터 집합입니다.</param>
         void SetVatParams(const VatParams& params);
 
         /// <summary>
         /// 시퀀스 파라미터에 정수 값을 문자열 형태로 저장합니다.
         /// </summary>
-        /// <param name="key">저장할 시퀀스 파라미터 키입니다.</param>
-        /// <param name="value">저장할 정수 값입니다.</param>
         void SetSeqParam(const std::string& key, int value);
 
         /// <summary>
         /// 지정한 키의 시퀀스 파라미터 문자열 값을 반환합니다.
         /// </summary>
-        /// <param name="key">조회할 시퀀스 파라미터 키입니다.</param>
-        /// <returns>해당 키의 문자열 값입니다. 없으면 빈 문자열입니다.</returns>
         std::string GetSeqParam(const std::string& key) const;
 
         /// <summary>
         /// 지정한 키의 비전 파라미터 문자열 값을 반환합니다.
         /// </summary>
-        /// <param name="key">조회할 비전 파라미터 키입니다.</param>
-        /// <returns>해당 키의 문자열 값입니다. 없으면 빈 문자열입니다.</returns>
         std::string GetVisionParam(const std::string& key) const;
-
-
-
-
-
-
-
 
         /// <summary>
         /// VAT 실행 컨텍스트를 초기화합니다.
-        /// 비전 프로세서, 저장소, 파라미터, 에러 상태 및 중지 요청 상태의 기본값을 준비합니다.
         /// </summary>
         VAT_Context();
 
@@ -206,66 +199,51 @@ namespace DVH_VAT
         /// <summary>
         /// 비전 명령 실행에 사용할 비전 프로세서 인터페이스를 설정합니다.
         /// </summary>
-        /// <param name="vp">등록할 비전 프로세서 객체입니다.</param>
         void SetVisionProcessor(VisionEventHandlerPtr vp);
 
         /// <summary>
         /// 현재 등록된 비전 프로세서 인터페이스를 반환합니다.
         /// </summary>
-        /// <returns>등록된 비전 프로세서 객체입니다. 없으면 null 포인터입니다.</returns>
         VisionEventHandlerPtr GetVisionProcessorInterface() const;
 
         /// <summary>
         /// 데이터 조회 및 저장에 사용할 저장소 인터페이스를 설정합니다.
         /// </summary>
-        /// <param name="repo">등록할 데이터 저장소 객체입니다.</param>
         void SetDataRepository(DataRepositoryPtr repo);
 
         /// <summary>
         /// 현재 등록된 데이터 저장소 인터페이스를 반환합니다.
         /// </summary>
-        /// <returns>등록된 데이터 저장소 객체입니다. 없으면 null 포인터입니다.</returns>
         DataRepositoryPtr getRepository() const;
 
         /// <summary>
         /// 마지막 오류 메시지를 저장합니다.
         /// </summary>
-        /// <param name="error">저장할 오류 메시지입니다.</param>
         void SetLastError(const std::string& error);
 
         /// <summary>
         /// 마지막으로 저장된 오류 메시지를 반환합니다.
         /// </summary>
-        /// <returns>현재 저장된 마지막 오류 메시지입니다.</returns>
         const std::string& GetLastError() const;
 
         /// <summary>
         /// 작업 중지 요청 상태를 설정합니다.
         /// </summary>
-        /// <param name="stop">중지 요청 여부입니다.</param>
         void SetStopRequested(bool stop);
 
         /// <summary>
         /// 현재 작업 중지 요청 상태를 반환합니다.
         /// </summary>
-        /// <returns>중지 요청 상태이면 true, 아니면 false입니다.</returns>
         bool GetStopRequested() const;
 
         /// <summary>
         /// 현재 저장된 비전 파라미터를 사용하여 지정한 비전 명령을 실행합니다.
         /// </summary>
-        /// <param name="cmd">실행할 비전 명령입니다.</param>
-        /// <returns>명령 요청에 성공하면 true, 실패하면 false입니다.</returns>
         bool ExecuteVisionCommand(VatCommand cmd);
 
         /// <summary>
         /// 지정한 시퀀스 파라미터를 원하는 타입으로 변환하여 반환합니다.
-        /// 키가 없거나 변환에 실패하면 기본값을 반환합니다.
         /// </summary>
-        /// <typeparam name="T">반환받을 대상 타입입니다.</typeparam>
-        /// <param name="key">조회할 시퀀스 파라미터 키입니다.</param>
-        /// <param name="defaultValue">키가 없거나 변환 실패 시 반환할 기본값입니다.</param>
-        /// <returns>변환된 시퀀스 파라미터 값 또는 기본값입니다.</returns>
         template <typename T>
         T GetSeqParamAs(const std::string& key, const T& defaultValue) const
         {
@@ -282,12 +260,7 @@ namespace DVH_VAT
 
         /// <summary>
         /// 지정한 비전 파라미터를 원하는 타입으로 변환하여 반환합니다.
-        /// 키가 없거나 변환에 실패하면 기본값을 반환합니다.
         /// </summary>
-        /// <typeparam name="T">반환받을 대상 타입입니다.</typeparam>
-        /// <param name="key">조회할 비전 파라미터 키입니다.</param>
-        /// <param name="defaultValue">키가 없거나 변환 실패 시 반환할 기본값입니다.</param>
-        /// <returns>변환된 비전 파라미터 값 또는 기본값입니다.</returns>
         template <typename T>
         T GetVisionParamAs(const std::string& key, const T& defaultValue) const
         {
@@ -305,12 +278,10 @@ namespace DVH_VAT
         /// <summary>
         /// 시퀀스 파라미터에 지정한 타입의 값을 문자열로 변환하여 저장합니다.
         /// </summary>
-        /// <typeparam name="T">저장할 값의 타입입니다.</typeparam>
-        /// <param name="key">저장할 시퀀스 파라미터 키입니다.</param>
-        /// <param name="value">저장할 값입니다.</param>
         template <typename T>
         void SetSeqParamAs(const std::string& key, const T& value)
         {
+            // Types.h에서 수정된 LockGuardType (std::lock_guard) 매칭 사용
             LockGuardType guard(m_mutex);
             m_params.seqParams[key] = detail::ParamFormatter<T>::Format(value);
         }
@@ -318,9 +289,6 @@ namespace DVH_VAT
         /// <summary>
         /// 비전 파라미터에 지정한 타입의 값을 문자열로 변환하여 저장합니다.
         /// </summary>
-        /// <typeparam name="T">저장할 값의 타입입니다.</typeparam>
-        /// <param name="key">저장할 비전 파라미터 키입니다.</param>
-        /// <param name="value">저장할 값입니다.</param>
         template <typename T>
         void SetVisionParamAs(const std::string& key, const T& value)
         {
@@ -331,40 +299,34 @@ namespace DVH_VAT
         /// <summary>
         /// 현재 저장된 비전 위치 목록 전체를 복사하여 반환합니다.
         /// </summary>
-        /// <returns>비전 위치 목록입니다.</returns>
         std::vector<VisionPosition> GetVisionPositions() const;
 
         /// <summary>
         /// 비전 위치 목록의 첫 번째 항목을 꺼내어 반환하고 목록에서 제거합니다.
         /// </summary>
-        /// <param name="outPos">꺼낸 비전 위치를 저장할 출력 변수입니다.</param>
-        /// <returns>꺼낼 항목이 있으면 true, 없으면 false입니다.</returns>
         bool PopVisionPosition(VisionPosition& outPos);
 
         /// <summary>
         /// 비전 위치 목록의 마지막 항목을 제거하지 않고 조회합니다.
         /// </summary>
-        /// <param name="outPos">조회한 비전 위치를 저장할 출력 변수입니다.</param>
-        /// <returns>조회할 항목이 있으면 true, 없으면 false입니다.</returns>
         bool PeekVisionPosition(VisionPosition& outPos);
 
         /// <summary>
         /// 비전 위치 목록에 새 위치 정보를 추가합니다.
         /// </summary>
-        /// <param name="pos">추가할 비전 위치 정보입니다.</param>
         void AddVisionPosition(const VisionPosition& pos);
 
         /// <summary>
         /// 비전 위치 목록이 비어 있는지 확인합니다.
         /// </summary>
-        /// <returns>비어 있으면 true, 아니면 false입니다.</returns>
         bool IsVisionPositionEmpty() const;
 
     private:
         VisionEventHandlerPtr   m_processor;
         DataRepositoryPtr       m_repo;
         
-        mutable boost::mutex    m_mutex;
+        // boost::mutex -> std::mutex 교체
+        mutable std::mutex      m_mutex;
         std::string             m_lastError;
         bool                    m_isStopRequested;
         VatParams               m_params;

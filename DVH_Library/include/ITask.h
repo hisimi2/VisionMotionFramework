@@ -2,6 +2,7 @@
 #include "DVH_VAT_API.h"
 
 #include <string>
+#include <memory> // std::shared_ptr 사용을 위해 포함
 // VAT_Context 객체를 참조로 사용하더라도, 인터페이스 사용자가 Context 정의를 필요로 할 가능성이 높으므로 포함
 #include "VAT_Context.h" 
 
@@ -27,7 +28,8 @@ namespace DVH_VAT
     class DVH_VAT_API ITask
     {
     public:
-        virtual ~ITask() {}
+        // C++11/14: 빈 소멸자 구현 {} 대신 컴파일러 최적화를 돕는 = default 사용
+        virtual ~ITask() = default;
 
         // 비차단 실행 함수: 호출할 때마다 짧게 실행되어야 함.
         virtual TaskResult Execute(VAT_Context& ctx, IVatActuator* actuator) = 0;
@@ -40,5 +42,6 @@ namespace DVH_VAT
         virtual std::string GetName() const = 0;
     };
 
-    typedef boost::shared_ptr<ITask> TaskStepPtr;
+    // C++11/14: boost::shared_ptr -> std::shared_ptr 교체 및 typedef 대신 using 구문 사용
+    using TaskStepPtr = std::shared_ptr<ITask>;
 } // namespace DVH_VAT

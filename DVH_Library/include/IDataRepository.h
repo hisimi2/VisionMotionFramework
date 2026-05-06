@@ -2,7 +2,7 @@
 #include "DVH_VAT_API.h"
 
 #include "Types.h"
-#include <stdint.h>
+#include <cstdint> // <stdint.h> 대신 C++ 표준 헤더 사용
 #include <string>
 #include <vector>
 
@@ -12,7 +12,6 @@ namespace DVH_VAT
      * @enum StorageError
      * @brief 저장소 작업 결과 코드.
      */
-
     enum StorageError 
     {
         StorageSuccess = 0,
@@ -26,14 +25,13 @@ namespace DVH_VAT
 
     /**
      * @class IDataRepository
-     * @brief 데이터 저장소를 정의하는 인터페이스.
-     *
-     * VS2010 호환을 위해 C++11/C++14 문법(override, nullptr, std::unique_ptr 등)을 사용하지 않습니다.
-     * 순수 가상 소멸자는 헤더 내 inline 정의를 제공하여 링크 오류를 방지합니다.
+     * @brief 데이터 저장소를 정의하는 추상 인터페이스.
      */
     class DVH_VAT_API IDataRepository {
     public:
-        virtual ~IDataRepository() = 0;
+        // C++11/14: 순수 가상 소멸자 대신 기본 가상 소멸자 = default 사용
+        // 별도의 inline 구현이 필요 없으며 인터페이스 역할에 충분합니다.
+        virtual ~IDataRepository() = default;
 
         // 기본 키-값 스타일 저장/로드
         virtual StorageError SaveParam(const std::string& recipe, const std::string& name, const std::string& value) = 0;
@@ -49,10 +47,7 @@ namespace DVH_VAT
         virtual StorageError Initialize() = 0;
         virtual StorageError Shutdown() = 0;
 
-        /* 추가 구조화 API (Z-Focus 등 상세 테이블 사용을 위한 확장)
-           - VS2010에서도 잘 동작하도록 참조/값 파라미터만 사용합니다.
-           - 구현체(SqliteDataRepository 등)는 필요에 따라 이 메서드들을 구현하세요.
-        */
+        /* 추가 구조화 API (Z-Focus 등 상세 테이블 사용을 위한 확장) */
 
         // sequence_runs 레코드 생성: paramsJson은 JSON을 문자열로 전달, outRunId는 생성된 run id 반환
         virtual StorageError CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId) = 0;
@@ -144,8 +139,5 @@ namespace DVH_VAT
 			int& locationId) = 0;
 
     };
-
-    // 순수 가상 소멸자도 정의 필요(링크 오류 방지)
-    inline IDataRepository::~IDataRepository() {}
 
 } // namespace DVH_VAT

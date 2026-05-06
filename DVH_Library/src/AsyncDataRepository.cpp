@@ -1,10 +1,13 @@
 ﻿// [필수] 미리 컴파일된 헤더
 #include "stdafx.h"
 
-// Boost 헤더
-#include <boost/thread.hpp>
-#include <boost/atomic.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp> 
+// Boost 대신 C++ 표준 라이브러리 사용
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include <condition_variable>
+#include <chrono>
+#include <deque>
 
 #include "AsyncDataRepository.h"
 
@@ -40,15 +43,23 @@ struct AsyncDataRepository::Impl {
     std::deque<PendingResult> m_resultQueue;
     std::deque<PendingStatus> m_statusQueue;
 
-    boost::mutex m_mutex;
-    boost::condition_variable m_cv;
-    boost::thread m_worker;
-    boost::atomic<bool> m_stopRequested;
+    // 표준 라이브러리로 교체
+    std::mutex m_mutex;
+    std::condition_variable m_cv;
+    std::thread m_worker;
+    std::atomic<bool> m_stopRequested;
     
     int m_maxRetries;
 
     Impl(IDataRepository* inner, bool ownInner) 
         : m_inner(inner), m_ownInner(ownInner), m_stopRequested(false), m_maxRetries(3) {}
+
+    ~Impl() {
+        if (m_ownInner && m_inner) {
+            delete m_inner;
+            m_inner = nullptr;
+        }
+    }
 
     void WorkerLoop()
     {
@@ -59,10 +70,12 @@ struct AsyncDataRepository::Impl {
             std::deque<PendingStatus> localStatuses;
 
             {
-                UniqueLockType lk(m_mutex);
-                while (m_pointQueue.empty() && m_resultQueue.empty() && m_statusQueue.empty() && !m_stopRequested) {
-                    m_cv.wait(lk);
-                }
+                std::unique_lock<std::mutex> lk(m_mutex);
+                
+                // C++11: 람다를 사용해 spurious wakeup 방지 및 가독성 개선
+                m_cv.wait(lk, [this]() { 
+                    return m_stopRequested || !m_pointQueue.empty() || !m_resultQueue.empty() || !m_statusQueue.empty(); 
+                });
                 
                 if (m_stopRequested && m_pointQueue.empty() && m_resultQueue.empty() && m_statusQueue.empty()) {
                     break;
@@ -73,42 +86,39 @@ struct AsyncDataRepository::Impl {
                 localStatuses.swap(m_statusQueue);
             }
 
-            // [1] ZFocusPoint 처리
-            for (size_t i = 0; i < localPoints.size(); ++i) {
-                const PendingZPoint &item = localPoints[i];
+            // [1] ZFocusPoint 처리 (C++11 range-based for 사용)
+            for (const auto& item : localPoints) {
                 if (!m_inner) continue;
                 
                 StorageError res = StorageGeneral;
                 for (int attempt = 0; attempt < m_maxRetries; ++attempt) {
                     res = m_inner->SaveZFocusPoint(item.runId, item.zPosition, item.score, item.sampleCount, item.extraJson);
                     if (res == StorageSuccess) break;
-                    try { boost::this_thread::sleep(boost::posix_time::milliseconds(100)); } catch (...) {}
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 표준 라이브러리로 대체
                 }
             }
 
             // [2] ZFocusResult 처리
-            for (size_t i = 0; i < localResults.size(); ++i) {
-                const PendingResult &item = localResults[i];
+            for (const auto& item : localResults) {
                 if (!m_inner) continue;
                 
                 StorageError res = StorageGeneral;
                 for (int attempt = 0; attempt < m_maxRetries; ++attempt) {
                     res = m_inner->SaveZFocusResult(item.camIndex, item.locationId, item.pkgId, item.newFocus);
                     if (res == StorageSuccess) break;
-                    try { boost::this_thread::sleep(boost::posix_time::milliseconds(100)); } catch (...) {}
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 }
             }
 
             // [3] Status 처리
-            for (size_t i = 0; i < localStatuses.size(); ++i) {
-                const PendingStatus &item = localStatuses[i];
+            for (const auto& item : localStatuses) {
                 if (!m_inner) continue;
                 
                 StorageError res = StorageGeneral;
                 for (int attempt = 0; attempt < m_maxRetries; ++attempt) {
                     res = m_inner->UpdateSequenceRunStatus(item.runId, item.status, item.resultSummaryJson);
                     if (res == StorageSuccess) break;
-                    try { boost::this_thread::sleep(boost::posix_time::milliseconds(100)); } catch (...) {}
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 }
             }
         } // while
@@ -116,9 +126,10 @@ struct AsyncDataRepository::Impl {
 };
 
 AsyncDataRepository::AsyncDataRepository(IDataRepository* inner, bool ownInner)
-    : m_pImpl(new Impl(inner, ownInner))
+    : m_pImpl(std::make_unique<Impl>(inner, ownInner)) // C++14 std::make_unique 사용
 {
-    m_pImpl->m_worker = boost::thread(&AsyncDataRepository::Impl::WorkerLoop, m_pImpl);
+    // std::unique_ptr이라 내부 로우 포인터 접근 시 .get() 사용
+    m_pImpl->m_worker = std::thread(&AsyncDataRepository::Impl::WorkerLoop, m_pImpl.get());
 }
 
 AsyncDataRepository::~AsyncDataRepository()
@@ -131,8 +142,7 @@ AsyncDataRepository::~AsyncDataRepository()
             m_pImpl->m_cv.notify_one();
             m_pImpl->m_worker.join();
         }
-        delete m_pImpl;
-        m_pImpl = NULL;
+        // std::unique_ptr을 사용하므로 delete m_pImpl; 가 생략됩니다.
     }
 }
 
@@ -140,7 +150,7 @@ StorageError AsyncDataRepository::SaveZFocusPoint(int runId, double zPosition, d
 {
     if(!m_pImpl) return StorageErrorWriteFailed;
 
-    UniqueLockType lock(m_pImpl->m_mutex);
+    std::lock_guard<std::mutex> lock(m_pImpl->m_mutex);
     Impl::PendingZPoint pt;
     pt.runId = runId;
     pt.zPosition = zPosition;
@@ -148,7 +158,7 @@ StorageError AsyncDataRepository::SaveZFocusPoint(int runId, double zPosition, d
     pt.sampleCount = sampleCount;
     pt.extraJson = extraJson;
     
-    m_pImpl->m_pointQueue.push_back(pt);
+    m_pImpl->m_pointQueue.push_back(std::move(pt));
     m_pImpl->m_cv.notify_one();
     
     return StorageSuccess;
@@ -158,14 +168,14 @@ StorageError AsyncDataRepository::SaveZFocusResult(int camIndex, int locationId,
 {
     if(!m_pImpl) return StorageErrorWriteFailed;
 
-    UniqueLockType lock(m_pImpl->m_mutex);
+    std::lock_guard<std::mutex> lock(m_pImpl->m_mutex);
     Impl::PendingResult res;
     res.camIndex = camIndex;
     res.locationId = locationId;
     res.pkgId = pkgId;
     res.newFocus = newFocus;
 
-    m_pImpl->m_resultQueue.push_back(res);
+    m_pImpl->m_resultQueue.push_back(std::move(res));
     m_pImpl->m_cv.notify_one();
 
     return StorageSuccess;
@@ -175,14 +185,13 @@ StorageError AsyncDataRepository::UpdateSequenceRunStatus(int runId, const std::
 {
     if(!m_pImpl) return StorageErrorWriteFailed;
 
-    UniqueLockType lock(m_pImpl->m_mutex);
+    std::lock_guard<std::mutex> lock(m_pImpl->m_mutex);
     Impl::PendingStatus st;
-    // [수정] pt -> st 오타 수정
     st.runId = runId;
     st.status = status;
     st.resultSummaryJson = resultSummaryJson;
 
-    m_pImpl->m_statusQueue.push_back(st);
+    m_pImpl->m_statusQueue.push_back(std::move(st));
     m_pImpl->m_cv.notify_one();
 
     return StorageSuccess;

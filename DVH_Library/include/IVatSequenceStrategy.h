@@ -1,14 +1,18 @@
 ﻿#pragma once
 
 #include "Types.h"
+#include <string>
+#include <memory>
 
 namespace DVH_VAT
 {
+    class IVatActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
+
     class IVatSequenceStrategy
     {
-
     public:
-        virtual ~IVatSequenceStrategy() {}
+        // C++11/14: 다형성 클래스의 가상 소멸자를 명시적으로 default 처리
+        virtual ~IVatSequenceStrategy() = default;
 
         // 1. 실행할 시퀀스 이름 반환
         virtual std::string GetSequenceName() const = 0;
@@ -25,13 +29,13 @@ namespace DVH_VAT
         // 5. 사용할 시퀀스 생성기 반환 
         virtual VisionEventHandlerPtr CreateVisionProcessor() = 0;
 
-        // 6. IVatSequenceStrategy 인터페이스 구현               
+        // 6. 엑츄에이터(어댑터) 설정   
         virtual void SetActuator(IVatActuator* adapter) = 0;
 
-        // 7. IVatSequenceStrategy 인터페이스 구현
+        // 7. 설정된 엑츄에이터 반환
         virtual IVatActuator* GetActuator() = 0;
-
     };
 
-    typedef boost::shared_ptr<IVatSequenceStrategy> VatSequenceStrategyPtr;
+    // C++11/14: boost::shared_ptr 대신 std::shared_ptr를 적용하며 typedef 대신 using 권장
+    using VatSequenceStrategyPtr = std::shared_ptr<IVatSequenceStrategy>;
 }

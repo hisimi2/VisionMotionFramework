@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "IDataRepository.h"
+#include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
 struct sqlite3; // forward declaration for sqlite3*
 
@@ -12,36 +13,36 @@ class DVH_VAT_API SqliteDataRepository : public IDataRepository
 public:
     // dbFilePath: sqlite 파일 경로. imageBasePath: 이미지 파일을 저장할 디렉터리
     SqliteDataRepository(const std::string& dbFilePath, const std::string& imageBasePath);
-    virtual ~SqliteDataRepository();
+    
+    // C++11/14: 다형성 클래스이므로 명시적 override 적용 권장
+    ~SqliteDataRepository() override;
 
     // IDataRepository 인터페이스 구현
-    // [v100] override 키워드 제거 (VS2010 일부 버전 미지원 가능성 고려)
-    virtual StorageError SaveParam(const std::string& recipe, const std::string& name, const std::string& value);
-    virtual StorageError LoadParam(const std::string& recipe, const std::string& name, std::string& outValue);
-    virtual StorageError SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath);
-    virtual StorageError SaveSequenceRun(const std::string& sequenceName, const std::string& summary);
-    virtual StorageError Initialize(); // override 제거
-    virtual StorageError Shutdown();   // override 제거
+    // C++11/14: 상속받는 가상 함수들에 virtual 키워드를 제거하고 override 명시
+    StorageError SaveParam(const std::string& recipe, const std::string& name, const std::string& value) override;
+    StorageError LoadParam(const std::string& recipe, const std::string& name, std::string& outValue) override;
+    StorageError SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath) override;
+    StorageError SaveSequenceRun(const std::string& sequenceName, const std::string& summary) override;
+    StorageError Initialize() override;
+    StorageError Shutdown() override;
 
     // --- 새로 추가한 구조화된 저장 API ---
-    virtual StorageError CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId);
-    virtual StorageError SaveZFocusPoint(int runId, double zPosition, double score, int sampleCount, const std::string& extraJson);
-
-
+    StorageError CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId) override;
+    StorageError SaveZFocusPoint(int runId, double zPosition, double score, int sampleCount, const std::string& extraJson) override;
 
 
     //////////////검사 결과 저장//////////////////
-    virtual StorageError SaveZFocusResult(int camIndex, int locationId, int pkgId, double newFocus);
+    StorageError SaveZFocusResult(int camIndex, int locationId, int pkgId, double newFocus) override;
 
 
 	// Picker-Cam 거리 값 저장
-	virtual StorageError SavePickerCamDistanceResult(int camIndex, int pkgId, double narrowX, double narrowY, double wideX, double wideY);
+	StorageError SavePickerCamDistanceResult(int camIndex, int pkgId, double narrowX, double narrowY, double wideX, double wideY) override;
 
 	// 검사 위치 정보 저장
-	virtual StorageError SaveCalibrationPosResult(int camIndex, int locationId, int pkgId, double posX, double posY);
+	StorageError SaveCalibrationPosResult(int camIndex, int locationId, int pkgId, double posX, double posY) override;
 
 	// 핸드 피치 정보 저장
-	virtual StorageError SaveHandPitchResult(
+	StorageError SaveHandPitchResult(
 		int handId,
 		int pkgId,
 		int col,
@@ -49,35 +50,35 @@ public:
 		double narrowX,
 		double narrowY,
 		double wideX,
-		double wideY);
+		double wideY) override;
 
 	// Teaching 검사 결과 저장
-	virtual StorageError SaveTeachingResult(int handId, int locationId, int pkgId, double posX, double posY, double posZ);
+	StorageError SaveTeachingResult(int handId, int locationId, int pkgId, double posX, double posY, double posZ) override;
 
 
 	//////////////검사 결과 로드//////////////////
 	// InspInitPos 로드 (초기 위치 + Focus)
-	virtual StorageError LoadInspInitPos(
+	StorageError LoadInspInitPos(
 		int camIndex,
 		int locationId,
 		int pkgId,
 		double& posX,
 		double& posY,
-		double& focus);
+		double& focus) override;
 
 
 	// Picker-Cam 거리 로드
-	virtual StorageError LoadPickerCamDistance(
+	StorageError LoadPickerCamDistance(
 		int camIndex,
 		int pkgId,
         double& narrowX,
         double& narrowY,
         double& wideX,
-        double& wideY);
+        double& wideY) override;
 
 
 	// HandPitch 로드 (특정 row/col)
-	virtual StorageError LoadHandPitch(
+	StorageError LoadHandPitch(
 		int handId,
 		int pkgId,
 		int row,
@@ -85,33 +86,33 @@ public:
 		double& narrowX,
 		double& narrowY,
 		double& wideX,
-		double& wideY);
+		double& wideY) override;
 
 
 	// Teaching 결과 로드
-	virtual StorageError LoadTeachingResult(
+	StorageError LoadTeachingResult(
 		int handId,
 		int locationId,
 		int pkgId,
 		int dateoffset,
 		double& posX,
 		double& posY,
-		double& posZ);
+		double& posZ) override;
 
-	virtual StorageError LoadHandCamGroup(
+	StorageError LoadHandCamGroup(
 		int handId,
-		std::vector<int>& camIds);
+		std::vector<int>& camIds) override;
 
-    virtual StorageError LoadCamLocationGroup(
+    StorageError LoadCamLocationGroup(
         int camIndex,
-        std::vector<int>& locateIds);
+        std::vector<int>& locateIds) override;
 
-	virtual StorageError LoadLocationIdByName(
+	StorageError LoadLocationIdByName(
 		const std::string& locateName,
-		int& locationId);
+		int& locationId) override;
 
     // 추가: sequence_runs 상태 업데이트
-    virtual StorageError UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson);
+    StorageError UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson) override;
 
 private:
     // helpers
@@ -123,8 +124,8 @@ private:
     std::string imageBasePath_;
     sqlite3* db_;
     
-    // [v100] boost::mutex (CompatUtils.h에 정의됨)
-    boost::mutex mutex_;
+    // boost::mutex -> std::mutex 교체
+    std::mutex mutex_;
     bool initialized_;
 };
 

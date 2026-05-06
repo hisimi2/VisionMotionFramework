@@ -3,20 +3,18 @@
 #include "DVH_VAT_API.h"    // API Export 매크로
 #include "IDataRepository.h" // StorageError 정의
 
+#include <thread>
+#include <chrono>
+
 namespace DVH_VAT 
 {
-    /**
-     * @brief Boost 의존성을 숨기기 위한 내부 Sleep 함수 선언
-     * 구현은 SaveUtils.cpp에 위치합니다.
-     */
-    DVH_VAT_API void WaitRetryDelay(int milliseconds);
-
     /**
      * SaveWithRetries: 저장을 재시도하는 유틸리티
      * 
      * [수정 내역]
-     * - 템플릿 함수 특성상 헤더에 위치해야 함
-     * - Boost 헤더 충돌 방지를 위해 Sleep 기능만 외부 함수(WaitRetryDelay)로 분리
+     * - C++11 이후 표준 쓰레드 지연 사용: std::this_thread::sleep_for
+     * - 외부 구현 파일(CPP) 분리 제거 -> 헤더 단독 파일 (Header-only)
+     * - IDataRepository.h 의 StorageError 반환값 'StorageSuccess' 사용 
      */
     template <typename SaveFunc>
     StorageError SaveWithRetries(SaveFunc saveFunc, int maxRetries, int retryDelayMs = 100)
@@ -30,9 +28,9 @@ namespace DVH_VAT
                 // 저장 시도
                 last = saveFunc();
                 
-                // 성공 확인 (StorageError::StorageOK 또는 0 가정)
-                if (last == StorageOK) {
-                    return StorageOK;
+                // 성공 확인 (StorageSuccess 로 매칭)
+                if (last == StorageSuccess) {
+                    return StorageSuccess;
                 }
             }
             catch (...) {
@@ -42,8 +40,8 @@ namespace DVH_VAT
 
             // 마지막 시도가 아니면 대기
             if (attempt < maxRetries - 1 && retryDelayMs > 0) {
-                // Boost 의존성이 있는 코드를 cpp 내부 함수 호출로 대체
-                WaitRetryDelay(retryDelayMs);
+                // C++14: 표준 스레드 지연 함수 사용
+                std::this_thread::sleep_for(std::chrono::milliseconds(retryDelayMs));
             }
         }
         return last;

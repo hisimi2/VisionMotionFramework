@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "DVH_VAT_API.h"
 #include "VAT_Context.h"
 #include "VatSequence.h"
 #include "IDataRepository.h"
 #include "IVatActuator.h"
-#include <boost/move/unique_ptr.hpp>
+
 
 namespace DVH_VAT
 {

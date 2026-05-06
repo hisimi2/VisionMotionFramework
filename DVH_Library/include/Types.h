@@ -4,18 +4,10 @@
 #include <map>
 #include <vector>
 #include <cstdint>
-
-// [v100] C++11 미지원 기능 대체용 Boost 라이브러리
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/lock_guard.hpp>
-#include <boost/thread/locks.hpp>              
-#include <boost/thread/condition_variable.hpp> 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/chrono.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
+#include <memory>              // std::shared_ptr, std::unique_ptr, std::make_shared 등
+#include <mutex>               // std::mutex, std::lock_guard, std::unique_lock
+#include <condition_variable>  // std::condition_variable
+#include <chrono>              // std::chrono
 
 namespace DVH_VAT 
 {
@@ -28,18 +20,23 @@ namespace DVH_VAT
     class VAT_Context;
     class AsyncSequenceRunner;
 
-    // 스마트 포인터 타입 정의
-    typedef boost::shared_ptr<VatCorrectionEngine>  VatEnginePtr;
-    typedef boost::shared_ptr<IDataRepository>      DataRepositoryPtr;
-    typedef boost::shared_ptr<IVisionEventHandler>  VisionEventHandlerPtr;
-    typedef boost::shared_ptr<SequenceBuilderBase>  SequenceBuilderPtr;
-    typedef boost::shared_ptr<VAT_Context>          VatContextPtr;
-    typedef boost::shared_ptr<AsyncSequenceRunner>  AsyncSequenceRunnerPtr;
-    typedef boost::unique_ptr<IVatSequence>         VatSequencePtr;
-    typedef IVatActuator*                           VatActuatorPtr;
+    // C++11/14: typedef 대신 가독성이 높은 using 키워드 사용 권장
+    // boost::shared_ptr -> std::shared_ptr 로 교체
+    using VatEnginePtr           = std::shared_ptr<VatCorrectionEngine>;
+    using DataRepositoryPtr      = std::shared_ptr<IDataRepository>;
+    using VisionEventHandlerPtr  = std::shared_ptr<IVisionEventHandler>;
+    using SequenceBuilderPtr     = std::shared_ptr<SequenceBuilderBase>;
+    using VatContextPtr          = std::shared_ptr<VAT_Context>;
+    using AsyncSequenceRunnerPtr = std::shared_ptr<AsyncSequenceRunner>;
     
-    typedef std::map<std::string, std::string>      StringMap; 
-    typedef boost::lock_guard<boost::mutex>         LockGuardType;
-    typedef boost::unique_lock<boost::mutex>        UniqueLockType;
-    typedef boost::condition_variable               ConditionVariableType;
+    // boost::unique_ptr가 아니라 기존에도 std::unique_ptr 였으나 C++11 표준이므로 유지
+    using VatSequencePtr         = std::unique_ptr<IVatSequence>;
+    
+    using VatActuatorPtr         = IVatActuator*;
+    using StringMap              = std::map<std::string, std::string>; 
+    
+    // boost 스레드 동기화 객체를 C++11 표준 라이브러리로 대체
+    using LockGuardType          = std::lock_guard<std::mutex>;
+    using UniqueLockType         = std::unique_lock<std::mutex>;
+    using ConditionVariableType  = std::condition_variable;
 } // namespace DVH_VAT

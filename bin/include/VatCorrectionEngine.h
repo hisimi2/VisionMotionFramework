@@ -1,35 +1,37 @@
 ﻿#pragma once
 #include "DVH_VAT_API.h"
 #include "VAT_Context.h"
-
+#include <string>
 
 namespace DVH_VAT 
 {
     class IVisionEventHandler; 
     class IDataRepository;
     class IVatActuator;
-    class VAT_Context;
     class SequenceBuilderBase;
     class AsyncSequenceRunner;
 
     class DVH_VAT_API VatCorrectionEngine
     {
     public:
-        ~VatCorrectionEngine();
+        // 생성자 선언을 소멸자보다 위에 배치하여 가독성을 높입니다.
         VatCorrectionEngine(SequenceBuilderPtr  builder,
                             VatContextPtr       ctx,
                             VatActuatorPtr      actuator);
+        
+        ~VatCorrectionEngine();
 
         void SetBuilder(SequenceBuilderPtr builder);
-        void SetRunner(AsyncSequenceRunnerPtr runner = AsyncSequenceRunnerPtr());
+        void SetRunner(AsyncSequenceRunnerPtr runner = nullptr); // C++11: 기본값을 nullptr 지정 방식(또는 타입 생략)으로 권장
 
-        bool RunSequence(std::string sequenceName);
+        // C++11/14: 불필요한 복사를 막기 위해 std::string은 const reference로 받는 것이 좋습니다.
+        bool RunSequence(const std::string& sequenceName);
         void StopSequence();
 
         DataRepositoryPtr getRepository() const;
 
     private:
-        // 소유권을 엔진이 갖는 shared_ptr
+        // 의존성 주입된 스마트 포인터들
         VatActuatorPtr          m_actuator;
         SequenceBuilderPtr      m_pBuilder;
         AsyncSequenceRunnerPtr  m_pRunner;

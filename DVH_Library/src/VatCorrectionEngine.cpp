@@ -7,8 +7,9 @@
 #include "IDataRepository.h"
 #include "Types.h" 
 
-#include <boost/make_shared.hpp>
-#include <boost/move/move.hpp>
+#include <memory> // C++11 std::make_shared 등 대체 사용
+#include <string>
+#include <utility> // std::move
 
 namespace DVH_VAT
 {
@@ -20,13 +21,12 @@ namespace DVH_VAT
     {
         if (!m_pRunner)
         {
-            m_pRunner = boost::make_shared<AsyncSequenceRunner>();
+            m_pRunner = std::make_shared<AsyncSequenceRunner>(); // boost::make_shared 대체
         }
     }
 
-    VatCorrectionEngine::~VatCorrectionEngine()
-    {
-    }
+    // 소멸자 (헤더에서 선언된 명시적 소멸자와 매칭. 빈 동작이므로 default 선언 권장이나 이 파일에 유지)
+    VatCorrectionEngine::~VatCorrectionEngine() = default;
 
     DataRepositoryPtr VatCorrectionEngine::getRepository() const
     {
@@ -34,7 +34,7 @@ namespace DVH_VAT
         {
             return m_pCtx->getRepository();
         }
-        return DataRepositoryPtr();
+        return nullptr; // C++11 nullptr 사용
     }
 
     void VatCorrectionEngine::SetBuilder(SequenceBuilderPtr builder)
@@ -52,12 +52,13 @@ namespace DVH_VAT
         {
             if (!m_pRunner)
             {
-                m_pRunner = boost::make_shared<AsyncSequenceRunner>();
+                m_pRunner = std::make_shared<AsyncSequenceRunner>();
             }
         }
     }
 
-    bool VatCorrectionEngine::RunSequence(std::string sequenceName)
+    // C++14: 헤더 수정 사항에 맞춰 const std::string& 형태로 매개변수 일치
+    bool VatCorrectionEngine::RunSequence(const std::string& sequenceName)
     {
         if (!m_pBuilder)
         {
@@ -69,12 +70,13 @@ namespace DVH_VAT
             return false;
         }
 
-        boost::unique_ptr<IVatSequence> seq = m_pBuilder->CreateSequence(sequenceName);
+        // boost::unique_ptr 가 아닌 std::unique_ptr 반환
+        std::unique_ptr<IVatSequence> seq = m_pBuilder->CreateSequence(sequenceName);
 
         if (!seq) return false;
 
         return m_pRunner->Start(
-            boost::move(seq),
+            std::move(seq), // boost::move -> std::move 적용
             m_pCtx,
             m_actuator
         );

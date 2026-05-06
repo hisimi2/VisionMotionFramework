@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "IDataRepository.h"
+#include <memory>
 
 namespace DVH_VAT 
 {
@@ -13,32 +14,35 @@ namespace DVH_VAT
     {
     public:
         AsyncDataRepository(IDataRepository* inner, bool ownInner);
-        virtual ~AsyncDataRepository();
+        
+        // C++11/14: 다형성 클래스의 오버라이드 소멸자
+        ~AsyncDataRepository() override;
 
         // IDataRepository 인터페이스
-        virtual StorageError SaveParam(const std::string& recipe, const std::string& name, const std::string& value);
-        virtual StorageError LoadParam(const std::string& recipe, const std::string& name, std::string& outValue);
-        virtual StorageError SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath);
-        virtual StorageError SaveSequenceRun(const std::string& sequenceName, const std::string& summary);
-        virtual StorageError Initialize();
-        virtual StorageError Shutdown();
-        virtual StorageError CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId);
+        // C++11/14: virtual 키워드를 생략하고 override 명시
+        StorageError SaveParam(const std::string& recipe, const std::string& name, const std::string& value) override;
+        StorageError LoadParam(const std::string& recipe, const std::string& name, std::string& outValue) override;
+        StorageError SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath) override;
+        StorageError SaveSequenceRun(const std::string& sequenceName, const std::string& summary) override;
+        StorageError Initialize() override;
+        StorageError Shutdown() override;
+        StorageError CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId) override;
 
         // 비동기 처리 대상
-        virtual StorageError SaveZFocusPoint(int runId, double zPosition, double score, int sampleCount, const std::string& extraJson);
-        virtual StorageError SaveZFocusResult(int camIndex, int locationId, int pkgId, double newFocus);
-        virtual StorageError UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson);
+        StorageError SaveZFocusPoint(int runId, double zPosition, double score, int sampleCount, const std::string& extraJson) override;
+        StorageError SaveZFocusResult(int camIndex, int locationId, int pkgId, double newFocus) override;
+        StorageError UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson) override;
 
         // Picker-Cam 거리 값 저장
-        virtual StorageError SavePickerCamDistanceResult(int camIndex, int pkgId, double narrowX, double narrowY, double wideX, double wideY);
+        StorageError SavePickerCamDistanceResult(int camIndex, int pkgId, double narrowX, double narrowY, double wideX, double wideY) override;
 
         // 검사 위치 정보 저장
-        virtual StorageError SaveCalibrationPosResult(int camIndex, int locationId, int pkgId, double posX, double posY);
+        StorageError SaveCalibrationPosResult(int camIndex, int locationId, int pkgId, double posX, double posY) override;
 
         // 핸드 피치 정보 저장
-        virtual StorageError SaveHandPitchResult(int handId, int pkgId, int col, int row, double narrowX, double narrowY, double wideX, double wideY);
+        StorageError SaveHandPitchResult(int handId, int pkgId, int col, int row, double narrowX, double narrowY, double wideX, double wideY) override;
 
-        virtual StorageError SaveTeachingResult(int handId, int locationId, int pkgId, double posX, double posY, double posZ);
+        StorageError SaveTeachingResult(int handId, int locationId, int pkgId, double posX, double posY, double posZ) override;
 
         //////////////검사 결과 로드//////////////////
         StorageError LoadInspInitPos(int camIndex, int locationId, int pkgId, double& posX, double& posY, double& focus);
@@ -53,8 +57,8 @@ namespace DVH_VAT
         // Pimpl 관용구: 구현부 구조체 전방 선언
         struct Impl;
     
-        // v100 호환성을 위해 일반 포인터 사용 (소멸자에서 delete 필수)
-        Impl* m_pImpl;
+        // C++14: 수동 메모리 관리(delete)에서 발생하는 누수를 막기 위해 std::unique_ptr 사용
+        std::unique_ptr<Impl> m_pImpl;
     };
 
 } // namespace DVH_VAT

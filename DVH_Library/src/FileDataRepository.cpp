@@ -1,22 +1,24 @@
 ﻿#include "stdafx.h"
 #include "FileDataRepository.h"
 #include "FileUtils.h"
-#include "CompatUtils.h" // StorageError 정의, LockGuardType 포함
+#include "CompatUtils.h" // StorageError 정의
 #include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <ctime>
 #include <iostream> 
+#include <mutex> // std::lock_guard 사용을 위해 포함
 
 namespace DVH_VAT {
 
 FileDataRepository::FileDataRepository(const std::string& basePath)
     : basePath_(basePath) {}
 
-FileDataRepository::~FileDataRepository() {}
+FileDataRepository::~FileDataRepository() = default; // C++11 = default 사용
 
 StorageError FileDataRepository::SaveParam(const std::string& recipe, const std::string& name, const std::string& value) {
-    LockGuardType lg(mutex_); // [v100] CompatUtils.h에 정의된 boost::lock_guard 기반
+    // LockGuardType 대신 C++11 표준 std::lock_guard 사용
+    std::lock_guard<std::mutex> lg(mutex_); 
     std::ofstream ofs(FileUtils::MakeParamPath(basePath_, recipe).c_str(), std::ios::app);
     if (!ofs) {
         std::cerr << "[FileDataRepository] Failed to open file for writing: " << FileUtils::MakeParamPath(basePath_, recipe) << std::endl;
@@ -28,7 +30,7 @@ StorageError FileDataRepository::SaveParam(const std::string& recipe, const std:
 }
 
 StorageError FileDataRepository::LoadParam(const std::string& recipe, const std::string& name, std::string& outValue) {
-    LockGuardType lg(mutex_);
+    std::lock_guard<std::mutex> lg(mutex_);
     std::ifstream ifs(FileUtils::MakeParamPath(basePath_, recipe).c_str());
     if (!ifs) {
         std::cerr << "[FileDataRepository] Failed to open file for reading: " << FileUtils::MakeParamPath(basePath_, recipe) << std::endl;
@@ -47,7 +49,7 @@ StorageError FileDataRepository::LoadParam(const std::string& recipe, const std:
 }
 
 StorageError FileDataRepository::SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath) {
-    LockGuardType lg(mutex_);
+    std::lock_guard<std::mutex> lg(mutex_);
     outPath = FileUtils::MakeImagePath(basePath_, contextTag);
     std::ofstream ofs(outPath.c_str(), std::ios::binary);
     if (!ofs) {
@@ -62,7 +64,7 @@ StorageError FileDataRepository::SaveImage(const std::string& contextTag, const 
 }
 
 StorageError FileDataRepository::SaveSequenceRun(const std::string& sequenceName, const std::string& summary) {
-    LockGuardType lg(mutex_);
+    std::lock_guard<std::mutex> lg(mutex_);
     std::string logPath = FileUtils::JoinPath(basePath_, "sequence_runs.log");
     std::ofstream ofs(logPath.c_str(), std::ios::app);
     if (!ofs) {
@@ -86,8 +88,8 @@ StorageError FileDataRepository::Shutdown() {
 
 StorageError FileDataRepository::CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId)
 {
-    LockGuardType lg(mutex_);
-    std::time_t t = std::time(NULL);
+    std::lock_guard<std::mutex> lg(mutex_);
+    std::time_t t = std::time(nullptr); // C++11 NULL -> nullptr
     int runId = static_cast<int>(t & 0x7FFFFFFF); // 간단 ID 생성
 
     std::ostringstream ss;
@@ -106,7 +108,7 @@ StorageError FileDataRepository::CreateSequenceRun(const std::string& sequenceNa
 
 StorageError FileDataRepository::SaveZFocusPoint(int runId, double zPosition, double score, int sampleCount, const std::string& extraJson)
 {
-    LockGuardType lg(mutex_);
+    std::lock_guard<std::mutex> lg(mutex_);
     std::ostringstream ss;
     ss << FileUtils::MakeTimeTag() << " | ZPOINT | run=" << runId << " | z=" << zPosition << " | score=" << score
        << " | samples=" << sampleCount << " | extra=" << extraJson << "\n";
@@ -123,7 +125,7 @@ StorageError FileDataRepository::SaveZFocusPoint(int runId, double zPosition, do
 
 StorageError FileDataRepository::SaveZFocusResult(int camIndex, int locationId, int pkgId, double newFocus)
 {
-    LockGuardType lg(mutex_);
+    std::lock_guard<std::mutex> lg(mutex_);
     std::ostringstream ss;
     ss << FileUtils::MakeTimeTag() << " | ZRESULT | camIndex=" << camIndex 
        << " | locationId=" << locationId << " | pkgId=" << pkgId << " | Focus=" << newFocus << "\n";
@@ -263,7 +265,7 @@ StorageError FileDataRepository::LoadLocationIdByName(
 
 StorageError FileDataRepository::UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson)
 {
-    LockGuardType lg(mutex_);
+    std::lock_guard<std::mutex> lg(mutex_);
     std::ostringstream ss;
     ss << FileUtils::MakeTimeTag() << " | UPDATE_RUN | id=" << runId << " | status=" << status << " | result=" << resultSummaryJson << "\n";
 

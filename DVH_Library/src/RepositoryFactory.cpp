@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <memory>
 
 namespace DVH_VAT {
 
@@ -14,25 +15,26 @@ static std::string trim(const std::string& s)
 {
     if (s.empty()) return s;
     
-    size_t start = 0;
-    while (start < s.size() && isspace(static_cast<unsigned char>(s[start]))) {
+    // C++11 이후 권장되는 반복자(iterator) 기반 탐색
+    auto start = s.begin();
+    while (start != s.end() && std::isspace(static_cast<unsigned char>(*start))) {
         start++;
     }
     
-    size_t end = s.size();
-    while (end > start && isspace(static_cast<unsigned char>(s[end - 1]))) {
+    auto end = s.end();
+    while (end > start && std::isspace(static_cast<unsigned char>(*(end - 1)))) {
         end--;
     }
     
-    return s.substr(start, end - start);
+    return std::string(start, end);
 }
 
-// [v100] std::transform용 헬퍼 함수 (int(*)(int) 캐스팅 대신 사용)
+// std::transform용 헬퍼 함수
 static int ToLowerChar(int c) {
     return std::tolower(c);
 }
 
-IDataRepository* RepositoryFactory::CreateRepository(const std::string& type, const std::string& config)
+std::unique_ptr<IDataRepository> RepositoryFactory::CreateRepository(const std::string& type, const std::string& config)
 {
     std::string t = type;
     std::transform(t.begin(), t.end(), t.begin(), ToLowerChar);
@@ -41,7 +43,8 @@ IDataRepository* RepositoryFactory::CreateRepository(const std::string& type, co
         // config format: "dbPath;imageBasePath"
         std::string dbPath;
         std::string imageBase;
-        size_t sep = config.find_first_of(';');
+        // C++11: 타입 추론 auto 활용
+        auto sep = config.find_first_of(';');
         
         if (sep == std::string::npos) {
             dbPath = trim(config);
@@ -51,30 +54,29 @@ IDataRepository* RepositoryFactory::CreateRepository(const std::string& type, co
             imageBase = trim(config.substr(sep + 1));
         }
 
-        if (dbPath.empty()) return NULL;
+        // NULL을 C++11 표준인 nullptr로 대체
+        if (dbPath.empty()) return nullptr;
 
         try {
-            // [주의] SqliteDataRepository 가 구현되어 있지 않거나 링크되지 않으면 에러 가능
-            // 현재 코드 구조상 구현체가 있다고 가정
-            SqliteDataRepository* repo = new SqliteDataRepository(dbPath, imageBase);
-            return static_cast<IDataRepository*>(repo);
+            // C++14: std::make_unique를 사용하여 안전하게 할당 및 리턴 (캐스팅 불필요)
+            return std::make_unique<SqliteDataRepository>(dbPath, imageBase);
         } catch (...) {
-            return NULL;
+            return nullptr;
         }
     }
     else if (t == "file" || t == "filesystem") {
         std::string basePath = trim(config);
-        if (basePath.empty()) return NULL;
+        if (basePath.empty()) return nullptr;
         
         try {
-            FileDataRepository* repo = new FileDataRepository(basePath);
-            return static_cast<IDataRepository*>(repo);
+            // C++14: std::make_unique 활용
+            return std::make_unique<FileDataRepository>(basePath);
         } catch (...) {
-            return NULL;
+            return nullptr;
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 } // namespace DVH_VAT

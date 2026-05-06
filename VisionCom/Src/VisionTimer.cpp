@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "VisionTimer.h"
 
 #include <chrono> // std::chrono 사용을 위한 포함

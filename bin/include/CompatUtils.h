@@ -1,14 +1,17 @@
 ﻿#pragma once
 
-// VS2010 친화적 전처리: Windows 헤더 최소화 및 min/max 매크로 방지
+// Windows 헤더 최소화 및 min/max 매크로 방지
+#if defined(_WIN32)
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include <windows.h> // OutputDebugStringA 사용을 위한 명시적 포함
+#endif
 
-// [v100] 표준 C++ 헤더
+// C++ 표준 헤더
 #include <string>
 #include <vector>
 #include <map>
@@ -17,8 +20,9 @@
 #include <fstream>
 #include <iomanip>
 #include <ctime>
-#include <memory>    // std::auto_ptr 등 (v100)
+#include <memory>    // std::unique_ptr, std::shared_ptr 등
 #include <cassert>
+#include <thread>    // std::this_thread::get_id() 확보
 
 // 새로 구현한 Logger 포함
 #include "Logger.h"
@@ -27,25 +31,35 @@ namespace DVH_VAT
 {
     inline void DBG(const char* fn) {
         std::ostringstream ss;
-        ss << fn << " tid=" << ::GetCurrentThreadId() << "\n";
+        // C++11: Windows 전용 ::GetCurrentThreadId() 대신 표준 라이브러리 사용
+        ss << fn << " tid=" << std::this_thread::get_id() << "\n";
+#if defined(_WIN32)
         ::OutputDebugStringA(ss.str().c_str());
+#else
+        std::cout << ss.str();
+#endif
     }
 
     inline void DBG_FMT(const char* fn, const char* msg) {
         std::ostringstream ss;
-        ss << fn << " tid=" << ::GetCurrentThreadId() << " : " << msg << "\n";
+        ss << fn << " tid=" << std::this_thread::get_id() << " : " << msg << "\n";
+#if defined(_WIN32)
         ::OutputDebugStringA(ss.str().c_str());
+#else
+        std::cout << ss.str();
+#endif
     }
 
-    static std::string makeLogPrefix(const std::string& seqName)
+    // 헤더 구현 시 중복 심볼 생성을 막기 위해 static -> inline 변경
+    inline std::string makeLogPrefix(const std::string& seqName)
     {
         std::ostringstream oss;
         oss << "[VatSequence:" << seqName << "] ";
         return oss.str();
     }
 
-
-    // [유틸리티] std::to_string 미지원 (v100) -> 헬퍼 함수 구현
+    // [유틸리티] 사용자 정의 클래스 문자열 변환용 헬퍼 
+    // (기본 자료형은 C++11 std::to_string 사용을 권장)
     template <typename T>
     inline std::string ToString(const T& value) 
     {
@@ -54,7 +68,7 @@ namespace DVH_VAT
         return oss.str();
     }
 
-    // 특수화가 필요한 경우 추가 (예: float 정밀도)
+    // 특수화 포맷 유지를 위한 double 오버로드
     inline std::string ToString(double value) 
     {
         std::ostringstream oss;

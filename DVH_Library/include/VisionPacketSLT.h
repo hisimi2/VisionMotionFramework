@@ -1,14 +1,18 @@
 ﻿#pragma once
 
+#include <cstring> // std::memset, strncpy_s
+
 namespace DVH_VAT
 {
-#define STR_LEN		(64)
-#define DATA_SIZE	(10)
+    // C++11/14: 전처리기 매크로 대신 타입과 스코프가 보장되는 constexpr 상수 사용
+    constexpr size_t STR_LEN   = 64;
+    constexpr size_t DATA_SIZE = 10;
 
     struct CPacketBody_S2F41
     {
-        int nCmd;
-        int nParamCount;
+        // C++11: 멤버 기본 초기화
+        int nCmd = 0;
+        int nParamCount = 0;
         char szParam[DATA_SIZE][STR_LEN];
 
         void Clear()
@@ -18,7 +22,8 @@ namespace DVH_VAT
 
         void SetParam(int index, const char* pValue)
         {
-            if (index >= 0 && index < (int)DATA_SIZE && pValue != NULL)
+            // C++11: NULL -> nullptr, index 비교 시 size_t 변환
+            if (index >= 0 && static_cast<size_t>(index) < DATA_SIZE && pValue != nullptr)
             {
                 strncpy_s(szParam[index], STR_LEN, pValue, _TRUNCATE);
             }
@@ -26,38 +31,41 @@ namespace DVH_VAT
     };
 
     struct CPacketBody_S2F42 {
-        int nDataID;
-        int nIndex;
-        int nRCMDACK;
+        int nDataID = 0;
+        int nIndex = 0;
+        int nRCMDACK = 0;
+        
         CPacketBody_S2F42() {
-            memset(this, 0x00, sizeof(CPacketBody_S2F42));
+            std::memset(this, 0, sizeof(*this));
         }
     };
 
     struct CPacketBody_S2F3 {
-        int nDataID;
-        int nStatus;
-        int nDataCount;
+        int nDataID = 0;
+        int nStatus = 0;
+        int nDataCount = 0;
         char cData[DATA_SIZE][STR_LEN];
+        
         CPacketBody_S2F3() {
-            memset(this, 0x00, sizeof(CPacketBody_S2F3));
+            std::memset(this, 0, sizeof(*this));
         }
     };
 
     struct CPacketBody_S2F4 {
-        int nDataID;
-        int nStatus;
-        int nDataCount;
+        int nDataID = 0;
+        int nStatus = 0;
+        int nDataCount = 0;
         char cData[DATA_SIZE][STR_LEN];
+        
         CPacketBody_S2F4() {
-            memset(this, 0x00, sizeof(CPacketBody_S2F4));
+            std::memset(this, 0, sizeof(*this));
         }
     };
 
     struct CPacketBody_S107F9
     {
-        int  nDataID;
-        int  nStatus;
+        int  nDataID = 0;
+        int  nStatus = 0;
         char cData[DATA_SIZE][STR_LEN];
 
         void Clear()
@@ -67,7 +75,7 @@ namespace DVH_VAT
 
         void SetData(int index, const char* pValue)
         {
-            if (index >= 0 && index < (int)DATA_SIZE && pValue != NULL)
+            if (index >= 0 && static_cast<size_t>(index) < DATA_SIZE && pValue != nullptr)
             {
                 strncpy_s(cData[index], STR_LEN, pValue, _TRUNCATE);
             }

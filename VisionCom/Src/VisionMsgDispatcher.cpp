@@ -1,4 +1,4 @@
-// [필수] 가장 먼저 포함
+﻿// [필수] 가장 먼저 포함
 #include "stdafx.h"
 
 #include "VisionMsgDispatcher.h"

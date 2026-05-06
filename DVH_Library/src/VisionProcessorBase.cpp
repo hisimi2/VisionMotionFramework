@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include <vector>
+#include <vector>   
 #include <map>
 #include <string>
 
@@ -8,14 +8,12 @@
 #include "SECSIPacket.h"
 #include "IResultSink.h"
 
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/atomic.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
-
+// Boost 대신 C++ 표준 라이브러리 사용
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <chrono>
+#include <memory>
 #include <algorithm>
 
 namespace DVH_VAT
@@ -23,21 +21,24 @@ namespace DVH_VAT
     struct VisionProcessorBase::Impl
     {
         Impl()
-            : m_processRunning(false)
+            : m_processRunning(false), m_mainRunning(false)
         {
         }
 
         std::map<VatCommand, bool> m_received;
         std::map<VatCommand, VisionProcessorBase::DataMap> m_latestData;
 
-        boost::mutex m_dataMutex;
-        boost::atomic<bool> m_processRunning;
-        boost::shared_ptr<boost::thread> m_processThread;
-        boost::shared_ptr<boost::thread> m_thread;
+        std::mutex m_dataMutex; // boost::mutex 대체
+        std::atomic<bool> m_processRunning;
+        std::atomic<bool> m_mainRunning; // 스레드 인터럽트 대체를 위한 실행 플래그
+        
+        // boost::shared_ptr<boost::thread> 대신 std::unique_ptr<std::thread> 사용 (단일 소유 제어)
+        std::unique_ptr<std::thread> m_processThread;
+        std::unique_ptr<std::thread> m_thread;
     };
 
     VisionProcessorBase::VisionProcessorBase()
-        : m_impl(new Impl())
+        : m_impl(std::make_unique<Impl>()) // C++14 std::make_unique 적용
     {
     }
 
@@ -55,24 +56,24 @@ namespace DVH_VAT
             return;
         }
 
-        m_impl->m_thread = boost::make_shared<boost::thread>(
-            boost::bind(&VisionProcessorBase::RunLoop, this));
+        m_impl->m_mainRunning = true;
+        // boost::bind 대신 람다식 또는 멤버 함수 포인터 직접 전달
+        m_impl->m_thread = std::make_unique<std::thread>(&VisionProcessorBase::RunLoop, this);
     }
 
     void VisionProcessorBase::Stop()
     {
-        if (!m_impl->m_thread)
-        {
-            return;
-        }
+        m_impl->m_mainRunning = false; // 안전한 종료 신호 전달
 
-        try
+        if (m_impl->m_thread && m_impl->m_thread->joinable())
         {
-            m_impl->m_thread->interrupt();
-            m_impl->m_thread->join();
-        }
-        catch (...)
-        {
+            try
+            {
+                m_impl->m_thread->join();
+            }
+            catch (...)
+            {
+            }
         }
 
         m_impl->m_thread.reset();
@@ -87,9 +88,8 @@ namespace DVH_VAT
     {
         try
         {
-            while (true)
+            while (m_impl->m_mainRunning) // interruption_point 대신 원자적 플래그 확인
             {
-                boost::this_thread::interruption_point();
                 Process();
             }
         }
@@ -100,7 +100,8 @@ namespace DVH_VAT
 
     void VisionProcessorBase::Process()
     {
-        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+        // boost::this_thread -> std::this_thread
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     VisionCom::VisionStatus VisionProcessorBase::Initialize(const VisionConnectionConfig& config)
@@ -123,9 +124,11 @@ namespace DVH_VAT
 
     VisionProcessorBase::DataMap VisionProcessorBase::GetLatestData(VatCommand type) const
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        // boost::mutex::scoped_lock -> std::lock_guard
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
 
-        std::map<VatCommand, DataMap>::const_iterator it = m_impl->m_latestData.find(type);
+        // C++11 auto 타입 추론 적용
+        auto it = m_impl->m_latestData.find(type);
         if (it != m_impl->m_latestData.end())
         {
             return it->second;
@@ -136,49 +139,49 @@ namespace DVH_VAT
 
     void VisionProcessorBase::SetLatestData(VatCommand type, const DataMap& data)
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
         m_impl->m_latestData[type] = data;
         m_impl->m_received[type] = true;
     }
 
     void VisionProcessorBase::ClearLatestData(VatCommand type)
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
         m_impl->m_latestData.erase(type);
         m_impl->m_received.erase(type);
     }
 
     bool VisionProcessorBase::IsValid(VatCommand type) const
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
 
-        std::map<VatCommand, bool>::const_iterator receivedIt = m_impl->m_received.find(type);
+        auto receivedIt = m_impl->m_received.find(type);
         if (receivedIt == m_impl->m_received.end() || !receivedIt->second)
         {
             return false;
         }
 
-        std::map<VatCommand, DataMap>::const_iterator dataIt = m_impl->m_latestData.find(type);
+        auto dataIt = m_impl->m_latestData.find(type);
         return (dataIt != m_impl->m_latestData.end() && !dataIt->second.empty());
     }
 
     bool VisionProcessorBase::HasReceived(VatCommand type) const
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
 
-        std::map<VatCommand, bool>::const_iterator it = m_impl->m_received.find(type);
+        auto it = m_impl->m_received.find(type);
         return (it != m_impl->m_received.end()) ? it->second : false;
     }
 
     void VisionProcessorBase::SetReceived(VatCommand type, bool received)
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
         m_impl->m_received[type] = received;
     }
 
     void VisionProcessorBase::ClearReceived(VatCommand type)
     {
-        boost::mutex::scoped_lock lk(m_impl->m_dataMutex);
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
         m_impl->m_received.erase(type);
     }
 
@@ -190,15 +193,14 @@ namespace DVH_VAT
         }
 
         m_impl->m_processRunning = true;
-        m_impl->m_processThread = boost::make_shared<boost::thread>(
-            boost::bind(&VisionProcessorBase::PacketLoop, this));
+        m_impl->m_processThread = std::make_unique<std::thread>(&VisionProcessorBase::PacketLoop, this);
     }
 
     void VisionProcessorBase::StopProcessThread()
     {
         m_impl->m_processRunning = false;
 
-        if (m_impl->m_processThread)
+        if (m_impl->m_processThread && m_impl->m_processThread->joinable())
         {
             try
             {
@@ -217,7 +219,7 @@ namespace DVH_VAT
         while (m_impl->m_processRunning)
         {
             m_ctrl.PacketThread();
-            boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }
 

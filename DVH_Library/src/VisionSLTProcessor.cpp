@@ -2,6 +2,11 @@
 #include "VisionSLTProcessor.h"
 #include "VisionMsgDispatcher.h"
 #include "VisionPacketSLT.h"
+#include "VisionMemoryKeys.h" // VisionKeys 사용을 위해 추가
+
+#include <vector>
+#include <string>
+#include <cstring>
 
 namespace DVH_VAT
 {
@@ -18,51 +23,58 @@ namespace DVH_VAT
         disp.RegisterHandler(107, 9,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& disp = this->m_ctrl.GetDispatcher();
-                if (disp.OnMeasure) disp.OnMeasure(body);
+                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
+                if (d.OnMeasure) d.OnMeasure(body);
             });
 
         disp.RegisterHandler(2, 42,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& disp = this->m_ctrl.GetDispatcher();
-                if (disp.OnSetCok) disp.OnSetCok(body);
+                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
+                if (d.OnSetCok) d.OnSetCok(body);
             });
 
         disp.RegisterHandler(2, 4,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& disp = this->m_ctrl.GetDispatcher();
-                if (disp.OnDeviceCheck) disp.OnDeviceCheck(body);
+                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
+                if (d.OnDeviceCheck) d.OnDeviceCheck(body);
             });
     }
 
-    VisionSLTProcessor::~VisionSLTProcessor()
-    {
-    }
+    // 헤더에서 명시적 override 및 default 처리 연계
+    VisionSLTProcessor::~VisionSLTProcessor() = default;
 
     bool VisionSLTProcessor::RequestSetCokAsync(const StringMap& params)
     {
         ClearLatestData(SetCok);
 
         CPacketBody_S2F41 body;
-        std::memset(&body, 0, sizeof(body));
+        // memset 대신 Clear() 유틸 사용 권장
+        body.Clear();
         body.nCmd = 1000;
         body.nParamCount = 7;
 
-        StringMap::const_iterator it = params.find("recipe_name");
+        // C++11: auto를 이용한 타입 추론
+        auto it = params.find(VisionKeys::RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("pcd_mode");
+        
+        it = params.find(VisionKeys::PCD_MODE);
         if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("device_size_x");
+        
+        it = params.find(VisionKeys::DEVICE_SIZE_X);
         if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("device_size_y");
+        
+        it = params.find(VisionKeys::DEVICE_SIZE_Y);
         if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("cok_type");
+        
+        it = params.find(VisionKeys::COK_TYPE);
         if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("picker_pitch_x");
+        
+        it = params.find(VisionKeys::PICKER_PITCH_X);
         if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("picker_pitch_y");
+        
+        it = params.find(VisionKeys::PICKER_PITCH_Y);
         if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
 
         std::vector<uint8_t> bodyBytes;
@@ -83,23 +95,29 @@ namespace DVH_VAT
         ClearLatestData(InspReady);
 
         CPacketBody_S2F41 body;
-        std::memset(&body, 0, sizeof(body));
+        body.Clear();
         body.nCmd = 1000;
         body.nParamCount = 7;
 
-        StringMap::const_iterator it = params.find("recipe_name");
+        auto it = params.find(VisionKeys::RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("pcd_mode");
+        
+        it = params.find(VisionKeys::PCD_MODE);
         if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("device_size_x");
+        
+        it = params.find(VisionKeys::DEVICE_SIZE_X);
         if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("device_size_y");
+        
+        it = params.find(VisionKeys::DEVICE_SIZE_Y);
         if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("cok_type");
+        
+        it = params.find(VisionKeys::COK_TYPE);
         if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("picker_pitch_x");
+        
+        it = params.find(VisionKeys::PICKER_PITCH_X);
         if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
-        it = params.find("picker_pitch_y");
+        
+        it = params.find(VisionKeys::PICKER_PITCH_Y);
         if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
 
         std::vector<uint8_t> bodyBytes;
@@ -122,19 +140,20 @@ namespace DVH_VAT
         CPacketBody_S107F9 body;
         body.Clear();
 
-        StringMap::const_iterator it = params.find("CameraID");
-        if (it != params.end()) body.nDataID = atoi(it->second.c_str());
+        // C++11: atoi 대신 std::stoi
+        auto it = params.find(VisionKeys::CAMERA_ID);
+        if (it != params.end()) body.nDataID = std::stoi(it->second);
 
-        it = params.find("InspectionType");
-        if (it != params.end()) body.nStatus = atoi(it->second.c_str());
+        it = params.find(VisionKeys::INSPECTION_TYPE);
+        if (it != params.end()) body.nStatus = std::stoi(it->second);
 
-        it = params.find("nMovePart");
+        it = params.find(VisionKeys::MOVE_PART);
         if (it != params.end()) body.SetData(0, it->second.c_str());
 
-        it = params.find("bSaveImage");
+        it = params.find(VisionKeys::SAVE_IMAGE);
         if (it != params.end()) body.SetData(1, it->second.c_str());
 
-        it = params.find("nFovDirection");
+        it = params.find(VisionKeys::FOV_DIRECTION);
         if (it != params.end()) body.SetData(3, it->second.c_str());
 
         std::vector<uint8_t> bodyBytes;
@@ -174,10 +193,10 @@ namespace DVH_VAT
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        std::stringstream ss;
-        ss << pkt.nDataID; data["MsgID"] = ss.str(); ss.str(""); ss.clear();
-        ss << pkt.nIndex; data["PCIndex"] = ss.str(); ss.str(""); ss.clear();
-        ss << pkt.nRCMDACK; data["Status"] = ss.str();
+        // C++11: std::stringstream 대신 std::to_string 사용 (성능/가독성 향상)
+        data["MsgID"]   = std::to_string(pkt.nDataID);
+        data["PCIndex"] = std::to_string(pkt.nIndex);
+        data["Status"]  = std::to_string(pkt.nRCMDACK);
 
         SetLatestData(SetCok, data);
     }
@@ -194,10 +213,10 @@ namespace DVH_VAT
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        std::stringstream ss;
-        ss << pkt.nDataID; data["MsgID"] = ss.str(); ss.str(""); ss.clear();
-        ss << pkt.nIndex; data["PCIndex"] = ss.str(); ss.str(""); ss.clear();
-        ss << pkt.nRCMDACK; data["Result"] = ss.str();
+        // C++11: std::stringstream 대체
+        data["MsgID"]   = std::to_string(pkt.nDataID);
+        data["PCIndex"] = std::to_string(pkt.nIndex);
+        data["Result"]  = std::to_string(pkt.nRCMDACK);
 
         SetLatestData(InspReady, data);
     }
@@ -221,9 +240,9 @@ namespace DVH_VAT
 
         DataMap data;
         data["Error Description"] = std::string(packet.cData[0]);
-        data["XOffset"] = std::string(packet.cData[1]);
-        data["YOffset"] = std::string(packet.cData[2]);
-        data["ZFocus"] = std::string(packet.cData[3]);
+        data[VisionKeys::X_OFFSET] = std::string(packet.cData[1]);
+        data[VisionKeys::Y_OFFSET] = std::string(packet.cData[2]);
+        data["ZFocus"]            = std::string(packet.cData[3]);
 
         SetLatestData(Measure, data);
     }
@@ -240,12 +259,11 @@ namespace DVH_VAT
         std::memcpy(&packet, body.data(), sizeof(packet));
 
         DataMap data;
-        std::stringstream ss;
-        ss << packet.nDataID; data["MsgID"] = ss.str(); ss.str(""); ss.clear();
-        ss << packet.nStatus; data["Status"] = ss.str(); ss.str(""); ss.clear();
-        ss << packet.nDataCount; data["Data Count"] = ss.str();
+        data["MsgID"]      = std::to_string(packet.nDataID);
+        data["Status"]     = std::to_string(packet.nStatus);
+        data["Data Count"] = std::to_string(packet.nDataCount);
 
-        data["Error Description"] = std::string(packet.cData[0]);
+        data["Error Description"]        = std::string(packet.cData[0]);
         data["Device Check Result Data"] = std::string(packet.cData[1]);
 
         SetLatestData(DeviceCheck, data);
@@ -263,10 +281,9 @@ namespace DVH_VAT
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        std::stringstream ss;
-        ss << pkt.nDataID; data["MsgID"] = ss.str(); ss.str(""); ss.clear();
-        ss << pkt.nIndex; data["PCIndex"] = ss.str(); ss.str(""); ss.clear();
-        ss << pkt.nRCMDACK; data["Status"] = ss.str();
+        data["MsgID"]   = std::to_string(pkt.nDataID);
+        data["PCIndex"] = std::to_string(pkt.nIndex);
+        data["Status"]  = std::to_string(pkt.nRCMDACK);
 
         SetLatestData(Light, data);
     }

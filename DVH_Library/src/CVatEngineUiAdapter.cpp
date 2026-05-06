@@ -9,9 +9,8 @@
 #include <sstream>
 #include <afxwin.h> // CWnd, RegisterWindowMessage
 #include <tchar.h>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>   // std::shared_ptr, std::make_shared
+#include <mutex>    // std::lock_guard
 
 namespace DVH_VAT
 {
@@ -28,6 +27,7 @@ namespace DVH_VAT
         VatEnginePtr engineToStop;
         VatSequenceStrategyPtr strategyToReset;
         {
+            // std::lock_guard (Types.h에서 LockGuardType이 std::lock_guard<std::mutex>로 교체됨)
             LockGuardType guard(m_seqMutex);
             engineToStop = m_pVatEngine;
             m_pVatEngine.reset();
@@ -50,7 +50,7 @@ namespace DVH_VAT
         {
             return m_pVatEngine->getRepository();
         }
-        return DataRepositoryPtr();
+        return nullptr;
     }
 
     void CVatEngineUiAdapter::SetOwner(::CWnd* pOwner)
@@ -86,20 +86,21 @@ namespace DVH_VAT
         if (!m_pOwner || !::IsWindow(m_pOwner->GetSafeHwnd()))
             return;
 
-        // smart pointer로 소유권을 묶어 메시지로 전달: 수신측에서 shared_ptr을 복원하여 사용
-        boost::shared_ptr<VisionResultPayload> sp = boost::make_shared<VisionResultPayload>();
+        // boost::shared_ptr -> std::shared_ptr 교체
+        std::shared_ptr<VisionResultPayload> sp = std::make_shared<VisionResultPayload>();
         sp->requestId = requestId;
         sp->results = results;
 
-        // 힙에 shared_ptr을 복사하여 전달
-        boost::shared_ptr<VisionResultPayload>* heap_sp = new boost::shared_ptr<VisionResultPayload>(sp);
+        // 힙에 shared_ptr을 복사하여 전달 (수신측 UI에서 delete 필수)
+        std::shared_ptr<VisionResultPayload>* heap_sp = new std::shared_ptr<VisionResultPayload>(sp);
 
         ::PostMessage(m_pOwner->GetSafeHwnd(), GetVisionResultMsgId(), reinterpret_cast<WPARAM>(heap_sp), 0);
     }
 
     VatContextPtr CVatEngineUiAdapter::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
     {
-        auto ctx = boost::make_shared<VAT_Context>();
+        // boost::make_shared -> std::make_shared 교체
+        auto ctx = std::make_shared<VAT_Context>();
         ctx->SetVisionProcessor(vm);
         ctx->SetDataRepository(repo);
         return ctx;
@@ -185,7 +186,8 @@ namespace DVH_VAT
 
         try
         {
-            m_pVatEngine = boost::make_shared<VatCorrectionEngine>(builder, ctx, actuator);
+            // std::make_shared 교체
+            m_pVatEngine = std::make_shared<VatCorrectionEngine>(builder, ctx, actuator);
         }
         catch (const std::exception& ex)
         {
@@ -204,7 +206,7 @@ namespace DVH_VAT
 
         // 추가: runner를 새로 만들고 이 어댑터를 결과 sink로 등록한 다음 엔진에 주입
         {
-            AsyncSequenceRunnerPtr runner = boost::make_shared<AsyncSequenceRunner>();
+            AsyncSequenceRunnerPtr runner = std::make_shared<AsyncSequenceRunner>();
             runner->SetResultSink(this); // 등록: runner가 결과를 어댑터로 보냄
             m_pVatEngine->SetRunner(runner);
         }
@@ -225,7 +227,8 @@ namespace DVH_VAT
 	{
 		VatEnginePtr engineToStop;
 		{
-			boost::lock_guard<boost::mutex> guard(m_seqMutex);
+            // boost::lock_guard -> std::lock_guard 교체
+			std::lock_guard<std::mutex> guard(m_seqMutex);
 			engineToStop = m_pVatEngine;
 			m_pVatEngine.reset();
 			m_pCurrentStrategy.reset();

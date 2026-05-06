@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "SECSIPacket.h"
 #include <cstring> // memcpy
 #include <cstdint>

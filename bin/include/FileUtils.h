@@ -22,7 +22,8 @@ namespace DVH_VAT
 
         static std::string MakeTimeTag()
         {
-            std::time_t t = std::time(NULL);
+            // C++11: NULL -> nullptr
+            std::time_t t = std::time(nullptr);
             struct tm tmBuf;
 
             localtime_s(&tmBuf, &t);
@@ -40,9 +41,8 @@ namespace DVH_VAT
             if (base.empty()) return name;
             if (name.empty()) return base;
         
-            // v100 std::string::back() 지원 여부 확인 필요 (C++11). 
-            // VS2010은 back()을 지원하지만, 안전하게 인덱스 접근 사용
-            char lastChar = base[base.length() - 1];
+            // C++11부터 std::string::back() 지원됨 (C++14 컴파일 가능하므로 안전하게 사용)
+            char lastChar = base.back();
             if (lastChar == sep || lastChar == '/')
             {
                  return base + name;

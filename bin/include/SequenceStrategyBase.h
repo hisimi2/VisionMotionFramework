@@ -2,6 +2,7 @@
 #include "DVH_VAT_API.h"
 #include "IVatSequenceStrategy.h"
 #include "VatSequence.h"
+#include <string>
 
 namespace DVH_VAT
 {
@@ -24,51 +25,53 @@ namespace DVH_VAT
 
         /// <summary>
         /// SequenceStrategyBase의 가상 소멸자입니다.
+        /// C++11/14: 다형성 클래스이므로 부모로부터 상속받은 소멸자에 명시적 override 지정 (추가 최적화를 위해 default 적용 가능)
         /// </summary>
-        virtual ~SequenceStrategyBase();
+        ~SequenceStrategyBase() override = default;
 
         /// <summary>
         /// 실행할 시퀀스의 이름을 반환합니다.
+        /// C++11/14: 부모 인터페이스 구현들에 명확히 override 지정.
         /// </summary>
         /// <returns>시퀀스 이름 문자열</returns>
-        virtual std::string GetSequenceName() const = 0;
+        std::string GetSequenceName() const override = 0;
 
         /// <summary>
         /// 이 전략에서 사용할 SequenceBuilder 객체를 생성하여 반환합니다.
         /// </summary>
         /// <returns>생성된 SequenceBuilder의 스마트 포인터</returns>
-        virtual SequenceBuilderPtr CreateBuilder() = 0;
+        SequenceBuilderPtr CreateBuilder() override = 0;
 
         /// <summary>
         /// 시퀀스 실행에 필요한 파라미터를 Context에 설정(주입)합니다.
         /// </summary>
         /// <param name="context">설정할 VatContext 객체</param>
-        virtual void ConfigureParams(VatContextPtr context) = 0;
+        void ConfigureParams(VatContextPtr context) override = 0;
 
         /// <summary>
         /// 시퀀스에서 사용할 데이터 저장소(Repository)를 생성하여 반환합니다.
         /// </summary>
         /// <returns>생성된 DataRepository의 스마트 포인터</returns>
-        virtual DataRepositoryPtr CreateRepository() = 0;
+        DataRepositoryPtr CreateRepository() override = 0;
 
         /// <summary>
         /// 시퀀스에서 사용할 비전 이벤트 처리기(Vision Processor)를 생성하여 반환합니다.
         /// </summary>
         /// <returns>생성된 VisionEventHandler의 스마트 포인터</returns>
-        virtual VisionEventHandlerPtr CreateVisionProcessor() = 0;
+        VisionEventHandlerPtr CreateVisionProcessor() override = 0;
 
         /// <summary>
         /// 액추에이터(하드웨어 제어 인터페이스)를 설정합니다.
         /// IVatSequenceStrategy 인터페이스 구현입니다.
         /// </summary>
         /// <param name="adapter">설정할 액추에이터 포인터</param>
-        virtual void SetActuator(IVatActuator* adapter) override;
+        void SetActuator(IVatActuator* adapter) override;
 
         /// <summary>
         /// 현재 설정된 액추에이터를 반환합니다.
         /// IVatSequenceStrategy 인터페이스 구현입니다.
         /// </summary>
         /// <returns>액추에이터 포인터</returns>
-        virtual IVatActuator* GetActuator() override;
+        IVatActuator* GetActuator() override;
     };
 }

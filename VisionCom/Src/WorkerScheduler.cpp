@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "WorkerScheduler.h"
 
 // Boost 대신 C++ 표준 라이브러리 사용

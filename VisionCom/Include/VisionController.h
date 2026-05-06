@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "VisionComAPI.h"
 #include "IVisionPacket.h" 

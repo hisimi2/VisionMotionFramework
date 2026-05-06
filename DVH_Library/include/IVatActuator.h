@@ -59,8 +59,9 @@ namespace DVH_VAT
 	class DVH_VAT_API IVatActuator
 	{
 	public:
-		IVatActuator() {}
-		virtual ~IVatActuator() {}
+		// C++11/14: 비어있는 생성자 및 소멸자 구현 {} 대신 = default 사용 (컴파일러 최적화 및 의도 명확화)
+		IVatActuator() = default;
+		virtual ~IVatActuator() = default;
 
 		virtual PitchType GetPitchType() = 0;
 		virtual ActError IsReadyToMove() = 0;

@@ -1,6 +1,5 @@
 ﻿// SqliteDataRepository.cpp
-// VS2010 호환: SaveImage — A 방식 적용 (DB에 tempPath로 INSERT -> rename -> UPDATE)
-// 주의: C++11/14 특성 최소화.
+// C++14 적용 및 Boost (LockGuardType 등) 의존성 제거
 
 #include "StdAfx.h"
 #include "SqliteDataRepository.h"
@@ -14,12 +13,13 @@
 #include <iostream>
 #include <cstdio> // remove, rename
 #include <cstdint>
+#include <mutex>  // std::lock_guard
 
 static uint64_t g_imageCounter = 0;
 
 namespace DVH_VAT {
 
-    // 파일을 문자열로 읽는 헬퍼 (VS2010 호환)
+    // 파일을 문자열로 읽는 헬퍼
     static bool readFileToString(const std::string& path, std::string& out)
     {
         std::ifstream ifs(path.c_str(), std::ios::in | std::ios::binary);
@@ -36,7 +36,7 @@ namespace DVH_VAT {
         std::tm tm_storage;
     #if defined(_MSC_VER) || defined(__MINGW32__)
         // MSVC / MinGW: use localtime_s (thread-safe)
-        std::tm* tm = NULL;
+        std::tm* tm = nullptr;
         if (localtime_s(&tm_storage, &t) == 0) {
             tm = &tm_storage;
         }
@@ -44,7 +44,7 @@ namespace DVH_VAT {
         // POSIX: use localtime_r (thread-safe)
         std::tm* tm = localtime_r(&t, &tm_storage);
     #else
-        // Fallback (may produce deprecation warning on MSVC)
+        // Fallback
         std::tm* tm = std::localtime(&t);
     #endif
         if (tm) {
@@ -63,8 +63,8 @@ namespace DVH_VAT {
     static bool beginTransaction(sqlite3* db)
     {
         if (!db) return false;
-        char* err = NULL;
-        int rc = sqlite3_exec(db, "BEGIN;", NULL, NULL, &err);
+        char* err = nullptr;
+        int rc = sqlite3_exec(db, "BEGIN;", nullptr, nullptr, &err);
         if (rc != SQLITE_OK) {
             if (err) sqlite3_free(err);
             return false;
@@ -75,8 +75,8 @@ namespace DVH_VAT {
     static bool commitTransaction(sqlite3* db)
     {
         if (!db) return false;
-        char* err = NULL;
-        int rc = sqlite3_exec(db, "COMMIT;", NULL, NULL, &err);
+        char* err = nullptr;
+        int rc = sqlite3_exec(db, "COMMIT;", nullptr, nullptr, &err);
         if (rc != SQLITE_OK) {
             if (err) sqlite3_free(err);
             return false;
@@ -87,11 +87,11 @@ namespace DVH_VAT {
     static void rollbackTransaction(sqlite3* db)
     {
         if (!db) return;
-        sqlite3_exec(db, "ROLLBACK;", NULL, NULL, NULL);
+        sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
     }
 
     SqliteDataRepository::SqliteDataRepository(const std::string& dbFilePath, const std::string& imageBasePath)
-        : dbPath_(dbFilePath), imageBasePath_(imageBasePath), db_(NULL), initialized_(false)
+        : dbPath_(dbFilePath), imageBasePath_(imageBasePath), db_(nullptr), initialized_(false)
     {
     }
 
@@ -102,42 +102,41 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::Initialize()
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (initialized_) return StorageSuccess;
 
         int rc = sqlite3_open(dbPath_.c_str(), &db_);
         if (rc != SQLITE_OK) {
             std::cerr << "[SqliteDataRepository] Failed to open DB '" << dbPath_ << "': "
                 << (db_ ? sqlite3_errmsg(db_) : "unknown") << std::endl;
-            if (db_) { sqlite3_close(db_); db_ = NULL; }
+            if (db_) { sqlite3_close(db_); db_ = nullptr; }
             return StorageWriteFailed;
         }
 
         {
-            char* err = NULL;
-            rc = sqlite3_exec(db_, "PRAGMA foreign_keys = ON;", NULL, NULL, &err);
+            char* err = nullptr;
+            rc = sqlite3_exec(db_, "PRAGMA foreign_keys = ON;", nullptr, nullptr, &err);
             if (rc != SQLITE_OK) {
                 std::cerr << "[SqliteDataRepository] PRAGMA foreign_keys failed: " << (err ? err : "unknown") << std::endl;
                 if (err) sqlite3_free(err);
-                sqlite3_close(db_); db_ = NULL;
+                sqlite3_close(db_); db_ = nullptr;
                 return StorageWriteFailed;
             }
-            rc = sqlite3_exec(db_, "PRAGMA journal_mode = WAL;", NULL, NULL, &err);
+            rc = sqlite3_exec(db_, "PRAGMA journal_mode = WAL;", nullptr, nullptr, &err);
             if (rc != SQLITE_OK) {
                 if (err) sqlite3_free(err);
-                // WAL mode 실패 시 로그만 남기고 계속 진행 (필수는 아님)
                 std::cerr << "[SqliteDataRepository] PRAGMA journal_mode=WAL failed or not supported." << std::endl;
             }
             else {
                 if (err) sqlite3_free(err);
             }
-            rc = sqlite3_exec(db_, "PRAGMA synchronous = NORMAL;", NULL, NULL, &err);
+            rc = sqlite3_exec(db_, "PRAGMA synchronous = NORMAL;", nullptr, nullptr, &err);
             if (err) sqlite3_free(err);
         }
 
         // 마이그레이션 SQL 로드
         std::string migrationPath;
-        size_t pos = dbPath_.find_last_of("/\\");
+        auto pos = dbPath_.find_last_of("/\\");
         if (pos != std::string::npos) {
             migrationPath = dbPath_.substr(0, pos) + "/migration_v1.sql";
         }
@@ -154,30 +153,30 @@ namespace DVH_VAT {
         }
 
         if (loaded && !migrationSql.empty()) {
-            char* err = NULL;
-            rc = sqlite3_exec(db_, "BEGIN TRANSACTION;", NULL, NULL, &err);
+            char* err = nullptr;
+            rc = sqlite3_exec(db_, "BEGIN TRANSACTION;", nullptr, nullptr, &err);
             if (rc != SQLITE_OK) {
                 std::cerr << "[SqliteDataRepository] Failed to BEGIN transaction for migration: " << (err ? err : "unknown") << std::endl;
                 if (err) sqlite3_free(err);
-                sqlite3_close(db_); db_ = NULL;
+                sqlite3_close(db_); db_ = nullptr;
                 return StorageWriteFailed;
             }
 
-            rc = sqlite3_exec(db_, migrationSql.c_str(), NULL, NULL, &err);
+            rc = sqlite3_exec(db_, migrationSql.c_str(), nullptr, nullptr, &err);
             if (rc != SQLITE_OK) {
                 std::cerr << "[SqliteDataRepository] Failed to execute migration SQL: " << (err ? err : "unknown") << std::endl;
                 if (err) sqlite3_free(err);
-                sqlite3_exec(db_, "ROLLBACK;", NULL, NULL, NULL);
-                sqlite3_close(db_); db_ = NULL;
+                sqlite3_exec(db_, "ROLLBACK;", nullptr, nullptr, nullptr);
+                sqlite3_close(db_); db_ = nullptr;
                 return StorageWriteFailed;
             }
 
-            rc = sqlite3_exec(db_, "COMMIT;", NULL, NULL, &err);
+            rc = sqlite3_exec(db_, "COMMIT;", nullptr, nullptr, &err);
             if (rc != SQLITE_OK) {
                 std::cerr << "[SqliteDataRepository] Failed to COMMIT migration transaction: " << (err ? err : "unknown") << std::endl;
                 if (err) sqlite3_free(err);
-                sqlite3_exec(db_, "ROLLBACK;", NULL, NULL, NULL);               
-                sqlite3_close(db_); db_ = NULL;
+                sqlite3_exec(db_, "ROLLBACK;", nullptr, nullptr, nullptr);               
+                sqlite3_close(db_); db_ = nullptr;
                 return StorageWriteFailed;
             }
 
@@ -194,10 +193,10 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::Shutdown()
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (db_) {
             sqlite3_close(db_);
-            db_ = NULL;
+            db_ = nullptr;
         }
         initialized_ = false;
         return StorageSuccess;
@@ -206,8 +205,8 @@ namespace DVH_VAT {
     StorageError SqliteDataRepository::executeSimple(const char* sql)
     {
         if (!initialized_) return StorageWriteFailed;
-        char* err = NULL;
-        int rc = sqlite3_exec(db_, sql, NULL, NULL, &err);
+        char* err = nullptr;
+        int rc = sqlite3_exec(db_, sql, nullptr, nullptr, &err);
         if (rc != SQLITE_OK) {
             if (err) {
                 std::cerr << "[SqliteDataRepository] executeSimple error: " << err << std::endl;
@@ -220,12 +219,12 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::SaveParam(const std::string& recipe, const std::string& name, const std::string& value)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageWriteFailed;
 
         const char* sql = "INSERT OR REPLACE INTO params(recipe,name,value) VALUES(?,?,?);";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             return StorageWriteFailed;
@@ -243,12 +242,12 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::LoadParam(const std::string& recipe, const std::string& name, std::string& outValue)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageFileNotFound;
 
         const char* sql = "SELECT value FROM params WHERE recipe=? AND name=? LIMIT 1;";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             return StorageWriteFailed;
@@ -270,17 +269,16 @@ namespace DVH_VAT {
 
     std::string SqliteDataRepository::makeImageFilename(const std::string& tag)
     {
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         uint64_t cnt = ++g_imageCounter;
         std::ostringstream oss;
         oss << tag << "_" << t << "_" << cnt << ".bin";
-        // FileUtils::joinPath -> JoinPath
         return FileUtils::JoinPath(imageBasePath_, oss.str());
     }
 
     StorageError SqliteDataRepository::SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageWriteFailed;
 
         // final path and temp path
@@ -295,22 +293,20 @@ namespace DVH_VAT {
                 return StorageWriteFailed;
             }
             if (!imageData.empty()) {
-                // VS2010 호환: vector::data()가 불확실한 환경을 고려하여 &imageData[0] 사용
-                ofs.write(reinterpret_cast<const char*>(&(imageData[0])), static_cast<std::streamsize>(imageData.size()));
+                ofs.write(reinterpret_cast<const char*>(imageData.data()), static_cast<std::streamsize>(imageData.size()));
             }
             ofs.close();
         }
 
         // A 방식: DB에 tempPath로 INSERT -> commit -> rename(temp->final) -> UPDATE path
-        // 1) INSERT tempPath
         if (!beginTransaction(db_)) {
             std::remove(tempPath.c_str());
             return StorageWriteFailed;
         }
 
         const char* insertSql = "INSERT INTO images(tag, path, created_at) VALUES(?,?,?);";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, insertSql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, insertSql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             rollbackTransaction(db_);
@@ -320,7 +316,7 @@ namespace DVH_VAT {
 
         sqlite3_bind_text(stmt, 1, contextTag.c_str(), -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(stmt, 2, tempPath.c_str(), -1, SQLITE_TRANSIENT);
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         std::string ts = formatIsoTime(t);
         sqlite3_bind_text(stmt, 3, ts.c_str(), -1, SQLITE_TRANSIENT);
 
@@ -344,14 +340,13 @@ namespace DVH_VAT {
         // 2) rename temp -> final
         if (std::rename(tempPath.c_str(), finalPath.c_str()) != 0) {
             std::cerr << "[SqliteDataRepository] Failed to rename temp image to final path: " << tempPath << " -> " << finalPath << std::endl;
-            // rename 실패: 시도해서 DB 레코드 삭제(트랜잭션) 및 temp 삭제
             std::remove(tempPath.c_str());
             if (!beginTransaction(db_)) {
                 return StorageWriteFailed;
             }
             const char* delSql = "DELETE FROM images WHERE id = ?;";
-            sqlite3_stmt* delStmt = NULL;
-            rc = sqlite3_prepare_v2(db_, delSql, -1, &delStmt, NULL);
+            sqlite3_stmt* delStmt = nullptr;
+            rc = sqlite3_prepare_v2(db_, delSql, -1, &delStmt, nullptr);
             if (rc == SQLITE_OK) {
                 sqlite3_bind_int64(delStmt, 1, rowid);
                 rc = sqlite3_step(delStmt);
@@ -361,13 +356,11 @@ namespace DVH_VAT {
                 }
                 else {
                     rollbackTransaction(db_);
-                    // DB 삭제 실패: 로그만 남기고 에러 반환
                     std::cerr << "[SqliteDataRepository] Failed to delete image record for rowid=" << rowid << std::endl;
                     return StorageWriteFailed;
                 }
             }
             else {
-                // prepare 실패
                 rollbackTransaction(db_);
                 return StorageWriteFailed;
             }
@@ -376,14 +369,13 @@ namespace DVH_VAT {
 
         // 3) UPDATE images.path -> finalPath WHERE id = rowid
         if (!beginTransaction(db_)) {
-            // try to clean up file if we cannot update DB
             std::remove(finalPath.c_str());
             return StorageWriteFailed;
         }
 
         const char* updateSql = "UPDATE images SET path = ? WHERE id = ?;";
-        sqlite3_stmt* updStmt = NULL;
-        rc = sqlite3_prepare_v2(db_, updateSql, -1, &updStmt, NULL);
+        sqlite3_stmt* updStmt = nullptr;
+        rc = sqlite3_prepare_v2(db_, updateSql, -1, &updStmt, nullptr);
         if (rc != SQLITE_OK) {
             if (updStmt) sqlite3_finalize(updStmt);
             rollbackTransaction(db_);
@@ -412,25 +404,23 @@ namespace DVH_VAT {
         return StorageSuccess;
     }
 
-    // 새로 추가된 저장소 API 구현들
-
     StorageError SqliteDataRepository::SaveSequenceRun(const std::string& sequenceName, const std::string& summary)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageWriteFailed;
 
         if (!beginTransaction(db_)) return StorageWriteFailed;
 
         const char* sql = "INSERT INTO sequence_runs(name, result_summary, created_at, status) VALUES(?,?,?,?);";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             rollbackTransaction(db_);
             return StorageWriteFailed;
         }
 
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         std::string ts = formatIsoTime(t);
 
         sqlite3_bind_text(stmt, 1, sequenceName.c_str(), -1, SQLITE_TRANSIENT);
@@ -455,22 +445,22 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         outRunId = -1;
         if (!initialized_) return StorageWriteFailed;
 
         if (!beginTransaction(db_)) return StorageWriteFailed;
 
         const char* sql = "INSERT INTO sequence_runs(type, params_json, status, created_at) VALUES(?,?,?,?);";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             rollbackTransaction(db_);
             return StorageWriteFailed;
         }
 
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         std::string ts = formatIsoTime(t);
 
         sqlite3_bind_text(stmt, 1, sequenceName.c_str(), -1, SQLITE_TRANSIENT);
@@ -497,20 +487,20 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::SaveZFocusPoint(int runId, double zPosition, double score, int sampleCount, const std::string& extraJson)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageWriteFailed;
 
         if (!beginTransaction(db_)) return StorageWriteFailed;
 
         const char* sql = "INSERT INTO z_focus_points(run_id, z_position, score, sample_count, extra_json, created_at) VALUES(?,?,?,?,?,?);";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             return StorageWriteFailed;
         }
 
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         std::string ts = formatIsoTime(t);
 
         sqlite3_bind_int(stmt, 1, runId);
@@ -541,7 +531,7 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::SaveZFocusResult(int camIndex, int locationId, int pkgId, double newFocus)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageWriteFailed;
 
         if (!beginTransaction(db_))
@@ -554,9 +544,9 @@ namespace DVH_VAT {
 			"ON CONFLICT(cam_index, location_id, pkg_id) "
 			"DO UPDATE SET focus = excluded.focus;";
 
-        sqlite3_stmt* stmt = NULL;
+        sqlite3_stmt* stmt = nullptr;
 
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 		{
 			if (stmt) sqlite3_finalize(stmt);
@@ -597,7 +587,7 @@ namespace DVH_VAT {
         double wideX,
         double wideY)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageWriteFailed;
 
 		if (!beginTransaction(db_))
@@ -614,9 +604,9 @@ namespace DVH_VAT {
             "W_offset_x  = excluded.W_offset_x, "
             "W_offset_y = excluded.W_offset_y;";
 
-		sqlite3_stmt* stmt = NULL;
+		sqlite3_stmt* stmt = nullptr;
 
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 		{
 			if (stmt) sqlite3_finalize(stmt);
@@ -657,7 +647,7 @@ namespace DVH_VAT {
 		double posX,
 		double posY)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageWriteFailed;
 		
 		if (!beginTransaction(db_))
@@ -672,9 +662,9 @@ namespace DVH_VAT {
 			"pos_x = excluded.pos_x, "
 			"pos_y = excluded.pos_y;";
 
-		sqlite3_stmt* stmt = NULL;
+		sqlite3_stmt* stmt = nullptr;
 
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 		{
 			if (stmt) sqlite3_finalize(stmt);
@@ -717,7 +707,7 @@ namespace DVH_VAT {
 		double wideX,
 		double wideY)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageWriteFailed;
 		
 		if (!beginTransaction(db_))
@@ -735,9 +725,9 @@ namespace DVH_VAT {
 			"W_offset_x = excluded.W_offset_x, "
 			"W_offset_y = excluded.W_offset_y;";
 
-		sqlite3_stmt* stmt = NULL;
+		sqlite3_stmt* stmt = nullptr;
 
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 		{
 			if (stmt) sqlite3_finalize(stmt);
@@ -772,7 +762,6 @@ namespace DVH_VAT {
 		return StorageSuccess;
 	}
 
-
 	StorageError SqliteDataRepository::SaveTeachingResult(
 		int handId,
 		int locationId,
@@ -781,22 +770,21 @@ namespace DVH_VAT {
 		double posY,
 		double posZ)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageWriteFailed;
 		
 		if (!beginTransaction(db_))
 			return StorageWriteFailed;
 
-		sqlite3_stmt* stmt = NULL;
+		sqlite3_stmt* stmt = nullptr;
 		int rc;
 
-		// UpperCamTeachingInspection INSERT
 		const char* insertInspectionSql =
 			"INSERT INTO UpperCamTeachingInspection "
 			"(hand_id, location_id, pkg_id, insp_date) "
 			"VALUES (?, ?, ?, datetime('now'));";
 
-		rc = sqlite3_prepare_v2(db_, insertInspectionSql, -1, &stmt, NULL);
+		rc = sqlite3_prepare_v2(db_, insertInspectionSql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 		{
 			rollbackTransaction(db_);
@@ -816,16 +804,14 @@ namespace DVH_VAT {
 			return StorageWriteFailed;
 		}
 
-		// 마지막 INSERT id 획득
 		sqlite3_int64 inspId = sqlite3_last_insert_rowid(db_);
 
-		// TeachingPos INSERT
 		const char* insertPosSql =
 			"INSERT INTO TeachingPos "
 			"(insp_id, pos_x, pos_y, pos_z) "
 			"VALUES (?, ?, ?, ?);";
 
-		rc = sqlite3_prepare_v2(db_, insertPosSql, -1, &stmt, NULL);
+		rc = sqlite3_prepare_v2(db_, insertPosSql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 		{
 			rollbackTransaction(db_);
@@ -864,7 +850,7 @@ namespace DVH_VAT {
 		double& posY,
 		double& focus)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageFileNotFound;
 		
 		const char* sql =
@@ -872,8 +858,8 @@ namespace DVH_VAT {
 			"FROM InspInitPos "
 			"WHERE cam_index = ? AND location_id = ? AND pkg_id = ?;";
 
-		sqlite3_stmt* stmt = NULL;
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		sqlite3_stmt* stmt = nullptr;
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 			return StorageFileNotFound;
 
@@ -903,7 +889,7 @@ namespace DVH_VAT {
         double& wideX,
         double& wideY)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageFileNotFound;
 		
 		const char* sql =
@@ -911,8 +897,8 @@ namespace DVH_VAT {
 			"FROM PickerCamDistance "
 			"WHERE cam_index = ? AND pkg_id = ?;";
 
-		sqlite3_stmt* stmt = NULL;
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		sqlite3_stmt* stmt = nullptr;
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 			return StorageFileNotFound;
 
@@ -944,7 +930,7 @@ namespace DVH_VAT {
 		double& wideX,
 		double& wideY)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageFileNotFound;
 		
 		const char* sql =
@@ -952,8 +938,8 @@ namespace DVH_VAT {
 			"FROM HandPitch "
 			"WHERE hand_id = ? AND pkg_id = ? AND row = ? AND col = ?;";
 
-		sqlite3_stmt* stmt = NULL;
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		sqlite3_stmt* stmt = nullptr;
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 			return StorageFileNotFound;
 
@@ -981,12 +967,12 @@ namespace DVH_VAT {
 		int handId,
 		int locationId,
 		int pkgId,
-		int dateoffset,   // 0=최신, 1=그 다음...
+		int dateoffset,
 		double& posX,
 		double& posY,
 		double& posZ)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageFileNotFound;
 		
 		const char* sql =
@@ -997,8 +983,8 @@ namespace DVH_VAT {
 			"ORDER BY u.insp_date DESC "
 			"LIMIT 1 OFFSET ?;";
 
-		sqlite3_stmt* stmt = NULL;
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		sqlite3_stmt* stmt = nullptr;
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 			return StorageFileNotFound;
 
@@ -1021,12 +1007,11 @@ namespace DVH_VAT {
 		return StorageNotFound;
 	}
 
-
 	StorageError SqliteDataRepository::LoadHandCamGroup(
 		int handId,
 		std::vector<int>& camIds)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageFileNotFound;
 		
 		camIds.clear();
@@ -1036,9 +1021,9 @@ namespace DVH_VAT {
 			"FROM Hand_Cam_Group "
 			"WHERE hand_id = ?;";
 
-		sqlite3_stmt* stmt = NULL;
+		sqlite3_stmt* stmt = nullptr;
 
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 			return StorageFileNotFound;
 
@@ -1062,7 +1047,7 @@ namespace DVH_VAT {
         int camIndex,
         std::vector<int>& locateIds)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageFileNotFound;
 
         locateIds.clear();
@@ -1072,9 +1057,9 @@ namespace DVH_VAT {
             "FROM Cam_Location_Group "
             "WHERE cam_index_id = ?;";
 
-        sqlite3_stmt* stmt = NULL;
+        sqlite3_stmt* stmt = nullptr;
 
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK)
             return StorageFileNotFound;
 
@@ -1094,12 +1079,11 @@ namespace DVH_VAT {
         return StorageSuccess;
     }
 
-
 	StorageError SqliteDataRepository::LoadLocationIdByName(
 		const std::string& locateName,
 		int& locationId)
 	{
-		LockGuardType lg(mutex_);
+		std::lock_guard<std::mutex> lg(mutex_);
 		if (!initialized_) return StorageFileNotFound;
 		
 		const char* sql =
@@ -1107,9 +1091,9 @@ namespace DVH_VAT {
 			"FROM Location "
 			"WHERE locate = ?;";
 
-		sqlite3_stmt* stmt = NULL;
+		sqlite3_stmt* stmt = nullptr;
 
-		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+		int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
 		if (rc != SQLITE_OK)
 			return StorageFileNotFound;
 
@@ -1129,21 +1113,21 @@ namespace DVH_VAT {
 
     StorageError SqliteDataRepository::UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson)
     {
-        LockGuardType lg(mutex_);
+        std::lock_guard<std::mutex> lg(mutex_);
         if (!initialized_) return StorageWriteFailed;
 
         if (!beginTransaction(db_)) return StorageWriteFailed;
 
         const char* sql = "UPDATE sequence_runs SET status = ?, result_summary = ?, finished_at = ? WHERE id = ?;";
-        sqlite3_stmt* stmt = NULL;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, NULL);
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             if (stmt) sqlite3_finalize(stmt);
             rollbackTransaction(db_);
             return StorageWriteFailed;
         }
 
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         std::string ts = formatIsoTime(t);
 
         sqlite3_bind_text(stmt, 1, status.c_str(), -1, SQLITE_TRANSIENT);
@@ -1165,8 +1149,5 @@ namespace DVH_VAT {
 
         return StorageSuccess;
     }
-
-
-	
 
 } // namespace DVH_VAT

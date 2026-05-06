@@ -3,16 +3,11 @@
 #include <string>
 #include <fstream>
 #include <cstdarg>
-
-// VS2010 호환: <mutex> 없음 -> Win32 CriticalSection 사용
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
+#include <mutex> // Win32 CRITICAL_SECTION 대신 C++11 표준 라이브러리 사용
 
 namespace DVH_VAT
 {
-    // VS2010 호환: enum class 미지원, 매크로 충돌 방지를 위한 접두어 사용
+    // 기존 시스템과의 호환성을 위해 전통적 enum 유지
     enum LogLevel
     {
         LOG_DEBUG,
@@ -38,20 +33,21 @@ namespace DVH_VAT
         // 포맷 로그 (printf 스타일)
         void LogF(LogLevel level, const char* format, ...);
 
+        // C++11/14: 복사 생성자 및 대입 연산자 생성을 구식 선언 방식 대신 명시적 = delete로 차단
+        Logger(const Logger&) = delete;
+        Logger& operator=(const Logger&) = delete;
+
     private:
         Logger();
         ~Logger();
-
-        // VS2010 호환: = delete 미지원 -> private 선언으로 복사 방지
-        Logger(const Logger&);
-        Logger& operator=(const Logger&);
 
         const char* GetLevelString(LogLevel level);
         std::string GetCurrentTime();
         void WriteInternal(LogLevel level, const std::string& message);
 
     private:
-        CRITICAL_SECTION cs_;
+        // CRITICAL_SECTION 대체
+        std::mutex mutex_;
 
         std::ofstream ofs_;
         std::string filePath_;
