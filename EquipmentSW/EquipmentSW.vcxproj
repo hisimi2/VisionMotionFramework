@@ -21,14 +21,13 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FAA6667D-1022-42E8-954D-609EC64966E4}</ProjectGuid>
     <RootNamespace>EquipmentSW</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
@@ -94,11 +93,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;BOOST_ALL_DYN_LINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\ThirdParty\boost_1.65_1\;$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionCom\include;$(SolutionDir)DVH_Library\include;$(ProjectDir)DVH_VAT\Mock;$(ProjectDir)DVH_VAT\Load1\Tasks;$(ProjectDir)DVH_VAT\Load1\Strategies;$(ProjectDir)DVH_VAT\Load1\Sequences;$(ProjectDir)DVH_VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionCom\include;$(SolutionDir)DVH_Library\include;$(ProjectDir)DVH_VAT\Mock;$(ProjectDir)DVH_VAT\Load1\Tasks;$(ProjectDir)DVH_VAT\Load1\Strategies;$(ProjectDir)DVH_VAT\Load1\Sequences;$(ProjectDir)DVH_VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\boost_1.65_1\lib32-msvc-10.0;$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DVH_VAT.lib;VisionCom.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>

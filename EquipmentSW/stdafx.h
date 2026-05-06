@@ -1,4 +1,4 @@
-﻿
+
 // stdafx.h : 자주 사용하지만 자주 변경되지는 않는
 // 표준 시스템 포함 파일 및 프로젝트 관련 포함 파일이 
 // 들어 있는 포함 파일입니다.
@@ -31,8 +31,7 @@
 
 #pragma warning(push)
 #pragma warning(disable:4005) // macro redefinition 경고 무시 (INT16_MAX 중복 정의 방지)
-#include <windows.h>   // windows 포함 시 intsafe.h 등 내부 포함될 수 있음
-#include <intsafe.h>   // 필요하면 명시적으로 포함
+
 #include <stdint.h>    // stdint가 필요하면 포함
 #pragma warning(pop)
 
