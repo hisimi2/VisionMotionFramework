@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "SECSIPacket.h"
 #include <cstring> // memcpy
 #include <cstdint>
@@ -10,13 +10,9 @@ namespace VisionCom
         // m_header는 생성자에서 0으로 초기화됨
     }
 
-    SECSPacket::~SECSPacket() 
-    {
-    }
-
     ByteArray SECSPacket::ToByteArray() const 
     {
-        // 전체 패킷 크기 계산 (int로 관리되는 헤더 필드와 호환되도록 int 사용)
+        // 전체 패킷 크기 계산
         int totalLen = static_cast<int>(sizeof(SECSPacketHeader) + m_body.size());
 
         // 헤더의 nLength 필드 업데이트 (로컬 복사본 사용)
@@ -29,9 +25,9 @@ namespace VisionCom
         // 헤더 공간 확보
         packet.resize(sizeof(SECSPacketHeader));
 
-        // 헤더 복사: VS2010 호환성 위해 data() 대신 &packet[0] 사용
+        // C++14: vector의 포인터 접근은 &packet[0] 대신 data() 사용
         if (!packet.empty()) {
-            std::memcpy(&packet[0], &headerCopy, sizeof(SECSPacketHeader));
+            std::memcpy(packet.data(), &headerCopy, sizeof(SECSPacketHeader));
         }
 
         // 바디 복사
@@ -50,12 +46,12 @@ namespace VisionCom
         // 헤더 파싱
         std::memcpy(&m_header, raw.data(), sizeof(SECSPacketHeader));
 
-        // 길이 검증 (선택 사항)
+        // 길이 검증
         if (static_cast<int>(raw.size()) < m_header.nLength)
             return false;
 
-        // 바디 파싱
-        size_t bodySize = raw.size() - sizeof(SECSPacketHeader);
+        // 바디 파싱 (C++14: 타입 추론 auto 활용)
+        const auto bodySize = raw.size() - sizeof(SECSPacketHeader);
         if (bodySize > 0) {
             m_body.assign(raw.begin() + sizeof(SECSPacketHeader), raw.end());
         } else {

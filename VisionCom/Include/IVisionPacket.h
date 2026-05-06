@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -19,12 +19,14 @@ namespace VisionCom
 		VisionConnectionFailed = 4
 	};
 
-	typedef std::vector<uint8_t> ByteArray;
+	// C++11/14: typedef 대신 가독성이 좋은 using 키워드 사용 권장
+	using ByteArray = std::vector<uint8_t>;
 
 	// IVisionPacket: 프로토콜별 패킷 데이터 구조 추상화
 	class IVisionPacket {
 	public:
-		virtual ~IVisionPacket() {}
+		// C++11/14: 비어있는 다형성 가상 소멸자는 = default 로 구현을 명시
+		virtual ~IVisionPacket() = default;
 
 		// 직렬화 인터페이스
 		virtual ByteArray ToByteArray() const = 0;

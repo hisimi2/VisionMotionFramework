@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IFramer.h"
 #include <vector>
 
@@ -15,14 +15,14 @@ namespace VisionCom
 		explicit FixedLengthFramer(size_t packetSize = 664)
 			: m_packetSize(packetSize) {}
 
-		virtual ~FixedLengthFramer() {}
+		// C++14: 다형성 소멸자는 `= default`로 선언하는 것을 권장
+		~FixedLengthFramer() override = default;
 
 		void FeedBytes(const ByteVector& bytes) override {
 			m_buffer.insert(m_buffer.end(), bytes.begin(), bytes.end());
 		}
 
 		bool NextFrame(ByteVector& frame) override {
-
 			if (m_buffer.size() < m_packetSize) return false;
 
 			frame.assign(m_buffer.begin(), m_buffer.begin() + m_packetSize);

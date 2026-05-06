@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "VisionLogger.h"
 
 #include <iostream>
@@ -39,7 +39,8 @@ namespace VisionCom
 
     VisionLogger::~VisionLogger()
     {
-        boost::unique_lock<boost::mutex> lk(m_mutex);
+        // boost::unique_lock -> std::unique_lock 또는 std::lock_guard
+        std::lock_guard<std::mutex> lk(m_mutex);
         if (m_ofs.is_open()) {
             m_ofs.flush();
             m_ofs.close();
@@ -48,7 +49,7 @@ namespace VisionCom
 
     void VisionLogger::SetLogFile(const std::string& path)
     {
-        boost::unique_lock<boost::mutex> lk(m_mutex);
+        std::lock_guard<std::mutex> lk(m_mutex);
         if (m_ofs.is_open()) {
             m_ofs.flush();
             m_ofs.close();
@@ -60,7 +61,7 @@ namespace VisionCom
     void VisionLogger::WriteLine(const std::string& msg)
     {
         // assume caller holds no lock; but we take lock here for thread-safety
-        boost::unique_lock<boost::mutex> lk(m_mutex);
+        std::lock_guard<std::mutex> lk(m_mutex);
         const std::string line = CurrentTimeString() + " " + msg + "\n";
         if (m_useFile && m_ofs.is_open()) {
             m_ofs << line;

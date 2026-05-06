@@ -1,14 +1,15 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "VisionController.h"
 #include "VisionMsgDispatcher.h"
 #include "ByteOrder.h"   
 #include <queue>
-// Boost 라이브러리
-#include <boost/thread.hpp>
-#include <boost/atomic.hpp>
-#include <boost/bind.hpp>
 
+// Boost 대신 C++ 표준 라이브러리 사용
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include <functional> // std::bind 용 (혹은 람다)
 
 #include "IFramer.h"
 #include "FixedLengthFramer.h"
@@ -21,23 +22,26 @@ namespace VisionCom
 		std::shared_ptr<IFramer> m_framer;
 		std::shared_ptr<IScheduler> m_scheduler;
 		std::shared_ptr<ILogger>    m_logger;
-		boost::atomic<bool>         m_running;
-		boost::atomic<bool>         m_PacketReceived;
-		boost::atomic<bool>         m_bStatusConnect;
-		VisionMsgDispatcher*        m_dispatcher;
+		
+        // Boost -> 표준 라이브러리
+		std::atomic<bool>         m_running;
+		std::atomic<bool>         m_PacketReceived;
+		std::atomic<bool>         m_bStatusConnect;
+		VisionMsgDispatcher*      m_dispatcher;
 
-		std::shared_ptr<boost::thread> m_recvThread;
+		std::shared_ptr<std::thread> m_recvThread;
 
-		// 추가: 수신 큐
+		// 수신 큐
 		std::queue<ByteVector> m_packetQueue;
-		boost::mutex m_queueMutex;
+		std::mutex m_queueMutex;
 
 		Impl()
 			: m_dispatcher(new VisionMsgDispatcher())
 			, m_running(false)
 			, m_PacketReceived(false)
+            , m_bStatusConnect(false)
 		{
-
+            // C++14: auto 와 std::make_shared 적극 사용
 			m_transport = std::make_shared<VisionTcpClient>();
 
 			// 1. 먼저 자식 타입으로 생성
@@ -56,11 +60,10 @@ namespace VisionCom
 			if (m_dispatcher)
 			{
 				delete m_dispatcher;
-				m_dispatcher = NULL;
+				m_dispatcher = nullptr; // C++11 이후 nullptr 사용
 			}
 		}
 
-		// 
 		void HandleTransportData(const ByteArray& raw)
 		{
 			if (!m_framer) return;
@@ -70,7 +73,8 @@ namespace VisionCom
 				ByteVector frame;
 
 				while (m_framer->NextFrame(frame)) {
-					boost::lock_guard<boost::mutex> lock(m_queueMutex);
+                    // boost::lock_guard -> std::lock_guard
+					std::lock_guard<std::mutex> lock(m_queueMutex);
 					m_packetQueue.push(frame); // 안전하게 큐에 저장
 				}
 			}
@@ -84,7 +88,8 @@ namespace VisionCom
 		{
 			std::queue<ByteVector> localQueue;
 			{
-				boost::lock_guard<boost::mutex> lock(m_queueMutex);
+                // boost::lock_guard -> std::lock_guard
+				std::lock_guard<std::mutex> lock(m_queueMutex);
 				std::swap(localQueue, m_packetQueue);
 			}
 
@@ -121,16 +126,13 @@ namespace VisionCom
 		}
 	};
 
-    VisionController::VisionController() : m_pImpl(new Impl()) {}
+    // C++14: std::make_unique 사용 권장 (하지만 기존 클래스 구조 유지를 위해 new 사용)
+    VisionController::VisionController() : m_pImpl(std::make_unique<Impl>()) {}
 
     VisionController::~VisionController() 
     {
         StopReceiving();
-        if(m_pImpl) 
-        {
-            delete m_pImpl;
-            m_pImpl = NULL;
-        }
+        // std::unique_ptr이므로 delete 구문 생략 가능
     }
 
     void VisionController::SetTransport(std::shared_ptr<ITransport> transport)
@@ -138,7 +140,6 @@ namespace VisionCom
         if(m_pImpl) m_pImpl->m_transport = transport;
     }
     
-
     void VisionController::SetLogger(std::shared_ptr<ILogger> logger)
     {
         if(m_pImpl) m_pImpl->m_logger = logger;
@@ -222,7 +223,7 @@ namespace VisionCom
 	{
 		if (!m_pImpl) return;
 
-		Impl* pimpl = m_pImpl;
+		Impl* pimpl = m_pImpl.get(); // [수정] .get() 호출로 로 포인터 획득
 
 		if (pimpl->m_running) return;
 
@@ -231,7 +232,9 @@ namespace VisionCom
 		if (pimpl->m_transport)
 		{
 			pimpl->m_transport->SetReceiveCallback(
-				boost::bind(&VisionController::Impl::HandleTransportData, pimpl, _1)
+                [pimpl](const ByteArray& data) {
+                    pimpl->HandleTransportData(data);
+                }
 			);
 
 			pimpl->m_transport->StartRecvThread();
@@ -242,22 +245,19 @@ namespace VisionCom
     {
         if(!m_pImpl) return;
 
-        Impl* pimpl = m_pImpl;
+        Impl* pimpl = m_pImpl.get();  // [수정] .get() 호출
         pimpl->m_running = false;
 
-        // transport 콜백 해제 (빈 함수로 설정)
         if (pimpl->m_transport)
         {
             pimpl->m_transport->SetReceiveCallback(TransportReceiveCallback());
         }
     }
 
-
     VisionMsgDispatcher& VisionController::GetDispatcher()
     {
         return *(m_pImpl->m_dispatcher);
     }
-
 
 	void VisionController::PacketThread()
 	{

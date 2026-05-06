@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VisionComAPI.h"
 #include "IVisionPacket.h" 
@@ -43,9 +43,9 @@ namespace VisionCom
 
     private:
         // [Pimpl 관용구]
-        // 모든 멤버 변수(특히 Boost 관련)를 Impl 구조체로 이동시켜 헤더 의존성 제거
+        // C++11/14: 로우 포인터 대신 std::unique_ptr 사용 권장
         struct Impl;
-        Impl* m_pImpl;
+        std::unique_ptr<Impl> m_pImpl;
     };
 
 } // namespace VisionCom

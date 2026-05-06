@@ -1,11 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "ILogger.h"
 
 #include <string>
 #include <fstream>
-
-#include <boost/thread/mutex.hpp>
+#include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
 namespace VisionCom
 {
@@ -14,11 +13,13 @@ namespace VisionCom
     public:
         VisionLogger();
         explicit VisionLogger(const std::string& logFilePath);
-        virtual ~VisionLogger();
+        
+        // C++11/14: 다형성 클래스이므로 명시적 override 적용 권장
+        ~VisionLogger() override;
 
-        // ILogger
-        virtual void Log(const std::string& message) override;
-        virtual void LogDebug(const std::string& message) override;
+        // ILogger 구현
+        void Log(const std::string& message) override;
+        void LogDebug(const std::string& message) override;
 
         // 기존 코드 호환성: SaveLog 멤버 추가
         void SaveLog(const std::string& message);
@@ -38,7 +39,8 @@ namespace VisionCom
     private:
         void WriteLine(const std::string& msg);
 
-        boost::mutex m_mutex;
+        // boost::mutex -> std::mutex 교체
+        std::mutex m_mutex;
         std::ofstream m_ofs;
         bool m_useFile;
     };

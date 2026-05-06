@@ -1,12 +1,13 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "VisionTcpClient.h"
 #include "IFramer.h"
 
-#include <boost/thread.hpp>
-#include <boost/atomic.hpp>
-#include <boost/chrono.hpp>
-#include <boost/thread/mutex.hpp>
+// Boost 대신 C++ 표준 라이브러리 사용
+#include <thread>
+#include <atomic>
+#include <chrono>
+#include <mutex>
 #include <cstdlib> 
 
 #include <winsock2.h>
@@ -26,7 +27,6 @@ namespace VisionCom
         ::WSACleanup();
     }
 
-
     static bool InitWinsock()
     {
         WSADATA wsa;
@@ -38,14 +38,11 @@ namespace VisionCom
         return true;
     }
 
-
     static bool EnsureWinsockInitialized()
     {
         static bool s_inited = InitWinsock();
         return s_inited;
     }
-
-
 
 	struct VisionTcpClient::Impl
 	{
@@ -54,20 +51,20 @@ namespace VisionCom
 		SOCKET m_sock;
 		SOCKET m_listenSock;
 
-		boost::atomic<bool> m_running;
-		boost::atomic<bool> m_connected;
+		std::atomic<bool> m_running;
+		std::atomic<bool> m_connected;
 
 		VisionCom::RecvCallback m_recvCb;
-		boost::mutex m_cbMutex;      // 콜백 함수 보호
-		boost::mutex m_bufferMutex;  // m_partialBuffer 및 Framer 데이터 보호
+		std::mutex m_cbMutex;      // 콜백 함수 보호
+		std::mutex m_bufferMutex;  // m_partialBuffer 및 Framer 데이터 보호
 
-		boost::atomic<bool> m_callbackEnabled;
+		std::atomic<bool> m_callbackEnabled;
 
-		boost::thread m_recvThread;
+		std::thread m_recvThread;
 		size_t m_recvBufferSize;
 		std::vector<uint8_t> m_recvInternalBuffer; // RecvOnce 전용 재사용 버퍼
 
-												   // 추가: 패킷을 자르는 인터페이스
+		// 패킷을 자르는 인터페이스
 		VisionCom::IFramerPtr m_framer;
 
 		int m_sendTimeoutMs;
@@ -103,7 +100,7 @@ namespace VisionCom
 			m_connected = false;
 
 			// 버퍼 관련 작업 중일 수 있으므로 Lock
-			boost::lock_guard<boost::mutex> lock(m_bufferMutex);
+			std::lock_guard<std::mutex> lock(m_bufferMutex);
 
 			if (m_sock != INVALID_SOCKET) {
 				closesocket(m_sock);
@@ -113,12 +110,6 @@ namespace VisionCom
 			if (m_listenSock != INVALID_SOCKET) {
 				closesocket(m_listenSock);
 				m_listenSock = INVALID_SOCKET;
-			}
-
-			// 부모 클래스의 partialBuffer도 안전하게 클리어
-			if (m_parent) {
-				// 외부 클래스의 멤버 변수에 직접 접근하거나 인터페이스 호출
-				// m_parent->ClearPartialBuffer(); // 필요 시 구현
 			}
 		}
 
@@ -235,7 +226,7 @@ namespace VisionCom
 	};
 
     VisionTcpClient::VisionTcpClient()
-        : m_pImpl(new Impl(this))
+        : m_pImpl(std::make_unique<Impl>(this)) // [수정] make_unique로 할당
     {
     }
 
@@ -249,9 +240,7 @@ namespace VisionCom
             {
                 m_pImpl->m_recvThread.join();
             }
-
-            delete m_pImpl;
-            m_pImpl = NULL;
+            // [수정] delete 구문은 std::unique_ptr 로 교체되었으므로 제거
         }
     }
 
@@ -291,7 +280,8 @@ namespace VisionCom
 	{
 		m_pImpl->m_running = true;
 
-		m_pImpl->m_recvThread = boost::thread([this]()
+		// boost::thread -> std::thread
+		m_pImpl->m_recvThread = std::thread([this]()
 		{
 			std::vector<uint8_t> dummy;
 
@@ -299,7 +289,8 @@ namespace VisionCom
 			{
 				this->RecvOnce(dummy);
 
-				boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+				// boost::this_thread::sleep -> std::this_thread::sleep_for
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 		});
 	}
@@ -325,7 +316,7 @@ namespace VisionCom
 		if (n > 0)
 		{
 			// 2. 버퍼 및 프레이머 보호를 위한 Lock
-			boost::lock_guard<boost::mutex> lock(m_pImpl->m_bufferMutex);
+			std::lock_guard<std::mutex> lock(m_pImpl->m_bufferMutex);
 			bool packetDispatched = false;
 
 			if (m_pImpl->m_framer) // <--- IFramerPtr 사용
@@ -340,7 +331,7 @@ namespace VisionCom
 				while (m_pImpl->m_framer->NextFrame(frame))
 				{
 					{
-						boost::lock_guard<boost::mutex> cbLock(m_pImpl->m_cbMutex);
+						std::lock_guard<std::mutex> cbLock(m_pImpl->m_cbMutex);
 						if (m_pImpl->m_callbackEnabled && m_pImpl->m_recvCb)
 						{
 							m_pImpl->m_recvCb(frame);
@@ -363,7 +354,7 @@ namespace VisionCom
 					m_partialBuffer.erase(m_partialBuffer.begin(), m_partialBuffer.begin() + 664);
 
 					{
-						boost::lock_guard<boost::mutex> cbLock(m_pImpl->m_cbMutex);
+						std::lock_guard<std::mutex> cbLock(m_pImpl->m_cbMutex);
 						if (m_pImpl->m_callbackEnabled && m_pImpl->m_recvCb)
 							m_pImpl->m_recvCb(packet);
 					}
@@ -372,7 +363,7 @@ namespace VisionCom
 				}
 			}
 
-			return packetDispatched ? (int)outBytes.size() : 0;
+			return packetDispatched ? static_cast<int>(outBytes.size()) : 0;
 		}
 		// ... 이하 에러 처리(n <= 0) 로직 동일
 		if (n == 0)
@@ -432,7 +423,7 @@ namespace VisionCom
     {
         if (m_pImpl)
         {
-            boost::lock_guard<boost::mutex> lock(m_pImpl->m_cbMutex);
+            std::lock_guard<std::mutex> lock(m_pImpl->m_cbMutex);
             m_pImpl->m_recvCb = cb;
             m_pImpl->m_callbackEnabled = static_cast<bool>(cb);
         }
@@ -456,7 +447,7 @@ namespace VisionCom
 		if (!m_pImpl) return;
 
 		// 버퍼 접근 중일 수 있으므로 Lock 권장
-		boost::lock_guard<boost::mutex> lock(m_pImpl->m_bufferMutex);
+		std::lock_guard<std::mutex> lock(m_pImpl->m_bufferMutex);
 		m_pImpl->m_framer = framer;
 	}
 } 
