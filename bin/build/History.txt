@@ -1,0 +1,3 @@
+2026.04.22 (ver 1.0.2)
+- Memory VAT Sequence 테스트 완료
+- Memory Vision Processor 테스트 완료

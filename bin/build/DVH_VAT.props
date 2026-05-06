@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!-- build\native\ 기준 -->
+    <DVH_Root>$(MSBuildThisFileDirectory)</DVH_Root>
+    <DVH_Include>$(DVH_Root)include\</DVH_Include>
+    <!-- Platform 조건 분기: Win32 / x64 자동 선택 -->
+    <DVH_LibDir>$(DVH_Root)bin\$(Platform)\$(Configuration)\</DVH_LibDir>
+   <!-- ThirdParty 분리 -->
+  <DVH_ThirdParty>$(DVH_Root)ThirdParty\</DVH_ThirdParty>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+   <!-- 기본값 -->
+   <BoostLibSuffix>lib32-msvc-10.0</BoostLibSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PlatformToolset)' == 'v100'">
+    <BoostLibSuffix>lib32-msvc-10.0</BoostLibSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PlatformToolset)' == 'v140'">
+    <BoostLibSuffix>lib32-msvc-14.0</BoostLibSuffix>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>
+        $(DVH_Include);
+
+        $(DVH_ThirdParty)boost_1.65_1;
+        $(DVH_ThirdParty)sqlite3\include;
+
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+	
+      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(DVH_LibDir);$(DVH_ThirdParty)sqlite3\lib;$(DVH_ThirdParty)boost_1.65_1\$(BoostLibSuffix);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DVH_VAT.lib;VisionCom.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+</Project>

@@ -1,0 +1,311 @@
+﻿#include "StdAfx.h"
+#include "CLoad1PerformCalibrationTask.h"
+#include "DVH_VAT/DefineVAT.h"
+#include "VisionMemoryKeys.h"
+
+using namespace VAT_LOAD1::Task;
+
+CLoad1PerformCalibrationTask::CLoad1PerformCalibrationTask()
+	: m_moveTimeoutMs(7000)
+	, m_visionTimeoutMs(10000)
+	, m_inspectionCount(0)
+	, m_maxInspectionCount(0)
+	, m_currentPitchMode(DVH_VAT::Narrow)
+	, m_isWideCheck(false)
+	, m_cameraId(0)
+	, m_locationId(0)
+	, m_packageId(0)
+{
+}
+
+CLoad1PerformCalibrationTask::~CLoad1PerformCalibrationTask()
+{
+}
+
+void CLoad1PerformCalibrationTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+{
+	DVH_VAT::VisionPosition position;
+	if (ctx.PeekVisionPosition(position))
+	{
+		m_targetPosition = position.pos;
+		m_locationId = position.locateId;
+	}
+    else
+    {
+
+    }
+	{
+		EnterCommonState(CS_ERROR);
+		return;
+	}
+
+	m_maxInspectionCount = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MAX_INSP_COUNT, 0);
+	if (m_maxInspectionCount <= 0)
+	{
+		m_maxInspectionCount = 1;
+	}
+
+	const int moveTimeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
+	if (moveTimeoutMs > 0)
+		m_moveTimeoutMs = moveTimeoutMs;
+
+	m_isWideCheck = !ctx.GetSeqParamAs<std::string>(VAT_SEQ_PARAM_WIDE_CHECK, std::string()).empty();
+	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+
+	m_inspectionCount = 0;
+	m_currentPitchMode = DVH_VAT::Narrow;
+	EnterState(VisionRequest);
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::OnPoll(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	switch (GetState())
+	{
+	case MoveSafeZ:                 return HandleMoveSafeZ(ctx, actuator);
+	case MoveOrigin:                return HandleMoveOrigin(ctx, actuator);
+	case MoveCalibrationPositionXY: return HandleMoveCalibrationPositionXY(ctx, actuator);
+	case MoveFocusPositionZ:        return HandleMoveFocusPositionZ(ctx, actuator);
+	case VisionRequest:             return HandleVisionRequest(ctx, actuator);
+	case VisionWait:                return HandleVisionWait(ctx, actuator);
+	case SaveCalibrationResult:     return HandleSaveCalibrationResult(ctx);
+	default:                        return DVH_VAT::TR_ERROR;
+	}
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveSafeZ(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	if (!actuator)
+		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
+
+	if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+		return SetErrorAndReturn(ctx, "Calibration: MoveToSafeZ failed.");
+
+	EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
+	return DVH_VAT::TR_KEEP;
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveOrigin(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	if (!actuator)
+		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
+
+	if (actuator->isMoveZ(0.0) != DVH_VAT::ActOk)
+	{
+		if (IsDeadlineExpired())
+			return SetErrorAndReturn(ctx, "Calibration: SafeZ timeout.");
+
+		return DVH_VAT::TR_KEEP;
+	}
+
+	std::vector<double> originXY;
+	originXY.push_back(0.0);
+	originXY.push_back(0.0);
+
+	if (actuator->Move(originXY, m_currentPitchMode) != DVH_VAT::ActOk)
+		return SetErrorAndReturn(ctx, "Calibration: MoveToOrigin failed.");
+
+	EnterStateWithTimeout(MoveCalibrationPositionXY, m_moveTimeoutMs);
+	return DVH_VAT::TR_KEEP;
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveCalibrationPositionXY(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	if (!actuator)
+		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
+
+	std::vector<double> originXY;
+	originXY.push_back(0.0);
+	originXY.push_back(0.0);
+
+	if (actuator->isMove(originXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	{
+		if (IsDeadlineExpired())
+			return SetErrorAndReturn(ctx, "Calibration: Origin XY timeout.");
+
+		return DVH_VAT::TR_KEEP;
+	}
+
+	if (actuator->Move(m_targetPosition, m_currentPitchMode) != DVH_VAT::ActOk)
+		return SetErrorAndReturn(ctx, "Calibration: MoveToCalibrationPos failed.");
+
+	EnterStateWithTimeout(MoveFocusPositionZ, m_moveTimeoutMs);
+	return DVH_VAT::TR_KEEP;
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveFocusPositionZ(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	if (!actuator)
+		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
+
+	if (actuator->isMove(m_targetPosition, m_currentPitchMode) != DVH_VAT::ActOk)
+	{
+		if (IsDeadlineExpired())
+			return SetErrorAndReturn(ctx, "Calibration: FocusPos timeout.");
+
+		return DVH_VAT::TR_KEEP;
+	}
+
+	if (actuator->MoveZ(m_targetPosition[2]) != DVH_VAT::ActOk)
+		return SetErrorAndReturn(ctx, "Calibration: MoveToFocusZ failed.");
+
+	EnterState(VisionRequest);
+	return DVH_VAT::TR_KEEP;
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionRequest(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	if (!actuator)
+		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
+
+	if (actuator->isMoveZ(m_targetPosition[2]) != DVH_VAT::ActOk)
+	{
+		if (IsDeadlineExpired())
+			return SetErrorAndReturn(ctx, "Calibration: MoveZ timeout.");
+
+		return DVH_VAT::TR_KEEP;
+	}
+
+	actuator->SetLightState(m_cameraId, true);
+
+	auto visionProcessor = ctx.GetVisionProcessorInterface();
+
+	if (m_locationId == 13)
+	{
+		ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 4);
+	}
+	else if (m_locationId == 5)
+	{
+		ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 1);
+	}
+	else if (m_locationId == 1)
+	{
+		ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 5);
+	}
+	else if (m_locationId == 2)
+	{
+		ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 6);
+	}
+	else if (m_locationId == 3)
+	{
+		ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 0);
+	}
+	else if (m_locationId == 12)
+	{
+		ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 3);
+	}
+
+	visionProcessor->InitializeRecvThread();
+
+	if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+	{
+		return SetErrorAndReturn(ctx, "Vision Command Failed");
+	}
+
+	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
+	return DVH_VAT::TR_KEEP;
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
+	DVH_VAT::VAT_Context& ctx,
+	DVH_VAT::IVatActuator* actuator)
+{
+	if (IsDeadlineExpired())
+	{
+		return SetErrorAndReturn(ctx, "Vision Timeout");
+	}
+
+	auto visionProcessor = ctx.GetVisionProcessorInterface();
+
+	if (!visionProcessor->IsValid(DVH_VAT::Measure))
+		return DVH_VAT::TR_KEEP;
+
+	auto data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+
+	double offsetX = 0.0;
+	double offsetY = 0.0;
+
+	auto itXOffset = data.find(VAT_VISION_KEY_X_OFFSET);
+	if (itXOffset != data.end())
+		offsetX = std::stod(itXOffset->second);
+
+	auto itYOffset = data.find(VAT_VISION_KEY_Y_OFFSET);
+	if (itYOffset != data.end())
+		offsetY = std::stod(itYOffset->second);
+
+	actuator->SetLightState(m_cameraId, false);
+
+	if (m_cameraId < 6)
+	{
+		m_targetPosition[0] += offsetX;
+		m_targetPosition[1] += offsetY;
+	}
+	else
+	{
+		m_targetPosition[0] -= offsetX;
+		m_targetPosition[1] -= offsetY;
+	}
+
+	if (m_inspectionCount < m_maxInspectionCount)
+	{
+		++m_inspectionCount;
+		EnterState(MoveSafeZ);
+		return DVH_VAT::TR_KEEP;
+	}
+
+	m_inspectionCount = 0;
+	EnterState(SaveCalibrationResult);
+	return DVH_VAT::TR_KEEP;
+}
+
+DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(DVH_VAT::VAT_Context& ctx)
+{
+	auto repo = ctx.getRepository();
+
+	if (repo)
+	{
+		repo->SaveCalibrationPosResult(
+			m_cameraId,
+			m_locationId,
+			m_packageId,
+			m_targetPosition[0],
+			m_targetPosition[1]);
+	}
+
+	if (m_isWideCheck && m_currentPitchMode == DVH_VAT::Narrow)
+	{
+		m_currentPitchMode = DVH_VAT::Wide;
+		EnterState(MoveSafeZ);
+		return DVH_VAT::TR_NEXT;
+	}
+
+	m_currentPitchMode = DVH_VAT::Narrow;
+
+	DVH_VAT::VisionPosition position;
+	ctx.PopVisionPosition(position);
+
+	if (ctx.IsVisionPositionEmpty())
+	{
+		return DVH_VAT::TR_NEXT;
+	}
+
+	ctx.PeekVisionPosition(position);
+	m_targetPosition = position.pos;
+	m_locationId = position.locateId;
+
+	EnterStateWithTimeout(MoveSafeZ, m_moveTimeoutMs);
+	return DVH_VAT::TR_NEXT;
+}
+

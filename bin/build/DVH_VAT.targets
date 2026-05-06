@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CopyDVHDll" AfterTargets="Build">
+
+    <Message Text="=== DVH DLL Copy Start ===" Importance="high" />
+    <Message Text="TargetDir: $(TargetDir)" Importance="high" />
+    <Message Text="Configuration: $(Configuration)" Importance="high" />
+    <Message Text="Toolset: $(PlatformToolset)" Importance="high" />
+
+    <!-- DVH DLL -->
+    <Exec IgnoreExitCode="true"
+          Command="if exist &quot;$(MSBuildThisFileDirectory)bin\Win32\$(Configuration)\*.dll&quot; xcopy /Y /D /Q &quot;$(MSBuildThisFileDirectory)bin\Win32\$(Configuration)\*.dll&quot; &quot;$(TargetDir)&quot;" />
+
+    <!-- Boost (v100) -->
+    <Exec Condition="'$(PlatformToolset)'=='v100'"
+          IgnoreExitCode="true"
+          Command="if exist &quot;$(MSBuildThisFileDirectory)ThirdParty\boost_1.65_1\lib32-msvc-10.0\*.dll&quot; xcopy /Y /D /Q &quot;$(MSBuildThisFileDirectory)ThirdParty\boost_1.65_1\lib32-msvc-10.0\*.dll&quot; &quot;$(TargetDir)&quot;" />
+
+    <!-- Boost (v140 이상) -->
+    <Exec Condition="'$(PlatformToolset)'!='v100'"
+          IgnoreExitCode="true"
+          Command="if exist &quot;$(MSBuildThisFileDirectory)ThirdParty\boost_1.65_1\lib32-msvc-14.0\*.dll&quot; xcopy /Y /D /Q &quot;$(MSBuildThisFileDirectory)ThirdParty\boost_1.65_1\lib32-msvc-14.0\*.dll&quot; &quot;$(TargetDir)&quot;" />
+
+    <!-- SQLite DLL -->
+    <Exec IgnoreExitCode="true"
+          Command="if exist &quot;$(MSBuildThisFileDirectory)ThirdParty\sqlite3\lib\*.dll&quot; xcopy /Y /D /Q &quot;$(MSBuildThisFileDirectory)ThirdParty\sqlite3\lib\*.dll&quot; &quot;$(TargetDir)&quot;" />
+
+    <Message Text="=== DVH DLL Copy End ===" Importance="high" />
+
+  </Target>
+
+</Project>

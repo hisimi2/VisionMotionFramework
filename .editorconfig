@@ -1,0 +1,45 @@
+# .editorconfig for DVH_VAT project
+# Root marker
+root = true
+
+# Default settings
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# C/C++ specific
+[*.{cpp,h,hpp,cxx,c,hpp}]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = crlf
+
+# Coding conventions / Naming guidelines (human-readable comments)
+# NOTE: .editorconfig does not enforce naming by tooling by default.
+# The following are project conventions that must be followed and reviewed in code reviews.
+
+# Interface naming
+# - All abstract interface types MUST use an 'I' prefix, e.g. 'IAsyncVisionProcessor'.
+# - Do NOT use ambiguous suffixes like 'Sync' unless the meaning is explicit.
+# - For interfaces that primarily receive/handle events, prefer names that reflect the role:
+#     - 'IVisionReceiver'  : for components that receive and process incoming vision messages
+#     - 'IVisionEventHandler' : for components that handle vision-related events/callbacks
+# - If an interface composes both async request API and synchronous receive handlers,
+#   prefer separating concerns into two interfaces: IAsyncXxx (request API) and IXxxReceiver (event handlers).
+
+# Deprecation / Renaming policy
+# - To rename an interface exposed across modules (DLL/API), follow these steps:
+#   1) Add the new interface type (e.g. 'IVisionReceiver') and make it inherit from the old interface if needed.
+#   2) Mark the old interface as deprecated in CONTRIBUTING.md and add comments in header files.
+#   3) Update internal implementations to implement the new interface.
+#   4) Remove the old interface in a major version bump after all dependents are migrated.
+
+# Example guidance used in this project:
+# - Current 'ISyncVisionProcessor' is better named 'IVisionReceiver' or 'IVisionEventHandler'
+#   because it exposes OnSetCok/OnInspReady/OnMeasure and Get*Data which are receiver responsibilities.
+
+# End of .editorconfig

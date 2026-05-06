@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DVH_VAT</id>
+    <version>$version$</version>
+    <authors>Techwing</authors>
+    <description>DVH_VAT Native Library Package</description>
+    <dependencies> <group targetFramework="native" /> </dependencies>
+  </metadata>
+
+  <files>
+    <!-- build -->
+    <file src="build\DVH_VAT.props"   target="build\native\DVH_VAT.props" />
+    <file src="build\DVH_VAT.targets" target="build\native\DVH_VAT.targets" />
+
+    <!-- header -->
+    <file src="include\**\*" target="build\native\include\" />
+    <file src="ThirdParty\boost_1.65_1\**\*" target="build\native\ThirdParty\boost_1.65_1\" />
+    <file src="ThirdParty\sqlite3\include\**\*" target="build\native\ThirdParty\sqlite3\include\" />
+
+    <file src="ThirdParty\sqlite3\lib\**\*" target="build\native\ThirdParty\sqlite3\lib" />
+
+     <!-- Win32 -->
+    <file src="Win32\Debug\**\*.lib"   target="build\native\bin\Win32\Debug\" />
+    <file src="Win32\Debug\**\*.dll"   target="build\native\bin\Win32\Debug\" />
+    <file src="Win32\Release\**\*.lib" target="build\native\bin\Win32\Release\" />
+    <file src="Win32\Release\**\*.dll" target="build\native\bin\Win32\Release\" />
+
+    <!-- History -->
+    <file src="D:\git\0421\bin\build\History.txt" target="build\native\History.txt" />
+  </files>
+</package>

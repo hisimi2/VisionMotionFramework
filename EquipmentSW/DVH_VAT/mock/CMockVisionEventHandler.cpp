@@ -1,0 +1,168 @@
+﻿#include "stdafx.h"
+#include "CMockVisionEventHandler.h"
+
+namespace DVH_VAT
+{
+    CMockVisionEventHandler::CMockVisionEventHandler()
+        : m_connected(false)
+        , m_requestResult(true)
+    {
+        // m_latestData, m_receivedFlags 기본 생성자 사용
+    }
+
+    CMockVisionEventHandler::~CMockVisionEventHandler()
+    {
+    }
+
+    VisionCom::VisionStatus CMockVisionEventHandler::Initialize(const VisionConnectionConfig& /*config*/)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_connected = true;
+        return VisionCom::VisionOK;
+    }
+
+    void CMockVisionEventHandler::Disconnect()
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_connected = false;
+    }
+
+    bool CMockVisionEventHandler::IsConnected() const
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        return m_connected;
+    }
+
+    bool CMockVisionEventHandler::RequestSetCokAsync(const StringMap& params)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_lastRequestParams = params;
+        return m_requestResult;
+    }
+
+    bool CMockVisionEventHandler::RequestInspReadyAsync(const StringMap& params)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_lastRequestParams = params;
+        return m_requestResult;
+    }
+
+    bool CMockVisionEventHandler::RequestMeasureAsync(const StringMap& params)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_lastRequestParams = params;
+        return m_requestResult;
+    }
+
+    bool CMockVisionEventHandler::RequestDeviceCheckAsync(const StringMap& params)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_lastRequestParams = params;
+        return m_requestResult;
+    }
+
+    bool CMockVisionEventHandler::RequestLightAsync(const StringMap& params)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_lastRequestParams = params;
+        return m_requestResult;
+    }
+
+    CMockVisionEventHandler::DataMap CMockVisionEventHandler::GetLatestData(VatCommand type) const
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        int key = type;
+        std::map<int, StringMap>::const_iterator it = m_latestData.find(key);
+        if (it != m_latestData.end()) return it->second;
+        return DataMap();
+    }
+
+    void CMockVisionEventHandler::ClearLatestData(VatCommand type)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_latestData.erase(type);
+        m_receivedFlags[type] = false;
+    }
+
+    bool CMockVisionEventHandler::IsValid(VatCommand type) const
+    {
+		return true;
+    }
+
+    bool CMockVisionEventHandler::HasReceived(VatCommand type) const
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        int key = type;
+        std::map<int, bool>::const_iterator it = m_receivedFlags.find(key);
+        return (it != m_receivedFlags.end()) && it->second;
+    }
+
+    void CMockVisionEventHandler::InitializeRecvThread()
+    {
+        // 테스트용 모의 구현: 수신 스레드 없음
+    }
+
+    void CMockVisionEventHandler::OnSetCok(const ByteArray& body)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        StringMap m;
+        m["body"] = BodyToString(body);
+        m_latestData[SetCok] = m;
+        m_receivedFlags[SetCok] = true;
+    }
+
+    void CMockVisionEventHandler::OnInspReady(const ByteArray& body)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        StringMap m;
+        m["body"] = BodyToString(body);
+        m_latestData[InspReady] = m;
+        m_receivedFlags[InspReady] = true;
+    }
+
+    void CMockVisionEventHandler::OnMeasure(const ByteArray& body)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        StringMap m;
+        m["body"] = BodyToString(body);
+        m_latestData[Measure] = m;
+        m_receivedFlags[Measure] = true;
+    }
+
+    void CMockVisionEventHandler::OnDeviceCheck(const ByteArray& body)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        StringMap m;
+        m["body"] = BodyToString(body);
+        m_latestData[DeviceCheck] = m;
+        m_receivedFlags[DeviceCheck] = true;
+    }
+
+    void CMockVisionEventHandler::OnLight(const ByteArray& body)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        StringMap m;
+        m["body"] = BodyToString(body);
+        m_latestData[Light] = m;
+        m_receivedFlags[Light] = true;
+    }
+
+    void CMockVisionEventHandler::SetRequestResult(bool ok)
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        m_requestResult = ok;
+    }
+
+    StringMap CMockVisionEventHandler::GetLastRequestParams() const
+    {
+        boost::mutex::scoped_lock lg(m_mutex);
+        return m_lastRequestParams;
+    }
+
+    std::string CMockVisionEventHandler::BodyToString(const ByteArray& b)
+    {
+        if (b.empty()) return std::string();
+        return std::string(reinterpret_cast<const char*>(b.data()), b.size());
+    }
+
+} // namespace DVH_VAT

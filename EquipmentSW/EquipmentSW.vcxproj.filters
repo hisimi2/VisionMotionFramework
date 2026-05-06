@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Actuators">
+      <UniqueIdentifier>{8327dbca-7947-4c8f-91b0-69c1b7aa993b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actuators\Cylinders">
+      <UniqueIdentifier>{a6f4111a-dd80-4954-9f66-c18e5ad40de8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DVH_VAT">
+      <UniqueIdentifier>{659a6684-17f2-4782-b9c1-0a73b7913217}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DVH_VAT\Load1">
+      <UniqueIdentifier>{6efdf64c-8f98-4dde-a2d5-f50c6a0114c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DVH_VAT\Load1\Tasks">
+      <UniqueIdentifier>{df0687ff-0046-4d20-ae47-12f176e654c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DVH_VAT\Load1\Sequences">
+      <UniqueIdentifier>{62834f2b-f5e1-40f4-9055-603007c118c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DVH_VAT\Load1\Strategies">
+      <UniqueIdentifier>{dbfa1a0d-39eb-4ef3-9b5a-e4ad32e66610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DVH_VAT\Mock">
+      <UniqueIdentifier>{072d1b11-6388-4cd7-bebf-91402bacea7c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EquipmentSW.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="EquipmentSWDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CAxisController.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CMmceIo.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\COPSwitch.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CTimer.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\IDio.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\IOPSwitch.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CCylinderBase.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\COpenCloseCylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CUpDownCylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\ICylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CLamp.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CForBackCylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CClampReleaseCylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CVaccumBlowCylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CNarrowWideCylinder.h">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClInclude>
+    <ClInclude Include="PICTURE.H">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="spreadsheet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="spreadsheet_legend.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="_Font.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="_Picture.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FONT.H">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Load1Parts.h">
+      <Filter>DVH_VAT\Load1</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\VatAdapterLoad1.h">
+      <Filter>DVH_VAT\Load1</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\DefineVAT.h">
+      <Filter>DVH_VAT</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\MemorySequenceStrategy.h">
+      <Filter>DVH_VAT</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\StrategyUpperCam.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1BacklashSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1HandPitchCheckSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1LowCamFOVCheckSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1LowCamCheckSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1PCDSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1PlateJigFOVSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1PlateJigSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1TargetJigSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1UpperCamFOVSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1UpperCamCheckSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h">
+      <Filter>DVH_VAT\Load1\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1BacklashSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftUpperCamCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftPlateJigFOVCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftPlateJigCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightUpperCamCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightJigFOVCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightPlateJigCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightPlateJIGFocusCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1HandPitchCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowCamFOVCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowPlateJIGCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowCamCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowCamPlateJIGFocusCheckSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1PCDSequenceStrategy.h">
+      <Filter>DVH_VAT\Load1\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1FindAlignPosTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformFocusScanningTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformBacklashScanningTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformCalibrationTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformFOVScanningTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformHandPitchScanningTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformPCDScanningTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1CommitTeachingPosTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.h">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\mock\CMockDataRepository.h">
+      <Filter>DVH_VAT\Mock</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\mock\CMockVisionEventHandler.h">
+      <Filter>DVH_VAT\Mock</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EquipmentSW.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="EquipmentSWDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Actuators\CMmceIo.cpp">
+      <Filter>Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="Actuators\COPSwitch.cpp">
+      <Filter>Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="Actuators\CTimer.cpp">
+      <Filter>Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="Actuators\CCylinderBase.cpp">
+      <Filter>Actuators\Cylinders</Filter>
+    </ClCompile>
+    <ClCompile Include="PICTURE.CPP">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="spreadsheet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="spreadsheet_legend.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="FONT.CPP">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Load1Parts.cpp">
+      <Filter>DVH_VAT\Load1</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\VatAdapterLoad1.cpp">
+      <Filter>DVH_VAT\Load1</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1CommitTeachingPosTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1FindAlignPosTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformBacklashScanningTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformCalibrationTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformFOVScanningTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformHandPitchScanningTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformPCDScanningTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.cpp">
+      <Filter>DVH_VAT\Load1\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\mock\CMockDataRepository.cpp">
+      <Filter>DVH_VAT\Mock</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\mock\CMockVisionEventHandler.cpp">
+      <Filter>DVH_VAT\Mock</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EquipmentSW.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\EquipmentSW.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\EquipmentSW.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

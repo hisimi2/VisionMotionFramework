@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FAA6667D-1022-42E8-954D-609EC64966E4}</ProjectGuid>
+    <RootNamespace>EquipmentSW</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v100</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VCInstallDir)include;$(WindowsSdkDir)include;$(VCInstallDir)atlmfc\include;$(FrameworkSDKDir)\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;BOOST_ALL_DYN_LINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\ThirdParty\boost_1.65_1\;$(ProjectDir)..\thirdparty\sqlite3\include;$(ProjectDir)..\DVH_Library\include;$(ProjectDir)..\VisionCom\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\bin\$(Platform);$(ProjectDir)..\ThirdParty\boost_1.65_1\libs;$(ProjectDir)..\ThirdParty\sqlite3\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DVH_VAT.lib;VisionCom.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Actuators\CNarrowWideCylinder.h" />
+    <ClInclude Include="DVH_VAT\DefineVAT.h" />
+    <ClInclude Include="DVH_VAT\Load1\Load1Parts.h" />
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1HandPitchSequenceBuilder.h" />
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1UpperCamSequenceBuilder.h" />
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1UpperCamFOVSequenceBuilder.h" />
+    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1HandPitchSequenceStrategy.h" />
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1UpperCamCheckSequenceStrategy.h" />
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1UpperCamFOVSequenceStrategy.h" />
+    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1ZFocusSequenceStrategy.h" />
+    <ClInclude Include="DVH_VAT\Load1\Strategies\StrategyUpperCam.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1CommitTeachingPosTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1FindAlignPosTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformCalibrationTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformFOVScanningTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformHandPitchScanningTask.h" />
+    <ClInclude Include="DVH_VAT\Load1\VatAdapterLoad1.h" />
+    <ClInclude Include="DVH_VAT\MemorySequenceStrategy.h" />
+    <ClInclude Include="FONT.H" />
+    <ClInclude Include="PICTURE.H" />
+    <ClInclude Include="spreadsheet.h" />
+    <ClInclude Include="spreadsheet_legend.h" />
+    <ClInclude Include="Actuators\CAxisController.h" />
+    <ClInclude Include="Actuators\CClampReleaseCylinder.h" />
+    <ClInclude Include="Actuators\CCylinderBase.h" />
+    <ClInclude Include="Actuators\CForBackCylinder.h" />
+    <ClInclude Include="Actuators\COpenCloseCylinder.h" />
+    <ClInclude Include="Actuators\CMmceIo.h" />
+    <ClInclude Include="Actuators\COPSwitch.h" />
+    <ClInclude Include="Actuators\CTimer.h" />
+    <ClInclude Include="Actuators\CUpDownCylinder.h" />
+    <ClInclude Include="Actuators\CVaccumBlowCylinder.h" />
+    <ClInclude Include="Actuators\ICylinder.h" />
+    <ClInclude Include="Actuators\IDio.h" />
+    <ClInclude Include="Actuators\IOPSwitch.h" />
+    <ClInclude Include="Actuators\CLamp.h" />
+    <ClInclude Include="EquipmentSW.h" />
+    <ClInclude Include="EquipmentSWDlg.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="_Font.h" />
+    <ClInclude Include="_Picture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DVH_VAT\Load1\Load1Parts.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1CommitTeachingPosTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1FindAlignPosTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformCalibrationTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformFOVScanningTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformHandPitchScanningTask.cpp" />
+    <ClCompile Include="DVH_VAT\Load1\VatAdapterLoad1.cpp" />
+    <ClCompile Include="FONT.CPP" />
+    <ClCompile Include="PICTURE.CPP" />
+    <ClCompile Include="spreadsheet.cpp" />
+    <ClCompile Include="spreadsheet_legend.cpp" />
+    <ClCompile Include="Actuators\CCylinderBase.cpp" />
+    <ClCompile Include="Actuators\CMmceIo.cpp" />
+    <ClCompile Include="Actuators\COPSwitch.cpp" />
+    <ClCompile Include="Actuators\CTimer.cpp" />
+    <ClCompile Include="EquipmentSW.cpp" />
+    <ClCompile Include="EquipmentSWDlg.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EquipmentSW.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\EquipmentSW.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\EquipmentSW.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
