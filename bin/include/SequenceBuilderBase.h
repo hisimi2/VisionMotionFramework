@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DVH_VAT_API.h"
 #include "VAT_Context.h"
 #include "VatSequence.h"

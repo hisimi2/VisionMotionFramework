@@ -52,25 +52,25 @@ namespace DVH_VAT
         body.nParamCount = 7;
 
         // C++11: 타입 추론 auto를 이용해 장황한 반복자 타입 선언 축소
-        auto it = params.find(VisionKeys::RECIPE_NAME);
+        auto it = params.find(RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::PCD_MODE);
+        it = params.find(PCD_MODE);
         if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::DEVICE_SIZE_X);
+        it = params.find(DEVICE_SIZE_X);
         if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::DEVICE_SIZE_Y);
+        it = params.find(DEVICE_SIZE_Y);
         if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::COK_TYPE);
+        it = params.find(COK_TYPE);
         if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::PICKER_PITCH_X);
+        it = params.find(PICKER_PITCH_X);
         if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::PICKER_PITCH_Y);
+        it = params.find(PICKER_PITCH_Y);
         if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
 
         std::vector<uint8_t> bodyBytes;
@@ -94,25 +94,25 @@ namespace DVH_VAT
         body.nCmd = 1000;
         body.nParamCount = 7;
 
-        auto it = params.find(VisionKeys::RECIPE_NAME);
+        auto it = params.find(RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::PCD_MODE);
+        it = params.find(PCD_MODE);
         if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::DEVICE_SIZE_X);
+        it = params.find(DEVICE_SIZE_X);
         if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::DEVICE_SIZE_Y);
+        it = params.find(DEVICE_SIZE_Y);
         if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::COK_TYPE);
+        it = params.find(COK_TYPE);
         if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::PICKER_PITCH_X);
+        it = params.find(PICKER_PITCH_X);
         if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
         
-        it = params.find(VisionKeys::PICKER_PITCH_Y);
+        it = params.find(PICKER_PITCH_Y);
         if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
 
         std::vector<uint8_t> bodyBytes;
@@ -134,19 +134,19 @@ namespace DVH_VAT
 
         CPacketBody_S107F9 body;
 
-        auto it = params.find(VisionKeys::CAMERA_ID);
+        auto it = params.find(CAMERA_ID);
         if (it != params.end()) body.nDataID = std::stoi(it->second); // C++11 std::stoi 대체
 
-        it = params.find(VisionKeys::INSPECTION_TYPE);
+        it = params.find(INSPECTION_TYPE);
         if (it != params.end()) body.nStatus = std::stoi(it->second);
 
-        it = params.find(VisionKeys::MOVE_PART);
+        it = params.find(MOVE_PART);
         if (it != params.end()) body.SetData(0, it->second.c_str());
 
-        it = params.find(VisionKeys::SAVE_IMAGE);
+        it = params.find(SAVE_IMAGE);
         if (it != params.end()) body.SetData(1, it->second.c_str());
 
-        it = params.find(VisionKeys::FOV_DIRECTION);
+        it = params.find(FOV_DIRECTION);
         if (it != params.end()) body.SetData(3, it->second.c_str());
 
         std::vector<uint8_t> bodyBytes;
@@ -186,10 +186,10 @@ namespace DVH_VAT
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        data[VisionKeys::RESULT]       = std::string(pkt.szParam[0]);
-        data[VisionKeys::SERVER_INDEX] = std::string(pkt.szParam[1]);
-        data[VisionKeys::CAM_STATUS]   = std::string(pkt.szParam[2]);
-        data[VisionKeys::CAM_TYPE]     = std::string(pkt.szParam[3]);
+        data[RESULT]       = std::string(pkt.szParam[0]);
+        data[SERVER_INDEX] = std::string(pkt.szParam[1]);
+        data[CAM_STATUS]   = std::string(pkt.szParam[2]);
+        data[CAM_TYPE]     = std::string(pkt.szParam[3]);
 
         SetLatestData(SetCok, data);
     }
@@ -207,10 +207,10 @@ namespace DVH_VAT
 
         DataMap data;
         // 배열 포인터로부터 std::string 생성 강제하여 호환성 강화
-        data[VisionKeys::RESULT]       = std::string(pkt.szParam[0]);
-        data[VisionKeys::SERVER_INDEX] = std::string(pkt.szParam[1]);
-        data[VisionKeys::CAM_STATUS]   = std::string(pkt.szParam[2]);
-        data[VisionKeys::CAM_TYPE]     = std::string(pkt.szParam[3]);
+        data[RESULT]       = std::string(pkt.szParam[0]);
+        data[SERVER_INDEX] = std::string(pkt.szParam[1]);
+        data[CAM_STATUS]   = std::string(pkt.szParam[2]);
+        data[CAM_TYPE]     = std::string(pkt.szParam[3]);
 
         SetLatestData(InspReady, data);
     }
@@ -258,11 +258,11 @@ namespace DVH_VAT
         }
 
         DataMap data;
-        data[VisionKeys::Z_FOCUS_VALUE]       = pkt.cData[0];
-        data[VisionKeys::X_OFFSET]            = pkt.cData[1];
-        data[VisionKeys::Y_OFFSET]            = pkt.cData[2];
-        data[VisionKeys::ANGLE]               = pkt.cData[3];
-        data[VisionKeys::AUTO_VISION_SETTING] = pkt.cData[4];
+        data[Z_FOCUS_VALUE]       = pkt.cData[0];
+        data[X_OFFSET]            = pkt.cData[1];
+        data[Y_OFFSET]            = pkt.cData[2];
+        data[ANGLE]               = pkt.cData[3];
+        data[AUTO_VISION_SETTING] = pkt.cData[4];
 
         SetLatestData(Measure, data);
     }
