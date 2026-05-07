@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VisionMemoryProcessor.h"
 
 #include "VisionMsgDispatcher.h"
@@ -8,7 +8,7 @@
 #include "VisionPacketMemory.h"
 
 #include <vector>
-#include <cstring> // std::memcpy 사용 보장
+#include <cstring>
 
 namespace DVH_VAT
 {
@@ -16,27 +16,23 @@ namespace DVH_VAT
     {
         VisionCom::VisionMsgDispatcher& disp = m_ctrl.GetDispatcher();
 
-        // 람다 함수 캡처 방식을 더욱 안정적/명확하게 처리할 수 있으나 현재 [this] 캡처는 유효함.
-        disp.OnInspReady    = [this](const VisionCom::ByteArray& b) { this->OnInspReady(b);     };
-        disp.OnSetCok       = [this](const VisionCom::ByteArray& b) { this->OnSetCok(b);        };
-        disp.OnMeasure      = [this](const VisionCom::ByteArray& b) { this->OnMeasure(b);       };
-        disp.OnLight        = [this](const VisionCom::ByteArray& b) { this->OnLight(b);         };
-        disp.OnDeviceCheck  = [this](const VisionCom::ByteArray& b) { this->OnDeviceCheck(b);   };
-
-        disp.RegisterHandler(107, 9,
+        disp.RegisterHandler(VisionCom::VisionProtocol::Measure,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
-
-                if (d.OnMeasure) d.OnMeasure(body);
+                (void)s;
+                (void)f;
+                (void)serverIndex;
+                this->OnMeasure(body);
             });
 
-        disp.RegisterHandler(2, 42,
+        disp.RegisterHandler(VisionCom::VisionProtocol::ControlAck,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
-                if (d.OnSetCok)      d.OnSetCok(body);
-                if (d.OnInspReady)   d.OnInspReady(body);
+                (void)s;
+                (void)f;
+                (void)serverIndex;
+                this->OnSetCok(body);
+                this->OnInspReady(body);
             });
     }
 
@@ -48,8 +44,8 @@ namespace DVH_VAT
         ClearLatestData(SetCok);
 
         CPacketBody_S2F41 body;
-        body.nCmd = 1000;
-        body.nParamCount = 7;
+        body.nCmd =1000;
+        body.nParamCount =7;
 
         // C++11: 타입 추론 auto를 이용해 장황한 반복자 타입 선언 축소
         auto it = params.find(RECIPE_NAME);
@@ -79,8 +75,7 @@ namespace DVH_VAT
 
         VisionCom::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
-        secsPkt.SetOpCode(2);
-        secsPkt.SetSubCode(41);
+        secsPkt.SetProtocol(VisionCom::VisionProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionCom::VisionOK);
@@ -91,8 +86,8 @@ namespace DVH_VAT
         ClearLatestData(InspReady);
 
         CPacketBody_S2F41 body;
-        body.nCmd = 1000;
-        body.nParamCount = 7;
+        body.nCmd =1000;
+        body.nParamCount =7;
 
         auto it = params.find(RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
@@ -121,8 +116,7 @@ namespace DVH_VAT
 
         VisionCom::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
-        secsPkt.SetOpCode(2);
-        secsPkt.SetSubCode(41);
+        secsPkt.SetProtocol(VisionCom::VisionProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionCom::VisionOK);
@@ -155,8 +149,7 @@ namespace DVH_VAT
 
         VisionCom::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nDataID);
-        secsPkt.SetOpCode(107);
-        secsPkt.SetSubCode(9);
+        secsPkt.SetProtocol(VisionCom::VisionProtocol::Measure);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionCom::VisionOK);

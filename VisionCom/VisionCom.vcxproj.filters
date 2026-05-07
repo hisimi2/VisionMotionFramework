@@ -4,9 +4,6 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="VisionComCore.cpp" />
-    <ClCompile Include="Src\WorkerScheduler.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Src\VisionTimer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -25,6 +22,7 @@
     <ClCompile Include="Src\SECSIPacket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Src\TaskExecutor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
@@ -75,6 +73,8 @@
     <ClInclude Include="Include\FixedLengthFramer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Include\TaskExecutor.h" />
+    <ClInclude Include="Include\VisionProtocol.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VisionComCore.rc" />

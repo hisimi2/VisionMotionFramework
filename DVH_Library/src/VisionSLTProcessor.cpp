@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VisionSLTProcessor.h"
 #include "VisionMsgDispatcher.h"
 #include "VisionPacketSLT.h"
-#include "VisionMemoryKeys.h" // VisionKeys 사용을 위해 추가
+#include "VisionMemoryKeys.h"
 
 #include <vector>
 #include <string>
@@ -14,31 +14,31 @@ namespace DVH_VAT
     {
         VisionCom::VisionMsgDispatcher& disp = m_ctrl.GetDispatcher();
 
-        disp.OnInspReady    = [this](const VisionCom::ByteArray& b) { this->OnInspReady(b);     };
-        disp.OnSetCok       = [this](const VisionCom::ByteArray& b) { this->OnSetCok(b);        };
-        disp.OnMeasure      = [this](const VisionCom::ByteArray& b) { this->OnMeasure(b);       };
-        disp.OnLight        = [this](const VisionCom::ByteArray& b) { this->OnLight(b);         };
-        disp.OnDeviceCheck  = [this](const VisionCom::ByteArray& b) { this->OnDeviceCheck(b);   };
-
-        disp.RegisterHandler(107, 9,
+        disp.RegisterHandler(VisionCom::VisionProtocol::Measure,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
-                if (d.OnMeasure) d.OnMeasure(body);
+                (void)s;
+                (void)f;
+                (void)serverIndex;
+                this->OnMeasure(body);
             });
 
-        disp.RegisterHandler(2, 42,
+        disp.RegisterHandler(VisionCom::VisionProtocol::ControlAck,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
-                if (d.OnSetCok) d.OnSetCok(body);
+                (void)s;
+                (void)f;
+                (void)serverIndex;
+                this->OnSetCok(body);
             });
 
-        disp.RegisterHandler(2, 4,
+        disp.RegisterHandler(VisionCom::VisionProtocol::DeviceCheckAck,
             [this](int s, int f, const std::vector<uint8_t>& body, int serverIndex)
             {
-                VisionCom::VisionMsgDispatcher& d = this->m_ctrl.GetDispatcher();
-                if (d.OnDeviceCheck) d.OnDeviceCheck(body);
+                (void)s;
+                (void)f;
+                (void)serverIndex;
+                this->OnDeviceCheck(body);
             });
     }
 
@@ -52,8 +52,8 @@ namespace DVH_VAT
         CPacketBody_S2F41 body;
         // memset 대신 Clear() 유틸 사용 권장
         body.Clear();
-        body.nCmd = 1000;
-        body.nParamCount = 7;
+        body.nCmd =1000;
+        body.nParamCount =7;
 
         // C++11: auto를 이용한 타입 추론
         auto it = params.find(RECIPE_NAME);
@@ -83,8 +83,7 @@ namespace DVH_VAT
 
         VisionCom::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
-        secsPkt.SetOpCode(2);
-        secsPkt.SetSubCode(41);
+        secsPkt.SetProtocol(VisionCom::VisionProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionCom::VisionOK);
@@ -96,8 +95,8 @@ namespace DVH_VAT
 
         CPacketBody_S2F41 body;
         body.Clear();
-        body.nCmd = 1000;
-        body.nParamCount = 7;
+        body.nCmd =1000;
+        body.nParamCount =7;
 
         auto it = params.find(RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
@@ -126,8 +125,7 @@ namespace DVH_VAT
 
         VisionCom::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
-        secsPkt.SetOpCode(2);
-        secsPkt.SetSubCode(41);
+        secsPkt.SetProtocol(VisionCom::VisionProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionCom::VisionOK);
@@ -162,8 +160,7 @@ namespace DVH_VAT
 
         VisionCom::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nDataID);
-        secsPkt.SetOpCode(107);
-        secsPkt.SetSubCode(9);
+        secsPkt.SetProtocol(VisionCom::VisionProtocol::Measure);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionCom::VisionOK);
@@ -193,7 +190,6 @@ namespace DVH_VAT
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        // C++11: std::stringstream 대신 std::to_string 사용 (성능/가독성 향상)
         data["MsgID"]   = std::to_string(pkt.nDataID);
         data["PCIndex"] = std::to_string(pkt.nIndex);
         data["Status"]  = std::to_string(pkt.nRCMDACK);
@@ -213,7 +209,6 @@ namespace DVH_VAT
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        // C++11: std::stringstream 대체
         data["MsgID"]   = std::to_string(pkt.nDataID);
         data["PCIndex"] = std::to_string(pkt.nIndex);
         data["Result"]  = std::to_string(pkt.nRCMDACK);

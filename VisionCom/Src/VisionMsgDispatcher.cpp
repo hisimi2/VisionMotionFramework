@@ -2,12 +2,10 @@
 #include "stdafx.h"
 
 #include "VisionMsgDispatcher.h"
-// [FIX] SchedulerTask 타입 인식을 위해 명시적 포함
-#include "IScheduler.h" 
-#include "WorkerScheduler.h"
+#include "IScheduler.h"
+#include "TaskExecutor.h"
 #include "VisionLogger.h"
 
-// Boost 대신 C++ 표준 라이브러리 사용
 #include <mutex>
 #include <functional>
 #include <map>
@@ -18,11 +16,9 @@ namespace VisionCom
 {
     struct VisionMsgDispatcher::Impl
     {
-        // C++11/14: typedef 대신 using 사용 권장
         using SFKey = std::pair<int, int>;
         std::map<SFKey, PacketHandler> m_map;
         std::mutex m_mapMutex;
-
         std::shared_ptr<IScheduler> m_scheduler;
 
         Impl() : m_scheduler() {}
@@ -36,7 +32,6 @@ namespace VisionCom
     void VisionMsgDispatcher::SetScheduler(std::shared_ptr<IScheduler> scheduler)
     {
         if (!m_pImpl) return;
-        // boost::mutex::scoped_lock -> std::lock_guard
         std::lock_guard<std::mutex> lock(m_pImpl->m_mapMutex);
         m_pImpl->m_scheduler = scheduler;
     }
@@ -46,7 +41,12 @@ namespace VisionCom
     {
         if (!m_pImpl) return;
         std::lock_guard<std::mutex> lock(m_pImpl->m_mapMutex);
-        m_pImpl->m_map[std::make_pair(s, f)] = handler;
+        m_pImpl->m_map[std::make_pair(s, f)] = std::move(handler);
+    }
+
+    void VisionMsgDispatcher::RegisterHandler(const VisionProtocolId& protocolId, PacketHandler handler)
+    {
+        RegisterHandler(static_cast<int>(protocolId.stream), static_cast<int>(protocolId.function), std::move(handler));
     }
 
     void VisionMsgDispatcher::UnregisterHandler(int s, int f)
@@ -56,11 +56,21 @@ namespace VisionCom
         m_pImpl->m_map.erase(std::make_pair(s, f));
     }
 
+    void VisionMsgDispatcher::UnregisterHandler(const VisionProtocolId& protocolId)
+    {
+        UnregisterHandler(static_cast<int>(protocolId.stream), static_cast<int>(protocolId.function));
+    }
+
     bool VisionMsgDispatcher::HasHandler(int s, int f)
     {
         if (!m_pImpl) return false;
         std::lock_guard<std::mutex> lock(m_pImpl->m_mapMutex);
         return m_pImpl->m_map.find(std::make_pair(s, f)) != m_pImpl->m_map.end();
+    }
+
+    bool VisionMsgDispatcher::HasHandler(const VisionProtocolId& protocolId)
+    {
+        return HasHandler(static_cast<int>(protocolId.stream), static_cast<int>(protocolId.function));
     }
 
     void VisionMsgDispatcher::OnReceive(int s, int f, const std::vector<uint8_t>& body, int serverIndex)

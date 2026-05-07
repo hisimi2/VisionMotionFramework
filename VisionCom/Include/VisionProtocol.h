@@ -1,0 +1,37 @@
+#pragma once
+
+namespace VisionCom
+{
+ enum class VisionStream : int
+ {
+ Measure =107,
+ Control =2
+ };
+
+ enum class VisionFunction : int
+ {
+ Measure =9,
+ ControlRequest =41,
+ ControlAck =42,
+ DeviceCheckAck =4
+ };
+
+ struct VisionProtocolId
+ {
+ VisionStream stream;
+ VisionFunction function;
+
+ VisionProtocolId(VisionStream s, VisionFunction f)
+ : stream(s), function(f)
+ {
+ }
+ };
+
+ namespace VisionProtocol
+ {
+ static const VisionProtocolId Measure(VisionStream::Measure, VisionFunction::Measure);
+ static const VisionProtocolId ControlRequest(VisionStream::Control, VisionFunction::ControlRequest);
+ static const VisionProtocolId ControlAck(VisionStream::Control, VisionFunction::ControlAck);
+ static const VisionProtocolId DeviceCheckAck(VisionStream::Control, VisionFunction::DeviceCheckAck);
+ }
+}

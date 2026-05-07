@@ -123,12 +123,12 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\SECSIPacket.cpp" />
+    <ClCompile Include="Src\TaskExecutor.cpp" />
     <ClCompile Include="Src\VisionController.cpp" />
     <ClCompile Include="Src\VisionLogger.cpp" />
     <ClCompile Include="Src\VisionMsgDispatcher.cpp" />
     <ClCompile Include="Src\VisionTcpClient.cpp" />
     <ClCompile Include="Src\VisionTimer.cpp" />
-    <ClCompile Include="Src\WorkerScheduler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -144,10 +144,12 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="Include\ITransport.h" />
     <ClInclude Include="Include\IVisionPacket.h" />
     <ClInclude Include="Include\SECSIPacket.h" />
+    <ClInclude Include="Include\TaskExecutor.h" />
     <ClInclude Include="Include\VisionComAPI.h" />
     <ClInclude Include="Include\VisionController.h" />
     <ClInclude Include="Include\VisionLogger.h" />
     <ClInclude Include="Include\VisionMsgDispatcher.h" />
+    <ClInclude Include="Include\VisionProtocol.h" />
     <ClInclude Include="Include\VisionTcpClient.h" />
     <ClInclude Include="Include\VisionTimer.h" />
     <ClInclude Include="Include\WorkerScheduler.h" />

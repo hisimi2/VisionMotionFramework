@@ -28,7 +28,7 @@ namespace VisionCom
         void SetLogger(std::shared_ptr<ILogger> logger);
         void SetScheduler(std::shared_ptr<IScheduler> scheduler);
 
-        bool Initialize(char* szIp, int nPort, int nSocketType, int timeoutMs);
+        bool Initialize(const char* szIp, int nPort, int nSocketType, int timeoutMs);
         void Disconnect();
         bool IsConnected() const;
 

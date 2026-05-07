@@ -2,7 +2,7 @@
 
 #include "VisionController.h"
 #include "VisionMsgDispatcher.h"
-#include "ByteOrder.h"   
+#include "ByteOrder.h" 
 #include <queue>
 
 // Boost 대신 C++ 표준 라이브러리 사용
@@ -15,19 +15,19 @@
 #include "FixedLengthFramer.h"
 namespace VisionCom
 {
-    // Member 구조체 정의
+ // Member 구조체 정의
 	struct VisionController::Impl
 	{
 		std::shared_ptr<ITransport> m_transport;
 		std::shared_ptr<IFramer> m_framer;
 		std::shared_ptr<IScheduler> m_scheduler;
-		std::shared_ptr<ILogger>    m_logger;
+		std::shared_ptr<ILogger> m_logger;
 		
-        // Boost -> 표준 라이브러리
-		std::atomic<bool>         m_running;
-		std::atomic<bool>         m_PacketReceived;
-		std::atomic<bool>         m_bStatusConnect;
-		VisionMsgDispatcher*      m_dispatcher;
+ // Boost -> 표준 라이브러리
+		std::atomic<bool> m_running;
+		std::atomic<bool> m_PacketReceived;
+		std::atomic<bool> m_bStatusConnect;
+		VisionMsgDispatcher* m_dispatcher;
 
 		std::shared_ptr<std::thread> m_recvThread;
 
@@ -39,12 +39,12 @@ namespace VisionCom
 			: m_dispatcher(new VisionMsgDispatcher())
 			, m_running(false)
 			, m_PacketReceived(false)
-            , m_bStatusConnect(false)
+ , m_bStatusConnect(false)
 		{
-            // C++14: auto 와 std::make_shared 적극 사용
+ // C++14: auto 와 std::make_shared 적극 사용
 			m_transport = std::make_shared<VisionTcpClient>();
 
-			// 1. 먼저 자식 타입으로 생성
+			//1. 먼저 자식 타입으로 생성
 			auto concreteFramer = std::make_shared<VisionCom::FixedLengthFramer>(664);
 
 			m_framer = std::static_pointer_cast<VisionCom::IFramer>(concreteFramer);
@@ -73,7 +73,7 @@ namespace VisionCom
 				ByteVector frame;
 
 				while (m_framer->NextFrame(frame)) {
-                    // boost::lock_guard -> std::lock_guard
+ // boost::lock_guard -> std::lock_guard
 					std::lock_guard<std::mutex> lock(m_queueMutex);
 					m_packetQueue.push(frame); // 안전하게 큐에 저장
 				}
@@ -88,7 +88,7 @@ namespace VisionCom
 		{
 			std::queue<ByteVector> localQueue;
 			{
-                // boost::lock_guard -> std::lock_guard
+ // boost::lock_guard -> std::lock_guard
 				std::lock_guard<std::mutex> lock(m_queueMutex);
 				std::swap(localQueue, m_packetQueue);
 			}
@@ -99,24 +99,24 @@ namespace VisionCom
 			while (!localQueue.empty()) {
 				const ByteVector& frame = localQueue.front();
 
-				// 1. 최소 헤더 크기 체크 (하드코딩 12 대신 구조체 크기 사용)
+				//1. 최소 헤더 크기 체크 (하드코딩12 대신 구조체 크기 사용)
 				if (frame.size() >= headerSize) {
 
-					// 2. 메모리 복사로 헤더 채우기 (가장 안전하고 깔끔한 방법)
+					//2. 메모리 복사로 헤더 채우기 (가장 안전하고 깔끔한 방법)
 					SECSPacketHeader header;
 					std::memcpy(&header, frame.data(), headerSize);
 
-					// 3. nLength 교정 (프레임 전체 크기 - 헤더 크기 = 순수 바디 크기)
+					//3. nLength 교정 (프레임 전체 크기 - 헤더 크기 = 순수 바디 크기)
 					header.nLength = static_cast<int>(frame.size() - headerSize);
 
-					// 4. 바디(Body) 데이터 추출
+					//4. 바디(Body) 데이터 추출
 					ByteArray body;
 					if (frame.size() > headerSize) {
 						// 헤더 이후의 위치부터 끝까지 복사
 						body.assign(frame.begin() + headerSize, frame.end());
 					}
 
-					// 5. 디스패치
+					//5. 디스패치
 					if (m_dispatcher) {
 						m_dispatcher->Dispatch(header, body);
 					}
@@ -126,38 +126,38 @@ namespace VisionCom
 		}
 	};
 
-    // C++14: std::make_unique 사용 권장 (하지만 기존 클래스 구조 유지를 위해 new 사용)
-    VisionController::VisionController() : m_pImpl(std::make_unique<Impl>()) {}
+ // C++14: std::make_unique 사용 권장 (하지만 기존 클래스 구조 유지를 위해 new 사용)
+ VisionController::VisionController() : m_pImpl(std::make_unique<Impl>()) {}
 
-    VisionController::~VisionController() 
-    {
-        StopReceiving();
-        // std::unique_ptr이므로 delete 구문 생략 가능
-    }
+ VisionController::~VisionController() 
+ {
+ StopReceiving();
+ // std::unique_ptr이므로 delete 구문 생략 가능
+ }
 
-    void VisionController::SetTransport(std::shared_ptr<ITransport> transport)
-    {
-        if(m_pImpl) m_pImpl->m_transport = transport;
-    }
-    
-    void VisionController::SetLogger(std::shared_ptr<ILogger> logger)
-    {
-        if(m_pImpl) m_pImpl->m_logger = logger;
-    }
+ void VisionController::SetTransport(std::shared_ptr<ITransport> transport)
+ {
+ if(m_pImpl) m_pImpl->m_transport = transport;
+ }
+ 
+ void VisionController::SetLogger(std::shared_ptr<ILogger> logger)
+ {
+ if(m_pImpl) m_pImpl->m_logger = logger;
+ }
 
-    void VisionController::SetScheduler(std::shared_ptr<IScheduler> scheduler)
-    {
-        if(m_pImpl)
-        {
-            m_pImpl->m_scheduler = scheduler;
-            // 디스패처가 있으면 디스패처에도 스케줄러 전달
-            if (m_pImpl->m_dispatcher) {
-                m_pImpl->m_dispatcher->SetScheduler(scheduler);
-            }
-        }
-    }
+ void VisionController::SetScheduler(std::shared_ptr<IScheduler> scheduler)
+ {
+ if(m_pImpl)
+ {
+ m_pImpl->m_scheduler = scheduler;
+ // 디스패처가 있으면 디스패처에도 스케줄러 전달
+ if (m_pImpl->m_dispatcher) {
+ m_pImpl->m_dispatcher->SetScheduler(scheduler);
+ }
+ }
+ }
 
-	bool VisionController::Initialize(char* szIp, int nPort, int nSocketType, int timeoutMs)
+	bool VisionController::Initialize(const char* szIp, int nPort, int nSocketType, int timeoutMs)
 	{
 		if (!m_pImpl)
 			return false;
@@ -188,21 +188,21 @@ namespace VisionCom
 	}
 
 
-    void VisionController::Disconnect() 
-    {
-        StopReceiving();
-        if(m_pImpl && m_pImpl->m_transport) 
-        {
-            m_pImpl->m_transport->Disconnect();
-        }
-    }
+ void VisionController::Disconnect() 
+ {
+ StopReceiving();
+ if(m_pImpl && m_pImpl->m_transport) 
+ {
+ m_pImpl->m_transport->Disconnect();
+ }
+ }
 
-    bool VisionController::IsConnected() const 
-    {
-        if(m_pImpl && m_pImpl->m_transport)
-            return m_pImpl->m_transport->IsConnected();
-        return false;
-    }
+ bool VisionController::IsConnected() const 
+ {
+ if(m_pImpl && m_pImpl->m_transport)
+ return m_pImpl->m_transport->IsConnected();
+ return false;
+ }
 
 	VisionStatus VisionController::SendPacketAsync(const SECSPacket& pkt)
 	{
@@ -216,7 +216,7 @@ namespace VisionCom
 		ByteArray payload = pkt.ToByteArray();
 
 		int bytesSent = impl.m_transport->Send(payload);
-		return (bytesSent > 0) ? VisionOK : VisionFailed;
+		return (bytesSent >0) ? VisionOK : VisionFailed;
 	}
 
 	void VisionController::StartReceiving()
@@ -232,37 +232,37 @@ namespace VisionCom
 		if (pimpl->m_transport)
 		{
 			pimpl->m_transport->SetReceiveCallback(
-                [pimpl](const ByteArray& data) {
-                    pimpl->HandleTransportData(data);
-                }
+ [pimpl](const ByteArray& data) {
+ pimpl->HandleTransportData(data);
+ }
 			);
 
 			pimpl->m_transport->StartRecvThread();
 		}
 	}
 
-    void VisionController::StopReceiving()
-    {
-        if(!m_pImpl) return;
+ void VisionController::StopReceiving()
+ {
+ if(!m_pImpl) return;
 
-        Impl* pimpl = m_pImpl.get();  // [수정] .get() 호출
-        pimpl->m_running = false;
+ Impl* pimpl = m_pImpl.get(); // [수정] .get() 호출
+ pimpl->m_running = false;
 
-        if (pimpl->m_transport)
-        {
-            pimpl->m_transport->SetReceiveCallback(TransportReceiveCallback());
-        }
-    }
+ if (pimpl->m_transport)
+ {
+ pimpl->m_transport->SetReceiveCallback(TransportReceiveCallback());
+ }
+ }
 
-    VisionMsgDispatcher& VisionController::GetDispatcher()
-    {
-        return *(m_pImpl->m_dispatcher);
-    }
+ VisionMsgDispatcher& VisionController::GetDispatcher()
+ {
+ return *(m_pImpl->m_dispatcher);
+ }
 
 	void VisionController::PacketThread()
 	{
 		if (!m_pImpl) return;
 
-		m_pImpl->ProcessPackets();  // 내부 Impl 호출
+		m_pImpl->ProcessPackets(); // 내부 Impl 호출
 	}
 }
