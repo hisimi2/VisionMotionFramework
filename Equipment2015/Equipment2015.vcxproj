@@ -92,12 +92,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionCom\include;$(SolutionDir)DVH_Library\include;$(ProjectDir)DVH_VAT\Mock;$(ProjectDir)DVH_VAT\Load1\Tasks;$(ProjectDir)DVH_VAT\Load1\Strategies;$(ProjectDir)DVH_VAT\Load1\Sequences;$(ProjectDir)DVH_VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(ProjectDir)DVH_VAT\Mock;$(ProjectDir)DVH_VAT\Load1\Tasks;$(ProjectDir)DVH_VAT\Load1\Strategies;$(ProjectDir)DVH_VAT\Load1\Sequences;$(ProjectDir)DVH_VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DVH_VAT.lib;VisionCom.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

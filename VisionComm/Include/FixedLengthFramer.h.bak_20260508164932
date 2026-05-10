@@ -1,0 +1,78 @@
+﻿#pragma once
+#include "IFramer.h"
+#include <vector>
+
+namespace VisionCom
+{
+	class FixedLengthFramer : public IFramer
+	{
+	private:
+		std::vector<uint8_t> m_buffer;
+		size_t m_packetSize; // 생성 시 결정되는 패킷 크기
+		size_t m_head; // 읽기 위치 (앞에서 지우지 않고 오프셋만 증가)
+
+		// 임계값: m_head가 이보다 크거나 전체의 절반 이상이면 버퍼를 컴팩트한다
+		static constexpr size_t COMPACT_THRESHOLD = 4096;
+
+	public:
+		// 생성자에서 패킷 크기를 주입받음 (기본값 설정 가능)
+		explicit FixedLengthFramer(size_t packetSize = 664)
+			: m_buffer(), m_packetSize(static_cast<size_t>(packetSize)), m_head(0)
+		{
+			// 초기 예약으로 재할당을 줄임
+			m_buffer.reserve(m_packetSize * 2);
+		}
+
+		// C++14: 다형성 소멸자는 `= default`로 선언하는 것을 권장
+		~FixedLengthFramer() override = default;
+
+		void FeedBytes(const ByteVector& bytes) override {
+			if (bytes.empty()) return;
+
+			// 재할당을 최소화하기 위해 충분히 reserve
+			size_t newSize = m_buffer.size() + bytes.size();
+			if (m_buffer.capacity() < newSize) m_buffer.reserve(newSize);
+			m_buffer.insert(m_buffer.end(), bytes.begin(), bytes.end());
+		}
+
+		std::unique_ptr<ByteVector> NextFrame() override {
+			// 사용 가능한 바이트 수 계산
+			size_t available = (m_buffer.size() >= m_head) ? (m_buffer.size() - m_head) : 0;
+			if (available < m_packetSize) return nullptr;
+
+			// 만약 head가 0이고 버퍼 크기가 정확히 패킷 크기이면 이동으로 복사 비용 제거
+			if (m_head == 0 && m_buffer.size() == m_packetSize) {
+				auto frame = std::make_unique<ByteVector>(std::move(m_buffer));
+				// 다음 사용을 위해 버퍼를 재초기화
+				m_buffer.clear();
+				m_buffer.reserve(m_packetSize * 2);
+				m_head = 0;
+				return frame;
+			}
+
+			// 일반적인 경우: 필요한 부분만 복사
+			auto frame = std::make_unique<ByteVector>();
+			frame->reserve(m_packetSize);
+			frame->insert(frame->end(), m_buffer.begin() + m_head, m_buffer.begin() + m_head + m_packetSize);
+			m_head += m_packetSize;
+
+			// m_head가 일정 임계치에 도달하면 남은 데이터를 앞으로 당겨와서 메모리를 회수
+			if (m_head >= static_cast<size_t>(COMPACT_THRESHOLD) || m_head >= m_buffer.size() / 2) {
+				if (m_head < m_buffer.size()) {
+					std::vector<uint8_t> tmp;
+					tmp.reserve(m_buffer.size() - m_head);
+					tmp.insert(tmp.end(), m_buffer.begin() + m_head, m_buffer.end());
+					m_buffer.swap(tmp);
+				} else {
+					m_buffer.clear();
+				}
+				m_head = 0;
+			}
+
+			return frame;
+		}
+
+		// 실행 중에도 크기를 바꿀 수 있는 인터페이스 (선택 사항)
+		void SetPacketSize(size_t size) { m_packetSize = size; }
+	};
+}

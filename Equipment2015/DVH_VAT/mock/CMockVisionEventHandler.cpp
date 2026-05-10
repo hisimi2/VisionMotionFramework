@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CMockVisionEventHandler.h"
 
 namespace DVH_VAT
@@ -7,18 +7,18 @@ namespace DVH_VAT
         : m_connected(false)
         , m_requestResult(true)
     {
-        // m_latestData, m_receivedFlags 기본 생성자 사용
+        // m_latestData, m_receivedFlags 湲곕낯 ?앹꽦???ъ슜
     }
 
     CMockVisionEventHandler::~CMockVisionEventHandler()
     {
     }
 
-    VisionCom::VisionStatus CMockVisionEventHandler::Initialize(const VisionConnectionConfig& /*config*/)
+    VisionComm::VisionStatus CMockVisionEventHandler::Initialize(const VisionConnectionConfig& /*config*/)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         m_connected = true;
-        return VisionCom::VisionOK;
+        return VisionComm::VisionOK;
     }
 
     void CMockVisionEventHandler::Disconnect()
@@ -99,10 +99,10 @@ namespace DVH_VAT
 
     void CMockVisionEventHandler::InitializeRecvThread()
     {
-        // 테스트용 모의 구현: 수신 스레드 없음
+        // ?뚯뒪?몄슜 紐⑥쓽 援ы쁽: ?섏떊 ?ㅻ젅???놁쓬
     }
 
-    void CMockVisionEventHandler::OnSetCok(const ByteArray& body)
+    void CMockVisionEventHandler::OnSetCok(ByteArray body)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         StringMap m;
@@ -111,7 +111,7 @@ namespace DVH_VAT
         m_receivedFlags[SetCok] = true;
     }
 
-    void CMockVisionEventHandler::OnInspReady(const ByteArray& body)
+    void CMockVisionEventHandler::OnInspReady(ByteArray body)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         StringMap m;
@@ -120,7 +120,7 @@ namespace DVH_VAT
         m_receivedFlags[InspReady] = true;
     }
 
-    void CMockVisionEventHandler::OnMeasure(const ByteArray& body)
+    void CMockVisionEventHandler::OnMeasure(ByteArray body)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         StringMap m;
@@ -129,7 +129,7 @@ namespace DVH_VAT
         m_receivedFlags[Measure] = true;
     }
 
-    void CMockVisionEventHandler::OnDeviceCheck(const ByteArray& body)
+    void CMockVisionEventHandler::OnDeviceCheck(ByteArray body)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         StringMap m;
@@ -138,7 +138,7 @@ namespace DVH_VAT
         m_receivedFlags[DeviceCheck] = true;
     }
 
-    void CMockVisionEventHandler::OnLight(const ByteArray& body)
+    void CMockVisionEventHandler::OnLight(ByteArray body)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         StringMap m;
@@ -166,3 +166,4 @@ namespace DVH_VAT
     }
 
 } // namespace DVH_VAT
+

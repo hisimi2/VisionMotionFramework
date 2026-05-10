@@ -9,8 +9,8 @@
 
 namespace DVH_VAT
 {
-    // 테스트/유닛테스트용 모의 구현체: IVisionEventHandler 인터페이스 구현
-    // 클래스명은 프로젝트 규칙에 따라 'C' 접두를 사용합니다.
+    // ?뚯뒪???좊떅?뚯뒪?몄슜 紐⑥쓽 援ы쁽泥? IVisionEventHandler ?명꽣?섏씠??援ы쁽
+    // ?대옒?ㅻ챸? ?꾨줈?앺듃 洹쒖튃???곕씪 'C' ?묐몢瑜??ъ슜?⑸땲??
     class CMockVisionEventHandler : public IVisionEventHandler
     {
     public:
@@ -18,7 +18,7 @@ namespace DVH_VAT
         virtual ~CMockVisionEventHandler();
 
         // IAsyncVisionProcessor
-        virtual VisionCom::VisionStatus Initialize(const VisionConnectionConfig& config);
+        virtual VisionComm::VisionStatus Initialize(const VisionConnectionConfig& config);
         virtual void Disconnect();
         virtual bool IsConnected() const;
 
@@ -33,35 +33,36 @@ namespace DVH_VAT
         virtual bool IsValid(VatCommand type) const;
         virtual bool HasReceived(VatCommand type) const;
 
-        // IVisionEventHandler (수신 콜백)
+        // IVisionEventHandler (?섏떊 肄쒕갚)
         virtual void InitializeRecvThread();
 
-        virtual void OnSetCok(const ByteArray& body);
-        virtual void OnInspReady(const ByteArray& body);
-        virtual void OnMeasure(const ByteArray& body);
-        virtual void OnDeviceCheck(const ByteArray& body);
-        virtual void OnLight(const ByteArray& body);
+        virtual void OnSetCok(ByteArray body);
+        virtual void OnInspReady(ByteArray body);
+        virtual void OnMeasure(ByteArray body);
+        virtual void OnDeviceCheck(ByteArray body);
+        virtual void OnLight(ByteArray body);
 
-        // 테스트 헬퍼
+        // ?뚯뒪???ы띁
         void SetRequestResult(bool ok);
         StringMap GetLastRequestParams() const;
 
     private:
         mutable std::mutex m_mutex;
         bool m_connected;
-        bool m_requestResult; // RequestXXXAsync 반환값을 제어
+        bool m_requestResult; // RequestXXXAsync 諛섑솚媛믪쓣 ?쒖뼱
 
-        // 최신 데이터 보관 (VatCommand -> StringMap)
+        // 理쒖떊 ?곗씠??蹂닿? (VatCommand -> StringMap)
         std::map<int, StringMap> m_latestData;
 
-        // 수신 플래그 (인스턴스별)
+        // ?섏떊 ?뚮옒洹?(?몄뒪?댁뒪蹂?
         std::map<int, bool> m_receivedFlags;
 
-        // 마지막으로 전달된 요청 파라미터 (단순 검사용)
+        // 留덉?留됱쑝濡??꾨떖???붿껌 ?뚮씪誘명꽣 (?⑥닚 寃?ъ슜)
         StringMap m_lastRequestParams;
 
-        // 바디를 간단한 문자열로 변환하는 유틸
+        // 諛붾뵒瑜?媛꾨떒??臾몄옄?대줈 蹂?섑븯???좏떥
         static std::string BodyToString(const ByteArray& b);
     };
 } // namespace DVH_VAT
+
 
