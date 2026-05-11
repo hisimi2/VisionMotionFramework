@@ -60,7 +60,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>.\DVH_VAT.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\VisionMotionFramework.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>VisionComm.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -109,10 +109,9 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="DVH_VAT.def" />
+    <None Include="VisionMotionFramework.def" />
     <None Include="ReadMe.txt" />
-    <None Include="res\DVH_VAT.rc2" />
-    <None Include="src\Sql" />
+    <None Include="res\VisionMotionFramework.rc2" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -123,7 +122,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="DVH_VAT.cpp" />
+    <ClCompile Include="VisionMotionFramework.cpp" />
     <ClCompile Include="src\AsyncDataRepository.cpp" />
     <ClCompile Include="src\AsyncSequenceRunner.cpp" />
     <ClCompile Include="src\CVatEngineUiAdapter.cpp" />
@@ -183,7 +182,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DVH_VAT.rc" />
+    <ResourceCompile Include="VisionMotionFramework.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
