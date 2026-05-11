@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1CommitPickerCamDistanceResultsTask.h"
 #include "DVH_VAT/DefineVAT.h"
 
@@ -13,7 +13,7 @@ CLoad1CommitPickerCamDistanceResultsTask::CLoad1CommitPickerCamDistanceResultsTa
 	, m_pickerReferencePosY_Narrow(0.0)
 	, m_pickerReferencePosX_Wide(0.0)
 	, m_pickerReferencePosY_Wide(0.0)
-	, m_currentPitchMode(DVH_VAT::Narrow)
+	, m_currentPitchMode(VMF::Narrow)
 {
 }
 
@@ -21,10 +21,10 @@ CLoad1CommitPickerCamDistanceResultsTask::~CLoad1CommitPickerCamDistanceResultsT
 {
 }
 
-void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(VMF::VAT_Context& ctx)
 {
 	m_currentUpperCameraIndex = 0;
-	m_currentPitchMode = DVH_VAT::Narrow;
+	m_currentPitchMode = VMF::Narrow;
 
 	m_lowerCameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
@@ -37,7 +37,7 @@ void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(DVH_VAT::VAT_Context
 	if (repo && m_pickerHandId > 0)
 	{
 		std::vector<int> camList;
-		if (repo->LoadHandCamGroup(m_pickerHandId, camList) == DVH_VAT::StorageSuccess)
+		if (repo->LoadHandCamGroup(m_pickerHandId, camList) == VMF::StorageSuccess)
 		{
 			for (std::vector<int>::iterator it = camList.begin(); it != camList.end(); ++it)
 			{
@@ -53,21 +53,21 @@ void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(DVH_VAT::VAT_Context
 	EnterState(GetStdPickerPos);
 }
 
-DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
 	case GetStdPickerPos: return HandleGetStdPickerPos(ctx, actuator);
 	case CalcCamAlignPos: return HandleCalcCamAlignPos(ctx, actuator);
-	default:              return DVH_VAT::TR_ERROR;
+	default:              return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPickerPos(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPickerPos(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	auto repo = ctx.getRepository();
 
@@ -77,12 +77,12 @@ DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPicker
 	int locateId = 0;
 	double outFocusZ = 0.0;
 
-	if (repo->LoadLocationIdByName("Picker", locateId) != DVH_VAT::StorageSuccess)
+	if (repo->LoadLocationIdByName("Picker", locateId) != VMF::StorageSuccess)
 	{
 		return SetErrorAndReturn(ctx, "Failed to load Picker location id");
 	}
 
-	if (m_currentPitchMode == DVH_VAT::Narrow)
+	if (m_currentPitchMode == VMF::Narrow)
 	{
 		if (repo->LoadInspInitPos(
 			m_lowerCameraId,
@@ -90,13 +90,13 @@ DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPicker
 			m_packageId,
 			m_pickerReferencePosX_Narrow,
 			m_pickerReferencePosY_Narrow,
-			outFocusZ) != DVH_VAT::StorageSuccess)
+			outFocusZ) != VMF::StorageSuccess)
 		{
 			return SetErrorAndReturn(ctx, "Failed to load Picker align position");
 		}
 
-		m_currentPitchMode = DVH_VAT::Wide;
-		return DVH_VAT::TR_PREV;
+		m_currentPitchMode = VMF::Wide;
+		return VMF::TR_PREV;
 	}
 
 	if (repo->LoadInspInitPos(
@@ -105,18 +105,18 @@ DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPicker
 		m_packageId,
 		m_pickerReferencePosX_Wide,
 		m_pickerReferencePosY_Wide,
-		outFocusZ) != DVH_VAT::StorageSuccess)
+		outFocusZ) != VMF::StorageSuccess)
 	{
 		return SetErrorAndReturn(ctx, "Failed to load Picker align position");
 	}
 
 	EnterState(CalcCamAlignPos);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleCalcCamAlignPos(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleCalcCamAlignPos(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (m_currentUpperCameraIndex >= m_upperCameraIds.size())
 	{
@@ -143,7 +143,7 @@ DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleCalcCamAlign
 			m_pickerReferencePosX_Wide,
 			m_pickerReferencePosY_Wide);
 
-		return DVH_VAT::TR_NEXT;
+		return VMF::TR_NEXT;
 	}
 
 	auto repo = ctx.getRepository();
@@ -232,6 +232,6 @@ DVH_VAT::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleCalcCamAlign
 		pickerCamDistY_Wide);
 
 	++m_currentUpperCameraIndex;
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 

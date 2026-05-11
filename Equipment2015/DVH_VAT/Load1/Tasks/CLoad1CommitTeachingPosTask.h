@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -6,7 +6,7 @@ namespace VAT_LOAD1
 {
 	namespace Task
 	{
-		class CLoad1CommitTeachingPosTask : public DVH_VAT::NonBlockingTaskBase
+		class CLoad1CommitTeachingPosTask : public VMF::NonBlockingTaskBase
 		{
             enum Substep
             {
@@ -16,10 +16,10 @@ namespace VAT_LOAD1
                 SaveTeachingPositions
             };
 
-            DVH_VAT::TaskResult HandleLoadPickerCameraOffset(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleLoadVisionPositions(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleLoadHandPitchOffsets(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleSaveTeachingPositions(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
+            VMF::TaskResult HandleLoadPickerCameraOffset(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleLoadVisionPositions(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleLoadHandPitchOffsets(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleSaveTeachingPositions(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
 
 		public:
 			CLoad1CommitTeachingPosTask();
@@ -31,8 +31,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(DVH_VAT::VAT_Context& ctx) override;
-            DVH_VAT::TaskResult OnPoll(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator) override;
+            void OnInitialize(VMF::VAT_Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
 
             struct HandPitchOffset
             {
@@ -58,7 +58,7 @@ namespace VAT_LOAD1
 			double m_pickerCameraOffsetY_Narrow;
 			double m_pickerCameraOffsetX_Wide;
 			double m_pickerCameraOffsetY_Wide;
-			std::vector<DVH_VAT::VisionPosition> m_teachingPositions;
+			std::vector<VMF::VisionPosition> m_teachingPositions;
 			std::vector<HandPitchOffset> m_handPitchOffsets;
 		};
     } // namespace Task

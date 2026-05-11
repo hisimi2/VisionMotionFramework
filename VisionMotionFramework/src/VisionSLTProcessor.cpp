@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VisionSLTProcessor.h"
 #include "VisionMsgDispatcher.h"
 #include "VisionPacketSLT.h"
@@ -8,7 +8,7 @@
 #include <string>
 #include <cstring>
 
-namespace DVH_VAT
+namespace VMF
 {
     VisionSLTProcessor::VisionSLTProcessor()
     {
@@ -287,6 +287,6 @@ namespace DVH_VAT
     {
         VisionProcessorBase::Process();
     }
-} // namespace DVH_VAT
+} // namespace VMF
 
 

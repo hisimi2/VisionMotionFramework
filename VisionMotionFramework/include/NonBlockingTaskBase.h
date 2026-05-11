@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
 #include "ITask.h"
@@ -11,7 +11,7 @@
 #include <string>
 #include <exception>
 
-namespace DVH_VAT
+namespace VMF
 {
     /// <summary>
     /// 비동기(비차단) 작업 스텝의 공통 기초 클래스입니다.

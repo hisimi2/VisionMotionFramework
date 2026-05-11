@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 #include <string>
 
@@ -6,7 +6,7 @@ namespace VAT_LOAD1
 {
 	namespace Task
 	{
-		class CLoad1PerformPCDScanningTask : public DVH_VAT::NonBlockingTaskBase
+		class CLoad1PerformPCDScanningTask : public VMF::NonBlockingTaskBase
 		{
             enum Substep
             {
@@ -20,14 +20,14 @@ namespace VAT_LOAD1
                 SavePCDResult
             };
 
-            DVH_VAT::TaskResult HandleMoveSafeZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveOrigin(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveTargetPositionXY(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveFocusPositionZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleVisionRequest(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleVisionWait(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleCalculatePCD(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleSavePCDResult(DVH_VAT::VAT_Context& ctx);
+            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveTargetPositionXY(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveFocusPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleCalculatePCD(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleSavePCDResult(VMF::VAT_Context& ctx);
 
 		public:
 			CLoad1PerformPCDScanningTask();
@@ -39,8 +39,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(DVH_VAT::VAT_Context& ctx) override;
-            DVH_VAT::TaskResult OnPoll(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator) override;
+            void OnInitialize(VMF::VAT_Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
 
             enum Axis
             {

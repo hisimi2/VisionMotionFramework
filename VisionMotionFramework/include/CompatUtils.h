@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // Windows 헤더 최소화 및 min/max 매크로 방지
 #if defined(_WIN32)
@@ -27,7 +27,7 @@
 // 새로 구현한 Logger 포함
 #include "Logger.h"
 
-namespace DVH_VAT 
+namespace VMF 
 {
     inline void DBG(const char* fn) {
         std::ostringstream ss;
@@ -89,4 +89,4 @@ namespace DVH_VAT
         Logger::Instance().Log(LOG_ERROR, msg);
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

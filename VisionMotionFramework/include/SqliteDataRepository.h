@@ -1,14 +1,14 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
 struct sqlite3; // forward declaration for sqlite3*
 
-namespace DVH_VAT
+namespace VMF
 {
 
-class DVH_VAT_API SqliteDataRepository : public IDataRepository
+class VMF_API SqliteDataRepository : public IDataRepository
 {
 public:
     // dbFilePath: sqlite 파일 경로. imageBasePath: 이미지 파일을 저장할 디렉터리
@@ -127,4 +127,4 @@ private:
     bool initialized_;
 };
 
-} // namespace DVH_VAT
+} // namespace VMF

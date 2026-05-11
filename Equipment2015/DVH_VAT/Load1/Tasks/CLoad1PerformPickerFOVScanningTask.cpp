@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CLoad1PerformPickerFOVScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include "VisionMemoryKeys.h"
@@ -27,7 +27,7 @@ CLoad1PerformPickerFOVScanningTask::~CLoad1PerformPickerFOVScanningTask()
 {
 }
 
-void CLoad1PerformPickerFOVScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1PerformPickerFOVScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 {
     m_cameraId              = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX,                0);
     m_packageId             = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID,                  0);
@@ -45,9 +45,9 @@ void CLoad1PerformPickerFOVScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
     EnterState(MoveSafeZ);
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::OnPoll(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::OnPoll(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     switch (GetState())
     {
@@ -80,9 +80,9 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::OnPoll(
     }
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveSafeZ(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveSafeZ(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (!actuator)
     {
@@ -98,50 +98,50 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveSafeZ(
         m_focusPositionZ    = currentPosition[2];
     }
 
-    if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+    if (actuator->MoveZ(0.0) != VMF::ActOk)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: MoveToSafeZ failed.");
     }
 
     EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveOrigin(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveOrigin(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (!actuator)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: actuator is null.");
     }
 
-    if (actuator->isMoveZ(0.0) != DVH_VAT::ActOk)
+    if (actuator->isMoveZ(0.0) != VMF::ActOk)
     {
         if (IsDeadlineExpired())
         {
             return SetErrorAndReturn(ctx, "PickerFOV: SafeZ timeout.");
         }
 
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
     std::vector<double> originXY;
     originXY.push_back(0.0);
     originXY.push_back(0.0);
 
-    if (actuator->Move(originXY, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+    if (actuator->Move(originXY, VMF::Narrow) != VMF::ActOk)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: MoveToOrigin failed.");
     }
 
     EnterStateWithTimeout(MoveScanPosition, m_moveTimeoutMs);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveScanPosition(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveScanPosition(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (!actuator)
     {
@@ -152,14 +152,14 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveScanPosition(
     originXY.push_back(0.0);
     originXY.push_back(0.0);
 
-    if (actuator->isMove(originXY, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+    if (actuator->isMove(originXY, VMF::Narrow) != VMF::ActOk)
     {
         if (IsDeadlineExpired())
         {
             return SetErrorAndReturn(ctx, "PickerFOV: Origin XY timeout.");
         }
 
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
     double targetX = m_centerPositionX;
@@ -177,25 +177,25 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveScanPosition(
 
     default:
         EnterStateWithTimeout(ReturnHome, m_moveTimeoutMs);
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
     std::vector<double> targetXY;
     targetXY.push_back(targetX);
     targetXY.push_back(targetY);
 
-    if (actuator->Move(targetXY, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+    if (actuator->Move(targetXY, VMF::Narrow) != VMF::ActOk)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: XY Move failed.");
     }
 
     EnterStateWithTimeout(MoveFocusPositionZ, m_moveTimeoutMs);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveFocusPositionZ(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveFocusPositionZ(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (!actuator)
     {
@@ -218,49 +218,49 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveFocusPositionZ
 
     default:
         EnterStateWithTimeout(ReturnHome, m_moveTimeoutMs);
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
     std::vector<double> targetXY;
     targetXY.push_back(targetX);
     targetXY.push_back(targetY);
 
-    if (actuator->isMove(targetXY, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+    if (actuator->isMove(targetXY, VMF::Narrow) != VMF::ActOk)
     {
         if (IsDeadlineExpired())
         {
             return SetErrorAndReturn(ctx, "PickerFOV: Target XY timeout.");
         }
 
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
-    if (actuator->MoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+    if (actuator->MoveZ(m_focusPositionZ) != VMF::ActOk)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: MoveToFocusZ failed.");
     }
 
     EnterState(VisionRequest);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionRequest(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionRequest(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (!actuator)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: actuator is null.");
     }
 
-    if (actuator->isMoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+    if (actuator->isMoveZ(m_focusPositionZ) != VMF::ActOk)
     {
         if (IsDeadlineExpired())
         {
             return SetErrorAndReturn(ctx, "PickerFOV: Focus Z timeout.");
         }
 
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
     actuator->SetLightState(m_cameraId, true);
@@ -276,18 +276,18 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionRequest(
     const int visionRequestId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_VISION_PICKER_FOV_REQUEST_ID, 0);
     ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
 
-    if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+    if (!ctx.ExecuteVisionCommand(VMF::Measure))
     {
         return SetErrorAndReturn(ctx, "PickerFOV: Vision Command Failed");
     }
 
     EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (IsDeadlineExpired())
     {
@@ -300,23 +300,23 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
         return SetErrorAndReturn(ctx, "PickerFOV: No Vision Processor");
     }
 
-    if (!visionProcessor->IsValid(DVH_VAT::Measure))
+    if (!visionProcessor->IsValid(VMF::Measure))
     {
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
-    auto data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+    auto data = visionProcessor->GetLatestData(VMF::Measure);
 
     double offsetX = 0.0;
     double offsetY = 0.0;
 
-    auto itXOffset = data.find(DVH_VAT::X_OFFSET);
+    auto itXOffset = data.find(VMF::X_OFFSET);
     if (itXOffset != data.end())
     {
         offsetX = std::stod(itXOffset->second);
     }
 
-    auto itYOffset = data.find(DVH_VAT::Y_OFFSET);
+    auto itYOffset = data.find(VMF::Y_OFFSET);
     if (itYOffset != data.end())
     {
         offsetY = std::stod(itYOffset->second);
@@ -334,7 +334,7 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
 
         m_currentScanDirection = FRONT_RIGHT;
         EnterState(MoveSafeZ);
-        return DVH_VAT::TR_KEEP;
+        return VMF::TR_KEEP;
     }
 
     m_frontRightOffsetX = offsetX;
@@ -342,11 +342,11 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
 
     // 델타는 저장 시점에 계산하도록 변경 (멤버 제거)
     EnterState(SaveResult);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleSaveResult(
-    DVH_VAT::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleSaveResult(
+    VMF::VAT_Context& ctx)
 {
     auto repo = ctx.getRepository();
     if (!repo)
@@ -366,23 +366,23 @@ DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleSaveResult(
     ctx.SetSeqParamAs<double>("PickerFOVFrontRightDeltaY", frontRightDeltaY);
 
     EnterState(ReturnHome);
-    return DVH_VAT::TR_KEEP;
+    return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPickerFOVScanningTask::HandleReturnHome(
-    DVH_VAT::VAT_Context& ctx,
-    DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleReturnHome(
+    VMF::VAT_Context& ctx,
+    VMF::IVatActuator* actuator)
 {
     if (!actuator)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: actuator is null.");
     }
 
-    if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+    if (actuator->MoveZ(0.0) != VMF::ActOk)
     {
         return SetErrorAndReturn(ctx, "PickerFOV: Z Home Return Fail");
     }
 
     EnterStateWithTimeout(ReturnHome, m_moveTimeoutMs);
-    return DVH_VAT::TR_NEXT;
+    return VMF::TR_NEXT;
 }

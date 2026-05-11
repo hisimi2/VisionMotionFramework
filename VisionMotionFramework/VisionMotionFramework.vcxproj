@@ -54,7 +54,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;DVH_VAT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;VMF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(SolutionDir)bin\Thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\AsyncSequenceRunner.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVatEngineUiAdapter.h" />
-    <ClInclude Include="include\DVH_VAT_API.h" />
+    <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
     <ClInclude Include="include\FileUtils.h" />
     <ClInclude Include="include\IDataRepository.h" />

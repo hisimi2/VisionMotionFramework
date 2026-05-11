@@ -1,9 +1,9 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include "VAT_Context.h"
 #include <string>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     class IVisionEventHandler; 
     class IDataRepository;
@@ -11,7 +11,7 @@ namespace DVH_VAT
     class SequenceBuilderBase;
     class AsyncSequenceRunner;
 
-    class DVH_VAT_API VatCorrectionEngine
+    class VMF_API VatCorrectionEngine
     {
     public:
         // 생성자 선언을 소멸자보다 위에 배치하여 가독성을 높입니다.
@@ -36,5 +36,5 @@ namespace DVH_VAT
         AsyncSequenceRunnerPtr  m_pRunner;
         VatContextPtr           m_pCtx;
     };
-} // namespace DVH_VAT
+} // namespace VMF
 

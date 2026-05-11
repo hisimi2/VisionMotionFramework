@@ -1,12 +1,12 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 
 #include "Types.h"
 #include <cstdint> // <stdint.h> 대신 C++ 표준 헤더 사용
 #include <string>
 #include <vector>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     /**
      * @enum StorageError
@@ -27,7 +27,7 @@ namespace DVH_VAT
      * @class IDataRepository
      * @brief 데이터 저장소를 정의하는 추상 인터페이스.
      */
-    class DVH_VAT_API IDataRepository {
+    class VMF_API IDataRepository {
     public:
         virtual ~IDataRepository() = default;
 
@@ -138,4 +138,4 @@ namespace DVH_VAT
 
     };
 
-} // namespace DVH_VAT
+} // namespace VMF

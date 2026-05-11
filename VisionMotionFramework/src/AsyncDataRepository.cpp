@@ -1,4 +1,4 @@
-﻿// [필수] 미리 컴파일된 헤더
+// [필수] 미리 컴파일된 헤더
 #include "stdafx.h"
 
 // Boost 대신 C++ 표준 라이브러리 사용
@@ -11,7 +11,7 @@
 
 #include "AsyncDataRepository.h"
 
-namespace DVH_VAT {
+namespace VMF {
 
 // Impl 구조체 정의
 struct AsyncDataRepository::Impl {
@@ -217,4 +217,4 @@ StorageError AsyncDataRepository::LoadHandCamGroup(int h, std::vector<int>& c) {
 StorageError AsyncDataRepository::LoadCamLocationGroup(int handId, std::vector<int>& locateIds){ return StorageSuccess; }
 StorageError AsyncDataRepository::LoadLocationIdByName(const std::string& n, int& id) { return m_pImpl->m_inner->LoadLocationIdByName(n, id); }
 
-} // namespace DVH_VAT
+} // namespace VMF

@@ -1,4 +1,4 @@
-﻿// SqliteDataRepository.cpp
+// SqliteDataRepository.cpp
 // C++14 적용 및 Boost (LockGuardType 등) 의존성 제거
 
 #include "StdAfx.h"
@@ -17,7 +17,7 @@
 
 static uint64_t g_imageCounter = 0;
 
-namespace DVH_VAT {
+namespace VMF {
 
     // 파일을 문자열로 읽는 헬퍼
     static bool readFileToString(const std::string& path, std::string& out)
@@ -1150,4 +1150,4 @@ namespace DVH_VAT {
         return StorageSuccess;
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformFocusScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 
@@ -16,7 +16,7 @@ CLoad1PerformFocusScanningTask::~CLoad1PerformFocusScanningTask()
 {
 }
 
-void CLoad1PerformFocusScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1PerformFocusScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
@@ -26,9 +26,9 @@ void CLoad1PerformFocusScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 	EnterState(MoveDown);
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformFocusScanningTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -38,58 +38,58 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::OnPoll(
 	case VisionWait:      return HandleVisionWait(ctx, actuator);
 	case ReturnHome:      return HandleReturnHome(ctx, actuator);
 	case SaveFocusResult: return HandleSaveFocusResult(ctx);
-	default:              return DVH_VAT::TR_ERROR;
+	default:              return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleMoveDown(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformFocusScanningTask::HandleMoveDown(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z down failed");
 
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	if (!ctx.PeekVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
 
-	if (actuator->MoveZ(position.pos[2]) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(position.pos[2]) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Z down failed");
 
 	EnterStateWithTimeout(MoveWait, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleMoveWait(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformFocusScanningTask::HandleMoveWait(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Down Fail");
 
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	if (!ctx.PeekVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
 
-	if (actuator->isMoveZ(position.pos[2]) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(position.pos[2]) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Z Down Fail");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleVisionRequest(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionRequest(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "No Actuator");
@@ -104,32 +104,32 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleVisionRequest(
 
 	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
 
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 	if (!visionProcessor)
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 
-	if (!visionProcessor->IsValid(DVH_VAT::Measure))
+	if (!visionProcessor->IsValid(VMF::Measure))
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Vision Time Out");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
-	std::map<std::string, std::string>& data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+	std::map<std::string, std::string>& data = visionProcessor->GetLatestData(VMF::Measure);
 	(void)data;
 
 	if (actuator)
@@ -138,25 +138,25 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
 	}
 
 	EnterState(ReturnHome);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleReturnHome(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformFocusScanningTask::HandleReturnHome(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Home Return Fail");
 
-	if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(0.0) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Z Home Return Fail");
 
 	EnterStateWithTimeout(SaveFocusResult, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
-	DVH_VAT::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
+	VMF::VAT_Context& ctx)
 {
 	auto repo = ctx.getRepository();
 	if (!repo)
@@ -164,7 +164,7 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
 		return SetErrorAndReturn(ctx, "DB Access Fail");
 	}
 
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	if (!ctx.PopVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Pop Position Failed");
@@ -173,24 +173,24 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
 	const int locationId = position.locateId;
 	const double bestZPlateJig = position.pos[2];
 
-	if (repo->LoadCamLocationGroup(m_cameraId, m_locationIds) != DVH_VAT::StorageSuccess)
+	if (repo->LoadCamLocationGroup(m_cameraId, m_locationIds) != VMF::StorageSuccess)
 	{
 		return SetErrorAndReturn(ctx, "DB Read Fail");
 	}
 
 	if (m_cameraId > 5)
 	{
-		if (repo->SaveZFocusResult(m_cameraId, UpperTarget, m_packageId, bestZPlateJig) != DVH_VAT::StorageSuccess)
+		if (repo->SaveZFocusResult(m_cameraId, UpperTarget, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
 		{
 			return SetErrorAndReturn(ctx, "DB Write Fail");
 		}
 
-		if (repo->SaveZFocusResult(m_cameraId, TargetA, m_packageId, bestZPlateJig) != DVH_VAT::StorageSuccess)
+		if (repo->SaveZFocusResult(m_cameraId, TargetA, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
 		{
 			return SetErrorAndReturn(ctx, "DB Write Fail");
 		}
 
-		if (repo->SaveZFocusResult(m_cameraId, TargetB, m_packageId, bestZPlateJig) != DVH_VAT::StorageSuccess)
+		if (repo->SaveZFocusResult(m_cameraId, TargetB, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
 		{
 			return SetErrorAndReturn(ctx, "DB Write Fail");
 		}
@@ -213,7 +213,7 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
 			double dummy = 0.0;
 			double upperTargetBestZ = 0.0;
 
-			if (repo->LoadInspInitPos(6, UpperTarget, m_packageId, dummy, dummy, upperTargetBestZ) != DVH_VAT::StorageSuccess)
+			if (repo->LoadInspInitPos(6, UpperTarget, m_packageId, dummy, dummy, upperTargetBestZ) != VMF::StorageSuccess)
 			{
 				return SetErrorAndReturn(ctx, "DB Read Fail");
 			}
@@ -221,7 +221,7 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
 			bestZCok = upperTargetBestZ - 9.0;
 		}
 
-		if (repo->SaveZFocusResult(m_cameraId, *it, m_packageId, bestZCok) != DVH_VAT::StorageSuccess)
+		if (repo->SaveZFocusResult(m_cameraId, *it, m_packageId, bestZCok) != VMF::StorageSuccess)
 		{
 			return SetErrorAndReturn(ctx, "DB Write Fail");
 		}
@@ -229,11 +229,11 @@ DVH_VAT::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
 
 	if (ctx.IsVisionPositionEmpty())
 	{
-		return DVH_VAT::TR_NEXT;
+		return VMF::TR_NEXT;
 	}
 
 	(void)locationId;
 	EnterState(MoveDown);
-	return DVH_VAT::TR_PREV;
+	return VMF::TR_PREV;
 }
 

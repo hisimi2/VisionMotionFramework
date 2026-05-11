@@ -1,9 +1,9 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include "ITask.h"
 #include <string>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     class VAT_Context;
     class IVatActuator;
@@ -11,7 +11,7 @@ namespace DVH_VAT
     class IResultSink;
 
     // IVatSequence: sequence 실행 추상 인터페이스
-    class DVH_VAT_API IVatSequence 
+    class VMF_API IVatSequence 
     {
     public:
         virtual ~IVatSequence() = default;
@@ -22,4 +22,4 @@ namespace DVH_VAT
         virtual std::string GetTaskName() const = 0;
         virtual void AddTask(TaskStepPtr step) = 0;
     };
-} // namespace DVH_VAT
+} // namespace VMF

@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -28,7 +28,7 @@
 #define new DEBUG_NEW
 #endif
 
-static UINT g_VisionResultMsgId = DVH_VAT::CVatEngineUiAdapter::GetVisionResultMsgId();
+static UINT g_VisionResultMsgId = VMF::CVatEngineUiAdapter::GetVisionResultMsgId();
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -66,14 +66,14 @@ END_MESSAGE_MAP()
 // CEquipment2015Dlg 대화 상자
 LRESULT CEquipment2015Dlg::OnDVH_VATResultMsg(WPARAM wParam, LPARAM /*lParam*/)
 {
-    typedef std::shared_ptr<DVH_VAT::VisionResultPayload>* HeapSpPtr;
+    typedef std::shared_ptr<VMF::VisionResultPayload>* HeapSpPtr;
 
     HeapSpPtr pHeapSp = reinterpret_cast<HeapSpPtr>(wParam);
     if (!pHeapSp)
         return 0;
 
     // 힙에 있던 shared_ptr을 지역으로 복사해 소유권 확보하고 즉시 포인터 해제
-    std::shared_ptr<DVH_VAT::VisionResultPayload> payload = *pHeapSp;
+    std::shared_ptr<VMF::VisionResultPayload> payload = *pHeapSp;
     delete pHeapSp;
 
     if (!pHeapSp)

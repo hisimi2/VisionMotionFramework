@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CMockVisionEventHandler.h"
 
-namespace DVH_VAT
+namespace VMF
 {
     CMockVisionEventHandler::CMockVisionEventHandler()
         : m_connected(false)
@@ -165,5 +165,5 @@ namespace DVH_VAT
         return std::string(reinterpret_cast<const char*>(b.data()), b.size());
     }
 
-} // namespace DVH_VAT
+} // namespace VMF
 

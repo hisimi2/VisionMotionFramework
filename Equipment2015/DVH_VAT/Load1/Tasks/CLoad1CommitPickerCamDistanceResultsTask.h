@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -6,7 +6,7 @@ namespace VAT_LOAD1
 {
 	namespace Task
 	{
-		class CLoad1CommitPickerCamDistanceResultsTask : public DVH_VAT::NonBlockingTaskBase
+		class CLoad1CommitPickerCamDistanceResultsTask : public VMF::NonBlockingTaskBase
 		{
             // 파생 클래스는 범위화된 enum(class) 사용: 네임 충돌 제거 및 타입 안정성 확보
             enum Substep
@@ -16,8 +16,8 @@ namespace VAT_LOAD1
             };
 
             // 단계별 핸들러
-            DVH_VAT::TaskResult HandleCalcCamAlignPos(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleGetStdPickerPos(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
+            VMF::TaskResult HandleCalcCamAlignPos(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleGetStdPickerPos(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
 
 		public:
 			CLoad1CommitPickerCamDistanceResultsTask();
@@ -29,8 +29,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(DVH_VAT::VAT_Context& ctx) override;
-            DVH_VAT::TaskResult OnPoll(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator) override;
+            void OnInitialize(VMF::VAT_Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
 
 			int m_lowerCameraId;
 			int m_packageId;
@@ -41,7 +41,7 @@ namespace VAT_LOAD1
 			double m_pickerReferencePosY_Narrow;
 			double m_pickerReferencePosX_Wide;
 			double m_pickerReferencePosY_Wide;
-            DVH_VAT::PitchStatus m_currentPitchMode;
+            VMF::PitchStatus m_currentPitchMode;
 		};
     } // namespace Task
 } // namespace VAT_LOAD1 

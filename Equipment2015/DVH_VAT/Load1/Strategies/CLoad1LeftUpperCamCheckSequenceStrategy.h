@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MemorySequenceStrategy.h"
 #include "CLoad1UpperCamCheckSequenceBuilder.h"
@@ -13,14 +13,14 @@ namespace VAT_LOAD1
 		public:
 			std::string GetSequenceName() const { return "Load1UpperCamCheck"; }
 
-            DVH_VAT::SequenceBuilderPtr CreateBuilder()
+            VMF::SequenceBuilderPtr CreateBuilder()
 			{
-				return DVH_VAT::SequenceBuilderPtr(new CLoad1UpperCamCheckSequenceBuilder());
+				return VMF::SequenceBuilderPtr(new CLoad1UpperCamCheckSequenceBuilder());
 			}
 
-			void ConfigureParams(DVH_VAT::VatContextPtr ctx)
+			void ConfigureParams(VMF::VatContextPtr ctx)
 			{
-                DVH_VAT::VatParams params;
+                VMF::VatParams params;
 
 				// 헬퍼 함수 사용
 				SetParam(params, "CameraIndex",     6);
@@ -50,7 +50,7 @@ namespace VAT_LOAD1
 				// LoadTable1 (locateId=12, requestId=4)
 				nlocateId = 12;
 				nVisionRequestId = 4;
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ, -65, -65); // Table Pos 알아야 함
 				}
@@ -58,7 +58,7 @@ namespace VAT_LOAD1
 				// LoadTable2 (locateId=13, requestId=4)
 				nlocateId = 13;
 				nVisionRequestId = 4;
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ, -65, -65);
 				}
@@ -66,7 +66,7 @@ namespace VAT_LOAD1
 				// CTray1 (locateId=5, requestId=2)
 				nlocateId = 5;
 				nVisionRequestId = 2;
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ, -65, -65);
 				}

@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "SequenceStrategyBase.h"
 
-namespace DVH_VAT
+namespace VMF
 {
     SequenceStrategyBase::SequenceStrategyBase()
         :  m_adapter(nullptr)

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -10,7 +10,7 @@ namespace VAT_LOAD1
 		class IVatActuator;
 		class IDataRepository;
 
-		class CLoad1MoveToStartPositionTask : public DVH_VAT::NonBlockingTaskBase
+		class CLoad1MoveToStartPositionTask : public VMF::NonBlockingTaskBase
 		{
             enum Substep
             {
@@ -22,11 +22,11 @@ namespace VAT_LOAD1
                 CompleteMove,
             };
 
-            DVH_VAT::TaskResult HandleMoveSafeZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveOrigin(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveTargetPositionXY(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveTargetPositionZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleCompleteMove(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveTargetPositionXY(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveTargetPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleCompleteMove(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
 
 		public:
 			CLoad1MoveToStartPositionTask();
@@ -38,8 +38,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(DVH_VAT::VAT_Context& ctx) override;
-            DVH_VAT::TaskResult OnPoll(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator) override;
+            void OnInitialize(VMF::VAT_Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
 
             std::vector<double> m_targetPosition;
             long m_moveTimeoutMs;

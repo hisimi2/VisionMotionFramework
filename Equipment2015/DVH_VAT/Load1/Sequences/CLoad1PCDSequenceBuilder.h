@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "SequenceBuilderBase.h"
 
 #include "CLoad1MoveToStartPositionTask.h"
@@ -9,15 +9,15 @@ namespace VAT_LOAD1
 	namespace Sequence
 	{
         using namespace VAT_LOAD1::Task;
-		class CLoad1PCDSequenceBuilder : public DVH_VAT::SequenceBuilderBase
+		class CLoad1PCDSequenceBuilder : public VMF::SequenceBuilderBase
 		{
 		protected:
-            DVH_VAT::VatSequencePtr BuildSequence(std::string sequenceName) override
+            VMF::VatSequencePtr BuildSequence(std::string sequenceName) override
 			{
-                DVH_VAT::VatSequencePtr seq(new DVH_VAT::VatSequence(sequenceName));
-				seq->AddTask(DVH_VAT::TaskStepPtr(new CLoad1MoveToStartPositionTask()));
-				seq->AddTask(DVH_VAT::TaskStepPtr(new CLoad1PerformPCDScanningTask()));
-				return DVH_VAT::VatSequencePtr(seq.release());
+                VMF::VatSequencePtr seq(new VMF::VatSequence(sequenceName));
+				seq->AddTask(VMF::TaskStepPtr(new CLoad1MoveToStartPositionTask()));
+				seq->AddTask(VMF::TaskStepPtr(new CLoad1PerformPCDScanningTask()));
+				return VMF::VatSequencePtr(seq.release());
 			}
 		};
 	}

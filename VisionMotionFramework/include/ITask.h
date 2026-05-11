@@ -1,12 +1,12 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 
 #include <string>
 #include <memory> // std::shared_ptr 사용을 위해 포함
 // VAT_Context 객체를 참조로 사용하더라도, 인터페이스 사용자가 Context 정의를 필요로 할 가능성이 높으므로 포함
 #include "VAT_Context.h" 
 
-namespace DVH_VAT
+namespace VMF
 {
     class IVatActuator;
     class IDataRepository;
@@ -25,7 +25,7 @@ namespace DVH_VAT
      * @class ITask
      * @brief 시퀀스를 구성하는 단위 작업(Step) 인터페이스
      */
-    class DVH_VAT_API ITask
+    class VMF_API ITask
     {
     public:
         virtual ~ITask() = default;
@@ -42,4 +42,4 @@ namespace DVH_VAT
     };
 
     using TaskStepPtr = std::shared_ptr<ITask>;
-} // namespace DVH_VAT
+} // namespace VMF

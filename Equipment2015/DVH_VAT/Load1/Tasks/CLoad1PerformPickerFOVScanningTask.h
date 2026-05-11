@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -6,7 +6,7 @@ namespace VAT_LOAD1
 {
 	namespace Task
 	{
-		class CLoad1PerformPickerFOVScanningTask : public DVH_VAT::NonBlockingTaskBase
+		class CLoad1PerformPickerFOVScanningTask : public VMF::NonBlockingTaskBase
         {
             enum Substep
             {
@@ -20,14 +20,14 @@ namespace VAT_LOAD1
                 ReturnHome
             };
 
-            DVH_VAT::TaskResult HandleMoveSafeZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveOrigin(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveScanPosition(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveFocusPositionZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleVisionRequest(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleVisionWait(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleSaveResult(DVH_VAT::VAT_Context& ctx);
-            DVH_VAT::TaskResult HandleReturnHome(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveScanPosition(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveFocusPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleSaveResult(VMF::VAT_Context& ctx);
+            VMF::TaskResult HandleReturnHome(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
 
 		public:
 			CLoad1PerformPickerFOVScanningTask();
@@ -45,8 +45,8 @@ namespace VAT_LOAD1
 			};
 
 		protected:
-			void OnInitialize(DVH_VAT::VAT_Context& ctx) override;
-			DVH_VAT::TaskResult OnPoll(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator) override;
+			void OnInitialize(VMF::VAT_Context& ctx) override;
+			VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
 
 			FOVDirection m_currentScanDirection;
 

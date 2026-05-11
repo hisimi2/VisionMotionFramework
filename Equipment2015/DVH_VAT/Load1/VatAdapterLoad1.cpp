@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "VatAdapterLoad1.h"
 #include <Windows.h>
 
@@ -17,28 +17,28 @@ namespace VAT_LOAD1
 	}
 
 	// ---------------- Pitch ----------------
-    DVH_VAT::PitchType VatAdapterLoad1::GetPitchType()
+    VMF::PitchType VatAdapterLoad1::GetPitchType()
 	{
-		return DVH_VAT::Variable;
+		return VMF::Variable;
 	}
 
-	DVH_VAT::ActError VatAdapterLoad1::IsReadyToMove()
+	VMF::ActError VatAdapterLoad1::IsReadyToMove()
 	{
-		return DVH_VAT::ActOk;
+		return VMF::ActOk;
 	}
 
 	// ---------------- Move ----------------
-    DVH_VAT::ActError VatAdapterLoad1::MoveZ(double targetZ)
+    VMF::ActError VatAdapterLoad1::MoveZ(double targetZ)
     {
-        if (!m_parts) return DVH_VAT::ActFail;
+        if (!m_parts) return VMF::ActFail;
 
         m_parts->LOAD1_Z.Move(targetZ);
-        return DVH_VAT::ActOk;
+        return VMF::ActOk;
     }
 
-    DVH_VAT::ActError VatAdapterLoad1::Move(std::vector<double> pos, DVH_VAT::PitchStatus action)
+    VMF::ActError VatAdapterLoad1::Move(std::vector<double> pos, VMF::PitchStatus action)
     {
-        if (!m_parts) return DVH_VAT::ActFail;
+        if (!m_parts) return VMF::ActFail;
 
         // X,Y축이 움직이기 위한 Z축 위치 확인
         //if(m_parts->LOAD1_Z.GetCurrentPosition() > 0) return ActuatorFAIL;
@@ -48,7 +48,7 @@ namespace VAT_LOAD1
         m_parts->LOAD1_Y.Move(pos[1]);
 
         // Pitch 변경
-        if (action == DVH_VAT::Narrow)
+        if (action == VMF::Narrow)
         {
             m_parts->LoadHandYPitch.narrow(true);
         }
@@ -73,23 +73,23 @@ namespace VAT_LOAD1
         m_parts->LoadBuffer.backward(true);
 
 
-        return DVH_VAT::ActOk;
+        return VMF::ActOk;
     }
 
-    DVH_VAT::ActError VatAdapterLoad1::isMoveZ(double targetZ)
+    VMF::ActError VatAdapterLoad1::isMoveZ(double targetZ)
     {
         double currentposZ = m_parts->LOAD1_Z.GetEncoder();
         double diff = abs(currentposZ - targetZ);
 
         if (diff > 1)
         {
-            return DVH_VAT::ActFail;
+            return VMF::ActFail;
         }
 
-        return DVH_VAT::ActOk;
+        return VMF::ActOk;
     }
 
-    DVH_VAT::ActError VatAdapterLoad1::isMove(std::vector<double> pos, DVH_VAT::PitchStatus action)
+    VMF::ActError VatAdapterLoad1::isMove(std::vector<double> pos, VMF::PitchStatus action)
     {
         double currentposX = m_parts->LOAD1_X.GetEncoder();
         double currentposY = m_parts->LOAD1_Y.GetEncoder();
@@ -99,16 +99,16 @@ namespace VAT_LOAD1
 
         if (diffX > 1 || diffy > 1)
         {
-            return DVH_VAT::ActFail;
+            return VMF::ActFail;
         }
 
-        if (action == DVH_VAT::Narrow && !m_parts->LoadHandYPitch.isNarrow())
+        if (action == VMF::Narrow && !m_parts->LoadHandYPitch.isNarrow())
         {
-            return DVH_VAT::ActFail;
+            return VMF::ActFail;
         }
-        else if (action == DVH_VAT::Wide && !m_parts->LoadHandYPitch.isWide())
+        else if (action == VMF::Wide && !m_parts->LoadHandYPitch.isWide())
         {
-            return DVH_VAT::ActFail;
+            return VMF::ActFail;
         }
 
 
@@ -122,23 +122,23 @@ namespace VAT_LOAD1
 
             if (diffTable1 > 1 || diffTable2 > 1)
             {
-                return DVH_VAT::ActFail;
+                return VMF::ActFail;
             }
         }
         else
         {
             if (currentTablepos1 < 0 || currentTablepos2 < 0)
             {
-                return DVH_VAT::ActFail;
+                return VMF::ActFail;
             }
         }
 
         if (!m_parts->LoadBuffer.isBackward())
         {
-            return  DVH_VAT::ActFail;
+            return  VMF::ActFail;
         }
 
-        return  DVH_VAT::ActOk;
+        return  VMF::ActOk;
     }
 
 	std::vector<double> VatAdapterLoad1::getPosition()

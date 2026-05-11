@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "MemorySequenceStrategy.h"
 #include "CLoad1UpperCamCheckSequenceBuilder.h"
 
@@ -12,14 +12,14 @@ namespace VAT_LOAD1
 		public:
 			std::string GetSequenceName() const { return "Load1RightUpperCamCheck"; }
 
-            DVH_VAT::SequenceBuilderPtr CreateBuilder()
+            VMF::SequenceBuilderPtr CreateBuilder()
 			{
-				return DVH_VAT::SequenceBuilderPtr(new VAT_LOAD1::Sequence::CLoad1UpperCamCheckSequenceBuilder());
+				return VMF::SequenceBuilderPtr(new VAT_LOAD1::Sequence::CLoad1UpperCamCheckSequenceBuilder());
 			}
 
-			void ConfigureParams(DVH_VAT::VatContextPtr ctx)
+			void ConfigureParams(VMF::VatContextPtr ctx)
 			{
-				DVH_VAT::VatParams params;
+				VMF::VatParams params;
 
 				// 헬퍼 함수를 사용하여 파라미터 설정 간소화
 				SetParam(params, "CameraIndex", 7);
@@ -48,7 +48,7 @@ namespace VAT_LOAD1
 
 				// // 검사 좌표 추가
 				// CTray2 (locateId=6, requestId=2)
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ, -65, -65);
 				}

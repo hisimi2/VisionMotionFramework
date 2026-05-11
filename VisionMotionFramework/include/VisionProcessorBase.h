@@ -1,17 +1,17 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <vector>
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
-#include "DVH_VAT_API.h"
+#include "VMF_API.h"
 #include "IVisionProcessor.h"
 #include "IResultSink.h"
 #include "VisionController.h"
 
-namespace DVH_VAT
+namespace VMF
 {
-    class DVH_VAT_API VisionProcessorBase : public IVisionEventHandler
+    class VMF_API VisionProcessorBase : public IVisionEventHandler
     {
     public:
         using DataMap = StringMap;
@@ -58,5 +58,5 @@ namespace DVH_VAT
         void SendResultToSink(int requestId, const std::vector<std::string>& results);
         void PacketLoop();
     };
-} // namespace DVH_VAT
+} // namespace VMF
 

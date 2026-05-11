@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1CommitTeachingPosTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include <algorithm>
@@ -17,14 +17,14 @@ CLoad1CommitTeachingPosTask::~CLoad1CommitTeachingPosTask()
 {
 }
 
-void CLoad1CommitTeachingPosTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1CommitTeachingPosTask::OnInitialize(VMF::VAT_Context& ctx)
 {
 	EnterState(LoadPickerCameraOffset);
 }
 
-DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitTeachingPosTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -32,13 +32,13 @@ DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::OnPoll(
 	case LoadVisionPositions:       return HandleLoadVisionPositions(ctx, actuator);
 	case LoadHandPitchOffsets:      return HandleLoadHandPitchOffsets(ctx, actuator);
 	case SaveTeachingPositions:     return HandleSaveTeachingPositions(ctx, actuator);
-	default:                        return DVH_VAT::TR_ERROR;
+	default:                        return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleLoadPickerCameraOffset(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadPickerCameraOffset(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	auto repo = ctx.getRepository();
 
@@ -56,28 +56,28 @@ DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleLoadPickerCameraOffset(
 		m_pickerCameraOffsetX_Narrow,
 		m_pickerCameraOffsetY_Narrow,
 		m_pickerCameraOffsetX_Wide,
-		m_pickerCameraOffsetY_Wide) != DVH_VAT::StorageSuccess)
+		m_pickerCameraOffsetY_Wide) != VMF::StorageSuccess)
 	{
 		return SetErrorAndReturn(ctx, "CommitTeachingPos: Can Not Load Cam Picker Distance");
 	}
 
 	EnterState(LoadVisionPositions);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleLoadVisionPositions(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadVisionPositions(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	m_teachingPositions = ctx.GetVisionPositions();
 
 	EnterState(LoadHandPitchOffsets);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleLoadHandPitchOffsets(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadHandPitchOffsets(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
 	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
@@ -114,7 +114,7 @@ DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleLoadHandPitchOffsets(
 				narrowOffsetX,
 				narrowOffsetY,
 				wideOffsetX,
-				wideOffsetY) != DVH_VAT::StorageSuccess)
+				wideOffsetY) != VMF::StorageSuccess)
 			{
 				continue;
 			}
@@ -137,12 +137,12 @@ DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleLoadHandPitchOffsets(
 	}
 
 	EnterState(SaveTeachingPositions);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleSaveTeachingPositions(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1CommitTeachingPosTask::HandleSaveTeachingPositions(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
 	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
@@ -203,7 +203,7 @@ DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleSaveTeachingPositions(
 
 	for (size_t i = 0; i < m_teachingPositions.size(); ++i)
 	{
-		DVH_VAT::VisionPosition& position = m_teachingPositions[i];
+		VMF::VisionPosition& position = m_teachingPositions[i];
 
 		if (position.locateId == LoadTable1 || position.locateId == LoadTable2)
 		{
@@ -225,12 +225,12 @@ DVH_VAT::TaskResult CLoad1CommitTeachingPosTask::HandleSaveTeachingPositions(
 			packageId,
 			position.pos[0],
 			position.pos[1],
-			position.pos[2]) != DVH_VAT::StorageSuccess)
+			position.pos[2]) != VMF::StorageSuccess)
 		{
 			return SetErrorAndReturn(ctx, "CommitTeachingPos: Teaching Pos Save Fail");
 		}
 	}
 
-	return DVH_VAT::TR_NEXT;
+	return VMF::TR_NEXT;
 }
 

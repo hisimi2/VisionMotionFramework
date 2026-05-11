@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include "DVH_VAT_API.h"
+#include "VMF_API.h"
 #include "VisionController.h"
 #include "Types.h"
 
@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <string>
 
-namespace DVH_VAT
+namespace VMF
 {
     using ByteArray = std::vector<uint8_t>;
 
@@ -43,7 +43,7 @@ namespace DVH_VAT
         }
     };
 
-    class DVH_VAT_API IAsyncVisionProcessor
+    class VMF_API IAsyncVisionProcessor
     {
     public:
         using DataMap = StringMap;
@@ -67,7 +67,7 @@ namespace DVH_VAT
     };
 
     // 媛???곸냽(virtual inheritance) - ?명꽣?섏씠??蹂묓빀???꾪빐 ?ъ슜
-    class DVH_VAT_API IVisionEventHandler : public virtual IAsyncVisionProcessor
+    class VMF_API IVisionEventHandler : public virtual IAsyncVisionProcessor
     {
     public:
         ~IVisionEventHandler() override = default;
@@ -81,5 +81,5 @@ namespace DVH_VAT
         virtual void OnDeviceCheck(ByteArray body) = 0;
         virtual void OnLight(ByteArray body) = 0;
     };
-} // namespace DVH_VAT
+} // namespace VMF
 

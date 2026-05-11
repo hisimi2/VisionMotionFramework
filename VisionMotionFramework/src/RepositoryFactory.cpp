@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "RepositoryFactory.h"
 #include "SqliteDataRepository.h"
 // 명시적 상대 경로로 정확한 구현 헤더를 포함
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <memory>
 
-namespace DVH_VAT {
+namespace VMF {
 
 // [v100] 문자열 Trim 함수
 static std::string trim(const std::string& s)
@@ -79,4 +79,4 @@ std::unique_ptr<IDataRepository> RepositoryFactory::CreateRepository(const std::
     return nullptr;
 }
 
-} // namespace DVH_VAT
+} // namespace VMF

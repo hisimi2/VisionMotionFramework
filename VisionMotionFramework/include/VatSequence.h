@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include "IVatSequence.h" 
 #include "ITask.h"
 #include "CompatUtils.h" 
@@ -10,13 +10,13 @@
 #include <condition_variable>
 #include <atomic>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     class IVatActuator;
     class IDataRepository;
 
     // C++14 호환 모던 C++ 클래스
-    class DVH_VAT_API VatSequence : public IVatSequence
+    class VMF_API VatSequence : public IVatSequence
     {
     public:
         explicit VatSequence(const std::string& name = "");
@@ -56,4 +56,4 @@ namespace DVH_VAT
         DataRepositoryPtr   m_repo;
     };
 
-} // namespace DVH_VAT
+} // namespace VMF

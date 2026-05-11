@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "FileDataRepository.h"
 #include "FileUtils.h"
 #include "CompatUtils.h" // StorageError 정의
@@ -9,7 +9,7 @@
 #include <iostream> 
 #include <mutex> // std::lock_guard 사용을 위해 포함
 
-namespace DVH_VAT {
+namespace VMF {
 
 FileDataRepository::FileDataRepository(const std::string& basePath)
     : basePath_(basePath) {}
@@ -279,4 +279,4 @@ StorageError FileDataRepository::UpdateSequenceRunStatus(int runId, const std::s
     return StorageSuccess;
 }
 
-} // namespace DVH_VAT
+} // namespace VMF

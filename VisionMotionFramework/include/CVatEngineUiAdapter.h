@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VatCorrectionEngine.h"
 #include "IVatSequenceStrategy.h"
@@ -26,7 +26,7 @@ typedef unsigned int UINT;
 
 class CWnd; 
 
-namespace DVH_VAT
+namespace VMF
 {
     class IVatAdapter;
 
@@ -37,7 +37,7 @@ namespace DVH_VAT
     };
 
     // 엔진과 UI 사이 어댑터: UI 의존성은 이 클래스에 국한 (IResultSink 구현)
-    class DVH_VAT_API CVatEngineUiAdapter : public IResultSink
+    class VMF_API CVatEngineUiAdapter : public IResultSink
     {
     public:
         CVatEngineUiAdapter();
@@ -94,4 +94,4 @@ namespace DVH_VAT
         ::CWnd* m_pOwner;                // UI 소유자 (옵션)
         static UINT s_msgVisionResult;   // 런타임에 RegisterWindowMessage로 할당
     };
-} // namespace DVH_VAT
+} // namespace VMF

@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformBacklashScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include "VisionMemoryKeys.h"
@@ -34,7 +34,7 @@ CLoad1PerformBacklashScanningTask::~CLoad1PerformBacklashScanningTask()
 {
 }
 
-void CLoad1PerformBacklashScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1PerformBacklashScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAM_INDEX, 0);
 	m_zeroPositionX = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_ZERO_POS_X, 0.0);
@@ -44,7 +44,7 @@ void CLoad1PerformBacklashScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 	m_endPositionX = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_END_POS_X, 0.0);
 	m_endPositionY = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_END_POS_Y, 0.0);
 
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	ctx.PeekVisionPosition(position);
 	m_focusPositionZ = position.pos[2];
 
@@ -83,7 +83,7 @@ void CLoad1PerformBacklashScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 	EnterState(MoveSafeZ);
 }
 
-void CLoad1PerformBacklashScanningTask::ApplyCurrentSpeed(DVH_VAT::IVatActuator* actuator)
+void CLoad1PerformBacklashScanningTask::ApplyCurrentSpeed(VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 	{
@@ -99,9 +99,9 @@ void CLoad1PerformBacklashScanningTask::ApplyCurrentSpeed(DVH_VAT::IVatActuator*
 	(void)speedInfo;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -115,36 +115,36 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::OnPoll(
 	case VisionWait:         return HandleVisionWait(ctx, actuator);
 	case CalculateBacklash:  return HandleCalculateBacklash(ctx, actuator);
 	case SaveBacklashResult: return HandleSaveBacklashResult(ctx);
-	default:                 return DVH_VAT::TR_ERROR;
+	default:                 return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveSafeZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveSafeZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Actuator null");
 
-	if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(0.0) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "MoveZ failed");
 
 	ApplyCurrentSpeed(actuator);
 
 	EnterStateWithTimeout(m_nextStateAfterSafeZ, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveOrigin(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveOrigin(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
-	if (actuator->isMoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(0.0) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Backlash: Move Z timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	std::vector<double> nextPosition;
@@ -154,19 +154,19 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveOrigin(
 	nextPosition.push_back(m_targetTablePosition);
 	nextPosition.push_back(m_targetTablePosition);
 
-	if (actuator->Move(nextPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->Move(nextPosition, VMF::Narrow) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Move Origin failed");
 
 	m_currentPositionX = 0.0;
 	m_currentPositionY = 0.0;
 
 	EnterStateWithTimeout(MoveStart, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	std::vector<double> currentPosition;
 	currentPosition.push_back(m_currentPositionX);
@@ -175,12 +175,12 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
 	currentPosition.push_back(m_targetTablePosition);
 	currentPosition.push_back(m_targetTablePosition);
 
-	if (actuator->isMove(currentPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->isMove(currentPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Backlash: Move Origin timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	m_currentPositionX = m_startPositionX;
@@ -193,7 +193,7 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
 	nextPosition.push_back(m_targetTablePosition);
 	nextPosition.push_back(m_targetTablePosition);
 
-	if (actuator->Move(nextPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->Move(nextPosition, VMF::Narrow) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "MoveZero failed");
 
 	m_nextStateAfterSafeZ = MoveStart;
@@ -207,12 +207,12 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
 		EnterStateWithTimeout(MoveZero, m_moveTimeoutMs);
 	}
 
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveZero(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveZero(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	std::vector<double> currentPosition;
 	currentPosition.push_back(m_currentPositionX);
@@ -221,12 +221,12 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveZero(
 	currentPosition.push_back(m_targetTablePosition);
 	currentPosition.push_back(m_targetTablePosition);
 
-	if (actuator->isMove(currentPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->isMove(currentPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Backlash: Move Zero timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	m_currentPositionX = m_zeroPositionX;
@@ -239,16 +239,16 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveZero(
 	nextPosition.push_back(m_targetTablePosition);
 	nextPosition.push_back(m_targetTablePosition);
 
-	if (actuator->Move(nextPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->Move(nextPosition, VMF::Narrow) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Move Start failed");
 
 	EnterStateWithTimeout(MoveFocusZ, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveEnd(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveEnd(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	std::vector<double> currentPosition;
 	currentPosition.push_back(m_currentPositionX);
@@ -257,12 +257,12 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveEnd(
 	currentPosition.push_back(m_targetTablePosition);
 	currentPosition.push_back(m_targetTablePosition);
 
-	if (actuator->isMove(currentPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->isMove(currentPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Backlash: Move Start timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	m_currentPositionX = m_endPositionX;
@@ -275,16 +275,16 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveEnd(
 	nextPosition.push_back(m_targetTablePosition);
 	nextPosition.push_back(m_targetTablePosition);
 
-	if (actuator->Move(nextPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->Move(nextPosition, VMF::Narrow) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Move End failed");
 
 	EnterStateWithTimeout(MoveZero, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveFocusZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveFocusZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Actuator null");
@@ -296,26 +296,26 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveFocusZ(
 	currentPosition.push_back(m_targetTablePosition);
 	currentPosition.push_back(m_targetTablePosition);
 
-	if (actuator->isMove(currentPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->isMove(currentPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "XY Timeout");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
-	if (actuator->MoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(m_focusPositionZ) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "MoveZ failed");
 
 	EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionRequest(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionRequest(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
-	if (actuator->isMoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(m_focusPositionZ) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "PerformPCDScanning: Z Down Fail");
@@ -329,18 +329,18 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionRequest(
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
 
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionWait(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionWait(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -349,19 +349,19 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionWait(
 
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 
-	if (!visionProcessor->IsValid(DVH_VAT::Measure))
-		return DVH_VAT::TR_KEEP;
+	if (!visionProcessor->IsValid(VMF::Measure))
+		return VMF::TR_KEEP;
 
-	auto data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+	auto data = visionProcessor->GetLatestData(VMF::Measure);
 
 	double offsetX = 0.0;
 	double offsetY = 0.0;
 
-	auto itXOffset = data.find(DVH_VAT::X_OFFSET);
+	auto itXOffset = data.find(VMF::X_OFFSET);
 	if (itXOffset != data.end())
 		offsetX = std::stod(itXOffset->second);
 
-	auto itYOffset = data.find(DVH_VAT::Y_OFFSET);
+	auto itYOffset = data.find(VMF::Y_OFFSET);
 	if (itYOffset != data.end())
 		offsetY = std::stod(itYOffset->second);
 
@@ -381,12 +381,12 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionWait(
 		EnterState(CalculateBacklash);
 	}
 
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleCalculateBacklash(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleCalculateBacklash(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	double currentResult = 0.0;
 
@@ -416,15 +416,15 @@ DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleCalculateBacklash(
 		EnterState(SaveBacklashResult);
 	}
 
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformBacklashScanningTask::HandleSaveBacklashResult(DVH_VAT::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleSaveBacklashResult(VMF::VAT_Context& ctx)
 {
 	for (size_t i = 0; i < m_speedList.size(); ++i)
 	{
 		(void)i;
 	}
 
-	return DVH_VAT::TR_NEXT;
+	return VMF::TR_NEXT;
 }

@@ -1,12 +1,12 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include "VAT_Context.h"
 #include "VatSequence.h"
 #include "IDataRepository.h"
 #include "IVatActuator.h"
 
 
-namespace DVH_VAT
+namespace VMF
 {
     /// <summary>
     /// 특정 작업(Strategy)에 필요한 시퀀스를 구성(Build)하는 역할 클래스입니다.
@@ -25,7 +25,7 @@ namespace DVH_VAT
     /// 2. BuildSequence 메서드를 오버라이드하여 시퀀스 생성 및 태스크 추가 로직을 구현합니다.
     /// 3. 전략 클래스에서 CreateBuilder()를 통해 인스턴스를 반환합니다.
     /// </remarks>
-    class DVH_VAT_API SequenceBuilderBase
+    class VMF_API SequenceBuilderBase
     {
     public:
         SequenceBuilderBase();

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "MemorySequenceStrategy.h"
 
 #include "CLoad1ZFocusSequenceBuilder.h"
@@ -13,14 +13,14 @@ namespace VAT_LOAD1
 		public:
 			std::string GetSequenceName() const { return "Load1ZFocus"; }
 
-			DVH_VAT::SequenceBuilderPtr CreateBuilder()
+			VMF::SequenceBuilderPtr CreateBuilder()
 			{
 				return std::make_shared<CLoad1ZFocusSequenceBuilder>();
 			}
 
-			void ConfigureParams(DVH_VAT::VatContextPtr ctx)
+			void ConfigureParams(VMF::VatContextPtr ctx)
 			{
-                DVH_VAT::VatParams params;
+                VMF::VatParams params;
 
 				// 헬퍼 함수를 사용하여 파라미터 설정 간소화
 				SetParam(params, "CameraIndex", 6);
@@ -44,7 +44,7 @@ namespace VAT_LOAD1
 				double posX, posY, focusZ;
 
 				// // 검사 좌표 추가 (locateId=3, requestId=6)
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ);
 				}

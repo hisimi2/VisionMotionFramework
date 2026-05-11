@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "MemorySequenceStrategy.h"
 
 #include "CLoad1PlateJigSequenceBuilder.h"
@@ -13,14 +13,14 @@ namespace VAT_LOAD1
 		public:
 			std::string GetSequenceName() const { return "Load1PlateJig"; }
 
-            DVH_VAT::SequenceBuilderPtr CreateBuilder()
+            VMF::SequenceBuilderPtr CreateBuilder()
 			{
-				return DVH_VAT::SequenceBuilderPtr(new CLoad1PlateJigSequenceBuilder());
+				return VMF::SequenceBuilderPtr(new CLoad1PlateJigSequenceBuilder());
 			}
 
-			void ConfigureParams(DVH_VAT::VatContextPtr ctx)
+			void ConfigureParams(VMF::VatContextPtr ctx)
 			{
-                DVH_VAT::VatParams params;
+                VMF::VatParams params;
 
 				// 헬퍼 함수를 사용하여 파라미터 설정 간소화
 				SetParam(params, "CameraIndex", 6);
@@ -47,7 +47,7 @@ namespace VAT_LOAD1
 				// // Target A (locateId=1, requestId=5)
 				nlocateId = 1;
 				nVisionRequestId = 5;
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ);
 				}
@@ -55,7 +55,7 @@ namespace VAT_LOAD1
 				// // Target B (locateId=2, requestId=5)
 				nlocateId = 2;
 				nVisionRequestId = 5;
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ);
 				}
@@ -63,7 +63,7 @@ namespace VAT_LOAD1
 				// // Upper Target (locateId=3, requestId=5)
 				nlocateId = 3;
 				nVisionRequestId = 5;
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ);
 				}

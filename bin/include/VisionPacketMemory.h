@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include <cstring> // std::memset, strncpy_s
 
-namespace DVH_VAT
+namespace VMF
 {
     constexpr size_t STR_LEN   = 64;
     constexpr size_t DATA_SIZE = 10;

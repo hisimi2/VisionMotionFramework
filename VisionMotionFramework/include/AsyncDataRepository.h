@@ -1,16 +1,16 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 #include <memory>
 
-namespace DVH_VAT 
+namespace VMF 
 {
 
     /**
      * @class AsyncDataRepository
      * @brief IDataRepository 구현체를 비동기 큐로 래핑하여 Pimpl 패턴을 적용합니다.
      */
-    class DVH_VAT_API AsyncDataRepository : public IDataRepository 
+    class VMF_API AsyncDataRepository : public IDataRepository 
     {
     public:
         AsyncDataRepository(IDataRepository* inner, bool ownInner);
@@ -59,4 +59,4 @@ namespace DVH_VAT
         std::unique_ptr<Impl> m_pImpl;
     };
 
-} // namespace DVH_VAT
+} // namespace VMF

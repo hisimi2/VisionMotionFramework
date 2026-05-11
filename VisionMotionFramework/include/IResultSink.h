@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 #include <string>
 
 namespace VisionComm { enum VisionStatus : int; } // 전방 선언 시 기본 underlying type 명시 (선택사항이나 C++11에 적합성 높임)
 
-namespace DVH_VAT
+namespace VMF
 {
     class IResultSink
     {

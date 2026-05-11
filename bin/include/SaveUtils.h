@@ -1,12 +1,12 @@
-﻿#pragma once
+#pragma once
 
-#include "DVH_VAT_API.h"    // API Export 매크로
+#include "VMF_API.h"    // API Export 매크로
 #include "IDataRepository.h" // StorageError 정의
 
 #include <thread>
 #include <chrono>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     /**
      * SaveWithRetries: 저장을 재시도하는 유틸리티
@@ -47,4 +47,4 @@ namespace DVH_VAT
         return last;
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

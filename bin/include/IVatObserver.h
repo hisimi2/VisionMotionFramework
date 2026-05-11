@@ -1,10 +1,10 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include <string>
 
-namespace DVH_VAT 
+namespace VMF 
 {
-    class DVH_VAT_API IVatObserver 
+    class VMF_API IVatObserver 
     {
     public:
         virtual ~IVatObserver() = default;
@@ -16,4 +16,4 @@ namespace DVH_VAT
     };
 
     using IVatObserverPtr = IVatObserver*;
-} // namespace DVH_VAT
+} // namespace VMF

@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformPCDScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include "VisionMemoryKeys.h"
@@ -29,7 +29,7 @@ CLoad1PerformPCDScanningTask::~CLoad1PerformPCDScanningTask()
 {
 }
 
-void CLoad1PerformPCDScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1PerformPCDScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 	m_scanPitch = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PCD_PITCH, 0.0);
@@ -43,7 +43,7 @@ void CLoad1PerformPCDScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 			m_scanAxis = Axis_Y;
 	}
 
-    DVH_VAT::VisionPosition position;
+    VMF::VisionPosition position;
     ctx.PeekVisionPosition(position);
     m_targetPositionX = position.pos[0];
     m_targetPositionY = position.pos[1];
@@ -69,9 +69,9 @@ void CLoad1PerformPCDScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 	EnterState(VisionRequest);
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -83,37 +83,37 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::OnPoll(
 	case VisionWait:            return HandleVisionWait(ctx, actuator);
 	case CalculatePCD:          return HandleCalculatePCD(ctx, actuator);
 	case SavePCDResult:         return HandleSavePCDResult(ctx);
-	default:                    return DVH_VAT::TR_ERROR;
+	default:                    return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveSafeZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveSafeZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: actuator is null.");
 
-	if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(0.0) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: MoveToSafeZ failed.");
 
 	EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveOrigin(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveOrigin(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformCalibration: actuator is null.");
 
-	if (actuator->isMoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(0.0) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "PerformCalibration: SafeZ timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	std::vector<double> originPosition;
@@ -123,16 +123,16 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveOrigin(
 	originPosition.push_back(m_targetTablePosition);
 	originPosition.push_back(m_targetTablePosition);
 
-	if (actuator->Move(originPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->Move(originPosition, VMF::Narrow) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "PerformCalibration: MoveToFocusInspPos failed.");
 
 	EnterStateWithTimeout(MoveTargetPositionXY, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveTargetPositionXY(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveTargetPositionXY(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: actuator is null.");
@@ -144,12 +144,12 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveTargetPositionXY(
 	originPosition.push_back(m_targetTablePosition);
 	originPosition.push_back(m_targetTablePosition);
 
-	if (actuator->isMove(originPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->isMove(originPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "PerformPCDScanning: MoveToSafeZ failed.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	std::vector<double> targetPosition;
@@ -159,18 +159,18 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveTargetPositionXY(
 	targetPosition.push_back(m_targetTablePosition);
 	targetPosition.push_back(m_targetTablePosition);
 
-	if (actuator->Move(targetPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->Move(targetPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: MoveToFocusInspPos failed.");
 	}
 
 	EnterState(MoveFocusPositionZ);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveFocusPositionZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveFocusPositionZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformCalibration: actuator is null.");
@@ -182,34 +182,34 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleMoveFocusPositionZ(
 	targetPosition.push_back(m_targetTablePosition);
 	targetPosition.push_back(m_targetTablePosition);
 
-	if (actuator->isMove(targetPosition, DVH_VAT::Narrow) != DVH_VAT::ActOk)
+	if (actuator->isMove(targetPosition, VMF::Narrow) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "PerformCalibration: FocusPos timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
-	if (actuator->MoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(m_focusPositionZ) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "PerformCalibration: MoveToFocusInspPos failed.");
 
 	EnterState(VisionRequest);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionRequest(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleVisionRequest(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: light null");
 
-	if (actuator->isMoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(m_focusPositionZ) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "PerformPCDScanning: Z Down Fail");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	actuator->SetLightState(m_cameraId, true);
@@ -222,18 +222,18 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionRequest(
 
 	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
 
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -246,19 +246,19 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 	}
 
-	if (!visionProcessor->IsValid(DVH_VAT::Measure))
-		return DVH_VAT::TR_KEEP;
+	if (!visionProcessor->IsValid(VMF::Measure))
+		return VMF::TR_KEEP;
 
-	auto data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+	auto data = visionProcessor->GetLatestData(VMF::Measure);
 
 	double offsetX = 0.0;
 	double offsetY = 0.0;
 
-	auto itXOffset = data.find(DVH_VAT::X_OFFSET);
+	auto itXOffset = data.find(VMF::X_OFFSET);
 	if (itXOffset != data.end())
 		offsetX = std::stod(itXOffset->second);
 
-	auto itYOffset = data.find(DVH_VAT::Y_OFFSET);
+	auto itYOffset = data.find(VMF::Y_OFFSET);
 	if (itYOffset != data.end())
 		offsetY = std::stod(itYOffset->second);
 
@@ -282,7 +282,7 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
 
 		++m_inspectionCount;
 		EnterState(MoveSafeZ);
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	std::vector<double> axisPulse = actuator->getPulse();
@@ -301,7 +301,7 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
 		}
 
 		EnterState(CalculatePCD);
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	switch (m_scanAxis)
@@ -317,7 +317,7 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
 		break;
 	}
 
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	ctx.PopVisionPosition(position);
 	position.pos[0] = m_targetPositionX;
 	position.pos[1] = m_targetPositionY;
@@ -327,12 +327,12 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
 	m_inspectionCount = 0;
 
 	EnterState(VisionRequest);
-	return DVH_VAT::TR_PREV;
+	return VMF::TR_PREV;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleCalculatePCD(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleCalculatePCD(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	(void)ctx;
 	(void)actuator;
@@ -349,12 +349,12 @@ DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleCalculatePCD(
 	m_scaleResult = m_pulseDistanceResult * 1000.0 / 2500.0;
 
 	EnterState(SavePCDResult);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformPCDScanningTask::HandleSavePCDResult(
-	DVH_VAT::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformPCDScanningTask::HandleSavePCDResult(
+	VMF::VAT_Context& ctx)
 {
 	(void)ctx;
-	return DVH_VAT::TR_NEXT;
+	return VMF::TR_NEXT;
 }

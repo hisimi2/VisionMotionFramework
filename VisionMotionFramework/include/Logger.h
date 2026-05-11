@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <fstream>
 #include <cstdarg>
 #include <mutex> // Win32 CRITICAL_SECTION 대신 C++11 표준 라이브러리 사용
 
-namespace DVH_VAT
+namespace VMF
 {
     // 기존 시스템과의 호환성을 위해 전통적 enum 유지
     enum LogLevel
@@ -53,4 +53,4 @@ namespace DVH_VAT
         bool consoleOutput_;
     };
 
-} // namespace DVH_VAT
+} // namespace VMF

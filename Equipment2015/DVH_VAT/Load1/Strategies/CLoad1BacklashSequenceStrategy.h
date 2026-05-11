@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "MemorySequenceStrategy.h"
 
 #include "CLoad1BacklashSequenceBuilder.h"
@@ -16,17 +16,17 @@ namespace VAT_LOAD1
 			/// <summary>
             /// 이 전략에서 사용할 SequenceBuilder 객체를 생성하여 반환합니다.
 			/// </summary>
-            DVH_VAT::SequenceBuilderPtr CreateBuilder()
+            VMF::SequenceBuilderPtr CreateBuilder()
 			{
-				return DVH_VAT::SequenceBuilderPtr(new CLoad1BacklashSequenceBuilder());
+				return VMF::SequenceBuilderPtr(new CLoad1BacklashSequenceBuilder());
 			}
 
             /// <summary>
             /// 시퀀스 실행에 필요한 파라미터를 Context에 설정(주입)합니다.
             /// </summary>
-			void ConfigureParams(DVH_VAT::VatContextPtr ctx)
+			void ConfigureParams(VMF::VatContextPtr ctx)
 			{
-                DVH_VAT::VatParams params;
+                VMF::VatParams params;
 
                 /// 시퀀스 실행에 필요한 파라미터를 설정합니다.
 				SetParam(params, "CameraIndex",     6);

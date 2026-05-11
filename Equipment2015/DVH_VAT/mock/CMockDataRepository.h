@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace DVH_VAT
+namespace VMF
 {
     // IDataRepository의 단순 모의 구현체
     // 테스트 중 저장/조회 동작을 시뮬레이션합니다.
@@ -67,5 +67,5 @@ namespace DVH_VAT
         // sequence run id 생성기 (인스턴스 멤버로 명확히 선언)
         int m_nextRunId;
     };
-} // namespace DVH_VAT
+} // namespace VMF
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <map>
@@ -9,7 +9,7 @@
 #include <condition_variable>  // std::condition_variable
 #include <chrono>              // std::chrono
 
-namespace DVH_VAT 
+namespace VMF 
 {
     class IDataRepository;
     class IVisionEventHandler;
@@ -37,4 +37,4 @@ namespace DVH_VAT
     using LockGuardType          = std::lock_guard<std::mutex>;
     using UniqueLockType         = std::unique_lock<std::mutex>;
     using ConditionVariableType  = std::condition_variable;
-} // namespace DVH_VAT
+} // namespace VMF

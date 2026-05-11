@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "AsyncSequenceRunner.h"
 #include "VAT_Context.h"
 
@@ -15,7 +15,7 @@
 #include <string>
 #include <mutex>
 
-namespace DVH_VAT
+namespace VMF
 {
     struct SequenceThreadFunc
     {
@@ -295,4 +295,4 @@ namespace DVH_VAT
         return m_impl->running.load();
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

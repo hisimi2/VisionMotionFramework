@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "MemorySequenceStrategy.h"
 #include "CLoad1UpperCamFOVSequenceBuilder.h"
 
@@ -11,14 +11,14 @@ namespace VAT_LOAD1
 		public:
 			std::string GetSequenceName() const { return "Load1PlateJig"; }
 
-            DVH_VAT::SequenceBuilderPtr CreateBuilder()
+            VMF::SequenceBuilderPtr CreateBuilder()
 			{
-				return DVH_VAT::SequenceBuilderPtr(new VAT_LOAD1::Sequence::CLoad1UpperCamFOVSequenceBuilder());
+				return VMF::SequenceBuilderPtr(new VAT_LOAD1::Sequence::CLoad1UpperCamFOVSequenceBuilder());
 			}
 
-			void ConfigureParams(DVH_VAT::VatContextPtr& ctx)
+			void ConfigureParams(VMF::VatContextPtr& ctx)
 			{
-				DVH_VAT::VatRunParams params;
+				VMF::VatRunParams params;
 
 				// 헬퍼 함수를 사용하여 파라미터 설정 간소화
 				SetParam(params, "CameraIndex", 7);

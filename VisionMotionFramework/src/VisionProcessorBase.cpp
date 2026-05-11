@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <vector>   
 #include <map>
 #include <string>
@@ -16,7 +16,7 @@
 #include <memory>
 #include <algorithm>
 
-namespace DVH_VAT
+namespace VMF
 {
     struct VisionProcessorBase::Impl
     {

@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformCalibrationTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include "VisionMemoryKeys.h"
@@ -10,7 +10,7 @@ CLoad1PerformCalibrationTask::CLoad1PerformCalibrationTask()
 	, m_visionTimeoutMs(10000)
 	, m_inspectionCount(0)
 	, m_maxInspectionCount(0)
-	, m_currentPitchMode(DVH_VAT::Narrow)
+	, m_currentPitchMode(VMF::Narrow)
 	, m_isWideCheck(false)
 	, m_cameraId(0)
 	, m_locationId(0)
@@ -22,9 +22,9 @@ CLoad1PerformCalibrationTask::~CLoad1PerformCalibrationTask()
 {
 }
 
-void CLoad1PerformCalibrationTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1PerformCalibrationTask::OnInitialize(VMF::VAT_Context& ctx)
 {
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	if (ctx.PeekVisionPosition(position))
 	{
 		m_targetPosition = position.pos;
@@ -54,13 +54,13 @@ void CLoad1PerformCalibrationTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
 	m_inspectionCount = 0;
-	m_currentPitchMode = DVH_VAT::Narrow;
+	m_currentPitchMode = VMF::Narrow;
 	EnterState(VisionRequest);
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -71,53 +71,53 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::OnPoll(
 	case VisionRequest:             return HandleVisionRequest(ctx, actuator);
 	case VisionWait:                return HandleVisionWait(ctx, actuator);
 	case SaveCalibrationResult:     return HandleSaveCalibrationResult(ctx);
-	default:                        return DVH_VAT::TR_ERROR;
+	default:                        return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveSafeZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveSafeZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 
-	if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(0.0) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Calibration: MoveToSafeZ failed.");
 
 	EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveOrigin(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveOrigin(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 
-	if (actuator->isMoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(0.0) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Calibration: SafeZ timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	std::vector<double> originXY;
 	originXY.push_back(0.0);
 	originXY.push_back(0.0);
 
-	if (actuator->Move(originXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->Move(originXY, m_currentPitchMode) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Calibration: MoveToOrigin failed.");
 
 	EnterStateWithTimeout(MoveCalibrationPositionXY, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveCalibrationPositionXY(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveCalibrationPositionXY(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -126,56 +126,56 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveCalibrationPositionX
 	originXY.push_back(0.0);
 	originXY.push_back(0.0);
 
-	if (actuator->isMove(originXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->isMove(originXY, m_currentPitchMode) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Calibration: Origin XY timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
-	if (actuator->Move(m_targetPosition, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->Move(m_targetPosition, m_currentPitchMode) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Calibration: MoveToCalibrationPos failed.");
 
 	EnterStateWithTimeout(MoveFocusPositionZ, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleMoveFocusPositionZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveFocusPositionZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 
-	if (actuator->isMove(m_targetPosition, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->isMove(m_targetPosition, m_currentPitchMode) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Calibration: FocusPos timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
-	if (actuator->MoveZ(m_targetPosition[2]) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(m_targetPosition[2]) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Calibration: MoveToFocusZ failed.");
 
 	EnterState(VisionRequest);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionRequest(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleVisionRequest(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 
-	if (actuator->isMoveZ(m_targetPosition[2]) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(m_targetPosition[2]) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Calibration: MoveZ timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	actuator->SetLightState(m_cameraId, true);
@@ -209,18 +209,18 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionRequest(
 
 	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
 
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -229,19 +229,19 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
 
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 
-	if (!visionProcessor->IsValid(DVH_VAT::Measure))
-		return DVH_VAT::TR_KEEP;
+	if (!visionProcessor->IsValid(VMF::Measure))
+		return VMF::TR_KEEP;
 
-	auto data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+	auto data = visionProcessor->GetLatestData(VMF::Measure);
 
 	double offsetX = 0.0;
 	double offsetY = 0.0;
 
-	auto itXOffset = data.find(DVH_VAT::X_OFFSET);
+	auto itXOffset = data.find(VMF::X_OFFSET);
 	if (itXOffset != data.end())
 		offsetX = std::stod(itXOffset->second);
 
-	auto itYOffset = data.find(DVH_VAT::Y_OFFSET);
+	auto itYOffset = data.find(VMF::Y_OFFSET);
 	if (itYOffset != data.end())
 		offsetY = std::stod(itYOffset->second);
 
@@ -262,15 +262,15 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
 	{
 		++m_inspectionCount;
 		EnterState(MoveSafeZ);
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	m_inspectionCount = 0;
 	EnterState(SaveCalibrationResult);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(DVH_VAT::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(VMF::VAT_Context& ctx)
 {
 	auto repo = ctx.getRepository();
 
@@ -284,21 +284,21 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(DV
 			m_targetPosition[1]);
 	}
 
-	if (m_isWideCheck && m_currentPitchMode == DVH_VAT::Narrow)
+	if (m_isWideCheck && m_currentPitchMode == VMF::Narrow)
 	{
-		m_currentPitchMode = DVH_VAT::Wide;
+		m_currentPitchMode = VMF::Wide;
 		EnterState(MoveSafeZ);
-		return DVH_VAT::TR_NEXT;
+		return VMF::TR_NEXT;
 	}
 
-	m_currentPitchMode = DVH_VAT::Narrow;
+	m_currentPitchMode = VMF::Narrow;
 
-	DVH_VAT::VisionPosition position;
+	VMF::VisionPosition position;
 	ctx.PopVisionPosition(position);
 
 	if (ctx.IsVisionPositionEmpty())
 	{
-		return DVH_VAT::TR_NEXT;
+		return VMF::TR_NEXT;
 	}
 
 	ctx.PeekVisionPosition(position);
@@ -306,6 +306,6 @@ DVH_VAT::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(DV
 	m_locationId = position.locateId;
 
 	EnterStateWithTimeout(MoveSafeZ, m_moveTimeoutMs);
-	return DVH_VAT::TR_NEXT;
+	return VMF::TR_NEXT;
 }
 

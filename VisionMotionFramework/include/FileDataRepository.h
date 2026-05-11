@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
-namespace DVH_VAT
+namespace VMF
 {
-    class DVH_VAT_API FileDataRepository : public IDataRepository
+    class VMF_API FileDataRepository : public IDataRepository
     {
     public:
         /**
@@ -144,4 +144,4 @@ namespace DVH_VAT
         mutable std::mutex mutex_;
     };
 
-}; // namespace DVH_VAT
+}; // namespace VMF

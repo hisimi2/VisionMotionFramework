@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 #include <memory> // std::unique_ptr 사용을 위해 추가
 #include <string>
 
-namespace DVH_VAT
+namespace VMF
 {
     /*
      RepositoryFactory
@@ -16,10 +16,10 @@ namespace DVH_VAT
      - 반환: 생성된 std::unique_ptr<IDataRepository> (성공 시 유효한 객체, 실패 시 nullptr 반환)
        스마트 포인터를 반환하여 호출자에게 소유권이 있음을 명확히 하고, 메모리 누수를 자동으로 방지합니다.
     */
-    class DVH_VAT_API RepositoryFactory
+    class VMF_API RepositoryFactory
     {
     public:
         static std::unique_ptr<IDataRepository> CreateRepository(const std::string& type, const std::string& config);
     };
 
-} // namespace DVH_VAT
+} // namespace VMF

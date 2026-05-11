@@ -1,15 +1,15 @@
 #pragma once
 
-#include "DVH_VAT_API.h"
+#include "VMF_API.h"
 #include "VisionProcessorBase.h"
 #include "VisionMemoryKeys.h"
 
 #include <vector>
 #include <string>
 
-namespace DVH_VAT
+namespace VMF
 {
-    class DVH_VAT_API VisionMemoryProcessor : public VisionProcessorBase
+    class VMF_API VisionMemoryProcessor : public VisionProcessorBase
     {
     public:
         VisionMemoryProcessor();

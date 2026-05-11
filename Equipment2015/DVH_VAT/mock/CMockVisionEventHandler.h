@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IVisionProcessor.h"
 #include "Types.h"
 
@@ -7,10 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace DVH_VAT
+namespace VMF
 {
-    // ?뚯뒪???좊떅?뚯뒪?몄슜 紐⑥쓽 援ы쁽泥? IVisionEventHandler ?명꽣?섏씠??援ы쁽
-    // ?대옒?ㅻ챸? ?꾨줈?앺듃 洹쒖튃???곕씪 'C' ?묐몢瑜??ъ슜?⑸땲??
     class CMockVisionEventHandler : public IVisionEventHandler
     {
     public:
@@ -63,6 +61,6 @@ namespace DVH_VAT
         // 諛붾뵒瑜?媛꾨떒??臾몄옄?대줈 蹂?섑븯???좏떥
         static std::string BodyToString(const ByteArray& b);
     };
-} // namespace DVH_VAT
+} // namespace VMF
 
 

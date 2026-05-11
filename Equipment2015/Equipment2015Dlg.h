@@ -1,4 +1,4 @@
-﻿
+
 // Equipment2015Dlg.h : 헤더 파일
 //
 
@@ -11,7 +11,7 @@
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
 {
-    DVH_VAT::CVatEngineUiAdapter m_engine;
+    VMF::CVatEngineUiAdapter m_engine;
     std::shared_ptr<VAT_LOAD1::Load1Parts> m_parts;
     std::shared_ptr<VAT_LOAD1::VatAdapterLoad1> m_adapter;
 

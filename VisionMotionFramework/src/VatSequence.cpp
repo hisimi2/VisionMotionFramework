@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 
 #include "VatSequence.h"
 #include "ITask.h"
@@ -9,7 +9,7 @@
 #include <mutex>
 #include <chrono>
 
-namespace DVH_VAT
+namespace VMF
 {
     VatSequence::VatSequence(const std::string& name)
         : m_abortRequested(false)
@@ -168,5 +168,5 @@ namespace DVH_VAT
         return true;
     }
 
-} // namespace DVH_VAT
+} // namespace VMF
 

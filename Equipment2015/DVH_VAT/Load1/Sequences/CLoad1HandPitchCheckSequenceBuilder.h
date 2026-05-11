@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "SequenceBuilderBase.h"
 #include "CLoad1MoveToStartPositionTask.h"
@@ -11,18 +11,18 @@ namespace VAT_LOAD1
 	{
         using namespace VAT_LOAD1::Task;
 
-		class CLoad1HandPitchCheckSequenceBuilder : public DVH_VAT::SequenceBuilderBase
+		class CLoad1HandPitchCheckSequenceBuilder : public VMF::SequenceBuilderBase
 		{
 		protected:
-            DVH_VAT::VatSequencePtr BuildSequence(std::string sequenceName) override
+            VMF::VatSequencePtr BuildSequence(std::string sequenceName) override
 			{
-                DVH_VAT::VatSequencePtr seq(new DVH_VAT::VatSequence(sequenceName));
+                VMF::VatSequencePtr seq(new VMF::VatSequence(sequenceName));
 
-				seq->AddTask(DVH_VAT::TaskStepPtr(new CLoad1MoveToStartPositionTask()));
-				seq->AddTask(DVH_VAT::TaskStepPtr(new CLoad1PerformCalibrationTask()));
-				seq->AddTask(DVH_VAT::TaskStepPtr(new CLoad1PerformHandPitchScanningTask()));
+				seq->AddTask(VMF::TaskStepPtr(new CLoad1MoveToStartPositionTask()));
+				seq->AddTask(VMF::TaskStepPtr(new CLoad1PerformCalibrationTask()));
+				seq->AddTask(VMF::TaskStepPtr(new CLoad1PerformHandPitchScanningTask()));
 
-				return DVH_VAT::VatSequencePtr(seq.release());
+				return VMF::VatSequencePtr(seq.release());
 			}
 		};
 	}

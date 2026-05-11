@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <ctime>
 #include <sstream>
 #include <vector>
 
-namespace DVH_VAT
+namespace VMF
 {
     class FileUtils
     {
@@ -52,4 +52,4 @@ namespace DVH_VAT
         }
     };
 
-} // namespace DVH_VAT
+} // namespace VMF

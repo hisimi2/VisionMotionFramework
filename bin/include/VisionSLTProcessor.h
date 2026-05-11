@@ -1,14 +1,14 @@
 #pragma once
 
-#include "DVH_VAT_API.h"
+#include "VMF_API.h"
 #include "VisionProcessorBase.h"
 
 #include <vector>
 #include <string>
 
-namespace DVH_VAT
+namespace VMF
 {
-    class DVH_VAT_API VisionSLTProcessor : public VisionProcessorBase
+    class VMF_API VisionSLTProcessor : public VisionProcessorBase
     {
     public:
         VisionSLTProcessor();
@@ -35,4 +35,4 @@ namespace DVH_VAT
 
         std::vector<std::string> ParseMeasureBody(const ByteArray& body);
     };
-} // namespace DVH_VAT
+} // namespace VMF

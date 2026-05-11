@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VAT_Context.h"
 
 // boost 헤더 및 의존성 삭제
@@ -9,7 +9,7 @@
 #include <thread>
 #include <mutex>
 
-namespace DVH_VAT
+namespace VMF
 {
     // C++11 std::tolower의 정확한 사용을 위해 람다(또는 캐스팅) 활용 (로캘 충돌 방지)
     static std::string ToLowerCopy(const std::string& s)

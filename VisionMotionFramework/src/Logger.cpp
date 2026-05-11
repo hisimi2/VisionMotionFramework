@@ -1,11 +1,11 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "Logger.h"
 #include <iostream>
 #include <ctime>
 #include <cstdio>
 #include <vector>
 
-namespace DVH_VAT
+namespace VMF
 {
     // 싱글톤 인스턴스
     Logger& Logger::Instance()
@@ -119,4 +119,4 @@ namespace DVH_VAT
         }
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

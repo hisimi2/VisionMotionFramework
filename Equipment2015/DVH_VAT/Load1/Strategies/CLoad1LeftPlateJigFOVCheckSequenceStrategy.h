@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "MemorySequenceStrategy.h"
 #include "CLoad1PlateJigFOVSequenceBuilder.h"
@@ -13,14 +13,14 @@ namespace VAT_LOAD1
 		public:
 			std::string GetSequenceName() const { return "Load1PlateJigFOV"; }
 
-            DVH_VAT::SequenceBuilderPtr CreateBuilder()
+            VMF::SequenceBuilderPtr CreateBuilder()
 			{
 				return std::make_shared<CLoad1PlateJigFOVSequenceBuilder>();
 			}
 
-			void ConfigureParams(DVH_VAT::VatContextPtr ctx)
+			void ConfigureParams(VMF::VatContextPtr ctx)
 			{
-                DVH_VAT::VatParams params;
+                VMF::VatParams params;
 
 				// 헬퍼 함수를 사용하여 파라미터 설정 간소화
 				SetParam(params, "CameraIndex", 6);
@@ -45,7 +45,7 @@ namespace VAT_LOAD1
 				int nVisionRequestId = 9;
 				double posX, posY, focusZ;
 
-				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == DVH_VAT::StorageSuccess)
+				if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
 				{
 					// Backlash 위치 좌표
 					AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ, -65, -65); // Table Pos 알아야 함

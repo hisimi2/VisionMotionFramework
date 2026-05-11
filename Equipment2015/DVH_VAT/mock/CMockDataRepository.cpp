@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CMockDataRepository.h"
 
 #include <sstream>
 
-namespace DVH_VAT
+namespace VMF
 {
     CMockDataRepository::CMockDataRepository()
     {
@@ -172,5 +172,5 @@ namespace DVH_VAT
         m_nextRunId = 1;
     }
 
-} // namespace DVH_VAT
+} // namespace VMF
 

@@ -1,10 +1,10 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include "IVatSequenceStrategy.h"
 #include "VatSequence.h"
 #include <string>
 
-namespace DVH_VAT
+namespace VMF
 {
     /// <summary>
     /// 시퀀스 실행 전략(Strategy)을 정의하는 기본 추상 클래스입니다.
@@ -12,7 +12,7 @@ namespace DVH_VAT
     /// 각 구체적인 전략 클래스는 이 클래스를 상속받아 시퀀스 이름, 빌더, 파라미터 설정 등을 구현해야 합니다.
     /// </para>
     /// </summary>
-    class DVH_VAT_API SequenceStrategyBase : public IVatSequenceStrategy
+    class VMF_API SequenceStrategyBase : public IVatSequenceStrategy
     {
     protected:
         IVatActuator* m_adapter;

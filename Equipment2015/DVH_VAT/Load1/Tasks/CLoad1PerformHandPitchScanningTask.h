@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 #include <string>
 #include <vector>
@@ -11,7 +11,7 @@ namespace VAT_LOAD1
 		{
 			int row;
 			int col;
-            DVH_VAT::PitchStatus pitchMode;
+            VMF::PitchStatus pitchMode;
 			double targetPositionX;
 			double targetPositionY;
 			double measuredOffsetX;
@@ -20,7 +20,7 @@ namespace VAT_LOAD1
 			HandPitchScanPoint()
 				: row(0)
 				, col(0)
-				, pitchMode(DVH_VAT::Narrow)
+				, pitchMode(VMF::Narrow)
 				, targetPositionX(0.0)
 				, targetPositionY(0.0)
 				, measuredOffsetX(0.0)
@@ -29,7 +29,7 @@ namespace VAT_LOAD1
 			}
 		};
 
-		class CLoad1PerformHandPitchScanningTask : public DVH_VAT::NonBlockingTaskBase
+		class CLoad1PerformHandPitchScanningTask : public VMF::NonBlockingTaskBase
         {
             enum Substep
             {
@@ -43,14 +43,14 @@ namespace VAT_LOAD1
                 SaveHandPitchResult,
             };
 
-            DVH_VAT::TaskResult HandleMoveSafeZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveOrigin(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveHandPitch(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleMoveFocusPositionZ(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleVisionRequest(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleVisionWait(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleReturnHome(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator);
-            DVH_VAT::TaskResult HandleSaveHandPitchResult(DVH_VAT::VAT_Context& ctx);
+            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveHandPitch(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveFocusPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleReturnHome(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleSaveHandPitchResult(VMF::VAT_Context& ctx);
 
             void BuildScanPoints(
                 double standardPickerCol,
@@ -70,8 +70,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(DVH_VAT::VAT_Context& ctx) override;
-            DVH_VAT::TaskResult OnPoll(DVH_VAT::VAT_Context& ctx, DVH_VAT::IVatActuator* actuator) override;
+            void OnInitialize(VMF::VAT_Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
 
             size_t m_currentScanIndex;
 			double m_centerPositionX;
@@ -82,7 +82,7 @@ namespace VAT_LOAD1
 			double m_currentTargetPositionX;
 			double m_currentTargetPositionY;
 			std::vector<HandPitchScanPoint> m_scanPoints;
-            DVH_VAT::PitchStatus m_currentPitchMode;
+            VMF::PitchStatus m_currentPitchMode;
 			int m_pickerMaxRow;
 			int m_pickerMaxCol;
 			int m_visionTimeoutMs;

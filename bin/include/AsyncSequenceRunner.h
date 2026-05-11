@@ -1,19 +1,19 @@
-﻿#pragma once
+#pragma once
 
-#include "DVH_VAT_API.h"
+#include "VMF_API.h"
 #include "Types.h"
 #include <memory> // boost 스마트 포인터 대신 C++ 표준 라이브러리 사용
 #include <vector>
 #include <string>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     class VAT_Context;
     class IVatSequence;
     class IVatActuator;
     class IResultSink;
 
-    class DVH_VAT_API AsyncSequenceRunner 
+    class VMF_API AsyncSequenceRunner 
     {
     public:
         AsyncSequenceRunner();

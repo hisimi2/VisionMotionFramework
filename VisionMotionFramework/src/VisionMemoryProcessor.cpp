@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VisionMemoryProcessor.h"
 
 #include "VisionMsgDispatcher.h"
@@ -10,7 +10,7 @@
 #include <vector>
 #include <cstring>
 
-namespace DVH_VAT
+namespace VMF
 {
     VisionMemoryProcessor::VisionMemoryProcessor()
     {

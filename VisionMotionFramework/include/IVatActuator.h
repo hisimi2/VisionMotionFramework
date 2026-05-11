@@ -1,10 +1,10 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 
 #include <vector>
 #include "Types.h"
 
-namespace DVH_VAT
+namespace VMF
 {
 	enum PitchType
 	{
@@ -56,7 +56,7 @@ namespace DVH_VAT
         ActStateMismatch           // Pitch 등 상태 불일치
     };
 
-	class DVH_VAT_API IVatActuator
+	class VMF_API IVatActuator
 	{
 	public:
 		IVatActuator() = default;
@@ -74,4 +74,4 @@ namespace DVH_VAT
 		virtual int GetLightState(int camIndex, bool& outOn) = 0;
 	};
 
-} // namespace DVH_VAT
+} // namespace VMF

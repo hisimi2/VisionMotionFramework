@@ -13,7 +13,7 @@
 #include <memory> 
 #include <direct.h>
 
-namespace DVH_VAT
+namespace VMF
 {
     SequenceBuilderBase::SequenceBuilderBase() {}
     SequenceBuilderBase::~SequenceBuilderBase() {}
@@ -27,4 +27,4 @@ namespace DVH_VAT
     {
         return BuildSequence(sequenceName);
     }
-} // namespace DVH_VAT
+} // namespace VMF

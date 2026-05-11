@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
 #include <string>
 #include <memory>
 
-namespace DVH_VAT
+namespace VMF
 {
     class IVatActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
 

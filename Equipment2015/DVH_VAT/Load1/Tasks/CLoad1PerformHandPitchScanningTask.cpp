@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformHandPitchScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include "VisionMemoryKeys.h"
@@ -14,7 +14,7 @@ CLoad1PerformHandPitchScanningTask::CLoad1PerformHandPitchScanningTask()
 	, m_cameraId(0)
 	, m_currentTargetPositionX(0.0)
 	, m_currentTargetPositionY(0.0)
-	, m_currentPitchMode(DVH_VAT::Narrow)
+	, m_currentPitchMode(VMF::Narrow)
 	, m_pickerMaxRow(0)
 	, m_pickerMaxCol(0)
 	, m_visionTimeoutMs(30000)
@@ -33,7 +33,7 @@ CLoad1PerformHandPitchScanningTask::~CLoad1PerformHandPitchScanningTask()
 {
 }
 
-void CLoad1PerformHandPitchScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
+void CLoad1PerformHandPitchScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 {
 	m_safePositionZ = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_SAFE_Z, 0.0);
 	m_pickerMaxRow = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PICKER_MAX_ROW, 0);
@@ -64,7 +64,7 @@ void CLoad1PerformHandPitchScanningTask::OnInitialize(DVH_VAT::VAT_Context& ctx)
 
 	m_scanPoints.clear();
 	m_currentScanIndex = 0;
-	m_currentPitchMode = DVH_VAT::Narrow;
+	m_currentPitchMode = VMF::Narrow;
 	m_isScanPointsBuilt = false;
 	m_currentTargetPositionX = 0.0;
 	m_currentTargetPositionY = 0.0;
@@ -82,10 +82,10 @@ void CLoad1PerformHandPitchScanningTask::BuildScanPoints(
 {
 	m_scanPoints.clear();
 
-	for (int pitchMode = DVH_VAT::Narrow; pitchMode <= DVH_VAT::Wide; ++pitchMode)
+	for (int pitchMode = VMF::Narrow; pitchMode <= VMF::Wide; ++pitchMode)
 	{
-		const double pickerGapX = (pitchMode == DVH_VAT::Wide) ? pickerGapX_Wide : pickerGapX_Narrow;
-		const double pickerGapY = (pitchMode == DVH_VAT::Wide) ? pickerGapY_Wide : pickerGapY_Narrow;
+		const double pickerGapX = (pitchMode == VMF::Wide) ? pickerGapX_Wide : pickerGapX_Narrow;
+		const double pickerGapY = (pitchMode == VMF::Wide) ? pickerGapY_Wide : pickerGapY_Narrow;
 
 		for (int row = 0; row < m_pickerMaxRow; ++row)
 		{
@@ -93,7 +93,7 @@ void CLoad1PerformHandPitchScanningTask::BuildScanPoints(
 			HandPitchScanPoint firstPoint;
 			firstPoint.row = row;
 			firstPoint.col = firstCol;
-			firstPoint.pitchMode = static_cast<DVH_VAT::PitchStatus>(pitchMode);
+			firstPoint.pitchMode = static_cast<VMF::PitchStatus>(pitchMode);
 			firstPoint.targetPositionX = m_centerPositionX + (standardPickerCol - firstCol) * pickerGapX;
 			firstPoint.targetPositionY = m_centerPositionY - (standardPickerRow - row) * pickerGapY;
 			m_scanPoints.push_back(firstPoint);
@@ -105,7 +105,7 @@ void CLoad1PerformHandPitchScanningTask::BuildScanPoints(
 			HandPitchScanPoint lastPoint;
 			lastPoint.row = row;
 			lastPoint.col = lastCol;
-			lastPoint.pitchMode = static_cast<DVH_VAT::PitchStatus>(pitchMode);
+			lastPoint.pitchMode = static_cast<VMF::PitchStatus>(pitchMode);
 			lastPoint.targetPositionX = m_centerPositionX + (standardPickerCol - lastCol) * pickerGapX;
 			lastPoint.targetPositionY = m_centerPositionY - (standardPickerRow - row) * pickerGapY;
 			m_scanPoints.push_back(lastPoint);
@@ -115,9 +115,9 @@ void CLoad1PerformHandPitchScanningTask::BuildScanPoints(
 	m_isScanPointsBuilt = true;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::OnPoll(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::OnPoll(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -129,18 +129,18 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::OnPoll(
 	case VisionWait:          return HandleVisionWait(ctx, actuator);
 	case ReturnHome:          return HandleReturnHome(ctx, actuator);
 	case SaveHandPitchResult: return HandleSaveHandPitchResult(ctx);
-	default:                  return DVH_VAT::TR_ERROR;
+	default:                  return VMF::TR_ERROR;
 	}
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveSafeZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveSafeZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 
-	if (actuator->MoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(0.0) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Calibration: MoveToSafeZ failed.");
 
 	std::vector<double> currentPosition = actuator->getPosition();
@@ -160,41 +160,41 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveSafeZ(
 	}
 
 	EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveOrigin(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveOrigin(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 
-	if (actuator->isMoveZ(0.0) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(0.0) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Calibration: SafeZ timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	std::vector<double> originXY;
 	originXY.push_back(0.0);
 	originXY.push_back(0.0);
 
-	if (actuator->Move(originXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->Move(originXY, m_currentPitchMode) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "HandPitch: MoveToOrigin failed.");
 
 	m_currentTargetPositionX = 0.0;
 	m_currentTargetPositionY = 0.0;
 
 	EnterStateWithTimeout(MoveHandPitch, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveHandPitch(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveHandPitch(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "XY Move Fail: actuator null");
@@ -203,18 +203,18 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveHandPitch(
 	currentXY.push_back(m_currentTargetPositionX);
 	currentXY.push_back(m_currentTargetPositionY);
 
-	if (actuator->isMove(currentXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->isMove(currentXY, m_currentPitchMode) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Calibration: Origin XY timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	if (m_currentScanIndex >= m_scanPoints.size())
 	{
 		EnterStateWithTimeout(ReturnHome, m_moveTimeoutMs);
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	const HandPitchScanPoint& scanPoint = m_scanPoints[m_currentScanIndex];
@@ -227,16 +227,16 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveHandPitch(
 	targetXY.push_back(m_currentTargetPositionX);
 	targetXY.push_back(m_currentTargetPositionY);
 
-	if (actuator->Move(targetXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->Move(targetXY, m_currentPitchMode) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "XY Move Fail");
 
 	EnterStateWithTimeout(MoveFocusPositionZ, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveFocusPositionZ(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveFocusPositionZ(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "HandPitch: actuator is null.");
@@ -245,34 +245,34 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveFocusPositionZ
 	targetXY.push_back(m_currentTargetPositionX);
 	targetXY.push_back(m_currentTargetPositionY);
 
-	if (actuator->isMove(targetXY, m_currentPitchMode) != DVH_VAT::ActOk)
+	if (actuator->isMove(targetXY, m_currentPitchMode) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Z Down Fail");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
-	if (actuator->MoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(m_focusPositionZ) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "HandPitch: MoveToFocusZ failed.");
 
 	EnterState(VisionRequest);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionRequest(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionRequest(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Vision request: actuator null");
 
-	if (actuator->isMoveZ(m_focusPositionZ) != DVH_VAT::ActOk)
+	if (actuator->isMoveZ(m_focusPositionZ) != VMF::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "HandPitch: MoveZ timeout.");
 
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	actuator->SetLightState(m_cameraId, true);
@@ -285,18 +285,18 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionRequest(
 
 	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(DVH_VAT::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
 
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -309,19 +309,19 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 	}
 
-	if (!visionProcessor->IsValid(DVH_VAT::Measure))
-		return DVH_VAT::TR_KEEP;
+	if (!visionProcessor->IsValid(VMF::Measure))
+		return VMF::TR_KEEP;
 
-	auto data = visionProcessor->GetLatestData(DVH_VAT::Measure);
+	auto data = visionProcessor->GetLatestData(VMF::Measure);
 
 	double offsetX = 0.0;
 	double offsetY = 0.0;
 
-	auto itXOffset = data.find(DVH_VAT::X_OFFSET);
+	auto itXOffset = data.find(VMF::X_OFFSET);
 	if (itXOffset != data.end())
 		offsetX = std::stod(itXOffset->second);
 
-	auto itYOffset = data.find(DVH_VAT::Y_OFFSET);
+	auto itYOffset = data.find(VMF::Y_OFFSET);
 	if (itYOffset != data.end())
 		offsetY = std::stod(itYOffset->second);
 
@@ -339,7 +339,7 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
 	if (m_currentScanIndex >= m_scanPoints.size())
 	{
 		EnterState(ReturnHome);
-		return DVH_VAT::TR_KEEP;
+		return VMF::TR_KEEP;
 	}
 
 	const HandPitchScanPoint& nextScanPoint = m_scanPoints[m_currentScanIndex];
@@ -354,31 +354,31 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
 		EnterState(MoveHandPitch);
 	}
 
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleReturnHome(
-	DVH_VAT::VAT_Context& ctx,
-	DVH_VAT::IVatActuator* actuator)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleReturnHome(
+	VMF::VAT_Context& ctx,
+	VMF::IVatActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "ReturnHome: actuator null");
 
-	if (actuator->MoveZ(m_safePositionZ) != DVH_VAT::ActOk)
+	if (actuator->MoveZ(m_safePositionZ) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Z Home Return Fail");
 
 	EnterStateWithTimeout(SaveHandPitchResult, m_moveTimeoutMs);
-	return DVH_VAT::TR_KEEP;
+	return VMF::TR_KEEP;
 }
 
-DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleSaveHandPitchResult(
-	DVH_VAT::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleSaveHandPitchResult(
+	VMF::VAT_Context& ctx)
 {
 	auto repo = ctx.getRepository();
 	if (!repo)
 	{
 		EnterState(CS_ERROR);
-		return DVH_VAT::TR_ERROR;
+		return VMF::TR_ERROR;
 	}
 
 	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
@@ -403,12 +403,12 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleSaveHandPitchResul
 
 				if (scanPoint.row == row && scanPoint.col == col)
 				{
-					if (scanPoint.pitchMode == DVH_VAT::Narrow)
+					if (scanPoint.pitchMode == VMF::Narrow)
 					{
 						narrowOffsetX = scanPoint.measuredOffsetX;
 						narrowOffsetY = scanPoint.measuredOffsetY;
 					}
-					else if (scanPoint.pitchMode == DVH_VAT::Wide)
+					else if (scanPoint.pitchMode == VMF::Wide)
 					{
 						wideOffsetX = scanPoint.measuredOffsetX;
 						wideOffsetY = scanPoint.measuredOffsetY;
@@ -428,5 +428,5 @@ DVH_VAT::TaskResult CLoad1PerformHandPitchScanningTask::HandleSaveHandPitchResul
 		}
 	}
 
-	return DVH_VAT::TR_NEXT;
+	return VMF::TR_NEXT;
 }

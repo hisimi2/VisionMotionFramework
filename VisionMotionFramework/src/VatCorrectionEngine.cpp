@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Vat_context.h"
 #include "VatCorrectionEngine.h"
 #include "SequenceBuilderBase.h"
@@ -11,7 +11,7 @@
 #include <string>
 #include <utility> // std::move
 
-namespace DVH_VAT
+namespace VMF
 {
     VatCorrectionEngine::VatCorrectionEngine(SequenceBuilderPtr builder,
                                             VatContextPtr ctx, VatActuatorPtr actuator)
@@ -90,4 +90,4 @@ namespace DVH_VAT
         }
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

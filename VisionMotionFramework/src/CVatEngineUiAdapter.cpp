@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CVatEngineUiAdapter.h"
 #include "VatCorrectionEngine.h"
 #include "VAT_Context.h" // VatContextPtr 정의
@@ -12,7 +12,7 @@
 #include <memory>   // std::shared_ptr, std::make_shared
 #include <mutex>    // std::lock_guard
 
-namespace DVH_VAT
+namespace VMF
 {
     UINT CVatEngineUiAdapter::s_msgVisionResult = 0;
 
@@ -239,4 +239,4 @@ namespace DVH_VAT
 			engineToStop->StopSequence();
 		}
 	}
-} // namespace DVH_VAT
+} // namespace VMF

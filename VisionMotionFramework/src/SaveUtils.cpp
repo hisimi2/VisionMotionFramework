@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "SaveUtils.h"
 
@@ -6,7 +6,7 @@
 #include <thread>
 #include <chrono>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     // 헤더에 선언된 함수 구현
     // (현재 SaveWithRetries 템플릿 안에서 직접 std::this_thread::sleep_for가 쓰이고 있어, 
@@ -25,4 +25,4 @@ namespace DVH_VAT
         }
     }
 
-} // namespace DVH_VAT
+} // namespace VMF

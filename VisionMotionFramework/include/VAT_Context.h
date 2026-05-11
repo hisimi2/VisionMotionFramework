@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
+#pragma once
+#include "VMF_API.h"
 #include "Types.h"
 
 #include "IVisionProcessor.h"
@@ -10,7 +10,7 @@
 #include <memory> // std::enable_shared_from_this 사용 목적
 #include <mutex>  // std::mutex 사용 목적
 
-namespace DVH_VAT 
+namespace VMF 
 {
     namespace detail
     {
@@ -163,7 +163,7 @@ namespace DVH_VAT
     };
 
     // boost::enable_shared_from_this -> std::enable_shared_from_this
-    class DVH_VAT_API VAT_Context : public std::enable_shared_from_this<VAT_Context>
+    class VMF_API VAT_Context : public std::enable_shared_from_this<VAT_Context>
     {
     public:
         /// <summary>
@@ -331,4 +331,4 @@ namespace DVH_VAT
         bool                    m_isStopRequested;
         VatParams               m_params;
     };
-} // namespace DVH_VAT
+} // namespace VMF

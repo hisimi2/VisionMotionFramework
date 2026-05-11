@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-namespace DVH_VAT
+namespace VMF
 {
     // Request parameter keys
     constexpr const char* RECIPE_NAME           = "recipe_name";
