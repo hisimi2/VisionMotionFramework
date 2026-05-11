@@ -1,4 +1,5 @@
-﻿#pragma once
+#pragma once
+
 
 namespace VisionComm
 {
@@ -35,4 +36,5 @@ namespace VisionComm
         static const VisionProtocolId DeviceCheckAck(Stream::Control, Function::DeviceCheckAck);
     }
 }
+
 

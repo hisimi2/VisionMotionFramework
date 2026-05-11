@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <functional> 
 
@@ -6,7 +6,7 @@ namespace VisionComm
 {
     using SchedulerTask = std::function<void()>;
 
-    class IScheduler 
+    class IScheduler
     {
     public:
         virtual ~IScheduler() = default;

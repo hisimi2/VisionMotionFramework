@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VisionSLTProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "VisionPacketSLT.h"
@@ -42,7 +42,6 @@ namespace VMF
             });
     }
 
-    // ?ㅻ뜑?먯꽌 紐낆떆??override 諛?default 泥섎━ ?곌퀎
     VisionSLTProcessor::~VisionSLTProcessor() = default;
 
     bool VisionSLTProcessor::RequestSetCokAsync(const StringMap& params)
@@ -50,12 +49,12 @@ namespace VMF
         ClearLatestData(SetCok);
 
         CPacketBody_S2F41 body;
-        // memset ???Clear() ?좏떥 ?ъ슜 沅뚯옣
+
         body.Clear();
         body.nCmd =1000;
         body.nParamCount =7;
 
-        // C++11: auto瑜??댁슜?????異붾줎
+
         auto it = params.find(RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
         
@@ -138,7 +137,6 @@ namespace VMF
         CPacketBody_S107F9 body;
         body.Clear();
 
-        // C++11: atoi ???std::stoi
         auto it = params.find(CAMERA_ID);
         if (it != params.end()) body.nDataID = std::stoi(it->second);
 

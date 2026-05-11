@@ -1,4 +1,5 @@
-﻿#pragma once
+#pragma once
+
 
 namespace VisionComm
 {
@@ -10,10 +11,10 @@ namespace VisionComm
 
     enum class Function : int
     {
-        Measure =9,
-        ControlRequest =41,
-        ControlAck =42,
-        DeviceCheckAck =4
+        Measure         = 9,
+        ControlRequest  = 41,
+        ControlAck      = 42,
+        DeviceCheckAck  = 4
     };
 
     struct VisionProtocolId
@@ -35,4 +36,5 @@ namespace VisionComm
         static const VisionProtocolId DeviceCheckAck(Stream::Control, Function::DeviceCheckAck);
     }
 }
+
 
