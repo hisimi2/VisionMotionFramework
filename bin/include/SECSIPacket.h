@@ -6,19 +6,18 @@
 
 namespace VisionComm
 {
-
     struct SECSPacketHeader 
     {
-        int nMsgId = 0;   // C++11 멤버 이니셜라이저 사용
+        int nMsgId = 0;   
         int nS = 0;
         int nF = 0;
         int nLength = 0;
         
-        // 생성자 본문을 비우고 컴파일러 기본 생성자 위임
         SECSPacketHeader() = default; 
     };
 
-    class VISION_COMM_API SECSPacket : public IVisionPacket {
+    class VISION_COMM_API SECSPacket : public IVisionPacket
+    {
     public:
         SECSPacket();
         ~SECSPacket() override = default;
@@ -33,10 +32,10 @@ namespace VisionComm
         int GetSubCode() const override;      // Function
         void SetSubCode(int code) override;
 
-        void SetProtocol(VisionStream stream, VisionFunction function);
+        void SetProtocol(Stream stream, Function function);
         void SetProtocol(const VisionProtocolId& protocolId);
         
-        uint32_t GetCorrelationId() const override; // MsgId
+        uint32_t GetCorrelationId() const override; 
         void SetCorrelationId(uint32_t id) override;
 
         const ByteArray& GetBody() const override;
@@ -47,7 +46,6 @@ namespace VisionComm
         bool ParseResponse(int& dataId, int& nRet, std::vector<std::string>& results) const override;
 
     private:
-        // 직접 데이터 멤버 관리
         SECSPacketHeader m_header;
         ByteArray m_body;
     };

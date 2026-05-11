@@ -2,7 +2,6 @@
 #include "VisionMemoryProcessor.h"
 
 #include "VisionMsgDispatcher.h"
-#include "VisionLogger.h"
 #include "SECSIPacket.h"
 #include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"

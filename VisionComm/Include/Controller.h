@@ -18,11 +18,11 @@ namespace VisionComm
 {
     class VisionMsgDispatcher; // 전방 선언
 
-    class VISION_COMM_API VisionController 
+    class VISION_COMM_API Controller 
     {
     public:
-        VisionController();
-        ~VisionController();
+        Controller();
+        ~Controller();
 
         void SetTransport(std::shared_ptr<ITransport> transport);
         void SetLogger(std::shared_ptr<ILogger> logger);

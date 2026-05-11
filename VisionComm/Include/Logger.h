@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ILogger.h"
 
@@ -8,12 +8,12 @@
 
 namespace VisionComm
 {
-    class VisionLogger : public ILogger 
+    class Logger : public ILogger 
     {
     public:
-        VisionLogger();
-        explicit VisionLogger(const std::string& logFilePath);
-        ~VisionLogger() override;
+        Logger();
+        explicit Logger(const std::string& logFilePath);
+        ~Logger() override;
 
         // ILogger 구현
         void Log(const std::string& message) override;

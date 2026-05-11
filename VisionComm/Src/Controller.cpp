@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "VisionController.h"
+#include "Controller.h"
 #include "VisionMsgDispatcher.h"
-#include "ByteOrder.h"
 #include <queue>
 
 #include <thread>
@@ -15,7 +14,7 @@
 
 namespace VisionComm
 {
-	struct VisionController::Impl
+	struct Controller::Impl
 	{
 		std::shared_ptr<ITransport> m_transport;
 		std::shared_ptr<IFramer> m_framer;
@@ -109,24 +108,24 @@ namespace VisionComm
 	};
 
  
-    VisionController::VisionController() : m_pImpl(std::make_shared<Impl>()) {}
+    Controller::Controller() : m_pImpl(std::make_shared<Impl>()) {}
 
-    VisionController::~VisionController() 
+    Controller::~Controller() 
     {
         StopReceiving();
     }
 
-    void VisionController::SetTransport(std::shared_ptr<ITransport> transport)
+    void Controller::SetTransport(std::shared_ptr<ITransport> transport)
     {
         if(m_pImpl) m_pImpl->m_transport = transport;
     }
  
-    void VisionController::SetLogger(std::shared_ptr<ILogger> logger)
+    void Controller::SetLogger(std::shared_ptr<ILogger> logger)
     {
         if(m_pImpl) m_pImpl->m_logger = logger;
     }
 
-    void VisionController::SetScheduler(std::shared_ptr<IScheduler> scheduler)
+    void Controller::SetScheduler(std::shared_ptr<IScheduler> scheduler)
     {
         if(m_pImpl)
         {
@@ -138,7 +137,7 @@ namespace VisionComm
         }
     }
 
-    bool VisionController::Initialize(const char* szIp, int nPort, int nSocketType, int timeoutMs)
+    bool Controller::Initialize(const char* szIp, int nPort, int nSocketType, int timeoutMs)
     {
 	    if (!m_pImpl)
 		    return false;
@@ -168,7 +167,7 @@ namespace VisionComm
 	    return true;
     }
 
-    void VisionController::Disconnect() 
+    void Controller::Disconnect() 
     {
         StopReceiving();
         if(m_pImpl && m_pImpl->m_transport) 
@@ -177,7 +176,7 @@ namespace VisionComm
         }
     }
 
-    bool VisionController::IsConnected() const 
+    bool Controller::IsConnected() const 
     {
         if(m_pImpl && m_pImpl->m_transport)
         return m_pImpl->m_transport->IsConnected();
@@ -185,7 +184,7 @@ namespace VisionComm
         return false;
     }
 
-    Status VisionController::SendPacketAsync(const SECSPacket& pkt)
+    Status Controller::SendPacketAsync(const SECSPacket& pkt)
     {
         if (!m_pImpl) return VisionNotInitialized;
 
@@ -200,7 +199,7 @@ namespace VisionComm
         return (bytesSent >0) ? VisionOK : VisionFailed;
     }
 
-	void VisionController::StartReceiving()
+	void Controller::StartReceiving()
 	{
 		if (!m_pImpl) return;
 
@@ -225,7 +224,7 @@ namespace VisionComm
 		}
 	}
 
-    void VisionController::StopReceiving()
+    void Controller::StopReceiving()
     {
         if(!m_pImpl) return;
 
@@ -237,12 +236,12 @@ namespace VisionComm
         }
     }
 
-    VisionMsgDispatcher& VisionController::GetDispatcher()
+    VisionMsgDispatcher& Controller::GetDispatcher()
     {
         return *(m_pImpl->m_dispatcher);
     }
 
-	void VisionController::PacketThread()
+	void Controller::PacketThread()
 	{
 		if (!m_pImpl) return;
 

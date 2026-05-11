@@ -7,7 +7,7 @@
 #include "VMF_API.h"
 #include "IVisionProcessor.h"
 #include "IResultSink.h"
-#include "VisionController.h"
+#include "Controller.h"
 
 namespace VMF
 {
@@ -45,7 +45,7 @@ namespace VMF
         void StopProcessThread();
 
     protected:
-        VisionComm::VisionController m_ctrl;
+        VisionComm::Controller m_ctrl;
         
         // boost::mutex -> std::mutex 교체
         std::mutex m_mutex;

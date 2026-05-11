@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VMF_API.h"
-#include "VisionController.h"
+#include "Controller.h"
 #include "Types.h"
 
 #include <vector>

@@ -2,13 +2,13 @@
 
 namespace VisionComm
 {
-    enum class VisionStream : int
+    enum class Stream : int
     {
         Measure =   107,
         Control =   2
     };
 
-    enum class VisionFunction : int
+    enum class Function : int
     {
         Measure =9,
         ControlRequest =41,
@@ -18,10 +18,10 @@ namespace VisionComm
 
     struct VisionProtocolId
     {
-        VisionStream stream;
-        VisionFunction function;
+        Stream stream;
+        Function function;
 
-        VisionProtocolId(VisionStream s, VisionFunction f)
+        VisionProtocolId(Stream s, Function f)
         : stream(s), function(f)
         {
         }
@@ -29,10 +29,10 @@ namespace VisionComm
 
     namespace VisionProtocol
     {
-        static const VisionProtocolId Measure(VisionStream::Measure, VisionFunction::Measure);
-        static const VisionProtocolId ControlRequest(VisionStream::Control, VisionFunction::ControlRequest);
-        static const VisionProtocolId ControlAck(VisionStream::Control, VisionFunction::ControlAck);
-        static const VisionProtocolId DeviceCheckAck(VisionStream::Control, VisionFunction::DeviceCheckAck);
+        static const VisionProtocolId Measure(Stream::Measure, Function::Measure);
+        static const VisionProtocolId ControlRequest(Stream::Control, Function::ControlRequest);
+        static const VisionProtocolId ControlAck(Stream::Control, Function::ControlAck);
+        static const VisionProtocolId DeviceCheckAck(Stream::Control, Function::DeviceCheckAck);
     }
 }
 

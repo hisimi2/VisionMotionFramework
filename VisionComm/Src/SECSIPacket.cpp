@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "SECSIPacket.h"
 #include <cstring>
 #include <cstdint>
@@ -42,9 +42,12 @@ namespace VisionComm
             return false;
 
         const auto bodySize = raw.size() - sizeof(SECSPacketHeader);
-        if (bodySize >0) {
+        if (bodySize >0)
+        {
             m_body.assign(raw.begin() + sizeof(SECSPacketHeader), raw.end());
-        } else {
+        }
+        else
+        {
             m_body.clear();
         }
 
@@ -71,7 +74,7 @@ namespace VisionComm
         m_header.nF = code;
     }
 
-    void SECSPacket::SetProtocol(VisionStream stream, VisionFunction function)
+    void SECSPacket::SetProtocol(Stream stream, Function function)
     {
         m_header.nS = static_cast<int>(stream);
         m_header.nF = static_cast<int>(function);

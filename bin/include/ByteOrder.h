@@ -5,6 +5,7 @@
 
 namespace VisionComm
 {
+    /*
     // int32를 little-endian 바이트로 추가
     inline void AppendInt32(std::vector<uint8_t>& payload, int32_t v)
     {
@@ -29,6 +30,7 @@ namespace VisionComm
         out = static_cast<int32_t>(v);
         return true;
     }
+    */
 
 } // namespace VisionCommm
 

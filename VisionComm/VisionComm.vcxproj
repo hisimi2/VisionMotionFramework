@@ -124,8 +124,8 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     </ClCompile>
     <ClCompile Include="Src\SECSIPacket.cpp" />
     <ClCompile Include="Src\TaskExecutor.cpp" />
-    <ClCompile Include="Src\VisionController.cpp" />
-    <ClCompile Include="Src\VisionLogger.cpp" />
+    <ClCompile Include="Src\Controller.cpp" />
+    <ClCompile Include="Src\Logger.cpp" />
     <ClCompile Include="Src\VisionMsgDispatcher.cpp" />
     <ClCompile Include="Src\VisionTcpClient.cpp" />
     <ClCompile Include="Src\VisionTimer.cpp" />
@@ -136,19 +136,17 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="VisionComm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\ByteOrder.h" />
     <ClInclude Include="Include\FixedLengthFramer.h" />
     <ClInclude Include="Include\IFramer.h" />
     <ClInclude Include="Include\ILogger.h" />
     <ClInclude Include="Include\IScheduler.h" />
     <ClInclude Include="Include\ITransport.h" />
     <ClInclude Include="Include\IVisionPacket.h" />
-    <ClInclude Include="Include\LegacyPacketHandlerAdapter.h" />
     <ClInclude Include="Include\SECSIPacket.h" />
     <ClInclude Include="Include\TaskExecutor.h" />
     <ClInclude Include="Include\VisionCommAPI.h" />
-    <ClInclude Include="Include\VisionController.h" />
-    <ClInclude Include="Include\VisionLogger.h" />
+    <ClInclude Include="Include\Controller.h" />
+    <ClInclude Include="Include\Logger.h" />
     <ClInclude Include="Include\VisionMsgDispatcher.h" />
     <ClInclude Include="Include\VisionProtocol.h" />
     <ClInclude Include="Include\VisionTcpClient.h" />

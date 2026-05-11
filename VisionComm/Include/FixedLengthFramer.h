@@ -34,7 +34,8 @@ namespace VisionComm
 			m_buffer.insert(m_buffer.end(), bytes.begin(), bytes.end());
 		}
 
-		std::unique_ptr<ByteVector> NextFrame() override {
+		std::unique_ptr<ByteVector> NextFrame() override
+        {
 			// 사용 가능한 바이트 수 계산
 			size_t available = (m_buffer.size() >= m_head) ? (m_buffer.size() - m_head) : 0;
 			if (available < m_packetSize) return nullptr;
@@ -56,13 +57,16 @@ namespace VisionComm
 			m_head += m_packetSize;
 
 			// m_head가 일정 임계치에 도달하면 남은 데이터를 앞으로 당겨와서 메모리를 회수
-			if (m_head >= static_cast<size_t>(COMPACT_THRESHOLD) || m_head >= m_buffer.size() / 2) {
-				if (m_head < m_buffer.size()) {
+			if (m_head >= static_cast<size_t>(COMPACT_THRESHOLD) || m_head >= m_buffer.size() / 2)
+            {
+				if (m_head < m_buffer.size())
+                {
 					std::vector<uint8_t> tmp;
 					tmp.reserve(m_buffer.size() - m_head);
 					tmp.insert(tmp.end(), m_buffer.begin() + m_head, m_buffer.end());
 					m_buffer.swap(tmp);
-				} else {
+				} else
+                {
 					m_buffer.clear();
 				}
 				m_head = 0;

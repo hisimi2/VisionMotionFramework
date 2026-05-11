@@ -1,10 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "VisionMsgDispatcher.h"
 #include <functional>
 
 namespace VisionComm
 {
+    /*
     // Helpers to adapt legacy handlers that expect const ByteArray& into the new PacketHandler
 
     // Use when you have a callable that accepts 'const ByteArray&'
@@ -27,6 +28,7 @@ namespace VisionComm
             f(std::move(body));
         };
     }
+    */
 
 } // namespace VisionCommm
 

@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include <functional> // boost::function ???C++ ?쒖? ?쇱씠釉뚮윭由??ъ슜
+#include <functional> 
 
 namespace VisionComm
 {
@@ -10,9 +10,7 @@ namespace VisionComm
     {
     public:
         virtual ~IScheduler() = default;
-
         virtual void Schedule(const SchedulerTask& task, int delayMs = 0) = 0;
-
         virtual void Start() = 0;
         virtual void Stop() = 0;
     };

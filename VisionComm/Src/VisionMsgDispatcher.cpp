@@ -3,7 +3,7 @@
 #include "VisionMsgDispatcher.h"
 #include "IScheduler.h"
 #include "TaskExecutor.h"
-#include "VisionLogger.h"
+#include "Logger.h"
 
 #include <mutex>
 #include <functional>

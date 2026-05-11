@@ -22,7 +22,8 @@ namespace VisionComm
 	using ByteArray = std::vector<uint8_t>;
 
 	// IVisionPacket: 프로토콜별 패킷 데이터 구조 추상화
-	class IVisionPacket {
+	class IVisionPacket
+    {
 	public:
 		virtual ~IVisionPacket() = default;
 
