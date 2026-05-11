@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IFramer.h"
 #include <vector>
 
@@ -23,7 +23,6 @@ namespace VisionComm
 			m_buffer.reserve(m_packetSize * 2);
 		}
 
-		// C++14: 다형성 소멸자는 `= default`로 선언하는 것을 권장
 		~FixedLengthFramer() override = default;
 
 		void FeedBytes(const ByteVector& bytes) override {

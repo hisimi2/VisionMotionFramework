@@ -55,7 +55,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;VISION_COM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;VISION_COMM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -146,7 +146,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="Include\LegacyPacketHandlerAdapter.h" />
     <ClInclude Include="Include\SECSIPacket.h" />
     <ClInclude Include="Include\TaskExecutor.h" />
-    <ClInclude Include="Include\VisionComAPI.h" />
+    <ClInclude Include="Include\VisionCommAPI.h" />
     <ClInclude Include="Include\VisionController.h" />
     <ClInclude Include="Include\VisionLogger.h" />
     <ClInclude Include="Include\VisionMsgDispatcher.h" />

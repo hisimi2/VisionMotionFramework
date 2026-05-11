@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include "VisionComAPI.h"
+#include "VisionCommAPI.h"
 #include "IVisionPacket.h" 
 #include "IScheduler.h"
 #include "ILogger.h"
@@ -18,7 +18,7 @@ namespace VisionComm
 {
     class VisionMsgDispatcher; // 전방 선언
 
-    class VISION_COM_API VisionController 
+    class VISION_COMM_API VisionController 
     {
     public:
         VisionController();
@@ -33,7 +33,7 @@ namespace VisionComm
         bool IsConnected() const;
 
         // 비동기 전송
-        VisionStatus SendPacketAsync(const SECSPacket& pkt);
+        Status SendPacketAsync(const SECSPacket& pkt);
 
         void StartReceiving();
         void StopReceiving();

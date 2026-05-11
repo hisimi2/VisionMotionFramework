@@ -1,18 +1,18 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "VisionController.h"
 #include "VisionMsgDispatcher.h"
-#include "ByteOrder.h" 
+#include "ByteOrder.h"
 #include <queue>
 
-// Boost 대신 C++ 표준 라이브러리 사용
 #include <thread>
 #include <atomic>
 #include <mutex>
-#include <functional> // std::bind 용 (혹은 람다)
+#include <functional> 
 
 #include "IFramer.h"
 #include "FixedLengthFramer.h"
+
 namespace VisionComm
 {
 	struct VisionController::Impl
@@ -60,19 +60,17 @@ namespace VisionComm
 		{
 			try {
 				std::lock_guard<std::mutex> lock(m_queueMutex);
-				m_packetQueue.push(std::move(frameData)); // 안전하게 큐에 저장(이동)
+				m_packetQueue.push(std::move(frameData)); 
 			}
 			catch (...) {
 				if (m_logger) m_logger->Log("Error in HandleTransportData");
 			}
 		}
 
-
 		void ProcessPackets()
 		{
 			std::queue<ByteVector> localQueue;
 			{
- // boost::lock_guard -> std::lock_guard
 				std::lock_guard<std::mutex> lock(m_queueMutex);
 				std::swap(localQueue, m_packetQueue);
 			}
@@ -110,97 +108,97 @@ namespace VisionComm
 		}
 	};
 
- // C++14: std::make_unique 사용 권장 (하지만 기존 클래스 구조 유지를 위해 new 사용)
- VisionController::VisionController() : m_pImpl(std::make_shared<Impl>()) {}
-
- VisionController::~VisionController() 
- {
-    StopReceiving();
- }
-
- void VisionController::SetTransport(std::shared_ptr<ITransport> transport)
- {
- if(m_pImpl) m_pImpl->m_transport = transport;
- }
  
- void VisionController::SetLogger(std::shared_ptr<ILogger> logger)
- {
- if(m_pImpl) m_pImpl->m_logger = logger;
- }
+    VisionController::VisionController() : m_pImpl(std::make_shared<Impl>()) {}
 
- void VisionController::SetScheduler(std::shared_ptr<IScheduler> scheduler)
- {
- if(m_pImpl)
- {
- m_pImpl->m_scheduler = scheduler;
- // 디스패처가 있으면 디스패처에도 스케줄러 전달
- if (m_pImpl->m_dispatcher) {
- m_pImpl->m_dispatcher->SetScheduler(scheduler);
- }
- }
- }
+    VisionController::~VisionController() 
+    {
+        StopReceiving();
+    }
 
-	bool VisionController::Initialize(const char* szIp, int nPort, int nSocketType, int timeoutMs)
-	{
-		if (!m_pImpl)
-			return false;
+    void VisionController::SetTransport(std::shared_ptr<ITransport> transport)
+    {
+        if(m_pImpl) m_pImpl->m_transport = transport;
+    }
+ 
+    void VisionController::SetLogger(std::shared_ptr<ILogger> logger)
+    {
+        if(m_pImpl) m_pImpl->m_logger = logger;
+    }
 
-		// Transport 확인
-		if (!m_pImpl->m_transport)
-		{
-			m_pImpl->m_transport = std::make_shared<VisionTcpClient>();
-		}
+    void VisionController::SetScheduler(std::shared_ptr<IScheduler> scheduler)
+    {
+        if(m_pImpl)
+        {
+            m_pImpl->m_scheduler = scheduler;
+    
+            if (m_pImpl->m_dispatcher) {
+                m_pImpl->m_dispatcher->SetScheduler(scheduler);
+            }
+        }
+    }
 
-		// Connect 시도
-		bool connected = m_pImpl->m_transport->Connect(
-			szIp,
-			static_cast<uint16_t>(nPort),
-			timeoutMs,
-			nSocketType
-		);
+    bool VisionController::Initialize(const char* szIp, int nPort, int nSocketType, int timeoutMs)
+    {
+	    if (!m_pImpl)
+		    return false;
 
-		if (!connected)
-		{
-			return false;
-		}
+	    // Transport 확인
+	    if (!m_pImpl->m_transport)
+	    {
+		    m_pImpl->m_transport = std::make_shared<VisionTcpClient>();
+	    }
 
-		// 연결 상태 저장
-		m_pImpl->m_bStatusConnect = true;
+	    // Connect 시도
+	    bool connected = m_pImpl->m_transport->Connect(
+		    szIp,
+		    static_cast<uint16_t>(nPort),
+		    timeoutMs,
+		    nSocketType
+	    );
 
-		return true;
-	}
+	    if (!connected)
+	    {
+		    return false;
+	    }
 
+	    // 연결 상태 저장
+	    m_pImpl->m_bStatusConnect = true;
 
- void VisionController::Disconnect() 
- {
- StopReceiving();
- if(m_pImpl && m_pImpl->m_transport) 
- {
- m_pImpl->m_transport->Disconnect();
- }
- }
+	    return true;
+    }
 
- bool VisionController::IsConnected() const 
- {
- if(m_pImpl && m_pImpl->m_transport)
- return m_pImpl->m_transport->IsConnected();
- return false;
- }
+    void VisionController::Disconnect() 
+    {
+        StopReceiving();
+        if(m_pImpl && m_pImpl->m_transport) 
+        {
+            m_pImpl->m_transport->Disconnect();
+        }
+    }
 
-	VisionStatus VisionController::SendPacketAsync(const SECSPacket& pkt)
-	{
-		if (!m_pImpl) return VisionNotInitialized;
+    bool VisionController::IsConnected() const 
+    {
+        if(m_pImpl && m_pImpl->m_transport)
+        return m_pImpl->m_transport->IsConnected();
 
-		Impl& impl = *m_pImpl;
+        return false;
+    }
 
-		if (!impl.m_transport) return VisionNotInitialized;
-		if (!impl.m_transport->IsConnected()) return VisionConnectionFailed;
+    Status VisionController::SendPacketAsync(const SECSPacket& pkt)
+    {
+        if (!m_pImpl) return VisionNotInitialized;
 
-		ByteArray payload = pkt.ToByteArray();
+        Impl& impl = *m_pImpl;
 
-		int bytesSent = impl.m_transport->Send(payload);
-		return (bytesSent >0) ? VisionOK : VisionFailed;
-	}
+        if (!impl.m_transport) return VisionNotInitialized;
+        if (!impl.m_transport->IsConnected()) return VisionConnectionFailed;
+
+        ByteArray payload = pkt.ToByteArray();
+
+        int bytesSent = impl.m_transport->Send(payload);
+        return (bytesSent >0) ? VisionOK : VisionFailed;
+    }
 
 	void VisionController::StartReceiving()
 	{
@@ -235,7 +233,7 @@ namespace VisionComm
 
         if (m_pImpl->m_transport)
         {
-        m_pImpl->m_transport->SetReceiveCallback(TransportReceiveCallback());
+            m_pImpl->m_transport->SetReceiveCallback(TransportReceiveCallback());
         }
     }
 

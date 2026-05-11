@@ -1,14 +1,14 @@
-﻿#pragma once
+#pragma once
 #include <vector>
 #include <string>
 #include <cstdint>
 
-#include "VisionComAPI.h"
+#include "VisionCommAPI.h"
 
 namespace VisionComm
 {
 	// 장비/통신 관련 상태
-	enum VisionStatus 
+	enum Status 
 	{
 		VisionOK = 0,
 		VisionNotInitialized = -1,

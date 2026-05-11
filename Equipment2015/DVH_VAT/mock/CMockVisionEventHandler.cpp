@@ -14,7 +14,7 @@ namespace VMF
     {
     }
 
-    VisionComm::VisionStatus CMockVisionEventHandler::Initialize(const VisionConnectionConfig& /*config*/)
+    VisionComm::Status CMockVisionEventHandler::Initialize(const VisionConnectionConfig& /*config*/)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         m_connected = true;

@@ -50,7 +50,7 @@ namespace VMF
 
         virtual ~IAsyncVisionProcessor() = default;
 
-        virtual VisionComm::VisionStatus Initialize(const VisionConnectionConfig& config) = 0;
+        virtual VisionComm::Status Initialize(const VisionConnectionConfig& config) = 0;
         virtual void Disconnect() = 0;
         virtual bool IsConnected() const = 0;
 

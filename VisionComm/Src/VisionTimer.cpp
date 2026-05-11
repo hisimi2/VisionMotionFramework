@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "VisionTimer.h"
 
 #include <chrono> // std::chrono 사용을 위한 포함
@@ -10,7 +10,7 @@ VisionTimer::VisionTimer()
     Start();
 }
 
-// C++14: 명시적 기본 소멸자 사용
+
 VisionTimer::~VisionTimer() = default;
 
 void VisionTimer::Start()
@@ -20,7 +20,7 @@ void VisionTimer::Start()
 
 double VisionTimer::ElapsedSeconds() const
 {
-    // C++14: auto를 통한 타입 추론 적용
+    
     const auto now = std::chrono::steady_clock::now();
     std::chrono::duration<double> diff = now - m_start;
     return diff.count();

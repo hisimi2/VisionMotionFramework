@@ -28,7 +28,7 @@ namespace VMF
         void RunLoop();
         virtual void Process(); // 상속 구조에 따라 override 여부가 결정되나, 자식 클래스에서 오버라이드할 기본 제공 가상 함수로 보입니다.
 
-        VisionComm::VisionStatus Initialize(const VisionConnectionConfig& config) override;
+        VisionComm::Status Initialize(const VisionConnectionConfig& config) override;
         void Disconnect() override;
         bool IsConnected() const override;
 

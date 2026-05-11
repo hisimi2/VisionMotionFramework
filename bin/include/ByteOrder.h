@@ -1,13 +1,10 @@
-﻿#pragma once
+#pragma once
 #include <cstdint>
 #include <cstddef>
 #include <vector>
 
 namespace VisionComm
 {
-    // C++14: 헤더 파일에 정의하는 함수는 static inline보다 inline만 사용하는 것이 권장됨
-    // (TU 간 여러 복사본 생성을 방지하여 바이너리 팽창을 막음)
-
     // int32를 little-endian 바이트로 추가
     inline void AppendInt32(std::vector<uint8_t>& payload, int32_t v)
     {

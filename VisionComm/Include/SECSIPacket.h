@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 #include "IVisionPacket.h"
-#include "VisionComAPI.h"
+#include "VisionCommAPI.h"
 #include "VisionProtocol.h"
 #include <vector>
 
@@ -18,7 +18,7 @@ namespace VisionComm
         SECSPacketHeader() = default; 
     };
 
-    class VISION_COM_API SECSPacket : public IVisionPacket {
+    class VISION_COMM_API SECSPacket : public IVisionPacket {
     public:
         SECSPacket();
         ~SECSPacket() override = default;

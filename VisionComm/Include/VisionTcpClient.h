@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
 #include <cstdint> 
 #include <functional> 
 #include <memory>
 #include "ITransport.h" 
-#include "VisionComAPI.h" 
+#include "VisionCommAPI.h" 
 
 namespace VisionComm
 {
@@ -13,7 +13,7 @@ namespace VisionComm
     // Move-only callback: rvalue-reference parameter enforces move semantics
     using RecvCallback = std::function<void(ByteArray&&)>;
 
-    class VISION_COM_API VisionTcpClient : public ITransport
+    class VISION_COMM_API VisionTcpClient : public ITransport
     {
     public:
         VisionTcpClient();

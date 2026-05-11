@@ -104,7 +104,7 @@ namespace VMF
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    VisionComm::VisionStatus VisionProcessorBase::Initialize(const VisionConnectionConfig& config)
+    VisionComm::Status VisionProcessorBase::Initialize(const VisionConnectionConfig& config)
     {
         m_ctrl.Initialize(const_cast<char*>(config.address.c_str()), config.port, 0, config.timeoutMs);
         InitializeRecvThread();
