@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IVisionPacket.h"
-#include "SECSIPacket.h"
+#include "SECSPacket.h"
 #include "VisionCommAPI.h"
 #include "VisionProtocol.h"
 
@@ -17,11 +17,11 @@ namespace VisionComm
     using ByteArray = std::vector<uint8_t>;
     using PacketHandler = std::function<void(int /*S*/, int /*F*/, ByteArray&& /*body*/, int /*serverIndex*/)>;
 
-    class VISION_COMM_API VisionMsgDispatcher
+    class VISION_COMM_API SecsMessageDispatcher
     {
     public:
-        explicit VisionMsgDispatcher();
-        ~VisionMsgDispatcher();
+        explicit SecsMessageDispatcher();
+        ~SecsMessageDispatcher();
 
         void RegisterHandler(int s, int f, PacketHandler handler);
         void RegisterHandler(const VisionProtocolId& protocolId, PacketHandler handler);

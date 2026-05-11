@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "VisionMemoryProcessor.h"
 
-#include "VisionMsgDispatcher.h"
-#include "SECSIPacket.h"
+#include "SecsMessageDispatcher.h"
+#include "SECSPacket.h"
 #include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
@@ -13,7 +13,7 @@ namespace VMF
 {
     VisionMemoryProcessor::VisionMemoryProcessor()
     {
-        VisionComm::VisionMsgDispatcher& disp = m_ctrl.GetDispatcher();
+        VisionComm::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
         disp.RegisterHandler(VisionComm::VisionProtocol::Measure,
             [this](int s, int f, std::vector<uint8_t>&& body, int serverIndex)

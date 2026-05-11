@@ -1,6 +1,6 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
-#include "VisionTcpClient.h"
+#include "TcpClient.h"
 #include "IFramer.h"
 
 // Boost 대신 C++ 표준 라이브러리 사용
@@ -44,9 +44,9 @@ namespace VisionComm
         return s_inited;
     }
 
-	struct VisionTcpClient::Impl
+	struct TcpClient::Impl
 	{
-		VisionTcpClient* m_parent;
+		TcpClient* m_parent;
 
 		SOCKET m_sock;
 		SOCKET m_listenSock;
@@ -70,7 +70,7 @@ namespace VisionComm
 		int m_sendTimeoutMs;
 		int m_recvTimeoutMs;
 
-		Impl(VisionTcpClient* parent)
+		Impl(TcpClient* parent)
 			: m_parent(parent)
 			, m_sock(INVALID_SOCKET)
 			, m_listenSock(INVALID_SOCKET)
@@ -225,12 +225,12 @@ namespace VisionComm
 		}
 	};
 
-    VisionTcpClient::VisionTcpClient()
+    TcpClient::TcpClient()
         : m_pImpl(std::make_unique<Impl>(this)) // [수정] make_unique로 할당
     {
     }
 
-    VisionTcpClient::~VisionTcpClient()
+    TcpClient::~TcpClient()
     {
         if (m_pImpl)
         {
@@ -244,7 +244,7 @@ namespace VisionComm
         }
     }
 
-	bool VisionTcpClient::Connect(const char* ip, uint16_t port, int timeoutMs, int socketType)
+	bool TcpClient::Connect(const char* ip, uint16_t port, int timeoutMs, int socketType)
 	{
 		if (!m_pImpl)
 			return false;
@@ -263,20 +263,20 @@ namespace VisionComm
 		return (ret == 0);
 	}
 
-    void VisionTcpClient::Disconnect()
+    void TcpClient::Disconnect()
     {
         if (m_pImpl)
             m_pImpl->CleanupSocket();
     }
 
-    bool VisionTcpClient::IsConnected() const
+    bool TcpClient::IsConnected() const
     {
         if (m_pImpl)
             return m_pImpl->m_connected;
         return false;
     }
 
-	void VisionTcpClient::StartRecvThread()
+	void TcpClient::StartRecvThread()
 	{
 		m_pImpl->m_running = true;
 
@@ -295,7 +295,7 @@ namespace VisionComm
 		});
 	}
 
-	int VisionTcpClient::RecvOnce(ByteVector& outBytes)
+	int TcpClient::RecvOnce(ByteVector& outBytes)
 	{
 		outBytes.clear();
 
@@ -404,7 +404,7 @@ namespace VisionComm
 		return -1;
 	}
 
-	int VisionTcpClient::Send(const ByteArray& data)
+	int TcpClient::Send(const ByteArray& data)
 	{
 		if (!m_pImpl || !m_pImpl->m_connected)
 			return -1;
@@ -439,7 +439,7 @@ namespace VisionComm
 #endif
 	}
 
-    void VisionTcpClient::SetReceiveCallback(const RecvCallback& cb)
+    void TcpClient::SetReceiveCallback(const RecvCallback& cb)
     {
         if (m_pImpl)
         {
@@ -449,12 +449,12 @@ namespace VisionComm
         }
     }
 
-    void VisionTcpClient::SetRecvBufferSize(size_t sz)
+    void TcpClient::SetRecvBufferSize(size_t sz)
     {
         if (m_pImpl) m_pImpl->m_recvBufferSize = sz;
     }
 
-    void VisionTcpClient::SetSocketTimeout(int sendMs, int recvMs)
+    void TcpClient::SetSocketTimeout(int sendMs, int recvMs)
     {
         if (m_pImpl) {
             m_pImpl->m_sendTimeoutMs = sendMs;
@@ -462,7 +462,7 @@ namespace VisionComm
         }
     }
 
-	void VisionTcpClient::SetFramer(std::shared_ptr<VisionComm::IFramer> framer)
+	void TcpClient::SetFramer(std::shared_ptr<VisionComm::IFramer> framer)
 	{
 		if (!m_pImpl) return;
 

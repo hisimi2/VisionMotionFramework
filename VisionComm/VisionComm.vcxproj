@@ -122,13 +122,13 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Src\SECSIPacket.cpp" />
+    <ClCompile Include="Src\SECSPacket.cpp" />
     <ClCompile Include="Src\TaskExecutor.cpp" />
     <ClCompile Include="Src\Controller.cpp" />
     <ClCompile Include="Src\Logger.cpp" />
-    <ClCompile Include="Src\VisionMsgDispatcher.cpp" />
-    <ClCompile Include="Src\VisionTcpClient.cpp" />
-    <ClCompile Include="Src\VisionTimer.cpp" />
+    <ClCompile Include="Src\SecsMessageDispatcher.cpp" />
+    <ClCompile Include="Src\TcpClient.cpp" />
+    <ClCompile Include="Src\Timer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -142,15 +142,15 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="Include\IScheduler.h" />
     <ClInclude Include="Include\ITransport.h" />
     <ClInclude Include="Include\IVisionPacket.h" />
-    <ClInclude Include="Include\SECSIPacket.h" />
+    <ClInclude Include="Include\SECSPacket.h" />
     <ClInclude Include="Include\TaskExecutor.h" />
     <ClInclude Include="Include\VisionCommAPI.h" />
     <ClInclude Include="Include\Controller.h" />
     <ClInclude Include="Include\Logger.h" />
-    <ClInclude Include="Include\VisionMsgDispatcher.h" />
+    <ClInclude Include="Include\SecsMessageDispatcher.h" />
     <ClInclude Include="Include\VisionProtocol.h" />
-    <ClInclude Include="Include\VisionTcpClient.h" />
-    <ClInclude Include="Include\VisionTimer.h" />
+    <ClInclude Include="Include\TcpClient.h" />
+    <ClInclude Include="Include\Timer.h" />
     <ClInclude Include="Include\WorkerScheduler.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

@@ -1,24 +1,24 @@
 #include "StdAfx.h"
-#include "VisionTimer.h"
+#include "Timer.h"
 
 #include <chrono> // std::chrono 사용을 위한 포함
 
 namespace VisionComm{
 
-VisionTimer::VisionTimer()
+Timer::Timer()
 {
     Start();
 }
 
 
-VisionTimer::~VisionTimer() = default;
+Timer::~Timer() = default;
 
-void VisionTimer::Start()
+void Timer::Start()
 {
     m_start = std::chrono::steady_clock::now();
 }
 
-double VisionTimer::ElapsedSeconds() const
+double Timer::ElapsedSeconds() const
 {
     
     const auto now = std::chrono::steady_clock::now();
@@ -26,7 +26,7 @@ double VisionTimer::ElapsedSeconds() const
     return diff.count();
 }
 
-long VisionTimer::ElapsedMillis() const
+long Timer::ElapsedMillis() const
 {
     const auto now = std::chrono::steady_clock::now();
     const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_start);

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "SECSIPacket.h"
+#include "SECSPacket.h"
 #include <cstring>
 #include <cstdint>
 

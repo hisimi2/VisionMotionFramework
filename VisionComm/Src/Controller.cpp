@@ -1,7 +1,12 @@
 #include "stdafx.h"
 
 #include "Controller.h"
-#include "VisionMsgDispatcher.h"
+#include "SecsMessageDispatcher.h"
+
+#include "TcpClient.h"
+
+
+
 #include <queue>
 
 #include <thread>
@@ -24,7 +29,7 @@ namespace VisionComm
  		std::atomic<bool> m_running;
 		std::atomic<bool> m_PacketReceived;
 		std::atomic<bool> m_bStatusConnect;
-		std::unique_ptr<VisionMsgDispatcher> m_dispatcher;
+		std::unique_ptr<SecsMessageDispatcher> m_dispatcher;
 
 		std::shared_ptr<std::thread> m_recvThread;
 
@@ -33,12 +38,12 @@ namespace VisionComm
 		std::mutex m_queueMutex;
 
 		Impl()
-			: m_dispatcher(std::make_unique<VisionMsgDispatcher>())
+			: m_dispatcher(std::make_unique<SecsMessageDispatcher>())
 			, m_running(false)
 			, m_PacketReceived(false)
             , m_bStatusConnect(false)
 		{
-			m_transport = std::make_shared<VisionTcpClient>();
+			m_transport = std::make_shared<TcpClient>();
 
 			//1. 먼저 자식 타입으로 생성
 			auto concreteFramer = std::make_shared<VisionComm::FixedLengthFramer>(664);
@@ -145,7 +150,7 @@ namespace VisionComm
 	    // Transport 확인
 	    if (!m_pImpl->m_transport)
 	    {
-		    m_pImpl->m_transport = std::make_shared<VisionTcpClient>();
+		    m_pImpl->m_transport = std::make_shared<TcpClient>();
 	    }
 
 	    // Connect 시도
@@ -236,7 +241,7 @@ namespace VisionComm
         }
     }
 
-    VisionMsgDispatcher& Controller::GetDispatcher()
+    SecsMessageDispatcher& Controller::GetDispatcher()
     {
         return *(m_pImpl->m_dispatcher);
     }

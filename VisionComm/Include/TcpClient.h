@@ -13,13 +13,13 @@ namespace VisionComm
     // Move-only callback: rvalue-reference parameter enforces move semantics
     using RecvCallback = std::function<void(ByteArray&&)>;
 
-    class VISION_COMM_API VisionTcpClient : public ITransport
+    class VISION_COMM_API TcpClient : public ITransport
     {
     public:
-        VisionTcpClient();
+        TcpClient();
         
         // 다형성 클래스의 소멸자에 명시적 기본 처리 및 override
-        ~VisionTcpClient() override;
+        ~TcpClient() override;
 
         bool Connect(const char* ip, uint16_t port, int timeoutMs, int socketType) override;
         void Disconnect() override;
@@ -33,8 +33,8 @@ namespace VisionComm
         void SetRecvBufferSize(size_t sz);
         void SetSocketTimeout(int sendMs, int recvMs);
 
-        VisionTcpClient(const VisionTcpClient&) = delete;
-        VisionTcpClient& operator=(const VisionTcpClient&) = delete;
+        TcpClient(const TcpClient&) = delete;
+        TcpClient& operator=(const TcpClient&) = delete;
 
     private:
         size_t m_recvBufferSize = 8192; // 기본값 추가

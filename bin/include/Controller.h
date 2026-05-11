@@ -7,8 +7,7 @@
 #include "ITransport.h"
 #include "IFramer.h"
 #include "FixedLengthFramer.h"
-#include "VisionTcpClient.h"
-#include "SECSIPacket.h"
+#include "SECSPacket.h"
 
 #include <vector>
 #include <string>
@@ -16,7 +15,7 @@
 
 namespace VisionComm
 {
-    class VisionMsgDispatcher; // 전방 선언
+    class SecsMessageDispatcher; // 전방 선언
 
     class VISION_COMM_API Controller 
     {
@@ -39,7 +38,7 @@ namespace VisionComm
         void StopReceiving();
 		void PacketThread();
 
-        VisionMsgDispatcher& GetDispatcher(); 
+        SecsMessageDispatcher& GetDispatcher(); 
 
     private:
         // [Pimpl 관용구]

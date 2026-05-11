@@ -4,8 +4,8 @@
 #include <string>
 
 #include "VisionProcessorBase.h"
-#include "VisionMsgDispatcher.h"
-#include "SECSIPacket.h"
+#include "SecsMessageDispatcher.h"
+#include "SECSPacket.h"
 #include "IResultSink.h"
 
 // Boost 대신 C++ 표준 라이브러리 사용
