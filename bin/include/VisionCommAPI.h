@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef VISION_COMM_EXPORTS
 #define VISION_COMM_API __declspec(dllexport)

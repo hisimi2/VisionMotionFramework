@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "VMF_API.h"    // API Export 매크로
 #include "IDataRepository.h" // StorageError 정의

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 
 #include "VAT_Context.h"
 #include "SequenceBuilderBase.h"

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SequenceBuilderBase.h"
 
 #include "CLoad1MoveToStartPositionTask.h"

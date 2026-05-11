@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 
 namespace VisionComm
 {
-    class ILogger 
+    class ILogger
     {
     public:
         virtual ~ILogger() = default;

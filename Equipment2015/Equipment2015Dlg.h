@@ -1,4 +1,4 @@
-
+﻿
 // Equipment2015Dlg.h : 헤더 파일
 //
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "CLoad1CommitTeachingPosTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include <algorithm>

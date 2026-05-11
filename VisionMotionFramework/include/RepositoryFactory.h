@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "IDataRepository.h"
 #include <memory> // std::unique_ptr 사용을 위해 추가

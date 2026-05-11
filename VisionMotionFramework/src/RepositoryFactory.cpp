@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "RepositoryFactory.h"
 #include "SqliteDataRepository.h"
 // 명시적 상대 경로로 정확한 구현 헤더를 포함

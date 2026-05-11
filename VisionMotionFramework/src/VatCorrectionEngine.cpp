@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Vat_context.h"
 #include "VatCorrectionEngine.h"
 #include "SequenceBuilderBase.h"

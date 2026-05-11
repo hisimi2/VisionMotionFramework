@@ -1,4 +1,4 @@
-// dllmain.cpp : DLL의 초기화 루틴을 정의합니다.
+﻿// dllmain.cpp : DLL의 초기화 루틴을 정의합니다.
 //
 
 #include "stdafx.h"

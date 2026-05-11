@@ -1,4 +1,4 @@
-// SqliteDataRepository.cpp
+﻿// SqliteDataRepository.cpp
 // C++14 적용 및 Boost (LockGuardType 등) 의존성 제거
 
 #include "StdAfx.h"

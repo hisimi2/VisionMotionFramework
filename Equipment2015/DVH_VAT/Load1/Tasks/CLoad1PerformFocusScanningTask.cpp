@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "CLoad1PerformFocusScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 

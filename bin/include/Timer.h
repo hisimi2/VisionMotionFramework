@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <chrono> // boost::chrono 대신 C++ 표준 라이브러리 사용
 

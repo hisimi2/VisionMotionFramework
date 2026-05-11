@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CVatEngineUiAdapter.h"
 #include "VatCorrectionEngine.h"
 #include "VAT_Context.h" // VatContextPtr 정의

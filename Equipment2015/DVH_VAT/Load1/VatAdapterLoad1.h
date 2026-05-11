@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "IVatActuator.h"
 #include "DVH_VAT/Load1/Load1Parts.h"

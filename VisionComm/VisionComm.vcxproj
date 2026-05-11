@@ -151,7 +151,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="Include\VisionProtocol.h" />
     <ClInclude Include="Include\TcpClient.h" />
     <ClInclude Include="Include\Timer.h" />
-    <ClInclude Include="Include\WorkerScheduler.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

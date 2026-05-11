@@ -37,7 +37,6 @@ namespace VMF
             });
     }
 
-    // ?ㅻ뜑?먯꽌 ~VisionMemoryProcessor() override; 濡?蹂寃쏀븯?怨??ш린??紐낆떆??default ?ъ슜
     VisionMemoryProcessor::~VisionMemoryProcessor() = default;
 
     bool VisionMemoryProcessor::RequestSetCokAsync(const StringMap& params)
@@ -48,7 +47,6 @@ namespace VMF
         body.nCmd =1000;
         body.nParamCount =7;
 
-        // C++11: ???異붾줎 auto瑜??댁슜???ν솴??諛섎났??????좎뼵 異뺤냼
         auto it = params.find(RECIPE_NAME);
         if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
         
@@ -200,7 +198,6 @@ namespace VMF
         std::memcpy(&pkt, body.data(), sizeof(pkt));
 
         DataMap data;
-        // 諛곗뿴 ?ъ씤?곕줈遺??std::string ?앹꽦 媛뺤젣?섏뿬 ?명솚??媛뺥솕
         data[RESULT]       = std::string(pkt.szParam[0]);
         data[SERVER_INDEX] = std::string(pkt.szParam[1]);
         data[CAM_STATUS]   = std::string(pkt.szParam[2]);

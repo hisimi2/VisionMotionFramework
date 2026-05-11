@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "AsyncSequenceRunner.h"
 #include "VAT_Context.h"
 

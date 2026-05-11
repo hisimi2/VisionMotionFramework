@@ -1,19 +1,18 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include <cstdint> 
 #include <functional> 
 #include <memory>
-#include "ITransport.h" 
+#include "ITransport.h"
 #include "VisionCommAPI.h" 
 
 namespace VisionComm
 {
     using ByteArray = std::vector<uint8_t>;
-    // Move-only callback: rvalue-reference parameter enforces move semantics
     using RecvCallback = std::function<void(ByteArray&&)>;
 
-    class VISION_COMM_API TcpClient : public ITransport
+    class TcpClient : public ITransport
     {
     public:
         TcpClient();
@@ -29,7 +28,7 @@ namespace VisionComm
         int Send(const ByteArray& data) override;
         void SetReceiveCallback(const RecvCallback& cb) override;
 
-        void SetFramer(std::shared_ptr<VisionComm::IFramer> framer) override;
+        void SetFramer(std::shared_ptr<IFramer> framer) override;
         void SetRecvBufferSize(size_t sz);
         void SetSocketTimeout(int sendMs, int recvMs);
 

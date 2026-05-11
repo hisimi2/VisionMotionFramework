@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef VMF_EXPORTS
 #define VMF_API __declspec(dllexport)

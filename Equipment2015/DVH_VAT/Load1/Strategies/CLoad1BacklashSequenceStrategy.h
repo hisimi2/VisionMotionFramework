@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MemorySequenceStrategy.h"
 
 #include "CLoad1BacklashSequenceBuilder.h"

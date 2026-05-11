@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "IDataRepository.h"
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용

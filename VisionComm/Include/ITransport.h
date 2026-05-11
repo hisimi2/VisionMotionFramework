@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "FixedLengthFramer.h"
 
 #include <vector>
@@ -24,7 +24,7 @@ namespace VisionComm
         virtual int RecvOnce(ByteVector& out) = 0;
         virtual bool IsConnected() const = 0;
         virtual void SetReceiveCallback(const TransportReceiveCallback& cb) = 0;
-        virtual void SetFramer(std::shared_ptr<VisionComm::IFramer> framer) = 0;
+        virtual void SetFramer(std::shared_ptr<IFramer> framer) = 0;
     };
 
     using ITransportPtr = std::shared_ptr<ITransport>;

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "Controller.h"
 #include "SecsMessageDispatcher.h"
@@ -46,9 +46,9 @@ namespace VisionComm
 			m_transport = std::make_shared<TcpClient>();
 
 			//1. 먼저 자식 타입으로 생성
-			auto concreteFramer = std::make_shared<VisionComm::FixedLengthFramer>(664);
+			auto concreteFramer = std::make_shared<FixedLengthFramer>(664);
 
-			m_framer = std::static_pointer_cast<VisionComm::IFramer>(concreteFramer);
+			m_framer = std::static_pointer_cast<IFramer>(concreteFramer);
 
 			if (m_transport)
 			{

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "VisionSLTProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "VisionPacketSLT.h"

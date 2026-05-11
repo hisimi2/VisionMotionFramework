@@ -3,7 +3,6 @@
 #include "TcpClient.h"
 #include "IFramer.h"
 
-// Boost 대신 C++ 표준 라이브러리 사용
 #include <thread>
 #include <atomic>
 #include <chrono>
@@ -54,7 +53,7 @@ namespace VisionComm
 		std::atomic<bool> m_running;
 		std::atomic<bool> m_connected;
 
-		VisionComm::RecvCallback m_recvCb;
+		RecvCallback m_recvCb;
 		std::mutex m_cbMutex;      // 콜백 함수 보호
 		std::mutex m_bufferMutex;  // m_partialBuffer 및 Framer 데이터 보호
 
@@ -65,7 +64,7 @@ namespace VisionComm
 		std::vector<uint8_t> m_recvInternalBuffer; // RecvOnce 전용 재사용 버퍼
 
 		// 패킷을 자르는 인터페이스
-		VisionComm::IFramerPtr m_framer;
+		IFramerPtr m_framer;
 
 		int m_sendTimeoutMs;
 		int m_recvTimeoutMs;
@@ -240,7 +239,6 @@ namespace VisionComm
             {
                 m_pImpl->m_recvThread.join();
             }
-            // [수정] delete 구문은 std::unique_ptr 로 교체되었으므로 제거
         }
     }
 
@@ -280,7 +278,6 @@ namespace VisionComm
 	{
 		m_pImpl->m_running = true;
 
-		// boost::thread -> std::thread
 		m_pImpl->m_recvThread = std::thread([this]()
 		{
 			std::vector<uint8_t> dummy;
@@ -462,11 +459,10 @@ namespace VisionComm
         }
     }
 
-	void TcpClient::SetFramer(std::shared_ptr<VisionComm::IFramer> framer)
+	void TcpClient::SetFramer(std::shared_ptr<IFramer> framer)
 	{
 		if (!m_pImpl) return;
 
-		// 버퍼 접근 중일 수 있으므로 Lock 권장
 		std::lock_guard<std::mutex> lock(m_pImpl->m_bufferMutex);
 		m_pImpl->m_framer = framer;
 	}
