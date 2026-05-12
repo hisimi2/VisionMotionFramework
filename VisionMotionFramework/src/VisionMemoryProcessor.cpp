@@ -15,7 +15,7 @@ namespace VMF
     {
         VisionComm::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
-        disp.RegisterHandler(VisionComm::VisionProtocol::Measure,
+        disp.RegisterHandler(VisionMemoryProtocol::Measure,
             [this](int s, int f, std::vector<uint8_t>&& body, int serverIndex)
             {
                 (void)s;
@@ -24,14 +24,14 @@ namespace VMF
                 this->OnMeasure(std::move(body));
             });
 
-        disp.RegisterHandler(VisionComm::VisionProtocol::ControlAck,
+        disp.RegisterHandler(VisionMemoryProtocol::ControlAck,
             [this](int s, int f, std::vector<uint8_t>&& body, int serverIndex)
             {
                 (void)s;
                 (void)f;
                 (void)serverIndex;
                 // ControlAck needs to call two handlers; make a copy for the second call
-                auto copy = body; // copy before moving
+                auto& copy = body; // copy before moving
                 this->OnSetCok(std::move(body));
                 this->OnInspReady(std::move(copy));
             });
@@ -74,7 +74,7 @@ namespace VMF
 
         VisionComm::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
-        secsPkt.SetProtocol(VisionComm::VisionProtocol::ControlRequest);
+        secsPkt.SetProtocol(VisionMemoryProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionComm::VisionOK);
@@ -115,7 +115,7 @@ namespace VMF
 
         VisionComm::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
-        secsPkt.SetProtocol(VisionComm::VisionProtocol::ControlRequest);
+        secsPkt.SetProtocol(VisionMemoryProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionComm::VisionOK);
@@ -148,7 +148,7 @@ namespace VMF
 
         VisionComm::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nDataID);
-        secsPkt.SetProtocol(VisionComm::VisionProtocol::Measure);
+        secsPkt.SetProtocol(VisionMemoryProtocol::Measure);
         secsPkt.SetBody(bodyBytes);
 
         return (m_ctrl.SendPacketAsync(secsPkt) == VisionComm::VisionOK);

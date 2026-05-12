@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IVisionPacket.h"
 #include "VisionCommAPI.h"
 #include "VisionProtocol.h"
@@ -32,7 +32,7 @@ namespace VisionComm
         int GetSubCode() const override;      // Function
         void SetSubCode(int code) override;
 
-        void SetProtocol(Stream stream, Function function);
+        void SetProtocol(int stream, int function);
         void SetProtocol(const VisionProtocolId& protocolId);
         
         uint32_t GetCorrelationId() const override; 

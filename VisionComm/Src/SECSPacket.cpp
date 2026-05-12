@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "SECSPacket.h"
 #include <cstring>
 #include <cstdint>
@@ -74,7 +74,7 @@ namespace VisionComm
         m_header.nF = code;
     }
 
-    void SECSPacket::SetProtocol(Stream stream, Function function)
+    void SECSPacket::SetProtocol(int stream, int function)
     {
         m_header.nS = static_cast<int>(stream);
         m_header.nF = static_cast<int>(function);
