@@ -34,6 +34,9 @@
     <Filter Include="DVH_VAT\Load1\Tasks">
       <UniqueIdentifier>{cffd02bf-8e59-4502-9342-08efddc82fd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VisionProtocal">
+      <UniqueIdentifier>{37ec1f7c-15cf-45b9-b2f4-09bb23c8ed80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -234,6 +237,15 @@
     <ClInclude Include="DVH_VAT\mock\CMockVisionEventHandler.h">
       <Filter>DVH_VAT\Mock</Filter>
     </ClInclude>
+    <ClInclude Include="DVH_VAT\VisionProtocal\VisionMemoryKeys.h">
+      <Filter>VisionProtocal</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\VisionProtocal\VisionMemoryProcessor.h">
+      <Filter>VisionProtocal</Filter>
+    </ClInclude>
+    <ClInclude Include="DVH_VAT\VisionProtocal\VisionPacketMemory.h">
+      <Filter>VisionProtocal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">
@@ -301,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="DVH_VAT\mock\CMockVisionEventHandler.cpp">
       <Filter>DVH_VAT\Mock</Filter>
+    </ClCompile>
+    <ClCompile Include="DVH_VAT\VisionProtocal\VisionMemoryProcessor.cpp">
+      <Filter>VisionProtocal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -136,9 +136,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\VatCorrectionEngine.cpp" />
     <ClCompile Include="src\VatSequence.cpp" />
     <ClCompile Include="src\VAT_Context.cpp" />
-    <ClCompile Include="src\VisionMemoryProcessor.cpp" />
     <ClCompile Include="src\VisionProcessorBase.cpp" />
-    <ClCompile Include="src\VisionSLTProcessor.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -160,11 +158,8 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\IVatSequence.h" />
     <ClInclude Include="include\IVatSequenceStrategy.h" />
     <ClInclude Include="include\IVisionProcessor.h" />
-    <ClInclude Include="include\VisionMemoryKeys.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
-    <ClInclude Include="include\VisionPacketMemory.h" />
-    <ClInclude Include="include\VisionPacketSLT.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
@@ -174,9 +169,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\Types.h" />
     <ClInclude Include="include\VatCorrectionEngine.h" />
     <ClInclude Include="include\VAT_Context.h" />
-    <ClInclude Include="include\VisionMemoryProcessor.h" />
     <ClInclude Include="include\VisionProcessorBase.h" />
-    <ClInclude Include="include\VisionSLTProcessor.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

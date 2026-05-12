@@ -2,13 +2,15 @@
 
 #include "VMF_API.h"
 #include "VisionProcessorBase.h"
+#include "VisionMemoryKeys.h"
 
 #include <vector>
 #include <string>
 
 namespace VMF
 {
-    namespace VisionSLTProtocol
+    // "VMF는 '어떻게(How) 보낼지'만 정의하고, '무엇을(What/Which Keys) 보낼지'는 Equipment 프로젝트가 결정해야 합니다."
+    namespace VisionMemoryProtocol
     {
         enum class Stream : int
         {
@@ -30,11 +32,11 @@ namespace VMF
         static const VisionComm::VisionProtocolId DeviceCheckAck(static_cast<int>(Stream::Control), static_cast<int>(Function::DeviceCheckAck));
     }
 
-    class VMF_API VisionSLTProcessor : public VisionProcessorBase
+    class VMF_API VisionMemoryProcessor : public VisionProcessorBase
     {
     public:
-        VisionSLTProcessor();
-        ~VisionSLTProcessor() override;
+        VisionMemoryProcessor();
+        ~VisionMemoryProcessor() override;
 
         bool RequestSetCokAsync(const StringMap& params) override;
         bool RequestInspReadyAsync(const StringMap& params) override;
@@ -52,9 +54,9 @@ namespace VMF
         void Process() override;
 
     private:
-        VisionSLTProcessor(const VisionSLTProcessor&) = delete;
-        VisionSLTProcessor& operator=(const VisionSLTProcessor&) = delete;
+        VisionMemoryProcessor(const VisionMemoryProcessor&) = delete;
+        VisionMemoryProcessor& operator=(const VisionMemoryProcessor&) = delete;
 
         std::vector<std::string> ParseMeasureBody(const ByteArray& body);
     };
-} // namespace VMF
+}
