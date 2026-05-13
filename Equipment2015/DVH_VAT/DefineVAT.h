@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define VAT_SEQ_PARAM_CAMERA_INDEX               "CameraIndex"
 #define VAT_SEQ_PARAM_CAM_INDEX                  "CamIndex"
@@ -52,9 +52,7 @@
 #define VAT_SEQ_PARAM_PICKER_FOV_FRONT_RIGHT_OFFSET_Y   "PickerFOVFrontRightOffsetY"
 #define VAT_SEQ_PARAM_PICKER_FOV_FRONT_RIGHT_DELTA_X    "PickerFOVFrontRightDeltaX"
 #define VAT_SEQ_PARAM_PICKER_FOV_FRONT_RIGHT_DELTA_Y    "PickerFOVFrontRightDeltaY"
-
 #define VAT_SEQ_PARAM_RECIPE_NAME               "recipeName"
-
 
 enum LocateId
 {
@@ -108,7 +106,6 @@ namespace VAT_DEFINE
 		Picker = 20,
 		PickerWide = 21
 	};
-
 }
 
 
