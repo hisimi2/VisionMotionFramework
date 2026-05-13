@@ -3,7 +3,7 @@
 
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "VisionMemoryKeys.h"
+#include "DVH_VAT/VisionProtocal/VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 #include <vector>

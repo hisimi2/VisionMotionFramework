@@ -1,37 +1,27 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CVatEngineUiAdapter.h"
 #include "VatCorrectionEngine.h"
-#include "VAT_Context.h" // VatContextPtr 정의
-#include "CompatUtils.h"
+#include "VAT_Context.h"
 
-#include "AsyncSequenceRunner.h" // 추가: runner 생성 및 SetResultSink 호출을 위해 포함
+#include "AsyncSequenceRunner.h"
 
-#include <sstream>
-#include <afxwin.h> // CWnd, RegisterWindowMessage
-#include <tchar.h>
-#include <memory>   // std::shared_ptr, std::make_shared
-#include <mutex>    // std::lock_guard
+#include <memory>
+#include <mutex>
 
 namespace VMF
 {
-    UINT CVatEngineUiAdapter::s_msgVisionResult = 0;
-
-    CVatEngineUiAdapter::CVatEngineUiAdapter()
-        : m_pOwner(nullptr)
-        , m_pVatEngine()
+    CVatEngineObserverAdapter::CVatEngineObserverAdapter()
+        : m_pVatEngine()
     {
     }
 
-    CVatEngineUiAdapter::~CVatEngineUiAdapter()
+    CVatEngineObserverAdapter::~CVatEngineObserverAdapter()
     {
         VatEnginePtr engineToStop;
-        VatSequenceStrategyPtr strategyToReset;
         {
-            // std::lock_guard (Types.h에서 LockGuardType이 std::lock_guard<std::mutex>로 교체됨)
             LockGuardType guard(m_seqMutex);
             engineToStop = m_pVatEngine;
             m_pVatEngine.reset();
-            strategyToReset = m_pCurrentStrategy;
             m_pCurrentStrategy.reset();
         }
 
@@ -40,10 +30,13 @@ namespace VMF
             engineToStop->StopSequence();
             engineToStop.reset();
         }
+
+        // 옵저버 정리
+        ClearObservers();
     }
 
     // 헤더에 선언된 이름(getDataRepository)과 일치하도록 구현
-    DataRepositoryPtr CVatEngineUiAdapter::getDataRepository()
+    DataRepositoryPtr CVatEngineObserverAdapter::getDataRepository()
     {
         LockGuardType guard(m_seqMutex);
         if (m_pVatEngine)
@@ -53,65 +46,84 @@ namespace VMF
         return nullptr;
     }
 
-    void CVatEngineUiAdapter::SetOwner(::CWnd* pOwner)
+    CVatEngineObserverAdapter::ObserverId CVatEngineObserverAdapter::AddObserver(VisionResultObserver observer)
     {
-        LockGuardType guard(m_seqMutex);
-        m_pOwner = pOwner;
+        if (!observer)
+            return 0;
+
+        const ObserverId id = m_nextObserverId.fetch_add(1);
+        {
+            std::lock_guard<std::mutex> lk(m_observerMutex);
+            m_observers[id] = std::move(observer);
+        }
+        return id;
     }
 
-    UINT CVatEngineUiAdapter::GetVisionResultMsgId()
+    bool CVatEngineObserverAdapter::RemoveObserver(ObserverId id)
     {
-        if (s_msgVisionResult == 0)
-        {
-            s_msgVisionResult = ::RegisterWindowMessage(_T("DVH_VAT_VISION_RESULT_v100"));
-            if (s_msgVisionResult == 0)
-            {
-                s_msgVisionResult = WM_USER + 0x0400;
-            }
-        }
-        return s_msgVisionResult;
+        std::lock_guard<std::mutex> lk(m_observerMutex);
+        return m_observers.erase(id) > 0;
+    }
+
+    void CVatEngineObserverAdapter::ClearObservers()
+    {
+        std::lock_guard<std::mutex> lk(m_observerMutex);
+        m_observers.clear();
     }
 
     // IResultSink 구현: 외부 엔티티에서 호출되는 진입점
-    void CVatEngineUiAdapter::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
+    void CVatEngineObserverAdapter::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
     {
         // 내부 처리 (UI로 포스트)
         OnVisionResult(requestId, results);
     }
 
-    void CVatEngineUiAdapter::PostVisionResult(int requestId, const std::vector<std::string>& results)
+    void CVatEngineObserverAdapter::NotifyObservers(const VisionResultPayload& payload)
     {
-        LockGuardType guard(m_seqMutex);
+        // 콜백 실행 중 (등록/해제)에 의한 재진입 문제를 피하기 위해 스냅샷 복사
+        std::vector<VisionResultObserver> snapshot;
+        {
+            std::lock_guard<std::mutex> lk(m_observerMutex);
+            snapshot.reserve(m_observers.size());
+            for (auto& kv : m_observers)
+            {
+                if (kv.second)
+                    snapshot.push_back(kv.second);
+            }
+        }
 
-        if (!m_pOwner || !::IsWindow(m_pOwner->GetSafeHwnd()))
-            return;
-
-        // boost::shared_ptr -> std::shared_ptr 교체
-        std::shared_ptr<VisionResultPayload> sp = std::make_shared<VisionResultPayload>();
-        sp->requestId = requestId;
-        sp->results = results;
-
-        // 힙에 shared_ptr을 복사하여 전달 (수신측 UI에서 delete 필수)
-        std::shared_ptr<VisionResultPayload>* heap_sp = new std::shared_ptr<VisionResultPayload>(sp);
-
-        ::PostMessage(m_pOwner->GetSafeHwnd(), GetVisionResultMsgId(), reinterpret_cast<WPARAM>(heap_sp), 0);
+        for (auto& cb : snapshot)
+        {
+            try
+            {
+                cb(payload);
+            }
+            catch (...)
+            {
+                // 옵저버 예외는 VMF 내부에서 삼킴. (호스트 코드 보호)
+            }
+        }
     }
 
-    VatContextPtr CVatEngineUiAdapter::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
+    VatContextPtr CVatEngineObserverAdapter::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
     {
-        // boost::make_shared -> std::make_shared 교체
         auto ctx = std::make_shared<VAT_Context>();
         ctx->SetVisionProcessor(vm);
         ctx->SetDataRepository(repo);
         return ctx;
     }
 
-    void CVatEngineUiAdapter::OnVisionResult(int requestId, const std::vector<std::string>& results)
+    void CVatEngineObserverAdapter::OnVisionResult(int requestId, const std::vector<std::string>& results)
     {
-        PostVisionResult(requestId, results);
+        VisionResultPayload payload;
+        payload.requestId = requestId;
+        payload.results = results;
+
+        //1) Observer 통지 (UI/플랫폼 비종속)
+        NotifyObservers(payload);
     }
 
-    bool CVatEngineUiAdapter::StartVatSequenceSafe(VatSequenceStrategyPtr strategy)
+    bool CVatEngineObserverAdapter::StartVatSequenceSafe(VatSequenceStrategyPtr strategy)
     {
         if (!strategy)
         {
@@ -126,9 +138,9 @@ namespace VMF
             m_pVatEngine.reset();
         }
 
-        SequenceBuilderPtr      builder;
-        DataRepositoryPtr       repo;
-        VisionEventHandlerPtr   vm;
+        SequenceBuilderPtr builder;
+        DataRepositoryPtr repo;
+        VisionEventHandlerPtr vm;
 
         try
         {
@@ -186,7 +198,6 @@ namespace VMF
 
         try
         {
-            // std::make_shared 교체
             m_pVatEngine = std::make_shared<VatCorrectionEngine>(builder, ctx, actuator);
         }
         catch (const std::exception& ex)
@@ -204,10 +215,10 @@ namespace VMF
             return false;
         }
 
-        // 추가: runner를 새로 만들고 이 어댑터를 결과 sink로 등록한 다음 엔진에 주입
+        // runner를 새로 만들고 이 어댑터를 결과 sink로 등록한 다음 엔진에 주입
         {
             AsyncSequenceRunnerPtr runner = std::make_shared<AsyncSequenceRunner>();
-            runner->SetResultSink(this); // 등록: runner가 결과를 어댑터로 보냄
+            runner->SetResultSink(this);
             m_pVatEngine->SetRunner(runner);
         }
 
@@ -223,20 +234,19 @@ namespace VMF
         return true;
     }
 
-	void CVatEngineUiAdapter::StopVatSequence()
-	{
-		VatEnginePtr engineToStop;
-		{
-            // boost::lock_guard -> std::lock_guard 교체
-			std::lock_guard<std::mutex> guard(m_seqMutex);
-			engineToStop = m_pVatEngine;
-			m_pVatEngine.reset();
-			m_pCurrentStrategy.reset();
-		}
+    void CVatEngineObserverAdapter::StopVatSequence()
+    {
+        VatEnginePtr engineToStop;
+        {
+            std::lock_guard<std::mutex> guard(m_seqMutex);
+            engineToStop = m_pVatEngine;
+            m_pVatEngine.reset();
+            m_pCurrentStrategy.reset();
+        }
 
-		if (engineToStop)
-		{
-			engineToStop->StopSequence();
-		}
-	}
+        if (engineToStop)
+        {
+            engineToStop->StopSequence();
+        }
+    }
 } // namespace VMF

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <map>
@@ -27,13 +27,11 @@ namespace VMF
     using VatContextPtr          = std::shared_ptr<VAT_Context>;
     using AsyncSequenceRunnerPtr = std::shared_ptr<AsyncSequenceRunner>;
     
-    // boost::unique_ptr가 아니라 기존에도 std::unique_ptr 였으나 C++11 표준이므로 유지
     using VatSequencePtr         = std::unique_ptr<IVatSequence>;
     
     using VatActuatorPtr         = IVatActuator*;
     using StringMap              = std::map<std::string, std::string>; 
     
-    // boost 스레드 동기화 객체를 C++11 표준 라이브러리로 대체
     using LockGuardType          = std::lock_guard<std::mutex>;
     using UniqueLockType         = std::unique_lock<std::mutex>;
     using ConditionVariableType  = std::condition_variable;

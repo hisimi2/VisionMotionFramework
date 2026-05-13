@@ -1,7 +1,8 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformBacklashScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
-#include "VisionMemoryKeys.h"
+#include "DVH_VAT/VisionProtocal/VisionMemoryKeys.h"
+
 
 using namespace VAT_LOAD1::Task;
 

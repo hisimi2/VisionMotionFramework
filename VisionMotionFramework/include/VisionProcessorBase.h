@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <vector>
-#include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
+#include <mutex> 
 
 #include "VMF_API.h"
 #include "IVisionProcessor.h"
@@ -46,8 +46,6 @@ namespace VMF
 
     protected:
         VisionComm::Controller m_ctrl;
-        
-        // boost::mutex -> std::mutex 교체
         std::mutex m_mutex;
 
     private:

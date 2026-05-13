@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 #include "SequenceStrategyBase.h"
 
 #include "SqliteDataRepository.h"
-#include "VisionMemoryProcessor.h"
+
+#include "DVH_VAT/VisionProtocal/VisionMemoryProcessor.h"
 
 #include "DVH_VAT/Mock/CMockDataRepository.h"
 #include "DVH_VAT/Mock/CMockVisionEventHandler.h"

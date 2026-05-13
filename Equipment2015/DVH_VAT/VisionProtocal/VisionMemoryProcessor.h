@@ -1,8 +1,7 @@
 #pragma once
 
-#include "VMF_API.h"
 #include "VisionProcessorBase.h"
-#include "VisionMemoryKeys.h"
+#include "DVH_VAT/VisionProtocal/VisionMemoryKeys.h"
 
 #include <vector>
 #include <string>
@@ -32,7 +31,7 @@ namespace VMF
         static const VisionComm::VisionProtocolId DeviceCheckAck(static_cast<int>(Stream::Control), static_cast<int>(Function::DeviceCheckAck));
     }
 
-    class VMF_API VisionMemoryProcessor : public VisionProcessorBase
+    class VisionMemoryProcessor : public VisionProcessorBase
     {
     public:
         VisionMemoryProcessor();

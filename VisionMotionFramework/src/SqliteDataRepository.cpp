@@ -1,19 +1,17 @@
-﻿// SqliteDataRepository.cpp
-// C++14 적용 및 Boost (LockGuardType 등) 의존성 제거
-
+// SqliteDataRepository.cpp
 #include "StdAfx.h"
 #include "SqliteDataRepository.h"
 #include "FileUtils.h"
-#include "IDataRepository.h" // StorageError(WriteError 등) 정의 보장
+#include "IDataRepository.h" 
 #include <sqlite3.h>
 #include <sstream>
 #include <fstream>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <cstdio> // remove, rename
+#include <cstdio> 
 #include <cstdint>
-#include <mutex>  // std::lock_guard
+#include <mutex>  
 
 static uint64_t g_imageCounter = 0;
 

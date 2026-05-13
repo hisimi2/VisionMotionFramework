@@ -1,4 +1,3 @@
-﻿
 // Equipment2015Dlg.h : 헤더 파일
 //
 
@@ -14,6 +13,9 @@ class CEquipment2015Dlg : public CDialogEx
     VMF::CVatEngineUiAdapter m_engine;
     std::shared_ptr<VAT_LOAD1::Load1Parts> m_parts;
     std::shared_ptr<VAT_LOAD1::VatAdapterLoad1> m_adapter;
+
+    // Observer subscription id (for safe unsubscribe when dialog is destroyed)
+    VMF::CVatEngineUiAdapter::ObserverId m_engineObserverId;
 
 // 생성입니다.
 public:
@@ -31,7 +33,8 @@ public:
 // 구현입니다.
 protected:
 	HICON m_hIcon;
-    afx_msg LRESULT OnDVH_VATResultMsg(WPARAM wParam, LPARAM lParam);
+
+    void HandleVmfResult(const VMF::VisionResultPayload& payload);
 
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
@@ -40,5 +43,5 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-    afx_msg void OnBnClickedVisionSequence();
+ afx_msg void OnBnClickedVisionSequence();
 };

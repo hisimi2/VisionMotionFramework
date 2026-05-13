@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
 #include "ITask.h"
@@ -54,7 +54,7 @@ namespace VMF
         /// <returns>TaskResult 값</returns>
         TaskResult Execute(VAT_Context& ctx, IVatActuator* actuator) override
         {
-            std::lock_guard<std::mutex> lg(m_mutex_); // boost -> std 동기화 객체 교체
+            std::lock_guard<std::mutex> lg(m_mutex_); 
 
             if (ctx.GetStopRequested())
             {
@@ -187,7 +187,6 @@ namespace VMF
             }
             else
             {
-                // boost::chrono -> std::chrono 로 구현 교체
                 m_deadline_ = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutMs);
                 m_hasDeadline_ = true;
             }
@@ -214,7 +213,6 @@ namespace VMF
                 return false;
             }
 
-            // boost::chrono -> std::chrono 로 교체
             return std::chrono::steady_clock::now() >= m_deadline_;
         }
 

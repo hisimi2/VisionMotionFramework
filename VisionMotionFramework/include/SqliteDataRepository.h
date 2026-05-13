@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
@@ -122,7 +122,6 @@ private:
     std::string imageBasePath_;
     sqlite3* db_;
     
-    // boost::mutex -> std::mutex 교체
     std::mutex mutex_;
     bool initialized_;
 };

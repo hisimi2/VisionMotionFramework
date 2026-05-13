@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -162,7 +162,6 @@ namespace VMF
         std::vector<VisionPosition>     visionPositions;
     };
 
-    // boost::enable_shared_from_this -> std::enable_shared_from_this
     class VMF_API VAT_Context : public std::enable_shared_from_this<VAT_Context>
     {
     public:
@@ -325,7 +324,6 @@ namespace VMF
         VisionEventHandlerPtr   m_processor;
         DataRepositoryPtr       m_repo;
         
-        // boost::mutex -> std::mutex 교체
         mutable std::mutex      m_mutex;
         std::string             m_lastError;
         bool                    m_isStopRequested;

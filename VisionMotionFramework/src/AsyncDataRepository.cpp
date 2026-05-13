@@ -1,7 +1,5 @@
-﻿// [필수] 미리 컴파일된 헤더
 #include "stdafx.h"
 
-// Boost 대신 C++ 표준 라이브러리 사용
 #include <thread>
 #include <atomic>
 #include <mutex>

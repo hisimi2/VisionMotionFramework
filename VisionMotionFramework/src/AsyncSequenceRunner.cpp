@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "AsyncSequenceRunner.h"
 #include "VAT_Context.h"
 
@@ -6,7 +6,6 @@
 #include "IVatActuator.h"
 #include "IResultSink.h"
 
-// Boost 대신 C++ 표준 라이브러리 사용
 #include <chrono>
 #include <thread>
 #include <atomic>
@@ -102,7 +101,7 @@ namespace VMF
 
         void setResultSink(IResultSink* sink)
         {
-            std::lock_guard<std::mutex> lk(mutex); // LockGuardType(boost) -> std::lock_guard 대체
+            std::lock_guard<std::mutex> lk(mutex); 
             resultSink = sink;
         }
 
@@ -188,14 +187,14 @@ namespace VMF
             }
 
             m_impl->running.store(true);
-            m_impl->currentSeq = std::move(seq); // boost::move -> std::move
+            m_impl->currentSeq = std::move(seq); 
             m_impl->currentCtx = ctx;
         }
 
         try
         {
             SequenceThreadFunc func(m_impl->currentSeq.get(), ctx.get(), actuator, &m_impl->running, this);
-            m_impl->thread = std::thread(func); // boost::thread -> std::thread
+            m_impl->thread = std::thread(func); 
         }
         catch (...)
         {
@@ -220,7 +219,7 @@ namespace VMF
         {
             while (m_impl->running.load())
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs)); // boost -> std 지연
+                std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs)); 
             }
         }
         else
