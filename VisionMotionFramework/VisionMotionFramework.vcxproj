@@ -122,10 +122,10 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\CVatEngineObserverAdapter.cpp" />
     <ClCompile Include="VisionMotionFramework.cpp" />
     <ClCompile Include="src\AsyncDataRepository.cpp" />
     <ClCompile Include="src\AsyncSequenceRunner.cpp" />
-    <ClCompile Include="src\CVatEngineUiAdapter.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\RepositoryFactory.cpp" />
@@ -146,7 +146,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\AsyncDataRepository.h" />
     <ClInclude Include="include\AsyncSequenceRunner.h" />
     <ClInclude Include="include\CompatUtils.h" />
-    <ClInclude Include="include\CVatEngineUiAdapter.h" />
+    <ClInclude Include="include\CVatEngineObserverAdapter.h" />
     <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
     <ClInclude Include="include\FileUtils.h" />

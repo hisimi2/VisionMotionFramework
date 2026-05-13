@@ -7,20 +7,11 @@
     </Filter>
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="시퀀스">
-      <UniqueIdentifier>{29756060-9546-4596-84ce-4bb457177284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DataRepositiory">
-      <UniqueIdentifier>{bab2e4ee-6b26-4b81-bcf7-02a4b2752176}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VisionProcess">
-      <UniqueIdentifier>{d2af4683-4a1d-4623-8cf2-a0acdbcd0fd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +68,7 @@
     <ClCompile Include="src\SequenceStrategyBase.cpp">
       <Filter>시퀀스</Filter>
     </ClCompile>
-    <ClCompile Include="src\CVatEngineUiAdapter.cpp">
+    <ClCompile Include="src\CVatEngineObserverAdapter.cpp">
       <Filter>시퀀스</Filter>
     </ClCompile>
     <ClCompile Include="src\VAT_Context.cpp">
@@ -182,7 +173,7 @@
     <ClInclude Include="include\IResultSink.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\CVatEngineUiAdapter.h">
+    <ClInclude Include="include\CVatEngineObserverAdapter.h">
       <Filter>시퀀스</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionMemoryKeys.h">

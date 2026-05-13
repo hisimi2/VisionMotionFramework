@@ -3,19 +3,19 @@
 
 #pragma once
 
-#include "CVatEngineUiAdapter.h" 
+#include "CVatEngineObserverAdapter.h"
 #include "DVH_VAT/Load1/VatAdapterLoad1.h"
 
 
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
 {
-    VMF::CVatEngineUiAdapter m_engine;
-    std::shared_ptr<VAT_LOAD1::Load1Parts> m_parts;
-    std::shared_ptr<VAT_LOAD1::VatAdapterLoad1> m_adapter;
+ VMF::CVatEngineObserverAdapter m_engine;
+ std::shared_ptr<VAT_LOAD1::Load1Parts> m_parts;
+ std::shared_ptr<VAT_LOAD1::VatAdapterLoad1> m_adapter;
 
-    // Observer subscription id (for safe unsubscribe when dialog is destroyed)
-    VMF::CVatEngineUiAdapter::ObserverId m_engineObserverId;
+ // Observer subscription id (for safe unsubscribe when dialog is destroyed)
+ VMF::CVatEngineObserverAdapter::ObserverId m_engineObserverId;
 
 // 생성입니다.
 public:
@@ -34,7 +34,7 @@ public:
 protected:
 	HICON m_hIcon;
 
-    void HandleVmfResult(const VMF::VisionResultPayload& payload);
+ void HandleVmfResult(const VMF::VisionResultPayload& payload);
 
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
