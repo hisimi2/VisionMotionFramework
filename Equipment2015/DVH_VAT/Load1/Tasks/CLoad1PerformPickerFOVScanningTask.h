@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -20,14 +20,14 @@ namespace VAT_LOAD1
                 ReturnHome
             };
 
-            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveScanPosition(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveFocusPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleSaveResult(VMF::VAT_Context& ctx);
-            VMF::TaskResult HandleReturnHome(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveScanPosition(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveFocusPositionZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleSaveResult(VMF::Context& ctx);
+            VMF::TaskResult HandleReturnHome(VMF::Context& ctx, VMF::IActuator* actuator);
 
 		public:
 			CLoad1PerformPickerFOVScanningTask();
@@ -45,8 +45,8 @@ namespace VAT_LOAD1
 			};
 
 		protected:
-			void OnInitialize(VMF::VAT_Context& ctx) override;
-			VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+			void OnInitialize(VMF::Context& ctx) override;
+			VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
 			FOVDirection m_currentScanDirection;
 

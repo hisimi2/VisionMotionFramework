@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 #include <string>
 #include <vector>
@@ -43,14 +43,14 @@ namespace VAT_LOAD1
                 SaveHandPitchResult,
             };
 
-            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveHandPitch(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveFocusPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleReturnHome(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleSaveHandPitchResult(VMF::VAT_Context& ctx);
+            VMF::TaskResult HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveHandPitch(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveFocusPositionZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleReturnHome(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleSaveHandPitchResult(VMF::Context& ctx);
 
             void BuildScanPoints(
                 double standardPickerCol,
@@ -70,8 +70,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(VMF::VAT_Context& ctx) override;
-            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+            void OnInitialize(VMF::Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
             size_t m_currentScanIndex;
 			double m_centerPositionX;

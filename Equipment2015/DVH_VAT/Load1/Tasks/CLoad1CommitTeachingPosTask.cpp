@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1CommitTeachingPosTask.h"
 #include "DVH_VAT/DefineVAT.h"
 #include <algorithm>
@@ -17,14 +17,14 @@ CLoad1CommitTeachingPosTask::~CLoad1CommitTeachingPosTask()
 {
 }
 
-void CLoad1CommitTeachingPosTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1CommitTeachingPosTask::OnInitialize(VMF::Context& ctx)
 {
 	EnterState(LoadPickerCameraOffset);
 }
 
 VMF::TaskResult CLoad1CommitTeachingPosTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -37,8 +37,8 @@ VMF::TaskResult CLoad1CommitTeachingPosTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadPickerCameraOffset(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	auto repo = ctx.getRepository();
 
@@ -66,8 +66,8 @@ VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadPickerCameraOffset(
 }
 
 VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadVisionPositions(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	m_teachingPositions = ctx.GetVisionPositions();
 
@@ -76,8 +76,8 @@ VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadVisionPositions(
 }
 
 VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadHandPitchOffsets(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
 	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
@@ -141,8 +141,8 @@ VMF::TaskResult CLoad1CommitTeachingPosTask::HandleLoadHandPitchOffsets(
 }
 
 VMF::TaskResult CLoad1CommitTeachingPosTask::HandleSaveTeachingPositions(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
 	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);

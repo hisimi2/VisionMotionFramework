@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "SequenceStrategyBase.h"
 
 namespace VMF
@@ -8,12 +8,12 @@ namespace VMF
     {
     }
 
-    void SequenceStrategyBase::SetActuator(IVatActuator* adapter)
+    void SequenceStrategyBase::SetActuator(IActuator* adapter)
     {
         m_adapter = adapter;
     }
 
-    IVatActuator* SequenceStrategyBase::GetActuator()
+    IActuator* SequenceStrategyBase::GetActuator()
     {
         return m_adapter;
     }

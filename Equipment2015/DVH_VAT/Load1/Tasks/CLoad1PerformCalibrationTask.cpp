@@ -22,7 +22,7 @@ CLoad1PerformCalibrationTask::~CLoad1PerformCalibrationTask()
 {
 }
 
-void CLoad1PerformCalibrationTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformCalibrationTask::OnInitialize(VMF::Context& ctx)
 {
 	VMF::VisionPosition position;
 	if (ctx.PeekVisionPosition(position))
@@ -59,8 +59,8 @@ void CLoad1PerformCalibrationTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -76,8 +76,8 @@ VMF::TaskResult CLoad1PerformCalibrationTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -90,8 +90,8 @@ VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -116,8 +116,8 @@ VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveCalibrationPositionXY(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -142,8 +142,8 @@ VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveCalibrationPositionXY(
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveFocusPositionZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -164,8 +164,8 @@ VMF::TaskResult CLoad1PerformCalibrationTask::HandleMoveFocusPositionZ(
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -219,8 +219,8 @@ VMF::TaskResult CLoad1PerformCalibrationTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -270,7 +270,7 @@ VMF::TaskResult CLoad1PerformCalibrationTask::HandleVisionWait(
 	return VMF::TR_KEEP;
 }
 
-VMF::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(VMF::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformCalibrationTask::HandleSaveCalibrationResult(VMF::Context& ctx)
 {
 	auto repo = ctx.getRepository();
 

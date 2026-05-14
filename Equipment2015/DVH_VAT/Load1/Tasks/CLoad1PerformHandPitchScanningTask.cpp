@@ -33,7 +33,7 @@ CLoad1PerformHandPitchScanningTask::~CLoad1PerformHandPitchScanningTask()
 {
 }
 
-void CLoad1PerformHandPitchScanningTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformHandPitchScanningTask::OnInitialize(VMF::Context& ctx)
 {
 	m_safePositionZ = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_SAFE_Z, 0.0);
 	m_pickerMaxRow = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PICKER_MAX_ROW, 0);
@@ -116,8 +116,8 @@ void CLoad1PerformHandPitchScanningTask::BuildScanPoints(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -134,8 +134,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -164,8 +164,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -193,8 +193,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveHandPitch(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "XY Move Fail: actuator null");
@@ -235,8 +235,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveHandPitch(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveFocusPositionZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "HandPitch: actuator is null.");
@@ -261,8 +261,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleMoveFocusPositionZ(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Vision request: actuator null");
@@ -295,8 +295,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -358,8 +358,8 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleVisionWait(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleReturnHome(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "ReturnHome: actuator null");
@@ -372,7 +372,7 @@ VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleReturnHome(
 }
 
 VMF::TaskResult CLoad1PerformHandPitchScanningTask::HandleSaveHandPitchResult(
-	VMF::VAT_Context& ctx)
+	VMF::Context& ctx)
 {
 	auto repo = ctx.getRepository();
 	if (!repo)

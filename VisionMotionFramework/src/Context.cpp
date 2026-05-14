@@ -1,5 +1,5 @@
-﻿#include "stdafx.h"
-#include "VAT_Context.h"
+#include "stdafx.h"
+#include "Context.h"
 
 // boost 헤더 및 의존성 삭제
 #include <string>
@@ -20,7 +20,7 @@ namespace VMF
         return out;
     }
 
-    VAT_Context::VAT_Context()
+    Context::Context()
         : m_processor()
         , m_repo()
         , m_isStopRequested(false)
@@ -28,45 +28,45 @@ namespace VMF
     }
 
     // 소멸자는 헤더 파일에 명시되어 있다면 cpp에 포함하지만 본 파일 구현에서는 간결한 형태로 둡니다
-    VAT_Context::~VAT_Context() = default;
+    Context::~Context() = default;
 
-    void VAT_Context::SetVisionProcessor(VisionEventHandlerPtr vp)
+    void Context::SetVisionProcessor(VisionEventHandlerPtr vp)
     {
         LockGuardType guard(m_mutex);
         m_processor = vp;
     }
 
-    VisionEventHandlerPtr VAT_Context::GetVisionProcessorInterface() const
+    VisionEventHandlerPtr Context::GetVisionProcessorInterface() const
     {
         LockGuardType guard(m_mutex);
         return m_processor;
     }
 
-    void VAT_Context::SetLastError(const std::string& error)
+    void Context::SetLastError(const std::string& error)
     {
         LockGuardType guard(m_mutex);
         m_lastError = error; 
     }
 
-    const std::string& VAT_Context::GetLastError() const
+    const std::string& Context::GetLastError() const
     {
         // m_lastError 반환 시 동기화 여부는 설계 정책에 따르나, 기본적으로 std::string 참조형이므로 외부에선 주의가 필요합니다.
         return m_lastError; 
     }
 
-    void VAT_Context::SetStopRequested(bool stop)
+    void Context::SetStopRequested(bool stop)
     {
         LockGuardType guard(m_mutex);
         m_isStopRequested = stop; 
     }
 
-    bool VAT_Context::GetStopRequested() const
+    bool Context::GetStopRequested() const
     {
         LockGuardType guard(m_mutex);
         return m_isStopRequested; 
     }
 
-    bool VAT_Context::ExecuteVisionCommand(VatCommand cmd)
+    bool Context::ExecuteVisionCommand(VatCommand cmd)
     {
         LockGuardType guard(m_mutex);
 
@@ -88,13 +88,13 @@ namespace VMF
         return ret;
     }
 
-    void VAT_Context::SetVatParams(const VatParams& params)
+    void Context::SetVatParams(const VatParams& params)
     {
         LockGuardType guard(m_mutex);
         m_params = params;
     }
 
-    std::string VAT_Context::GetSeqParam(const std::string& key) const
+    std::string Context::GetSeqParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
         auto it = m_params.seqParams.find(key);
@@ -103,7 +103,7 @@ namespace VMF
         return std::string();
     }
 
-    std::string VAT_Context::GetVisionParam(const std::string& key) const
+    std::string Context::GetVisionParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
         auto it = m_params.visionParams.find(key);
@@ -112,18 +112,18 @@ namespace VMF
         return std::string();
     }
 
-    void VAT_Context::SetSeqParam(const std::string& key, int value)
+    void Context::SetSeqParam(const std::string& key, int value)
     {
         SetSeqParamAs<int>(key, value);
     }
 
-    std::vector<VisionPosition> VAT_Context::GetVisionPositions() const
+    std::vector<VisionPosition> Context::GetVisionPositions() const
     {
         LockGuardType guard(m_mutex);
         return m_params.visionPositions;
     }
 
-    bool VAT_Context::PopVisionPosition(VisionPosition& outPos)
+    bool Context::PopVisionPosition(VisionPosition& outPos)
     {
         LockGuardType guard(m_mutex);
         if (m_params.visionPositions.empty())
@@ -134,7 +134,7 @@ namespace VMF
         return true;
     }
 
-    bool VAT_Context::PeekVisionPosition(VisionPosition& outPos)
+    bool Context::PeekVisionPosition(VisionPosition& outPos)
     {
         LockGuardType guard(m_mutex);
 
@@ -145,25 +145,25 @@ namespace VMF
         return true;
     }
 
-    void VAT_Context::AddVisionPosition(const VisionPosition& pos)
+    void Context::AddVisionPosition(const VisionPosition& pos)
     {
         LockGuardType guard(m_mutex);
         m_params.visionPositions.push_back(pos);
     }
 
-    bool VAT_Context::IsVisionPositionEmpty() const
+    bool Context::IsVisionPositionEmpty() const
     {
         LockGuardType guard(m_mutex);
         return m_params.visionPositions.empty();
     }
 
-    void VAT_Context::SetDataRepository(DataRepositoryPtr repo)
+    void Context::SetDataRepository(DataRepositoryPtr repo)
     {
         LockGuardType guard(m_mutex);
         m_repo = repo;
     }
 
-    DataRepositoryPtr VAT_Context::getRepository() const
+    DataRepositoryPtr Context::getRepository() const
     {
         LockGuardType guard(m_mutex);
         return m_repo;

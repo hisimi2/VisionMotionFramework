@@ -1,7 +1,7 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
-#include "IVatSequenceStrategy.h"
-#include "VatSequence.h"
+#include "ISequenceStrategy.h"
+#include "Sequence.h"
 #include <string>
 
 namespace VMF
@@ -12,10 +12,10 @@ namespace VMF
     /// 각 구체적인 전략 클래스는 이 클래스를 상속받아 시퀀스 이름, 빌더, 파라미터 설정 등을 구현해야 합니다.
     /// </para>
     /// </summary>
-    class VMF_API SequenceStrategyBase : public IVatSequenceStrategy
+    class VMF_API SequenceStrategyBase : public ISequenceStrategy
     {
     protected:
-        IVatActuator* m_adapter;
+        IActuator* m_adapter;
 
     public:
         /// <summary>
@@ -60,16 +60,16 @@ namespace VMF
 
         /// <summary>
         /// 액추에이터(하드웨어 제어 인터페이스)를 설정합니다.
-        /// IVatSequenceStrategy 인터페이스 구현입니다.
+        /// ISequenceStrategy 인터페이스 구현입니다.
         /// </summary>
         /// <param name="adapter">설정할 액추에이터 포인터</param>
-        void SetActuator(IVatActuator* adapter) override;
+        void SetActuator(IActuator* adapter) override;
 
         /// <summary>
         /// 현재 설정된 액추에이터를 반환합니다.
-        /// IVatSequenceStrategy 인터페이스 구현입니다.
+        /// ISequenceStrategy 인터페이스 구현입니다.
         /// </summary>
         /// <returns>액추에이터 포인터</returns>
-        IVatActuator* GetActuator() override;
+        IActuator* GetActuator() override;
     };
 }

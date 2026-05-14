@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include "IVatActuator.h"
+#include "IActuator.h"
 #include "DVH_VAT/Load1/Load1Parts.h"
 
 namespace VAT_LOAD1
@@ -8,7 +8,7 @@ namespace VAT_LOAD1
 	/// <summary>
     /// RobotUnit의 구성 요소들을 IVatActuator 인터페이스로 래핑하는 어댑터 클래스입니다.
 	/// </summary>
-	class VatAdapterLoad1 : public VMF::IVatActuator
+	class VatAdapterLoad1 : public VMF::IActuator
 	{
         Load1Parts* m_parts;
 	public:

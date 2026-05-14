@@ -162,7 +162,7 @@ namespace VMF
         std::vector<VisionPosition>     visionPositions;
     };
 
-    class VMF_API VAT_Context : public std::enable_shared_from_this<VAT_Context>
+    class VMF_API Context : public std::enable_shared_from_this<Context>
     {
     public:
         /// <summary>
@@ -188,12 +188,12 @@ namespace VMF
         /// <summary>
         /// VAT 실행 컨텍스트를 초기화합니다.
         /// </summary>
-        VAT_Context();
+        Context();
 
         /// <summary>
         /// VAT 실행 컨텍스트를 정리합니다.
         /// </summary>
-        ~VAT_Context();
+        ~Context();
 
         /// <summary>
         /// 비전 명령 실행에 사용할 비전 프로세서 인터페이스를 설정합니다.

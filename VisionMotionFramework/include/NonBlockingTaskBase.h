@@ -2,8 +2,8 @@
 
 #include "Types.h"
 #include "ITask.h"
-#include "VAT_Context.h"
-#include "IVatActuator.h"
+#include "Context.h"
+#include "IActuator.h"
 #include "IDataRepository.h"
 
 #include <mutex>
@@ -52,7 +52,7 @@ namespace VMF
         /// <param name="ctx">공유 실행 컨텍스트</param>
         /// <param name="actuator">Actuator 인터페이스 (존재하지 않을 수 있음)</param>
         /// <returns>TaskResult 값</returns>
-        TaskResult Execute(VAT_Context& ctx, IVatActuator* actuator) override
+        TaskResult Execute(Context& ctx, IActuator* actuator) override
         {
             std::lock_guard<std::mutex> lg(m_mutex_); 
 
@@ -140,7 +140,7 @@ namespace VMF
         /// 오류 메시지를 컨텍스트에 기록하고 지정한 상태로 전이한 후 TR_ERROR를 반환합니다.
         /// 파생 클래스에서 에러 처리 및 반환을 간단히 하기 위한 헬퍼입니다.
         /// </summary>
-        TaskResult SetErrorAndReturn(VAT_Context& ctx, const std::string& msg) override
+        TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) override
         {
             ctx.SetLastError(msg);
             EnterState(CS_ERROR);
@@ -152,14 +152,14 @@ namespace VMF
         /// 스텝 초기화 시 호출되는 콜백입니다. 파생 클래스에서 초기화 로직을 구현합니다.
         /// (Execute에서 최초 한 번 호출됨)
         /// </summary>
-        virtual void OnInitialize(VAT_Context& ctx) = 0;
+        virtual void OnInitialize(Context& ctx) = 0;
 
         /// <summary>
         /// 스텝 진행 시 반복적으로 호출되는 폴링 콜백입니다.
         /// 상태 전이 및 작업 완료 판정을 이곳에서 수행합니다.
         /// </summary>
         /// <returns>다음 동작을 나타내는 TaskResult</returns>
-        virtual TaskResult OnPoll(VAT_Context& ctx, IVatActuator* actuator) = 0;
+        virtual TaskResult OnPoll(Context& ctx, IActuator* actuator) = 0;
 
         /// <summary>
         /// 공통 상태(CBS_*)로 진입합니다. 데드라인은 초기화됩니다.

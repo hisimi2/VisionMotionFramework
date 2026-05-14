@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -19,13 +19,13 @@ namespace VAT_LOAD1
                 SaveCalibrationResult,
             };
 
-            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveCalibrationXY(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveFocusZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleSaveCalibrationResult(VMF::VAT_Context& ctx);
+            VMF::TaskResult HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveCalibrationXY(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveFocusZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleSaveCalibrationResult(VMF::Context& ctx);
 
 		public:
 			CLoad1FindAlignPosTask();
@@ -37,8 +37,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(VMF::VAT_Context& ctx) override;
-            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+            void OnInitialize(VMF::Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
 			std::vector<double> m_targetPosition;
 			std::vector<VMF::VisionPosition> m_alignedPositions;

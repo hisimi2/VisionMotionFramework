@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "CVatEngineObserverAdapter.h"
+#include "CSequenceOrchestrator.h"
 #include "DVH_VAT/Load1/VatAdapterLoad1.h"
 
 

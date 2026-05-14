@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -22,11 +22,11 @@ namespace VAT_LOAD1
                 CompleteMove,
             };
 
-            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveTargetPositionXY(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveTargetPositionZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleCompleteMove(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveTargetPositionXY(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveTargetPositionZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleCompleteMove(VMF::Context& ctx, VMF::IActuator* actuator);
 
 		public:
 			CLoad1MoveToStartPositionTask();
@@ -38,8 +38,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(VMF::VAT_Context& ctx) override;
-            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+            void OnInitialize(VMF::Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
             std::vector<double> m_targetPosition;
             long m_moveTimeoutMs;

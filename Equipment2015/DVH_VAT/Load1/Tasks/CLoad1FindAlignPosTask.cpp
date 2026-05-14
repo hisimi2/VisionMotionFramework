@@ -20,7 +20,7 @@ CLoad1FindAlignPosTask::~CLoad1FindAlignPosTask()
 {
 }
 
-void CLoad1FindAlignPosTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1FindAlignPosTask::OnInitialize(VMF::Context& ctx)
 {
 	VMF::VisionPosition position;
 	if (ctx.PeekVisionPosition(position))
@@ -54,8 +54,8 @@ void CLoad1FindAlignPosTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -71,8 +71,8 @@ VMF::TaskResult CLoad1FindAlignPosTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -85,8 +85,8 @@ VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -114,8 +114,8 @@ VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveCalibrationXY(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -140,8 +140,8 @@ VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveCalibrationXY(
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveFocusZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -162,8 +162,8 @@ VMF::TaskResult CLoad1FindAlignPosTask::HandleMoveFocusZ(
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (actuator->isMoveZ(m_targetPosition[2]) != VMF::ActOk)
 	{
@@ -192,8 +192,8 @@ VMF::TaskResult CLoad1FindAlignPosTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1FindAlignPosTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -243,7 +243,7 @@ VMF::TaskResult CLoad1FindAlignPosTask::HandleVisionWait(
 	return VMF::TR_KEEP;
 }
 
-VMF::TaskResult CLoad1FindAlignPosTask::HandleSaveCalibrationResult(VMF::VAT_Context& ctx)
+VMF::TaskResult CLoad1FindAlignPosTask::HandleSaveCalibrationResult(VMF::Context& ctx)
 {
 	auto repo = ctx.getRepository();
 

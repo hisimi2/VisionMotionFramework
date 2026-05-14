@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformFocusScanningTask.h"
 #include "DVH_VAT/DefineVAT.h"
 
@@ -16,7 +16,7 @@ CLoad1PerformFocusScanningTask::~CLoad1PerformFocusScanningTask()
 {
 }
 
-void CLoad1PerformFocusScanningTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
@@ -27,8 +27,8 @@ void CLoad1PerformFocusScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -43,8 +43,8 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleMoveDown(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z down failed");
@@ -63,8 +63,8 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleMoveDown(
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleMoveWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Down Fail");
@@ -88,8 +88,8 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleMoveWait(
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "No Actuator");
@@ -114,8 +114,8 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 	if (!visionProcessor)
@@ -142,8 +142,8 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleReturnHome(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Home Return Fail");
@@ -156,7 +156,7 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleReturnHome(
 }
 
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
-	VMF::VAT_Context& ctx)
+	VMF::Context& ctx)
 {
 	auto repo = ctx.getRepository();
 	if (!repo)

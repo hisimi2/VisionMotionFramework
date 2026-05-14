@@ -1,7 +1,7 @@
 #pragma once
 
-#include "VatCorrectionEngine.h"
-#include "IVatSequenceStrategy.h"
+#include "SequenceExecutionEngine.h"
+#include "ISequenceStrategy.h"
 #include "IResultSink.h"
 
 #include <mutex>
@@ -25,14 +25,14 @@ namespace VMF
     // - Strategy/Builder/Context/Runner 조립(Composition Root)
     // - VAT 시퀀스 실행/중지 API 제공
     // - Runner 결과를 받아 Observer에게 브로드캐스트
-    class VMF_API CVatSequenceOrchestrator : public IResultSink
+    class VMF_API CSequenceOrchestrator : public IResultSink
     {
     public:
         using ObserverId = std::uint64_t;
         using VisionResultObserver = std::function<void(const VisionResultPayload& payload)>;
 
-        CVatSequenceOrchestrator();
-        ~CVatSequenceOrchestrator() override;
+        CSequenceOrchestrator();
+        ~CSequenceOrchestrator() override;
 
         // IResultSink 구현
         void NotifyVisionResult(int requestId, const std::vector<std::string>& results) override;
@@ -44,21 +44,21 @@ namespace VMF
 
         // ---- Sequence control ----
         template <typename StrategyType>
-        bool StartVatSequence(IVatActuator* adapter)
+        bool StartSequence(IActuator* adapter)
         {
         std::lock_guard<std::mutex> guard(m_seqMutex);
-        VatSequenceStrategyPtr strategy = std::make_shared<StrategyType>();
+        SequenceStrategyPtr strategy = std::make_shared<StrategyType>();
         strategy->SetActuator(adapter);
-        return StartVatSequenceSafe(strategy);
+        return StartSequenceSafe(strategy);
         }
 
-        void StopVatSequence();
+        void StopSequence();
 
         // Repository accessor
         DataRepositoryPtr getDataRepository();
 
     protected:
-        VatSequenceStrategyPtr m_pCurrentStrategy;
+        SequenceStrategyPtr m_pCurrentStrategy;
         VatEnginePtr m_pVatEngine;
 
         virtual VatContextPtr CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo);
@@ -70,7 +70,7 @@ namespace VMF
 
         private:
         mutable std::mutex m_seqMutex;
-        bool StartVatSequenceSafe(VatSequenceStrategyPtr strategy);
+        bool StartSequenceSafe(SequenceStrategyPtr strategy);
 
         mutable std::mutex m_observerMutex;
         std::unordered_map<ObserverId, VisionResultObserver> m_observers;
@@ -78,7 +78,7 @@ namespace VMF
     };
 
     // Backward compatibility: keep the old names.
-    // Prefer using `CVatSequenceOrchestrator` in new code.
-    using CVatEngineFacade = CVatSequenceOrchestrator;
-    using CVatEngineObserverAdapter = CVatSequenceOrchestrator;
+    // Prefer using `CSequenceOrchestrator` in new code.
+    using CVatEngineFacade = CSequenceOrchestrator;
+    using CVatEngineObserverAdapter = CSequenceOrchestrator;
 } // namespace VMF

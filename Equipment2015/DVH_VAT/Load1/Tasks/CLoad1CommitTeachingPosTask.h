@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -16,10 +16,10 @@ namespace VAT_LOAD1
                 SaveTeachingPositions
             };
 
-            VMF::TaskResult HandleLoadPickerCameraOffset(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleLoadVisionPositions(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleLoadHandPitchOffsets(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleSaveTeachingPositions(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleLoadPickerCameraOffset(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleLoadVisionPositions(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleLoadHandPitchOffsets(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleSaveTeachingPositions(VMF::Context& ctx, VMF::IActuator* actuator);
 
 		public:
 			CLoad1CommitTeachingPosTask();
@@ -31,8 +31,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(VMF::VAT_Context& ctx) override;
-            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+            void OnInitialize(VMF::Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
             struct HandPitchOffset
             {

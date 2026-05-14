@@ -1,14 +1,14 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include <string>
 #include <memory> // std::shared_ptr 사용을 위해 포함
-// VAT_Context 객체를 참조로 사용하더라도, 인터페이스 사용자가 Context 정의를 필요로 할 가능성이 높으므로 포함
-#include "VAT_Context.h" 
+// Context 객체를 참조로 사용하더라도, 인터페이스 사용자가 Context 정의를 필요로 할 가능성이 높으므로 포함
+#include "Context.h" 
 
 namespace VMF
 {
-    class IVatActuator;
+    class IActuator;
     class IDataRepository;
 
     enum TaskResult
@@ -31,8 +31,8 @@ namespace VMF
         virtual ~ITask() = default;
 
         // 비차단 실행 함수: 호출할 때마다 짧게 실행되어야 함.
-        virtual TaskResult Execute(VAT_Context& ctx, IVatActuator* actuator) = 0;
-        virtual TaskResult SetErrorAndReturn(VAT_Context& ctx, const std::string& msg) = 0;
+        virtual TaskResult Execute(Context& ctx, IActuator* actuator) = 0;
+        virtual TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) = 0;
 
         // 중단 시 필요한 정리 작업(하드웨어 안전 복귀 등)
         // 기본 구현은 아무것도 하지 않음 (void cast로 경고 방지)

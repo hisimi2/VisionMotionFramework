@@ -6,7 +6,7 @@
 
 namespace VMF
 {
-    class IVatActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
+    class IActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
 
     class ISequenceStrategy
     {
@@ -29,10 +29,10 @@ namespace VMF
         virtual VisionEventHandlerPtr CreateVisionProcessor() = 0;
 
         // 6. 엑츄에이터(어댑터) 설정   
-        virtual void SetActuator(IVatActuator* adapter) = 0;
+        virtual void SetActuator(IActuator* adapter) = 0;
 
         // 7. 설정된 엑츄에이터 반환
-        virtual IVatActuator* GetActuator() = 0;
+        virtual IActuator* GetActuator() = 0;
     };
 
     using SequenceStrategyPtr = std::shared_ptr<ISequenceStrategy>;

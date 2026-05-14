@@ -1,8 +1,8 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 
-#include "VatSequence.h"
+#include "Sequence.h"
 #include "ITask.h"
-#include "VAT_Context.h"
+#include "Context.h"
 #include <iostream>
 #include <exception>
 #include <sstream>
@@ -11,7 +11,7 @@
 
 namespace VMF
 {
-    VatSequence::VatSequence(const std::string& name)
+    Sequence::Sequence(const std::string& name)
         : m_abortRequested(false)
         , m_pollIntervalMs(10)
         , m_SequenceName(name)
@@ -21,12 +21,12 @@ namespace VMF
 
     // 소멸자는 헤더에서 = default로 선언되었으므로 생략 가능하지만, 
     // 기존에 소멸 로그가 존재하므로 로직을 헤더에서 옮겨오거나 계속 유지합니다.
-    VatSequence::~VatSequence()
+    Sequence::~Sequence()
     {
         LogTask(makeLogPrefix(m_SequenceName) + "destructed");
     }
 
-    void VatSequence::AddTask(TaskStepPtr task)
+    void Sequence::AddTask(TaskStepPtr task)
     {
         std::lock_guard<std::mutex> lock(m_mutex); // boost::mutex::scoped_lock -> std::lock_guard
     
@@ -34,17 +34,17 @@ namespace VMF
         LogTask(makeLogPrefix(m_SequenceName) + "AddTask: " + (task ? task->GetName() : "<null>"));
     }
 
-    std::string VatSequence::GetSequenceName() const
+    std::string Sequence::GetSequenceName() const
     {
         return m_SequenceName;
     }
 
-    std::string VatSequence::GetTaskName() const
+    std::string Sequence::GetTaskName() const
     {
         return m_TaskName;
     }
     
-    void VatSequence::Abort()
+    void Sequence::Abort()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_abortRequested = true; // 이제 std::atomic이므로 락 없이도 스레드 안전하지만 cv를 위해 락 유지
@@ -53,7 +53,7 @@ namespace VMF
         m_cv.notify_all();
     }
 
-    bool VatSequence::Execute(VAT_Context& context, IVatActuator* actuator)
+    bool Sequence::Execute(Context& context, IActuator* actuator)
     {
         LogTask(makeLogPrefix(m_SequenceName) + "Execute start");
 

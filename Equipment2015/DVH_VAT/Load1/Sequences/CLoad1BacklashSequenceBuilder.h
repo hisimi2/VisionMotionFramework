@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "SequenceBuilderBase.h"
 #include "CLoad1PerformBacklashScanningTask.h"
@@ -12,13 +12,13 @@ namespace VAT_LOAD1
 		class CLoad1BacklashSequenceBuilder : public VMF::SequenceBuilderBase
 		{
 		protected:
-            VMF::VatSequencePtr BuildSequence(std::string sequenceName) override
+            VMF::SequencePtr BuildSequence(std::string sequenceName) override
 			{
-                VMF::VatSequencePtr seq(new VMF::VatSequence(sequenceName));
+                VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
 				seq->AddTask(VMF::TaskStepPtr(new CLoad1PerformBacklashScanningTask()));
 
-				return VMF::VatSequencePtr(seq.release());
+				return VMF::SequencePtr(seq.release());
 			}
 		};
 	}

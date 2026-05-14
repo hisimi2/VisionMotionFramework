@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
-#include "VAT_Context.h"
-#include "VatSequence.h"
+#include "Context.h"
+#include "Sequence.h"
 #include "IDataRepository.h"
-#include "IVatActuator.h"
+#include "IActuator.h"
 
 
 namespace VMF
@@ -35,15 +35,15 @@ namespace VMF
         /// 주어진 이름으로 시퀀스를 생성합니다.
         /// </summary>
         /// <param name="sequenceName">생성할 시퀀스의 이름</param>
-        /// <returns>생성된 IVatSequence 객체의 소유권</returns>
-        VatSequencePtr CreateSequence(std::string sequenceName);
+        /// <returns>생성된 ISequence 객체의 소유권</returns>
+        SequencePtr CreateSequence(std::string sequenceName);
 
     protected:
         /// <summary>
         /// 실제 시퀀스 생성 및 태스크 조립을 수행하는 가상 함수입니다. 하위 클래스에서 구현해야 합니다.
         /// </summary>
         /// <param name="sequenceName">시퀀스 이름</param>
-        /// <returns>조립된 IVatSequence 객체의 소유권</returns>
-        virtual VatSequencePtr BuildSequence(std::string sequenceName) = 0;
+        /// <returns>조립된 ISequence 객체의 소유권</returns>
+        virtual SequencePtr BuildSequence(std::string sequenceName) = 0;
     };
 }

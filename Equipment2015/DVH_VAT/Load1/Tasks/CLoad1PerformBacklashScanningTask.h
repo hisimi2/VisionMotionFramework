@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -22,16 +22,16 @@ namespace VAT_LOAD1
                 SaveBacklashResult
             };
 
-            VMF::TaskResult HandleMoveSafeZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveOrigin(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveStart(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveZero(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveEnd(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleMoveFocusZ(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionRequest(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleVisionWait(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleCalculateBacklash(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleSaveBacklashResult(VMF::VAT_Context& ctx);
+            VMF::TaskResult HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveOrigin(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveStart(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveZero(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveEnd(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleMoveFocusZ(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionRequest(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleVisionWait(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleCalculateBacklash(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleSaveBacklashResult(VMF::Context& ctx);
 
 		public:
 			CLoad1PerformBacklashScanningTask();
@@ -43,8 +43,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(VMF::VAT_Context& ctx) override;
-            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+            void OnInitialize(VMF::Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
             enum Axis
             {
@@ -59,7 +59,7 @@ namespace VAT_LOAD1
 				int dcc;
 			};
 
-            void ApplyCurrentSpeed(VMF::IVatActuator* actuator);
+            void ApplyCurrentSpeed(VMF::IActuator* actuator);
 
 			int m_cameraId;
 			double m_zeroPositionX;

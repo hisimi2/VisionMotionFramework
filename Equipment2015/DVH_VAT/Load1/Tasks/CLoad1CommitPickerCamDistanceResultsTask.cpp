@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1CommitPickerCamDistanceResultsTask.h"
 #include "DVH_VAT/DefineVAT.h"
 
@@ -21,7 +21,7 @@ CLoad1CommitPickerCamDistanceResultsTask::~CLoad1CommitPickerCamDistanceResultsT
 {
 }
 
-void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(VMF::Context& ctx)
 {
 	m_currentUpperCameraIndex = 0;
 	m_currentPitchMode = VMF::Narrow;
@@ -54,8 +54,8 @@ void CLoad1CommitPickerCamDistanceResultsTask::OnInitialize(VMF::VAT_Context& ct
 }
 
 VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -66,8 +66,8 @@ VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPickerPos(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	auto repo = ctx.getRepository();
 
@@ -115,8 +115,8 @@ VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleGetStdPickerPos(
 }
 
 VMF::TaskResult CLoad1CommitPickerCamDistanceResultsTask::HandleCalcCamAlignPos(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (m_currentUpperCameraIndex >= m_upperCameraIds.size())
 	{

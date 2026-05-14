@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1MoveToStartPositionTask.h"
 #include "DVH_VAT/DefineVAT.h"
 
@@ -13,7 +13,7 @@ CLoad1MoveToStartPositionTask::~CLoad1MoveToStartPositionTask()
 {
 }
 
-void CLoad1MoveToStartPositionTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1MoveToStartPositionTask::OnInitialize(VMF::Context& ctx)
 {
 	const int timeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_TIMEOUT_MS, m_moveTimeoutMs);
 	if (timeoutMs > 0)
@@ -23,8 +23,8 @@ void CLoad1MoveToStartPositionTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1MoveToStartPositionTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -39,8 +39,8 @@ VMF::TaskResult CLoad1MoveToStartPositionTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
@@ -61,8 +61,8 @@ VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
@@ -87,8 +87,8 @@ VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveTargetPositionXY(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
@@ -113,8 +113,8 @@ VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveTargetPositionXY(
 }
 
 VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveTargetPositionZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
@@ -135,8 +135,8 @@ VMF::TaskResult CLoad1MoveToStartPositionTask::HandleMoveTargetPositionZ(
 }
 
 VMF::TaskResult CLoad1MoveToStartPositionTask::HandleCompleteMove(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");

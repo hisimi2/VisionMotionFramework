@@ -27,7 +27,7 @@ CLoad1PerformPickerFOVScanningTask::~CLoad1PerformPickerFOVScanningTask()
 {
 }
 
-void CLoad1PerformPickerFOVScanningTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformPickerFOVScanningTask::OnInitialize(VMF::Context& ctx)
 {
     m_cameraId              = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX,                0);
     m_packageId             = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID,                  0);
@@ -46,8 +46,8 @@ void CLoad1PerformPickerFOVScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::OnPoll(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     switch (GetState())
     {
@@ -81,8 +81,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveSafeZ(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (!actuator)
     {
@@ -108,8 +108,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveOrigin(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (!actuator)
     {
@@ -140,8 +140,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveScanPosition(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (!actuator)
     {
@@ -194,8 +194,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveScanPosition(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveFocusPositionZ(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (!actuator)
     {
@@ -245,8 +245,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleMoveFocusPositionZ(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionRequest(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (!actuator)
     {
@@ -286,8 +286,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (IsDeadlineExpired())
     {
@@ -346,7 +346,7 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleVisionWait(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleSaveResult(
-    VMF::VAT_Context& ctx)
+    VMF::Context& ctx)
 {
     auto repo = ctx.getRepository();
     if (!repo)
@@ -370,8 +370,8 @@ VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleSaveResult(
 }
 
 VMF::TaskResult CLoad1PerformPickerFOVScanningTask::HandleReturnHome(
-    VMF::VAT_Context& ctx,
-    VMF::IVatActuator* actuator)
+    VMF::Context& ctx,
+    VMF::IActuator* actuator)
 {
     if (!actuator)
     {

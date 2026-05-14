@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
-#include "Vat_context.h"
-#include "VatCorrectionEngine.h"
+#include "stdafx.h"
+#include "Context.h"
+#include "SequenceExecutionEngine.h"
 #include "SequenceBuilderBase.h"
-#include "AsyncSequenceRunner.h"
-#include "IVatActuator.h"
+#include "SequenceExecutionWorker.h"
+#include "IActuator.h"
 #include "IDataRepository.h"
 #include "Types.h" 
 
@@ -13,7 +13,7 @@
 
 namespace VMF
 {
-    VatCorrectionEngine::VatCorrectionEngine(SequenceBuilderPtr builder,
+    SequenceExecutionEngine::SequenceExecutionEngine(SequenceBuilderPtr builder,
                                             VatContextPtr ctx, VatActuatorPtr actuator)
         : m_actuator(actuator)
         , m_pBuilder(builder)
@@ -21,14 +21,14 @@ namespace VMF
     {
         if (!m_pRunner)
         {
-            m_pRunner = std::make_shared<AsyncSequenceRunner>(); // boost::make_shared 대체
+            m_pRunner = std::make_shared<SequenceExecutionWorker>(); // boost::make_shared 대체
         }
     }
 
     // 소멸자 (헤더에서 선언된 명시적 소멸자와 매칭. 빈 동작이므로 default 선언 권장이나 이 파일에 유지)
-    VatCorrectionEngine::~VatCorrectionEngine() = default;
+    SequenceExecutionEngine::~SequenceExecutionEngine() = default;
 
-    DataRepositoryPtr VatCorrectionEngine::getRepository() const
+    DataRepositoryPtr SequenceExecutionEngine::getRepository() const
     {
         if (m_pCtx)
         {
@@ -37,12 +37,12 @@ namespace VMF
         return nullptr; // C++11 nullptr 사용
     }
 
-    void VatCorrectionEngine::SetBuilder(SequenceBuilderPtr builder)
+    void SequenceExecutionEngine::SetBuilder(SequenceBuilderPtr builder)
     {
         m_pBuilder = builder;
     }
 
-    void VatCorrectionEngine::SetRunner(AsyncSequenceRunnerPtr runner)
+    void SequenceExecutionEngine::SetRunner(SequenceExecutionWorkerPtr runner)
     {
         if (runner)
         {
@@ -52,13 +52,13 @@ namespace VMF
         {
             if (!m_pRunner)
             {
-                m_pRunner = std::make_shared<AsyncSequenceRunner>();
+                m_pRunner = std::make_shared<SequenceExecutionWorker>();
             }
         }
     }
 
     // C++14: 헤더 수정 사항에 맞춰 const std::string& 형태로 매개변수 일치
-    bool VatCorrectionEngine::RunSequence(const std::string& sequenceName)
+    bool SequenceExecutionEngine::RunSequence(const std::string& sequenceName)
     {
         if (!m_pBuilder)
         {
@@ -71,7 +71,7 @@ namespace VMF
         }
 
         // boost::unique_ptr 가 아닌 std::unique_ptr 반환
-        std::unique_ptr<IVatSequence> seq = m_pBuilder->CreateSequence(sequenceName);
+        std::unique_ptr<ISequence> seq = m_pBuilder->CreateSequence(sequenceName);
 
         if (!seq) return false;
 
@@ -82,7 +82,7 @@ namespace VMF
         );
     }
 
-    void VatCorrectionEngine::StopSequence()
+    void SequenceExecutionEngine::StopSequence()
     {
         if (m_pRunner)
         {

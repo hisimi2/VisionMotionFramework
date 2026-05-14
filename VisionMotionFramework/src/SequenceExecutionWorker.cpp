@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "AsyncSequenceRunner.h"
-#include "VAT_Context.h"
+#include "SequenceExecutionWorker.h"
+#include "Context.h"
 
-#include "IVatSequence.h"
-#include "IVatActuator.h"
+#include "ISequence.h"
+#include "IActuator.h"
 #include "IResultSink.h"
 
 #include <chrono>
@@ -18,14 +18,14 @@ namespace VMF
 {
     struct SequenceThreadFunc
     {
-        IVatSequence*   m_seq;
-        VAT_Context*    m_ctx;
-        IVatActuator*   m_act;
+        ISequence*   m_seq;
+        Context*    m_ctx;
+        IActuator*   m_act;
 
         std::atomic<bool>* m_runningFlag;
-        AsyncSequenceRunner* m_runner;
+        SequenceExecutionWorker* m_runner;
 
-        SequenceThreadFunc(IVatSequence* seq, VAT_Context* ctx, IVatActuator* act, std::atomic<bool>* runningFlag, AsyncSequenceRunner* runner)
+        SequenceThreadFunc(ISequence* seq, Context* ctx, IActuator* act, std::atomic<bool>* runningFlag, SequenceExecutionWorker* runner)
             : m_seq(seq), m_ctx(ctx), m_act(act), m_runningFlag(runningFlag), m_runner(runner)
         {
         }
@@ -70,14 +70,14 @@ namespace VMF
         }
     };
 
-    struct AsyncSequenceRunner::Impl
+    struct SequenceExecutionWorker::Impl
     {
         std::thread                     thread;
         std::atomic<bool>               running;
         mutable std::mutex              mutex;
 
-        std::unique_ptr<IVatSequence>   currentSeq;
-        std::shared_ptr<VAT_Context>    currentCtx;
+        std::unique_ptr<ISequence>   currentSeq;
+        std::shared_ptr<Context>    currentCtx;
 
         IResultSink*                    resultSink;
 
@@ -131,12 +131,12 @@ namespace VMF
         }
     };
 
-    AsyncSequenceRunner::AsyncSequenceRunner()
+    SequenceExecutionWorker::SequenceExecutionWorker()
         : m_impl(std::make_unique<Impl>()) // C++14: std::make_unique 적용
     {
     }
 
-    AsyncSequenceRunner::~AsyncSequenceRunner()
+    SequenceExecutionWorker::~SequenceExecutionWorker()
     {
         Stop();
 
@@ -152,24 +152,24 @@ namespace VMF
         }
     }
 
-    void AsyncSequenceRunner::SetResultSink(IResultSink* sink)
+    void SequenceExecutionWorker::SetResultSink(IResultSink* sink)
     {
         if (m_impl) m_impl->setResultSink(sink);
     }
 
-    void AsyncSequenceRunner::SendResultToSink(int requestId, const std::vector<std::string>& results)
+    void SequenceExecutionWorker::SendResultToSink(int requestId, const std::vector<std::string>& results)
     {
         if (m_impl) m_impl->sendResultToSink(requestId, results);
     }
 
-    void AsyncSequenceRunner::SendResult(int requestId, const std::string& status)
+    void SequenceExecutionWorker::SendResult(int requestId, const std::string& status)
     {
         if (m_impl) m_impl->sendResult(requestId, status);
     }
 
-    bool AsyncSequenceRunner::Start(std::unique_ptr<IVatSequence> seq,
-                                    std::shared_ptr<VAT_Context> ctx,
-                                    IVatActuator* actuator)
+    bool SequenceExecutionWorker::Start(std::unique_ptr<ISequence> seq,
+                                    std::shared_ptr<Context> ctx,
+                                    IActuator* actuator)
     {
         if (!m_impl) return false;
         if (!seq) return false;
@@ -208,7 +208,7 @@ namespace VMF
         return true;
     }
 
-    bool AsyncSequenceRunner::WaitForCompletion(int timeoutMs)
+    bool SequenceExecutionWorker::WaitForCompletion(int timeoutMs)
     {
         if (!m_impl) return true;
 
@@ -256,7 +256,7 @@ namespace VMF
         return true;
     }
 
-    void AsyncSequenceRunner::Abort()
+    void SequenceExecutionWorker::Abort()
     {
         Stop();
 
@@ -278,7 +278,7 @@ namespace VMF
         }
     }
 
-    void AsyncSequenceRunner::Stop()
+    void SequenceExecutionWorker::Stop()
     {
         if (!m_impl) return;
         std::lock_guard<std::mutex> lock(m_impl->mutex);
@@ -288,7 +288,7 @@ namespace VMF
         }
     }
 
-    bool AsyncSequenceRunner::IsRunning() const
+    bool SequenceExecutionWorker::IsRunning() const
     {
         if (!m_impl) return false;
         return m_impl->running.load();

@@ -13,23 +13,23 @@ namespace VMF
 {
     class IDataRepository;
     class IVisionEventHandler;
-    class IVatSequence;
-    class IVatActuator;
-    class VatCorrectionEngine;
+    class ISequence;
+    class IActuator;
+    class SequenceExecutionEngine;
     class SequenceBuilderBase;
-    class VAT_Context;
-    class AsyncSequenceRunner;
+    class Context;
+    class SequenceExecutionWorker;
     
-    using VatEnginePtr           = std::shared_ptr<VatCorrectionEngine>;
+    using VatEnginePtr           = std::shared_ptr<SequenceExecutionEngine>;
     using DataRepositoryPtr      = std::shared_ptr<IDataRepository>;
     using VisionEventHandlerPtr  = std::shared_ptr<IVisionEventHandler>;
     using SequenceBuilderPtr     = std::shared_ptr<SequenceBuilderBase>;
-    using VatContextPtr          = std::shared_ptr<VAT_Context>;
-    using AsyncSequenceRunnerPtr = std::shared_ptr<AsyncSequenceRunner>;
+    using VatContextPtr          = std::shared_ptr<Context>;
+    using SequenceExecutionWorkerPtr = std::shared_ptr<SequenceExecutionWorker>;
     
-    using VatSequencePtr         = std::unique_ptr<IVatSequence>;
+    using SequencePtr         = std::unique_ptr<ISequence>;
     
-    using VatActuatorPtr         = IVatActuator*;
+    using VatActuatorPtr         = IActuator*;
     using StringMap              = std::map<std::string, std::string>; 
     
     using LockGuardType          = std::lock_guard<std::mutex>;

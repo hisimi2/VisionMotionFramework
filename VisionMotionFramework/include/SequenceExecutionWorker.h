@@ -8,20 +8,20 @@
 
 namespace VMF 
 {
-    class VAT_Context;
-    class IVatSequence;
-    class IVatActuator;
+    class Context;
+    class ISequence;
+    class IActuator;
     class IResultSink;
 
-    class VMF_API AsyncSequenceRunner 
+    class VMF_API SequenceExecutionWorker 
     {
     public:
-        AsyncSequenceRunner();
+        SequenceExecutionWorker();
         
         // 가상 함수가 존재하므로 안전한 상속을 위해 가상 소멸자로 변경하는 것을 권장합니다.
-        virtual ~AsyncSequenceRunner();
+        virtual ~SequenceExecutionWorker();
 
-        bool Start(std::unique_ptr<IVatSequence> seq, std::shared_ptr<VAT_Context> ctx, IVatActuator* actuator);
+        bool Start(std::unique_ptr<ISequence> seq, std::shared_ptr<Context> ctx, IActuator* actuator);
         
         void Abort();
         void Stop();

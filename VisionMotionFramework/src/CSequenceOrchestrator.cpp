@@ -1,25 +1,26 @@
 #include "stdafx.h"
-#include "CVatEngineObserverAdapter.h"
-#include "VatCorrectionEngine.h"
-#include "VAT_Context.h"
+#include "CSequenceOrchestrator.h"
+#include "SequenceExecutionEngine.h"
+#include "Context.h"
 
-#include "AsyncSequenceRunner.h"
+#include "SequenceExecutionWorker.h"
 
 #include <memory>
 #include <mutex>
+#include <exception>
 
 namespace VMF
 {
- CVatEngineObserverAdapter::CVatEngineObserverAdapter()
+ CSequenceOrchestrator::CSequenceOrchestrator()
  : m_pVatEngine()
  {
  }
 
- CVatEngineObserverAdapter::~CVatEngineObserverAdapter()
+ CSequenceOrchestrator::~CSequenceOrchestrator()
  {
  VatEnginePtr engineToStop;
  {
- LockGuardType guard(m_seqMutex);
+ std::lock_guard<std::mutex> guard(m_seqMutex);
  engineToStop = m_pVatEngine;
  m_pVatEngine.reset();
  m_pCurrentStrategy.reset();
@@ -34,9 +35,9 @@ namespace VMF
  ClearObservers();
  }
 
- DataRepositoryPtr CVatEngineObserverAdapter::getDataRepository()
+ DataRepositoryPtr CSequenceOrchestrator::getDataRepository()
  {
- LockGuardType guard(m_seqMutex);
+ std::lock_guard<std::mutex> guard(m_seqMutex);
  if (m_pVatEngine)
  {
  return m_pVatEngine->getRepository();
@@ -44,7 +45,7 @@ namespace VMF
  return nullptr;
  }
 
- CVatEngineObserverAdapter::ObserverId CVatEngineObserverAdapter::AddObserver(VisionResultObserver observer)
+ CSequenceOrchestrator::ObserverId CSequenceOrchestrator::AddObserver(VisionResultObserver observer)
  {
  if (!observer)
  return 0;
@@ -57,24 +58,24 @@ namespace VMF
  return id;
  }
 
- bool CVatEngineObserverAdapter::RemoveObserver(ObserverId id)
+ bool CSequenceOrchestrator::RemoveObserver(ObserverId id)
  {
  std::lock_guard<std::mutex> lk(m_observerMutex);
  return m_observers.erase(id) >0;
  }
 
- void CVatEngineObserverAdapter::ClearObservers()
+ void CSequenceOrchestrator::ClearObservers()
  {
  std::lock_guard<std::mutex> lk(m_observerMutex);
  m_observers.clear();
  }
 
- void CVatEngineObserverAdapter::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
+ void CSequenceOrchestrator::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
  {
  OnVisionResult(requestId, results);
  }
 
- void CVatEngineObserverAdapter::NotifyObservers(const VisionResultPayload& payload)
+ void CSequenceOrchestrator::NotifyObservers(const VisionResultPayload& payload)
  {
  std::vector<VisionResultObserver> snapshot;
  {
@@ -100,15 +101,15 @@ namespace VMF
  }
  }
 
- VatContextPtr CVatEngineObserverAdapter::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
+ VatContextPtr CSequenceOrchestrator::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
  {
- auto ctx = std::make_shared<VAT_Context>();
+ auto ctx = std::make_shared<Context>();
  ctx->SetVisionProcessor(vm);
  ctx->SetDataRepository(repo);
  return ctx;
  }
 
- void CVatEngineObserverAdapter::OnVisionResult(int requestId, const std::vector<std::string>& results)
+ void CSequenceOrchestrator::OnVisionResult(int requestId, const std::vector<std::string>& results)
  {
  VisionResultPayload payload;
  payload.requestId = requestId;
@@ -116,7 +117,7 @@ namespace VMF
  NotifyObservers(payload);
  }
 
- bool CVatEngineObserverAdapter::StartVatSequenceSafe(VatSequenceStrategyPtr strategy)
+ bool CSequenceOrchestrator::StartSequenceSafe(SequenceStrategyPtr strategy)
  {
  if (!strategy)
  {
@@ -191,7 +192,7 @@ namespace VMF
 
  try
  {
- m_pVatEngine = std::make_shared<VatCorrectionEngine>(builder, ctx, actuator);
+ m_pVatEngine = std::make_shared<SequenceExecutionEngine>(builder, ctx, actuator);
  }
  catch (const std::exception& ex)
  {
@@ -202,14 +203,14 @@ namespace VMF
  }
  catch (...)
  {
- ctx->SetLastError("Unknown exception creating VatCorrectionEngine");
+ ctx->SetLastError("Unknown exception creating SequenceExecutionEngine");
  m_pVatEngine.reset();
  m_pCurrentStrategy.reset();
  return false;
  }
 
  {
- AsyncSequenceRunnerPtr runner = std::make_shared<AsyncSequenceRunner>();
+ SequenceExecutionWorkerPtr runner = std::make_shared<SequenceExecutionWorker>();
  runner->SetResultSink(this);
  m_pVatEngine->SetRunner(runner);
  }
@@ -226,7 +227,7 @@ namespace VMF
  return true;
  }
 
- void CVatEngineObserverAdapter::StopVatSequence()
+ void CSequenceOrchestrator::StopSequence()
  {
  VatEnginePtr engineToStop;
  {

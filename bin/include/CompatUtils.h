@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // Windows 헤더 최소화 및 min/max 매크로 방지
 #if defined(_WIN32)
@@ -54,7 +54,7 @@ namespace VMF
     inline std::string makeLogPrefix(const std::string& seqName)
     {
         std::ostringstream oss;
-        oss << "[VatSequence:" << seqName << "] ";
+        oss << "[Sequence:" << seqName << "] ";
         return oss.str();
     }
 

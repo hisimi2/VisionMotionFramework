@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include <vector>
@@ -56,11 +56,11 @@ namespace VMF
         ActStateMismatch           // Pitch 등 상태 불일치
     };
 
-	class VMF_API IVatActuator
+	class VMF_API IActuator
 	{
 	public:
-		IVatActuator() = default;
-		virtual ~IVatActuator() = default;
+		IActuator() = default;
+		virtual ~IActuator() = default;
 
 		virtual PitchType GetPitchType() = 0;
 		virtual ActError IsReadyToMove() = 0;

@@ -122,10 +122,10 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\CVatEngineObserverAdapter.cpp" />
+    <ClCompile Include="src\CSequenceOrchestrator.cpp" />
     <ClCompile Include="VisionMotionFramework.cpp" />
     <ClCompile Include="src\AsyncDataRepository.cpp" />
-    <ClCompile Include="src\AsyncSequenceRunner.cpp" />
+    <ClCompile Include="src\SequenceExecutionWorker.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\RepositoryFactory.cpp" />
@@ -133,9 +133,9 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\SequenceBuilderBase.cpp" />
     <ClCompile Include="src\SequenceStrategyBase.cpp" />
     <ClCompile Include="src\SqliteDataRepository.cpp" />
-    <ClCompile Include="src\VatCorrectionEngine.cpp" />
-    <ClCompile Include="src\VatSequence.cpp" />
-    <ClCompile Include="src\VAT_Context.cpp" />
+    <ClCompile Include="src\SequenceExecutionEngine.cpp" />
+    <ClCompile Include="src\Sequence.cpp" />
+    <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\VisionProcessorBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -144,19 +144,19 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AsyncDataRepository.h" />
-    <ClInclude Include="include\AsyncSequenceRunner.h" />
+    <ClInclude Include="include\SequenceExecutionWorker.h" />
     <ClInclude Include="include\CompatUtils.h" />
-    <ClInclude Include="include\CVatEngineObserverAdapter.h" />
+    <ClInclude Include="include\CSequenceOrchestrator.h" />
     <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
     <ClInclude Include="include\FileUtils.h" />
     <ClInclude Include="include\IDataRepository.h" />
     <ClInclude Include="include\IResultSink.h" />
     <ClInclude Include="include\ITask.h" />
-    <ClInclude Include="include\IVatActuator.h" />
-    <ClInclude Include="include\IVatObserver.h" />
-    <ClInclude Include="include\IVatSequence.h" />
-    <ClInclude Include="include\IVatSequenceStrategy.h" />
+    <ClInclude Include="include\IActuator.h" />
+    <ClInclude Include="include\IObserver.h" />
+    <ClInclude Include="include\ISequence.h" />
+    <ClInclude Include="include\ISequenceStrategy.h" />
     <ClInclude Include="include\IVisionProcessor.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
@@ -165,10 +165,10 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\SequenceBuilderBase.h" />
     <ClInclude Include="include\SequenceStrategyBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
-    <ClInclude Include="include\VatSequence.h" />
+    <ClInclude Include="include\Sequence.h" />
     <ClInclude Include="include\Types.h" />
-    <ClInclude Include="include\VatCorrectionEngine.h" />
-    <ClInclude Include="include\VAT_Context.h" />
+    <ClInclude Include="include\SequenceExecutionEngine.h" />
+    <ClInclude Include="include\Context.h" />
     <ClInclude Include="include\VisionProcessorBase.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

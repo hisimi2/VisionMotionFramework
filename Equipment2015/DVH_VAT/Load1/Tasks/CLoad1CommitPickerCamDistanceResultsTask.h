@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -16,8 +16,8 @@ namespace VAT_LOAD1
             };
 
             // 단계별 핸들러
-            VMF::TaskResult HandleCalcCamAlignPos(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
-            VMF::TaskResult HandleGetStdPickerPos(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator);
+            VMF::TaskResult HandleCalcCamAlignPos(VMF::Context& ctx, VMF::IActuator* actuator);
+            VMF::TaskResult HandleGetStdPickerPos(VMF::Context& ctx, VMF::IActuator* actuator);
 
 		public:
 			CLoad1CommitPickerCamDistanceResultsTask();
@@ -29,8 +29,8 @@ namespace VAT_LOAD1
             }
 
 		protected:
-            void OnInitialize(VMF::VAT_Context& ctx) override;
-            VMF::TaskResult OnPoll(VMF::VAT_Context& ctx, VMF::IVatActuator* actuator) override;
+            void OnInitialize(VMF::Context& ctx) override;
+            VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
 			int m_lowerCameraId;
 			int m_packageId;

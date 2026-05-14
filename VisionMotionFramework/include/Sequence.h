@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
-#include "IVatSequence.h" 
+#include "ISequence.h" 
 #include "ITask.h"
 #include "CompatUtils.h" 
 
@@ -12,18 +12,18 @@
 
 namespace VMF 
 {
-    class IVatActuator;
+    class IActuator;
     class IDataRepository;
 
     // C++14 호환 모던 C++ 클래스
-    class VMF_API VatSequence : public IVatSequence
+    class VMF_API Sequence : public ISequence
     {
     public:
-        explicit VatSequence(const std::string& name = "");
+        explicit Sequence(const std::string& name = "");
         
-        ~VatSequence() override;
+        ~Sequence() override;
 
-        bool Execute(VAT_Context& context, IVatActuator* actuator) override;
+        bool Execute(Context& context, IActuator* actuator) override;
         void Abort() override;
         std::string GetSequenceName() const override;
         std::string GetTaskName() const override;
@@ -34,8 +34,8 @@ namespace VMF
         void SetPollIntervalMs(int ms) { m_pollIntervalMs = ms; }
 
         // C++11: 복사 생성자 및 대입 연산자 호출 방지를 명시적 = delete 처리하여 public 선언 권장
-        VatSequence(const VatSequence&) = delete;
-        VatSequence& operator=(const VatSequence&) = delete;
+        Sequence(const Sequence&) = delete;
+        Sequence& operator=(const Sequence&) = delete;
 
     private:
         std::vector<TaskStepPtr> m_tasks;

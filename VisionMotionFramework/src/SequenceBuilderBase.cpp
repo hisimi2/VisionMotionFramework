@@ -1,9 +1,9 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 
-#include "VAT_Context.h"
+#include "Context.h"
 #include "SequenceBuilderBase.h"
-#include "VatSequence.h"
-#include "IVatSequence.h"
+#include "Sequence.h"
+#include "ISequence.h"
 
 #include "SqliteDataRepository.h"
 #include "AsyncDataRepository.h"
@@ -23,7 +23,7 @@ namespace VMF
         _mkdir(path.c_str());
     }
 
-    std::unique_ptr<IVatSequence> SequenceBuilderBase::CreateSequence(std::string sequenceName)
+    std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(std::string sequenceName)
     {
         return BuildSequence(sequenceName);
     }

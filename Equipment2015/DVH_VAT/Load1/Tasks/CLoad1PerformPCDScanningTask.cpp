@@ -29,7 +29,7 @@ CLoad1PerformPCDScanningTask::~CLoad1PerformPCDScanningTask()
 {
 }
 
-void CLoad1PerformPCDScanningTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformPCDScanningTask::OnInitialize(VMF::Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 	m_scanPitch = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PCD_PITCH, 0.0);
@@ -70,8 +70,8 @@ void CLoad1PerformPCDScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -88,8 +88,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: actuator is null.");
@@ -102,8 +102,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformCalibration: actuator is null.");
@@ -131,8 +131,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveTargetPositionXY(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: actuator is null.");
@@ -169,8 +169,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveTargetPositionXY(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveFocusPositionZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformCalibration: actuator is null.");
@@ -198,8 +198,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleMoveFocusPositionZ(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PerformPCDScanning: light null");
@@ -232,8 +232,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -331,8 +331,8 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleVisionWait(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleCalculatePCD(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	(void)ctx;
 	(void)actuator;
@@ -353,7 +353,7 @@ VMF::TaskResult CLoad1PerformPCDScanningTask::HandleCalculatePCD(
 }
 
 VMF::TaskResult CLoad1PerformPCDScanningTask::HandleSavePCDResult(
-	VMF::VAT_Context& ctx)
+	VMF::Context& ctx)
 {
 	(void)ctx;
 	return VMF::TR_NEXT;

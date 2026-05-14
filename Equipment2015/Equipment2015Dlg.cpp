@@ -180,5 +180,5 @@ using namespace VAT_LOAD1::Strategies;
 
 void CEquipment2015Dlg::OnBnClickedVisionSequence()
 {
-	m_engine.StartVatSequence<CLoad1LeftPlateJIGFocusCheckSequenceStrategy>(m_adapter.get());
+	m_engine.StartSequence<CLoad1LeftPlateJIGFocusCheckSequenceStrategy>(m_adapter.get());
 }

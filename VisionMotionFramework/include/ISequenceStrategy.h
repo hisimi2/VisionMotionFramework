@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
 #include <string>
@@ -6,12 +6,12 @@
 
 namespace VMF
 {
-    class IVatActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
+    class IActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
 
-    class IVatSequenceStrategy
+    class ISequenceStrategy
     {
     public:
-        virtual ~IVatSequenceStrategy() = default;
+        virtual ~ISequenceStrategy() = default;
 
         // 1. 실행할 시퀀스 이름 반환
         virtual std::string GetSequenceName() const = 0;
@@ -29,11 +29,11 @@ namespace VMF
         virtual VisionEventHandlerPtr CreateVisionProcessor() = 0;
 
         // 6. 엑츄에이터(어댑터) 설정   
-        virtual void SetActuator(IVatActuator* adapter) = 0;
+        virtual void SetActuator(IActuator* adapter) = 0;
 
         // 7. 설정된 엑츄에이터 반환
-        virtual IVatActuator* GetActuator() = 0;
+        virtual IActuator* GetActuator() = 0;
     };
 
-    using VatSequenceStrategyPtr = std::shared_ptr<IVatSequenceStrategy>;
+    using SequenceStrategyPtr = std::shared_ptr<ISequenceStrategy>;
 }

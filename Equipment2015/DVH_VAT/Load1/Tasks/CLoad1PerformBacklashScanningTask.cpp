@@ -35,7 +35,7 @@ CLoad1PerformBacklashScanningTask::~CLoad1PerformBacklashScanningTask()
 {
 }
 
-void CLoad1PerformBacklashScanningTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformBacklashScanningTask::OnInitialize(VMF::Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAM_INDEX, 0);
 	m_zeroPositionX = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_ZERO_POS_X, 0.0);
@@ -84,7 +84,7 @@ void CLoad1PerformBacklashScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 	EnterState(MoveSafeZ);
 }
 
-void CLoad1PerformBacklashScanningTask::ApplyCurrentSpeed(VMF::IVatActuator* actuator)
+void CLoad1PerformBacklashScanningTask::ApplyCurrentSpeed(VMF::IActuator* actuator)
 {
 	if (!actuator)
 	{
@@ -101,8 +101,8 @@ void CLoad1PerformBacklashScanningTask::ApplyCurrentSpeed(VMF::IVatActuator* act
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -121,8 +121,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Actuator null");
@@ -137,8 +137,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (actuator->isMoveZ(0.0) != VMF::ActOk)
 	{
@@ -166,8 +166,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	std::vector<double> currentPosition;
 	currentPosition.push_back(m_currentPositionX);
@@ -212,8 +212,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveStart(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveZero(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	std::vector<double> currentPosition;
 	currentPosition.push_back(m_currentPositionX);
@@ -248,8 +248,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveZero(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveEnd(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	std::vector<double> currentPosition;
 	currentPosition.push_back(m_currentPositionX);
@@ -284,8 +284,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveEnd(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveFocusZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Actuator null");
@@ -313,8 +313,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleMoveFocusZ(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (actuator->isMoveZ(m_focusPositionZ) != VMF::ActOk)
 	{
@@ -340,8 +340,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -386,8 +386,8 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleVisionWait(
 }
 
 VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleCalculateBacklash(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	double currentResult = 0.0;
 
@@ -420,7 +420,7 @@ VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleCalculateBacklash(
 	return VMF::TR_KEEP;
 }
 
-VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleSaveBacklashResult(VMF::VAT_Context& ctx)
+VMF::TaskResult CLoad1PerformBacklashScanningTask::HandleSaveBacklashResult(VMF::Context& ctx)
 {
 	for (size_t i = 0; i < m_speedList.size(); ++i)
 	{

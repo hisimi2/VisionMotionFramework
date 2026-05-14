@@ -23,7 +23,7 @@ CLoad1PerformFOVScanningTask::~CLoad1PerformFOVScanningTask()
 {
 }
 
-void CLoad1PerformFOVScanningTask::OnInitialize(VMF::VAT_Context& ctx)
+void CLoad1PerformFOVScanningTask::OnInitialize(VMF::Context& ctx)
 {
 	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 
@@ -34,8 +34,8 @@ void CLoad1PerformFOVScanningTask::OnInitialize(VMF::VAT_Context& ctx)
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::OnPoll(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -51,8 +51,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::OnPoll(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveSafeZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -77,8 +77,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveSafeZ(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveOrigin(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
@@ -103,8 +103,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveOrigin(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveScanPosition(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "FOV: actuator is null.");
@@ -159,8 +159,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveScanPosition(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveFocusPositionZ(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "FOV: actuator is null.");
@@ -185,8 +185,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::HandleMoveFocusPositionZ(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleVisionRequest(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "FOV: actuator is null.");
@@ -223,8 +223,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::HandleVisionRequest(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleVisionWait(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (IsDeadlineExpired())
 	{
@@ -284,8 +284,8 @@ VMF::TaskResult CLoad1PerformFOVScanningTask::HandleVisionWait(
 }
 
 VMF::TaskResult CLoad1PerformFOVScanningTask::HandleReturnHome(
-	VMF::VAT_Context& ctx,
-	VMF::IVatActuator* actuator)
+	VMF::Context& ctx,
+	VMF::IActuator* actuator)
 {
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Home Return Fail");
