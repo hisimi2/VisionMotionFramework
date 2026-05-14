@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SequenceExecutionWorker.h"
+#include "AsyncExecutor.h"
 #include "Context.h"
 
 #include "ISequence.h"
@@ -23,9 +23,9 @@ namespace VMF
         IActuator*   m_act;
 
         std::atomic<bool>* m_runningFlag;
-        SequenceExecutionWorker* m_runner;
+        AsyncExecutor* m_runner;
 
-        SequenceThreadFunc(ISequence* seq, Context* ctx, IActuator* act, std::atomic<bool>* runningFlag, SequenceExecutionWorker* runner)
+        SequenceThreadFunc(ISequence* seq, Context* ctx, IActuator* act, std::atomic<bool>* runningFlag, AsyncExecutor* runner)
             : m_seq(seq), m_ctx(ctx), m_act(act), m_runningFlag(runningFlag), m_runner(runner)
         {
         }
@@ -70,7 +70,7 @@ namespace VMF
         }
     };
 
-    struct SequenceExecutionWorker::Impl
+    struct AsyncExecutor::Impl
     {
         std::thread                     thread;
         std::atomic<bool>               running;
@@ -131,12 +131,12 @@ namespace VMF
         }
     };
 
-    SequenceExecutionWorker::SequenceExecutionWorker()
+    AsyncExecutor::AsyncExecutor()
         : m_impl(std::make_unique<Impl>()) // C++14: std::make_unique 적용
     {
     }
 
-    SequenceExecutionWorker::~SequenceExecutionWorker()
+    AsyncExecutor::~AsyncExecutor()
     {
         Stop();
 
@@ -152,22 +152,22 @@ namespace VMF
         }
     }
 
-    void SequenceExecutionWorker::SetResultSink(IResultSink* sink)
+    void AsyncExecutor::SetResultSink(IResultSink* sink)
     {
         if (m_impl) m_impl->setResultSink(sink);
     }
 
-    void SequenceExecutionWorker::SendResultToSink(int requestId, const std::vector<std::string>& results)
+    void AsyncExecutor::SendResultToSink(int requestId, const std::vector<std::string>& results)
     {
         if (m_impl) m_impl->sendResultToSink(requestId, results);
     }
 
-    void SequenceExecutionWorker::SendResult(int requestId, const std::string& status)
+    void AsyncExecutor::SendResult(int requestId, const std::string& status)
     {
         if (m_impl) m_impl->sendResult(requestId, status);
     }
 
-    bool SequenceExecutionWorker::Start(std::unique_ptr<ISequence> seq,
+    bool AsyncExecutor::Start(std::unique_ptr<ISequence> seq,
                                     std::shared_ptr<Context> ctx,
                                     IActuator* actuator)
     {
@@ -208,7 +208,7 @@ namespace VMF
         return true;
     }
 
-    bool SequenceExecutionWorker::WaitForCompletion(int timeoutMs)
+    bool AsyncExecutor::WaitForCompletion(int timeoutMs)
     {
         if (!m_impl) return true;
 
@@ -256,7 +256,7 @@ namespace VMF
         return true;
     }
 
-    void SequenceExecutionWorker::Abort()
+    void AsyncExecutor::Abort()
     {
         Stop();
 
@@ -278,7 +278,7 @@ namespace VMF
         }
     }
 
-    void SequenceExecutionWorker::Stop()
+    void AsyncExecutor::Stop()
     {
         if (!m_impl) return;
         std::lock_guard<std::mutex> lock(m_impl->mutex);
@@ -288,7 +288,7 @@ namespace VMF
         }
     }
 
-    bool SequenceExecutionWorker::IsRunning() const
+    bool AsyncExecutor::IsRunning() const
     {
         if (!m_impl) return false;
         return m_impl->running.load();

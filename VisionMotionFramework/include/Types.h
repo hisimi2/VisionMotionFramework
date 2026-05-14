@@ -15,17 +15,17 @@ namespace VMF
     class IVisionEventHandler;
     class ISequence;
     class IActuator;
-    class SequenceExecutionEngine;
+    class RunController;
     class SequenceBuilderBase;
     class Context;
-    class SequenceExecutionWorker;
+    class AsyncExecutor;
     
-    using VatEnginePtr           = std::shared_ptr<SequenceExecutionEngine>;
+    using VatEnginePtr           = std::shared_ptr<RunController>;
     using DataRepositoryPtr      = std::shared_ptr<IDataRepository>;
     using VisionEventHandlerPtr  = std::shared_ptr<IVisionEventHandler>;
     using SequenceBuilderPtr     = std::shared_ptr<SequenceBuilderBase>;
     using VatContextPtr          = std::shared_ptr<Context>;
-    using SequenceExecutionWorkerPtr = std::shared_ptr<SequenceExecutionWorker>;
+    using AsyncExecutorPtr = std::shared_ptr<AsyncExecutor>;
     
     using SequencePtr         = std::unique_ptr<ISequence>;
     

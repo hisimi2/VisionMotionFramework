@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Context.h"
-#include "SequenceExecutionEngine.h"
+#include "RunController.h"
 #include "SequenceBuilderBase.h"
-#include "SequenceExecutionWorker.h"
+#include "AsyncExecutor.h"
 #include "IActuator.h"
 #include "IDataRepository.h"
 #include "Types.h" 
@@ -13,7 +13,7 @@
 
 namespace VMF
 {
-    SequenceExecutionEngine::SequenceExecutionEngine(SequenceBuilderPtr builder,
+    RunController::RunController(SequenceBuilderPtr builder,
                                             VatContextPtr ctx, VatActuatorPtr actuator)
         : m_actuator(actuator)
         , m_pBuilder(builder)
@@ -21,14 +21,14 @@ namespace VMF
     {
         if (!m_pRunner)
         {
-            m_pRunner = std::make_shared<SequenceExecutionWorker>(); // boost::make_shared 대체
+            m_pRunner = std::make_shared<AsyncExecutor>(); // boost::make_shared 대체
         }
     }
 
     // 소멸자 (헤더에서 선언된 명시적 소멸자와 매칭. 빈 동작이므로 default 선언 권장이나 이 파일에 유지)
-    SequenceExecutionEngine::~SequenceExecutionEngine() = default;
+    RunController::~RunController() = default;
 
-    DataRepositoryPtr SequenceExecutionEngine::getRepository() const
+    DataRepositoryPtr RunController::getRepository() const
     {
         if (m_pCtx)
         {
@@ -37,12 +37,12 @@ namespace VMF
         return nullptr; // C++11 nullptr 사용
     }
 
-    void SequenceExecutionEngine::SetBuilder(SequenceBuilderPtr builder)
+    void RunController::SetBuilder(SequenceBuilderPtr builder)
     {
         m_pBuilder = builder;
     }
 
-    void SequenceExecutionEngine::SetRunner(SequenceExecutionWorkerPtr runner)
+    void RunController::SetRunner(AsyncExecutorPtr runner)
     {
         if (runner)
         {
@@ -52,13 +52,13 @@ namespace VMF
         {
             if (!m_pRunner)
             {
-                m_pRunner = std::make_shared<SequenceExecutionWorker>();
+                m_pRunner = std::make_shared<AsyncExecutor>();
             }
         }
     }
 
     // C++14: 헤더 수정 사항에 맞춰 const std::string& 형태로 매개변수 일치
-    bool SequenceExecutionEngine::RunSequence(const std::string& sequenceName)
+    bool RunController::RunSequence(const std::string& sequenceName)
     {
         if (!m_pBuilder)
         {
@@ -82,7 +82,7 @@ namespace VMF
         );
     }
 
-    void SequenceExecutionEngine::StopSequence()
+    void RunController::StopSequence()
     {
         if (m_pRunner)
         {

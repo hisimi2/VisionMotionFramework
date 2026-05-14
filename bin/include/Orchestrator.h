@@ -25,14 +25,14 @@ namespace VMF
     // - Strategy/Builder/Context/Runner 조립(Composition Root)
     // - VAT 시퀀스 실행/중지 API 제공
     // - Runner 결과를 받아 Observer에게 브로드캐스트
-    class VMF_API CSequenceOrchestrator : public IResultSink
+    class VMF_API Orchestrator : public IResultSink
     {
     public:
         using ObserverId = std::uint64_t;
         using VisionResultObserver = std::function<void(const VisionResultPayload& payload)>;
 
-        CSequenceOrchestrator();
-        ~CSequenceOrchestrator() override;
+        Orchestrator();
+        ~Orchestrator() override;
 
         // IResultSink 구현
         void NotifyVisionResult(int requestId, const std::vector<std::string>& results) override;
@@ -78,7 +78,7 @@ namespace VMF
     };
 
     // Backward compatibility: keep the old names.
-    // Prefer using `CSequenceOrchestrator` in new code.
-    using CVatEngineFacade = CSequenceOrchestrator;
-    using CVatEngineObserverAdapter = CSequenceOrchestrator;
+    // Prefer using `Orchestrator` in new code.
+    using CVatEngineFacade = Orchestrator;
+    using CVatEngineObserverAdapter = Orchestrator;
 } // namespace VMF

@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "CSequenceOrchestrator.h"
-#include "SequenceExecutionEngine.h"
+#include "Orchestrator.h"
+#include "RunController.h"
 #include "Context.h"
 
-#include "SequenceExecutionWorker.h"
+#include "AsyncExecutor.h"
 
 #include <memory>
 #include <mutex>
@@ -11,12 +11,12 @@
 
 namespace VMF
 {
- CSequenceOrchestrator::CSequenceOrchestrator()
+ Orchestrator::Orchestrator()
  : m_pVatEngine()
  {
  }
 
- CSequenceOrchestrator::~CSequenceOrchestrator()
+ Orchestrator::~Orchestrator()
  {
  VatEnginePtr engineToStop;
  {
@@ -35,7 +35,7 @@ namespace VMF
  ClearObservers();
  }
 
- DataRepositoryPtr CSequenceOrchestrator::getDataRepository()
+ DataRepositoryPtr Orchestrator::getDataRepository()
  {
  std::lock_guard<std::mutex> guard(m_seqMutex);
  if (m_pVatEngine)
@@ -45,7 +45,7 @@ namespace VMF
  return nullptr;
  }
 
- CSequenceOrchestrator::ObserverId CSequenceOrchestrator::AddObserver(VisionResultObserver observer)
+ Orchestrator::ObserverId Orchestrator::AddObserver(VisionResultObserver observer)
  {
  if (!observer)
  return 0;
@@ -58,24 +58,24 @@ namespace VMF
  return id;
  }
 
- bool CSequenceOrchestrator::RemoveObserver(ObserverId id)
+ bool Orchestrator::RemoveObserver(ObserverId id)
  {
  std::lock_guard<std::mutex> lk(m_observerMutex);
  return m_observers.erase(id) >0;
  }
 
- void CSequenceOrchestrator::ClearObservers()
+ void Orchestrator::ClearObservers()
  {
  std::lock_guard<std::mutex> lk(m_observerMutex);
  m_observers.clear();
  }
 
- void CSequenceOrchestrator::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
+ void Orchestrator::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
  {
  OnVisionResult(requestId, results);
  }
 
- void CSequenceOrchestrator::NotifyObservers(const VisionResultPayload& payload)
+ void Orchestrator::NotifyObservers(const VisionResultPayload& payload)
  {
  std::vector<VisionResultObserver> snapshot;
  {
@@ -101,7 +101,7 @@ namespace VMF
  }
  }
 
- VatContextPtr CSequenceOrchestrator::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
+ VatContextPtr Orchestrator::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
  {
  auto ctx = std::make_shared<Context>();
  ctx->SetVisionProcessor(vm);
@@ -109,7 +109,7 @@ namespace VMF
  return ctx;
  }
 
- void CSequenceOrchestrator::OnVisionResult(int requestId, const std::vector<std::string>& results)
+ void Orchestrator::OnVisionResult(int requestId, const std::vector<std::string>& results)
  {
  VisionResultPayload payload;
  payload.requestId = requestId;
@@ -117,7 +117,7 @@ namespace VMF
  NotifyObservers(payload);
  }
 
- bool CSequenceOrchestrator::StartSequenceSafe(SequenceStrategyPtr strategy)
+ bool Orchestrator::StartSequenceSafe(SequenceStrategyPtr strategy)
  {
  if (!strategy)
  {
@@ -192,7 +192,7 @@ namespace VMF
 
  try
  {
- m_pVatEngine = std::make_shared<SequenceExecutionEngine>(builder, ctx, actuator);
+ m_pVatEngine = std::make_shared<RunController>(builder, ctx, actuator);
  }
  catch (const std::exception& ex)
  {
@@ -203,14 +203,14 @@ namespace VMF
  }
  catch (...)
  {
- ctx->SetLastError("Unknown exception creating SequenceExecutionEngine");
+ ctx->SetLastError("Unknown exception creating RunController");
  m_pVatEngine.reset();
  m_pCurrentStrategy.reset();
  return false;
  }
 
  {
- SequenceExecutionWorkerPtr runner = std::make_shared<SequenceExecutionWorker>();
+ AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
  runner->SetResultSink(this);
  m_pVatEngine->SetRunner(runner);
  }
@@ -227,7 +227,7 @@ namespace VMF
  return true;
  }
 
- void CSequenceOrchestrator::StopSequence()
+ void Orchestrator::StopSequence()
  {
  VatEnginePtr engineToStop;
  {
