@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(ProjectDir)DVH_VAT\Mock;$(ProjectDir)DVH_VAT\Load1\Tasks;$(ProjectDir)DVH_VAT\Load1\Strategies;$(ProjectDir)DVH_VAT\Load1\Sequences;$(ProjectDir)DVH_VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(ProjectDir)VMFramework\Mock;$(ProjectDir)VMFramework\Load1\Tasks;$(ProjectDir)VMFramework\Load1\Strategies;$(ProjectDir)VMFramework\Load1\Sequences;$(ProjectDir)VMFramework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -203,81 +203,65 @@
     <ClInclude Include="Actuators\ICylinder.h" />
     <ClInclude Include="Actuators\IDio.h" />
     <ClInclude Include="Actuators\IOPSwitch.h" />
-    <ClInclude Include="DVH_VAT\DefineVAT.h" />
-    <ClInclude Include="DVH_VAT\Load1\Load1Parts.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1BacklashSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1HandPitchCheckSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1LowCamCheckSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1LowCamFOVCheckSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1PCDSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1PlateJigFOVSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1PlateJigSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1TargetJigSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1UpperCamCheckSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1UpperCamFOVSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1BacklashSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1CAM6FOVSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1CAM7FOVSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1HandPitchCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftPlateJigCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftPlateJigFOVCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LeftUpperCamCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowCamCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowCamFOVCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowCamPlateJIGFocusCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1LowPlateJIGCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1PCDSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightJigFOVCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightPlateJigCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightPlateJIGFocusCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Strategies\CLoad1RightUpperCamCheckSequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1CommitTeachingPosTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1FindAlignPosTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformBacklashScanningTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformCalibrationTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformFOVScanningTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformHandPitchScanningTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformPCDScanningTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.h" />
-    <ClInclude Include="DVH_VAT\Load1\VatAdapterLoad1.h" />
-    <ClInclude Include="DVH_VAT\MemorySequenceStrategy.h" />
-    <ClInclude Include="DVH_VAT\mock\CMockDataRepository.h" />
-    <ClInclude Include="DVH_VAT\mock\CMockVisionEventHandler.h" />
-    <ClInclude Include="DVH_VAT\VisionProtocal\VisionMemoryKeys.h" />
-    <ClInclude Include="DVH_VAT\VisionProtocal\VisionMemoryProcessor.h" />
-    <ClInclude Include="DVH_VAT\VisionProtocal\VisionPacketMemory.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VMFramework\DefineVAT.h" />
+    <ClInclude Include="VMFramework\Load1\Load1Parts.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1BacklashSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1HandPitchCheckSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1LowCamCheckSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1LowCamFOVCheckSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1PCDSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1PlateJigFOVSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1PlateJigSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1TargetJigSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1UpperCamCheckSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1UpperCamFOVSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1BacklashSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1CAM6FOVSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1CAM7FOVSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1HandPitchCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJigCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJigFOVCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftUpperCamCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowCamCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowCamFOVCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowCamPlateJIGFocusCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowPlateJIGCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1PCDSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightJigFOVCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightPlateJigCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightPlateJIGFocusCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightUpperCamCheckSequenceStrategy.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1CommitTeachingPosTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1FindAlignPosTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformBacklashScanningTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformCalibrationTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFOVScanningTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformHandPitchScanningTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformPCDScanningTask.h" />
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.h" />
+    <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h" />
+    <ClInclude Include="VMFramework\MemorySequenceStrategy.h" />
+    <ClInclude Include="VMFramework\mock\CMockDataRepository.h" />
+    <ClInclude Include="VMFramework\mock\CMockVisionEventHandler.h" />
+    <ClInclude Include="VMFramework\VisionProtocal\VisionMemoryKeys.h" />
+    <ClInclude Include="VMFramework\VisionProtocal\VisionMemoryProcessor.h" />
+    <ClInclude Include="VMFramework\VisionProtocal\VisionPacketMemory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actuators\CCylinderBase.cpp" />
     <ClCompile Include="Actuators\CMmceIo.cpp" />
     <ClCompile Include="Actuators\COPSwitch.cpp" />
     <ClCompile Include="Actuators\CTimer.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Load1Parts.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1CommitTeachingPosTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1FindAlignPosTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformBacklashScanningTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformCalibrationTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformFOVScanningTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformHandPitchScanningTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformPCDScanningTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.cpp" />
-    <ClCompile Include="DVH_VAT\Load1\VatAdapterLoad1.cpp" />
-    <ClCompile Include="DVH_VAT\mock\CMockDataRepository.cpp" />
-    <ClCompile Include="DVH_VAT\mock\CMockVisionEventHandler.cpp" />
-    <ClCompile Include="DVH_VAT\VisionProtocal\VisionMemoryProcessor.cpp" />
     <ClCompile Include="Equipment2015.cpp" />
     <ClCompile Include="Equipment2015Dlg.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -286,6 +270,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VMFramework\Load1\Load1Parts.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1CommitTeachingPosTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1FindAlignPosTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformBacklashScanningTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformCalibrationTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformFOVScanningTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformHandPitchScanningTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformPCDScanningTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.cpp" />
+    <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp" />
+    <ClCompile Include="VMFramework\mock\CMockDataRepository.cpp" />
+    <ClCompile Include="VMFramework\mock\CMockVisionEventHandler.cpp" />
+    <ClCompile Include="VMFramework\VisionProtocal\VisionMemoryProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Equipment2015.rc" />

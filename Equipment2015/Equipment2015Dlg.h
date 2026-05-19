@@ -4,7 +4,7 @@
 #pragma once
 
 #include "Orchestrator.h"
-#include "DVH_VAT/Load1/VatAdapterLoad1.h"
+#include "VMFramework/Load1/VatAdapterLoad1.h"
 
 
 // CEquipment2015Dlg 대화 상자
