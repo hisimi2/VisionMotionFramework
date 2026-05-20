@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <vector>   
 #include <map>
 #include <string>
@@ -127,7 +127,6 @@ namespace VMF
         // boost::mutex::scoped_lock -> std::lock_guard
         std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
 
-        // C++11 auto 타입 추론 적용
         auto it = m_impl->m_latestData.find(type);
         if (it != m_impl->m_latestData.end())
         {

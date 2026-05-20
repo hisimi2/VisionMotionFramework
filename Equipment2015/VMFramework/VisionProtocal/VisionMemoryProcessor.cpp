@@ -3,7 +3,7 @@
 
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "DVH_VAT/VisionProtocal/VisionMemoryKeys.h"
+#include "VMFramework/VisionProtocal/VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 #include <vector>
@@ -128,7 +128,7 @@ namespace VMF
         CPacketBody_S107F9 body;
 
         auto it = params.find(CAMERA_ID);
-        if (it != params.end()) body.nDataID = std::stoi(it->second); // C++11 std::stoi ?泥?
+        if (it != params.end()) body.nDataID = std::stoi(it->second); 
 
         it = params.find(INSPECTION_TYPE);
         if (it != params.end()) body.nStatus = std::stoi(it->second);

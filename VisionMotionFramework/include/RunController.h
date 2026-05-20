@@ -22,7 +22,7 @@ namespace VMF
         ~RunController();
 
         void SetBuilder(SequenceBuilderPtr builder);
-        void SetRunner(AsyncExecutorPtr runner = nullptr); // C++11: 기본값을 nullptr 지정 방식(또는 타입 생략)으로 권장
+        void SetRunner(AsyncExecutorPtr runner = nullptr); 
 
         bool RunSequence(const std::string& sequenceName);
         void StopSequence();

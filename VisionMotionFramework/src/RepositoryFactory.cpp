@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "RepositoryFactory.h"
 #include "SqliteDataRepository.h"
 // 명시적 상대 경로로 정확한 구현 헤더를 포함
@@ -15,7 +15,6 @@ static std::string trim(const std::string& s)
 {
     if (s.empty()) return s;
     
-    // C++11 이후 권장되는 반복자(iterator) 기반 탐색
     auto start = s.begin();
     while (start != s.end() && std::isspace(static_cast<unsigned char>(*start))) {
         start++;
@@ -43,7 +42,7 @@ std::unique_ptr<IDataRepository> RepositoryFactory::CreateRepository(const std::
         // config format: "dbPath;imageBasePath"
         std::string dbPath;
         std::string imageBase;
-        // C++11: 타입 추론 auto 활용
+        
         auto sep = config.find_first_of(';');
         
         if (sep == std::string::npos) {

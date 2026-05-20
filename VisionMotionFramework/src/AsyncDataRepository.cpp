@@ -70,7 +70,6 @@ struct AsyncDataRepository::Impl {
             {
                 std::unique_lock<std::mutex> lk(m_mutex);
                 
-                // C++11: 람다를 사용해 spurious wakeup 방지 및 가독성 개선
                 m_cv.wait(lk, [this]() { 
                     return m_stopRequested || !m_pointQueue.empty() || !m_resultQueue.empty() || !m_statusQueue.empty(); 
                 });

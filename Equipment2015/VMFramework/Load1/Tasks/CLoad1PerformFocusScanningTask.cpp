@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "CLoad1PerformFocusScanningTask.h"
-#include "DVH_VAT/DefineVAT.h"
+#include "VMFramework/DefineVAT.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_Load1::Task;
 
 CLoad1PerformFocusScanningTask::CLoad1PerformFocusScanningTask()
 	: m_cameraId(0)

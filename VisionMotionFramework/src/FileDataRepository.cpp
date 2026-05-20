@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "FileDataRepository.h"
 #include "FileUtils.h"
 #include "CompatUtils.h" // StorageError 정의
@@ -14,7 +14,7 @@ namespace VMF {
 FileDataRepository::FileDataRepository(const std::string& basePath)
     : basePath_(basePath) {}
 
-FileDataRepository::~FileDataRepository() = default; // C++11 = default 사용
+FileDataRepository::~FileDataRepository() = default; 
 
 StorageError FileDataRepository::SaveParam(const std::string& recipe, const std::string& name, const std::string& value) {
     // LockGuardType 대신 C++11 표준 std::lock_guard 사용
@@ -89,7 +89,7 @@ StorageError FileDataRepository::Shutdown() {
 StorageError FileDataRepository::CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId)
 {
     std::lock_guard<std::mutex> lg(mutex_);
-    std::time_t t = std::time(nullptr); // C++11 NULL -> nullptr
+    std::time_t t = std::time(nullptr); 
     int runId = static_cast<int>(t & 0x7FFFFFFF); // 간단 ID 생성
 
     std::ostringstream ss;

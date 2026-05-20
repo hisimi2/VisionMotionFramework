@@ -6,13 +6,12 @@
 #include "Orchestrator.h"
 #include "VMFramework/Load1/VatAdapterLoad1.h"
 
-
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
 {
  VMF::CVatEngineObserverAdapter m_engine;
- std::shared_ptr<VAT_LOAD1::Load1Parts> m_parts;
- std::shared_ptr<VAT_LOAD1::VatAdapterLoad1> m_adapter;
+ std::shared_ptr<VMF_Load1::Load1Parts> m_parts;
+ std::shared_ptr<VMF_Load1::VatAdapterLoad1> m_adapter;
 
  // Observer subscription id (for safe unsubscribe when dialog is destroyed)
  VMF::CVatEngineObserverAdapter::ObserverId m_engineObserverId;

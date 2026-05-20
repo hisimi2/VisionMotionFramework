@@ -1,9 +1,9 @@
 #pragma once
 
 #include "IActuator.h"
-#include "DVH_VAT/Load1/Load1Parts.h"
+#include "VMFramework/Load1/Load1Parts.h"
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
 	/// <summary>
     /// RobotUnit의 구성 요소들을 IVatActuator 인터페이스로 래핑하는 어댑터 클래스입니다.
@@ -26,4 +26,4 @@ namespace VAT_LOAD1
         int SetLightState(int camIndex, bool on) override;
         int GetLightState(int camIndex, bool& outOn) override;
 	};
-} // namespace VAT_LOAD1
+} // namespace VMF_Load1

@@ -84,8 +84,7 @@ namespace VMF
         Impl()
             : running(false)
             , currentSeq()
-            , // C++11: NULL -> nullptr 교체
-              currentCtx(nullptr)
+            , currentCtx(nullptr)
             , resultSink(nullptr)
         {
         }

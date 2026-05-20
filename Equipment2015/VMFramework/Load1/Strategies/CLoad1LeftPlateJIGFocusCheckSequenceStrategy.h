@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 #include "MemorySequenceStrategy.h"
 
 #include "CLoad1ZFocusSequenceBuilder.h"
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
 	namespace Strategies
 	{

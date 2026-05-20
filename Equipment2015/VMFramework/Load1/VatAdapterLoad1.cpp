@@ -1,11 +1,9 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "VatAdapterLoad1.h"
 #include <Windows.h>
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
-    
-
 	// ---------------- Constructor ----------------
 	VatAdapterLoad1::VatAdapterLoad1(Load1Parts* parts)
 		: m_parts(parts)

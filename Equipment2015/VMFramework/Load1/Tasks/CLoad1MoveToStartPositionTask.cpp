@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "CLoad1MoveToStartPositionTask.h"
-#include "DVH_VAT/DefineVAT.h"
+#include "VMFramework/DefineVAT.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_Load1::Task;
 
 CLoad1MoveToStartPositionTask::CLoad1MoveToStartPositionTask()
 	: m_moveTimeoutMs(7000)

@@ -4,11 +4,11 @@
 #include "CLoad1MoveToStartPositionTask.h"
 #include "CLoad1PerformFocusScanningTask.h"
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
 	namespace Sequence
 	{
-        using namespace VAT_LOAD1::Task;
+        using namespace VMF_Load1::Task;
 		class CLoad1ZFocusSequenceBuilder : public VMF::SequenceBuilderBase
 		{
 		protected:

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include "IOPSwitch.h"
@@ -39,7 +39,6 @@ private:
     std::vector<int> m_inputs;
     std::vector<int> m_outputs;
 
-    // C++11 기능 제거( std::atomic, in-class 초기화, nullptr, std::mutex 등 )
     bool m_status;
     bool m_toggleFlag;
     bool m_blinkStatus;

@@ -7,7 +7,7 @@
 #include "IDataRepository.h"
 #include "Types.h" 
 
-#include <memory> // C++11 std::make_shared 등 대체 사용
+#include <memory> 
 #include <string>
 #include <utility> // std::move
 
@@ -34,7 +34,7 @@ namespace VMF
         {
             return m_pCtx->getRepository();
         }
-        return nullptr; // C++11 nullptr 사용
+        return nullptr; 
     }
 
     void RunController::SetBuilder(SequenceBuilderPtr builder)

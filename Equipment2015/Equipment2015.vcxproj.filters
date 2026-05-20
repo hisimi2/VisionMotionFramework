@@ -19,6 +19,15 @@
     <Filter Include="VMFramework">
       <UniqueIdentifier>{bae83fe6-680d-4913-b671-5a5220b1898f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VMFramework\Load1">
+      <UniqueIdentifier>{a1b76598-7594-4d76-9db9-e50ab4f5bab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMFramework\Load1\Sequence">
+      <UniqueIdentifier>{e829f9d8-fc0f-4419-918f-a76ec11b4b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMFramework\Load1\Mock">
+      <UniqueIdentifier>{102c0990-e520-4319-9e81-a861fce1ab0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -87,9 +96,6 @@
     <ClInclude Include="VMFramework\DefineVAT.h">
       <Filter>VMFramework</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\MemorySequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
     <ClInclude Include="VMFramework\VisionProtocal\VisionMemoryKeys.h">
       <Filter>VMFramework</Filter>
     </ClInclude>
@@ -99,134 +105,32 @@
     <ClInclude Include="VMFramework\VisionProtocal\VisionPacketMemory.h">
       <Filter>VMFramework</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\mock\CMockDataRepository.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\mock\CMockVisionEventHandler.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
     <ClInclude Include="VMFramework\Load1\Load1Parts.h">
       <Filter>VMFramework</Filter>
     </ClInclude>
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h">
       <Filter>VMFramework</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1BacklashSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1HandPitchCheckSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1LowCamCheckSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1LowCamFOVCheckSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1PCDSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1PlateJigFOVSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1PlateJigSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1TargetJigSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1UpperCamCheckSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CLoad1UpperCamFOVSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
+    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClInclude>
     <ClInclude Include="VMFramework\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1BacklashSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1CAM6FOVSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1CAM7FOVSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1HandPitchCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJigCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJigFOVCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftUpperCamCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowCamCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowCamFOVCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowCamPlateJIGFocusCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LowPlateJIGCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1PCDSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightJigFOVCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightPlateJigCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightPlateJIGFocusCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CLoad1RightUpperCamCheckSequenceStrategy.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformPCDScanningTask.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformHandPitchScanningTask.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFOVScanningTask.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformCalibrationTask.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformBacklashScanningTask.h">
-      <Filter>VMFramework</Filter>
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClInclude>
     <ClInclude Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.h">
-      <Filter>VMFramework</Filter>
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1FindAlignPosTask.h">
-      <Filter>VMFramework</Filter>
+    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.h">
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1CommitTeachingPosTask.h">
-      <Filter>VMFramework</Filter>
+    <ClInclude Include="VMFramework\MemorySequenceStrategy.h">
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.h">
-      <Filter>VMFramework</Filter>
+    <ClInclude Include="VMFramework\mock\CMockDataRepository.h">
+      <Filter>VMFramework\Load1\Mock</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFramework\mock\CMockVisionEventHandler.h">
+      <Filter>VMFramework\Load1\Mock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,50 +158,23 @@
     <ClCompile Include="VMFramework\VisionProtocal\VisionMemoryProcessor.cpp">
       <Filter>VMFramework</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\mock\CMockDataRepository.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\mock\CMockVisionEventHandler.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
     <ClCompile Include="VMFramework\Load1\Load1Parts.cpp">
       <Filter>VMFramework</Filter>
     </ClCompile>
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp">
       <Filter>VMFramework</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformPickerFOVScanningTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformPCDScanningTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformHandPitchScanningTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformFOVScanningTask.cpp">
-      <Filter>VMFramework</Filter>
+    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClCompile>
     <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp">
-      <Filter>VMFramework</Filter>
+      <Filter>VMFramework\Load1\Sequence</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformCalibrationTask.cpp">
-      <Filter>VMFramework</Filter>
+    <ClCompile Include="VMFramework\mock\CMockDataRepository.cpp">
+      <Filter>VMFramework\Load1\Mock</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformBacklashScanningTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1FindAlignPosTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1CommitTeachingPosTask.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CLoad1CommitPickerCamDistanceResultsTask.cpp">
-      <Filter>VMFramework</Filter>
+    <ClCompile Include="VMFramework\mock\CMockVisionEventHandler.cpp">
+      <Filter>VMFramework\Load1\Mock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

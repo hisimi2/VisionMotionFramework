@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "Logger.h"
 #include <iostream>
 #include <ctime>
@@ -17,7 +17,7 @@ namespace VMF
     Logger::Logger() 
         : consoleOutput_(true) 
     {
-        // C++11 std::mutex는 자체적으로 초기화되므로 InitializeCriticalSection 불필요
+        
     }
 
     Logger::~Logger()
@@ -67,7 +67,6 @@ namespace VMF
 
     std::string Logger::GetCurrentTime()
     {
-        // C++11의 경우 NULL 대신 nullptr 사용 권장
         std::time_t t = std::time(nullptr);
         char buf[64] = { 0 };
         std::tm tm_storage;

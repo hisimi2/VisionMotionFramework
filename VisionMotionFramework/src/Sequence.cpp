@@ -117,7 +117,6 @@ namespace VMF
             }
 
             if (res != TR_KEEP) {
-                 // C++11 std::to_string 활용
                  LogTask(makeLogPrefix(m_SequenceName) + "Step [" + curTask->GetName() + "] returned: " + std::to_string(static_cast<int>(res)));
             }
 

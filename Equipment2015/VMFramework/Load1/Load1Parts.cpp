@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1Parts.h"
 #include <sstream>
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
     // 구성 크기(필요 시 변경)
     static const int LOADPRECISER_SUB_COUNT = 4;

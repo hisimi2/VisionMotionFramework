@@ -3,10 +3,10 @@
 
 #include "SqliteDataRepository.h"
 
-#include "DVH_VAT/VisionProtocal/VisionMemoryProcessor.h"
+#include "VMFramework/VisionProtocal/VisionMemoryProcessor.h"
 
-#include "DVH_VAT/Mock/CMockDataRepository.h"
-#include "DVH_VAT/Mock/CMockVisionEventHandler.h"
+#include "VMFramework/Mock/CMockDataRepository.h"
+#include "VMFramework/Mock/CMockVisionEventHandler.h"
 
 #include <memory>
 

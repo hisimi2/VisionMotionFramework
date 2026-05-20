@@ -7,20 +7,6 @@
 #include "afxdialogex.h"
 
 #include "VMFramework/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LeftPlateJigFOVCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LeftPlateJigCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LowCamFOVCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LowCamCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1HandPitchCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LeftUpperCamCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1RightPlateJIGFocusCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1RightJigFOVCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1RightPlateJigCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1RightUpperCamCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LowPlateJIGCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1LowCamPlateJIGFocusCheckSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1PCDSequenceStrategy.h"
-#include "VMFramework/Load1/Strategies/CLoad1BacklashSequenceStrategy.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -127,8 +113,8 @@ BOOL CEquipment2015Dlg::OnInitDialog()
                                               });
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_parts = std::make_shared<VAT_LOAD1::Load1Parts>();
-	m_adapter = std::make_shared<VAT_LOAD1::VatAdapterLoad1>(m_parts.get());
+	m_parts = std::make_shared<VMF_Load1::Load1Parts>();
+	m_adapter = std::make_shared<VMF_Load1::VatAdapterLoad1>(m_parts.get());
 
 	return TRUE;	// 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -176,7 +162,7 @@ HCURSOR CEquipment2015Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-using namespace VAT_LOAD1::Strategies;
+using namespace VMF_Load1::Strategies;
 
 void CEquipment2015Dlg::OnBnClickedVisionSequence()
 {

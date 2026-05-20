@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actuators\CAxisController.h"
 #include "Actuators\CUpDownCylinder.h"
 #include "Actuators\CForBackCylinder.h"
@@ -9,7 +9,7 @@
 #include "Actuators\CLamp.h"
 #include <vector>
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
     class Load1Parts
     {

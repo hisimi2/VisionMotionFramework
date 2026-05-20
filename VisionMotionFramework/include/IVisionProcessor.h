@@ -39,7 +39,7 @@ namespace VMF
         }
 
         VisionConnectionConfig(std::string address, int port, int timeoutMs)
-            : type(""), address(std::move(address)), port(port), timeoutMs(timeoutMs) // C++11 std::move ?ъ슜 理쒖쟻??
+            : type(""), address(std::move(address)), port(port), timeoutMs(timeoutMs) 
         {
         }
     };

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <cstring> // std::memset, strncpy_s
 
@@ -9,7 +9,6 @@ namespace VMF
 
     struct CPacketBody_S2F41
     {
-        // C++11멤버 초기화 적용
         int nCmd = 0;
         int nParamCount = 0;
         char szParam[DATA_SIZE][STR_LEN];
@@ -21,7 +20,6 @@ namespace VMF
 
         void SetParam(int index, const char* pValue)
         {
-            // C++11: NULL -> nullptr, 형변환 없는 타입 비교 권장
             if (index >= 0 && static_cast<size_t>(index) < DATA_SIZE && pValue != nullptr)
             {
                 strncpy_s(szParam[index], STR_LEN, pValue, STR_LEN - 1);

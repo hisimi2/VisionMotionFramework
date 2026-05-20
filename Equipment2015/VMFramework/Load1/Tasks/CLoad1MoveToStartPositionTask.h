@@ -2,7 +2,7 @@
 
 #include "NonBlockingTaskBase.h"
 
-namespace VAT_LOAD1
+namespace VMF_Load1
 {
 	namespace Task
 	{
@@ -45,4 +45,4 @@ namespace VAT_LOAD1
             long m_moveTimeoutMs;
 		};
     } // namespace Task
-} // namespace VAT_LOAD1
+} // namespace VMF_Load1
