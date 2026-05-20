@@ -105,12 +105,6 @@
     <ClInclude Include="VMFramework\VisionProtocal\VisionPacketMemory.h">
       <Filter>VMFramework</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Load1Parts.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h">
-      <Filter>VMFramework</Filter>
-    </ClInclude>
     <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
       <Filter>VMFramework\Load1\Sequence</Filter>
     </ClInclude>
@@ -131,6 +125,12 @@
     </ClInclude>
     <ClInclude Include="VMFramework\mock\CMockVisionEventHandler.h">
       <Filter>VMFramework\Load1\Mock</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\Load1Parts.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h">
+      <Filter>VMFramework\Load1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,12 +158,6 @@
     <ClCompile Include="VMFramework\VisionProtocal\VisionMemoryProcessor.cpp">
       <Filter>VMFramework</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Load1Parts.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp">
-      <Filter>VMFramework</Filter>
-    </ClCompile>
     <ClCompile Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
       <Filter>VMFramework\Load1\Sequence</Filter>
     </ClCompile>
@@ -175,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="VMFramework\mock\CMockVisionEventHandler.cpp">
       <Filter>VMFramework\Load1\Mock</Filter>
+    </ClCompile>
+    <ClCompile Include="Actuators\Load1Parts.cpp">
+      <Filter>Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp">
+      <Filter>VMFramework\Load1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
