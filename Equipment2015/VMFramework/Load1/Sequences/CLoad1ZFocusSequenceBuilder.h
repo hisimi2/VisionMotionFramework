@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "SequenceBuilderBase.h"
 
 #include "CLoad1MoveToStartPositionTask.h"
@@ -15,8 +15,8 @@ namespace VMF_Load1
             VMF::SequencePtr BuildSequence(std::string sequenceName) override
 			{
                 VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
-				seq->AddTask(VMF::TaskStepPtr(new CLoad1MoveToStartPositionTask()));
-				seq->AddTask(VMF::TaskStepPtr(new CLoad1PerformFocusScanningTask()));
+				seq->AddTask(VMF::TaskPtr(new CLoad1MoveToStartPositionTask()));
+				seq->AddTask(VMF::TaskPtr(new CLoad1PerformFocusScanningTask()));
 				return VMF::SequencePtr(seq.release());
 			}
 		};

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "ITask.h"
 #include <string>
@@ -20,6 +20,6 @@ namespace VMF
         virtual void Abort() = 0;
         virtual std::string GetSequenceName() const = 0;
         virtual std::string GetTaskName() const = 0;
-        virtual void AddTask(TaskStepPtr step) = 0;
+        virtual void AddTask(TaskPtr step) = 0;
     };
 } // namespace VMF

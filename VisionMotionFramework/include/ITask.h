@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include <string>
@@ -41,5 +41,5 @@ namespace VMF
         virtual std::string GetName() const = 0;
     };
 
-    using TaskStepPtr = std::shared_ptr<ITask>;
+    using TaskPtr = std::shared_ptr<ITask>;
 } // namespace VMF

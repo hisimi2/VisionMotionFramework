@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
 
@@ -14,8 +14,7 @@ namespace VMF_Load1
 		{
             enum Substep
             {
-                Idle = 0,
-                MoveSafeZ,
+                MoveSafeZ = 0,
                 MoveOrigin,
                 MoveTargetPositionXY,
                 MoveTargetPositionZ,

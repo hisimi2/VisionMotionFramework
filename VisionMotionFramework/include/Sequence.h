@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "ISequence.h" 
 #include "ITask.h"
@@ -28,7 +28,7 @@ namespace VMF
         std::string GetSequenceName() const override;
         std::string GetTaskName() const override;
 
-        void AddTask(TaskStepPtr step) override;
+        void AddTask(TaskPtr step) override;
 
         // 폴링 간격(밀리초). 필요하면 런타임에 조정 가능.
         void SetPollIntervalMs(int ms) { m_pollIntervalMs = ms; }
@@ -37,7 +37,7 @@ namespace VMF
         Sequence& operator=(const Sequence&) = delete;
 
     private:
-        std::vector<TaskStepPtr> m_tasks;
+        std::vector<TaskPtr> m_tasks;
         std::mutex m_mutex;
         std::condition_variable m_cv;
         std::atomic<bool> m_abortRequested; 

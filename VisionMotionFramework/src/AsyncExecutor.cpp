@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "AsyncExecutor.h"
 #include "Context.h"
 
@@ -18,9 +18,9 @@ namespace VMF
 {
     struct SequenceThreadFunc
     {
-        ISequence*   m_seq;
-        Context*    m_ctx;
-        IActuator*   m_act;
+        ISequence*      m_seq;
+        Context*        m_ctx;
+        IActuator*      m_act;
 
         std::atomic<bool>* m_runningFlag;
         AsyncExecutor* m_runner;

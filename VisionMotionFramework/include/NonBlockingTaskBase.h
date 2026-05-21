@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
 #include "ITask.h"
@@ -21,17 +21,17 @@ namespace VMF
     class NonBlockingTaskBase : public ITask
     {
     public:
-        enum CommonStep
-        {
-            CS_UNINITIALIZED    = -1,
-            CS_ERROR            = -2
-        };
+
+        static const int CS_INITIALIZING    = -1; // 초기화 상태 (공통)
+        static const int CS_ERROR           = -2; // 에러 상태 (공통)
+        static const int CS_IDLE            = -3; // 대기 상태 (공통)
+        
 
         /// <summary>
         /// 기본 생성자. 내부 상태와 플래그를 초기화합니다.
         /// </summary>
         NonBlockingTaskBase()
-            : m_state_(CS_UNINITIALIZED)
+            : m_state_(CS_INITIALIZING)
             , m_initialized_(false)
             , m_hasDeadline_(false)
         {

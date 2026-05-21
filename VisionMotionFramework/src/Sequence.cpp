@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 
 #include "Sequence.h"
 #include "ITask.h"
@@ -26,7 +26,7 @@ namespace VMF
         LogTask(makeLogPrefix(m_SequenceName) + "destructed");
     }
 
-    void Sequence::AddTask(TaskStepPtr task)
+    void Sequence::AddTask(TaskPtr task)
     {
         std::lock_guard<std::mutex> lock(m_mutex); // boost::mutex::scoped_lock -> std::lock_guard
     
@@ -83,7 +83,7 @@ namespace VMF
                  return false;
             }
 
-            TaskStepPtr curTask;
+            TaskPtr curTask;
             {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 if (idx >= m_tasks.size())
