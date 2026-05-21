@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -6,7 +6,7 @@
 #include "Equipment2015Dlg.h"
 #include "afxdialogex.h"
 
-#include "VMFramework/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
+#include "VMFramework/Load1/Strategies/CPickPlaceSequenceStrategy.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -166,5 +166,8 @@ using namespace VMF_Load1::Strategies;
 
 void CEquipment2015Dlg::OnBnClickedVisionSequence()
 {
-	m_engine.StartSequence<CLoad1LeftPlateJIGFocusCheckSequenceStrategy>(m_adapter.get());
+	if (!m_adapter)
+		return;
+
+	m_engine.StartSequence<CPickPlaceSequenceStrategy>(m_adapter.get());
 }
