@@ -23,7 +23,7 @@ public:
     OneAxis                             LOAD_TABLE1;
     OneAxis                             LOAD_TABLE2;
 
-    // Lamps / LEDs
+    // Lamps
     CLamp                               VisionLED_Left;
     CLamp                               VisionLED_Right;
     CLamp                               VisionLED_Lower;

@@ -28,6 +28,9 @@
     <Filter Include="VMFramework\Load1\Mock">
       <UniqueIdentifier>{102c0990-e520-4319-9e81-a861fce1ab0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AutoRunning">
+      <UniqueIdentifier>{40d4269c-8b6f-4f8c-8c3b-457f5f950ee3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -132,20 +135,20 @@
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h">
       <Filter>VMFramework\Load1</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTask.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1Ex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.h">
+      <Filter>AutoRunning</Filter>
     </ClInclude>
     <ClInclude Include="VMFramework\Load1\Strategies\CPickPlaceSequenceStrategy.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>AutoRunning</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTask.h">
+      <Filter>AutoRunning</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.h">
+      <Filter>AutoRunning</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,17 +194,17 @@
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp">
       <Filter>VMFramework\Load1</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTask.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1Ex.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.cpp">
+      <Filter>AutoRunning</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTask.cpp">
+      <Filter>AutoRunning</Filter>
+    </ClCompile>
     <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>AutoRunning</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
