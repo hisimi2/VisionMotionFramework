@@ -2,9 +2,8 @@
 
 #include <cstring> // std::memset, strncpy_s
 
-namespace DVH_VAT
+namespace VMF
 {
-    // C++11/14: #define 매크로 대신 타입 안정성이 보장되는 constexpr 사용 권장
     constexpr size_t STR_LEN   = 64;
     constexpr size_t DATA_SIZE = 10;
 

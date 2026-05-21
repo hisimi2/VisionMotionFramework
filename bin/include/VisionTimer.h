@@ -2,7 +2,7 @@
 
 #include <chrono> // boost::chrono 대신 C++ 표준 라이브러리 사용
 
-namespace VisionCom
+namespace VisionComm
 {
 
     class VisionTimer 
@@ -22,4 +22,5 @@ namespace VisionCom
         std::chrono::steady_clock::time_point m_start;
     };
 
-} // namespace VisionCom
+} // namespace VisionCommm
+

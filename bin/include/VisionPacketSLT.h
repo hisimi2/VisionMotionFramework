@@ -2,9 +2,8 @@
 
 #include <cstring> // std::memset, strncpy_s
 
-namespace DVH_VAT
+namespace VMF
 {
-    // C++11/14: 전처리기 매크로 대신 타입과 스코프가 보장되는 constexpr 상수 사용
     constexpr size_t STR_LEN   = 64;
     constexpr size_t DATA_SIZE = 10;
 

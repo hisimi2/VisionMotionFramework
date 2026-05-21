@@ -6,15 +6,13 @@
 #include <fstream>
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
-namespace VisionCom
+namespace VisionComm
 {
     class VisionLogger : public ILogger 
     {
     public:
         VisionLogger();
         explicit VisionLogger(const std::string& logFilePath);
-        
-        // C++11/14: 다형성 클래스이므로 명시적 override 적용 권장
         ~VisionLogger() override;
 
         // ILogger 구현
@@ -45,4 +43,5 @@ namespace VisionCom
         bool m_useFile;
     };
 
-} // namespace VisionCom
+} // namespace VisionCommm
+

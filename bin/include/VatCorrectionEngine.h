@@ -1,17 +1,17 @@
-﻿#pragma once
-#include "DVH_VAT_API.h"
-#include "VAT_Context.h"
+#pragma once
+#include "VMF_API.h"
+#include "Context.h"
 #include <string>
 
-namespace DVH_VAT 
+namespace VMF 
 {
     class IVisionEventHandler; 
     class IDataRepository;
-    class IVatActuator;
+    class IActuator;
     class SequenceBuilderBase;
     class AsyncSequenceRunner;
 
-    class DVH_VAT_API VatCorrectionEngine
+    class VMF_API VatCorrectionEngine
     {
     public:
         // 생성자 선언을 소멸자보다 위에 배치하여 가독성을 높입니다.
@@ -24,7 +24,6 @@ namespace DVH_VAT
         void SetBuilder(SequenceBuilderPtr builder);
         void SetRunner(AsyncSequenceRunnerPtr runner = nullptr); // C++11: 기본값을 nullptr 지정 방식(또는 타입 생략)으로 권장
 
-        // C++11/14: 불필요한 복사를 막기 위해 std::string은 const reference로 받는 것이 좋습니다.
         bool RunSequence(const std::string& sequenceName);
         void StopSequence();
 
@@ -37,5 +36,5 @@ namespace DVH_VAT
         AsyncSequenceRunnerPtr  m_pRunner;
         VatContextPtr           m_pCtx;
     };
-} // namespace DVH_VAT
+} // namespace VMF
 

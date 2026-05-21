@@ -1,19 +1,19 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
-#include <cstdint> // <stdint.h> 대신 권장되는 헤더 사용
-#include <functional> // boost::function 대신 C++ 표준 라이브러리 사용
+#include <cstdint> 
+#include <functional> 
 #include <memory>
 #include "ITransport.h" 
-#include "VisionComAPI.h" 
+#include "VisionCommAPI.h" 
 
-namespace VisionCom
+namespace VisionComm
 {
-    // C++11/14: typedef 대신 가독성이 좋은 using 키워드 사용 권장
     using ByteArray = std::vector<uint8_t>;
-    using RecvCallback = std::function<void(const ByteArray&)>;
+    // Move-only callback: rvalue-reference parameter enforces move semantics
+    using RecvCallback = std::function<void(ByteArray&&)>;
 
-    class VISION_COM_API VisionTcpClient : public ITransport
+    class VISION_COMM_API VisionTcpClient : public ITransport
     {
     public:
         VisionTcpClient();
@@ -29,12 +29,10 @@ namespace VisionCom
         int Send(const ByteArray& data) override;
         void SetReceiveCallback(const RecvCallback& cb) override;
 
-        void SetFramer(std::shared_ptr<VisionCom::IFramer> framer) override;
+        void SetFramer(std::shared_ptr<VisionComm::IFramer> framer) override;
         void SetRecvBufferSize(size_t sz);
         void SetSocketTimeout(int sendMs, int recvMs);
 
-        // C++11/14: 복사 생성자 및 할당 연산자를 private에 선언하는 대신
-        // delete 키워드를 사용해 더 명확하게 복사 불가를 선언
         VisionTcpClient(const VisionTcpClient&) = delete;
         VisionTcpClient& operator=(const VisionTcpClient&) = delete;
 
@@ -46,4 +44,5 @@ namespace VisionCom
         struct Impl;
         std::unique_ptr<Impl> m_pImpl;
     };
-} // namespace VisionCom
+} // namespace VisionCommm
+
