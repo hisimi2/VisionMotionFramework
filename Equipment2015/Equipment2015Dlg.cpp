@@ -12,43 +12,6 @@
 #define new DEBUG_NEW
 #endif
 
-// PostMessage 기반 결과 수신은 제거됨. (CVatEngineUiAdapter는 Observer로 결과를 통지)
-
-// 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
-
-class CAboutDlg : public CDialogEx
-{
-public:
-	CAboutDlg();
-
-// 대화 상자 데이터입니다.
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_ABOUTBOX };
-#endif
-
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
-
-// 구현입니다.
-protected:
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
-{
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
-
-
-// CEquipment2015Dlg 대화 상자
-
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
  , m_engineObserverId(0)
@@ -123,8 +86,7 @@ void CEquipment2015Dlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID &0xFFF0) == IDM_ABOUTBOX)
 	{
-		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
+
 	}
 	else
 	{
