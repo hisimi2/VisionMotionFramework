@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -49,7 +49,6 @@ namespace VMF
                 if (text.empty())
                     return false;
 
-                // C++11: NULL -> nullptr
                 char* endPtr = nullptr;
                 const long parsed = std::strtol(text.c_str(), &endPtr, 10);
 
@@ -69,7 +68,6 @@ namespace VMF
                 if (text.empty())
                     return false;
 
-                // C++11: NULL -> nullptr
                 char* endPtr = nullptr;
                 const double parsed = std::strtod(text.c_str(), &endPtr);
 
@@ -147,7 +145,6 @@ namespace VMF
         int locateId;
         int visionRequestId;
 
-        // C++11: 멤버 이니셜라이저 리스트로 바로 초기화 가능 (여기서는 생성자 유지)
         VisionPosition() : locateId(0), visionRequestId(0) {}
         
         // std::move 를 이용하여 파라미터 복사 오버헤드 축소

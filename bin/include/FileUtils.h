@@ -22,7 +22,6 @@ namespace VMF
 
         static std::string MakeTimeTag()
         {
-            // C++11: NULL -> nullptr
             std::time_t t = std::time(nullptr);
             struct tm tmBuf;
 
@@ -41,7 +40,6 @@ namespace VMF
             if (base.empty()) return name;
             if (name.empty()) return base;
         
-            // C++11부터 std::string::back() 지원됨 (C++14 컴파일 가능하므로 안전하게 사용)
             char lastChar = base.back();
             if (lastChar == sep || lastChar == '/')
             {

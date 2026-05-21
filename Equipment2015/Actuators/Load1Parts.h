@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Actuators\CAxisController.h"
 #include "Actuators\CUpDownCylinder.h"
 #include "Actuators\CForBackCylinder.h"
@@ -12,6 +12,7 @@
 class Load1Parts
 {
 public:
+
     Load1Parts();
     ~Load1Parts();
 

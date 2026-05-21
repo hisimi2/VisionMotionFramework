@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VMF_API.h"
 #include "ISequence.h" 
 #include "ITask.h"
@@ -33,18 +33,13 @@ namespace VMF
         // 폴링 간격(밀리초). 필요하면 런타임에 조정 가능.
         void SetPollIntervalMs(int ms) { m_pollIntervalMs = ms; }
 
-        // C++11: 복사 생성자 및 대입 연산자 호출 방지를 명시적 = delete 처리하여 public 선언 권장
         Sequence(const Sequence&) = delete;
         Sequence& operator=(const Sequence&) = delete;
 
     private:
         std::vector<TaskStepPtr> m_tasks;
-        
-        // C++11: 표준 동기화 객체 적용
         std::mutex m_mutex;
         std::condition_variable m_cv;
-
-        // C++11: volatile 대신 안전한 원자적 변수 사용
         std::atomic<bool> m_abortRequested; 
         
         int m_pollIntervalMs;

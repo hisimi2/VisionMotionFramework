@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "RunController.h"
 #include "ISequenceStrategy.h"

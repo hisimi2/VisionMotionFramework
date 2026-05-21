@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // Windows 헤더 최소화 및 min/max 매크로 방지
 #if defined(_WIN32)
@@ -31,7 +31,7 @@ namespace VMF
 {
     inline void DBG(const char* fn) {
         std::ostringstream ss;
-        // C++11: Windows 전용 ::GetCurrentThreadId() 대신 표준 라이브러리 사용
+        
         ss << fn << " tid=" << std::this_thread::get_id() << "\n";
 #if defined(_WIN32)
         ::OutputDebugStringA(ss.str().c_str());

@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "IActuator.h"
-#include "VMFramework/Load1/Load1Parts.h"
+#include "Actuators/Load1Parts.h"
 
 namespace VMF_Load1
 {

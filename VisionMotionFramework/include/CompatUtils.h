@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // Windows 헤더 최소화 및 min/max 매크로 방지
 #if defined(_WIN32)

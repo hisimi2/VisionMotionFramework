@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Context.h"
 #include "RunController.h"
 #include "SequenceBuilderBase.h"
