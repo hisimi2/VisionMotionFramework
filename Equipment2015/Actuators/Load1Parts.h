@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actuators\CAxisController.h"
 #include "Actuators\CUpDownCylinder.h"
 #include "Actuators\CForBackCylinder.h"
@@ -39,5 +39,8 @@ public:
     std::vector<CUpDownCylinder>        Setplate;
     std::vector<CClampReleaseCylinder>  TransferClamp;
     std::vector<CUpDownCylinder>        LoadPreciserSub;
+
+    // Pick & Place 확장용 Vacuum/Blow
+    std::vector<CVaccumBlowCylinder>   PickVacuum;
 };
 

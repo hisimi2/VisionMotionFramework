@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1Parts.h"
 #include <sstream>
 
@@ -43,6 +43,13 @@ Load1Parts::Load1Parts()
     for (int i = 0; i < TRANSFERCLAMP_COUNT; ++i)
     {
         TransferClamp.emplace_back(std::string("TransferClamp_") + IntToString(i));
+    }
+
+    // Vacuum 초기화
+    PickVacuum.clear();
+    for (int i = 0; i < TRANSFERCLAMP_COUNT; ++i)
+    {
+        PickVacuum.emplace_back(std::string("PickVacuum_") + IntToString(i));
     }
 }
 
