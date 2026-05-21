@@ -144,9 +144,6 @@
     <ClInclude Include="VMFramework\Load1\Strategies\CPickPlaceSequenceStrategy.h">
       <Filter>AutoRunning</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTask.h">
-      <Filter>AutoRunning</Filter>
-    </ClInclude>
     <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.h">
       <Filter>AutoRunning</Filter>
     </ClInclude>
@@ -198,9 +195,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.cpp">
-      <Filter>AutoRunning</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTask.cpp">
       <Filter>AutoRunning</Filter>
     </ClCompile>
     <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.cpp">

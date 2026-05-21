@@ -216,7 +216,6 @@
     <ClInclude Include="VMFramework\Load1\Strategies\CPickPlaceSequenceStrategy.h" />
     <ClInclude Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
     <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
-    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTask.h" />
     <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.h" />
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h" />
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1Ex.h" />
@@ -244,7 +243,6 @@
     <ClCompile Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.cpp" />
     <ClCompile Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
     <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
-    <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTask.cpp" />
     <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.cpp" />
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp" />
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1Ex.cpp" />
