@@ -6,7 +6,7 @@
 #include "Equipment2015Dlg.h"
 #include "afxdialogex.h"
 
-#include "VMFramework/Load1/Strategies/CPickPlaceSequenceStrategy.h"
+#include "AutoThread/CPickPlaceSequenceStrategy.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

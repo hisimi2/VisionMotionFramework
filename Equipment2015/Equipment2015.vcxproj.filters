@@ -28,7 +28,7 @@
     <Filter Include="VMFramework\Load1\Mock">
       <UniqueIdentifier>{102c0990-e520-4319-9e81-a861fce1ab0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AutoRunning">
+    <Filter Include="AutoThread">
       <UniqueIdentifier>{40d4269c-8b6f-4f8c-8c3b-457f5f950ee3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -138,14 +138,14 @@
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1Ex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.h">
-      <Filter>AutoRunning</Filter>
+    <ClInclude Include="AutoThread\CPickPlaceSequenceBuilder.h">
+      <Filter>AutoThread</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Strategies\CPickPlaceSequenceStrategy.h">
-      <Filter>AutoRunning</Filter>
+    <ClInclude Include="AutoThread\CPickPlaceSequenceStrategy.h">
+      <Filter>AutoThread</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.h">
-      <Filter>AutoRunning</Filter>
+    <ClInclude Include="AutoThread\CPickPlaceTaskEx.h">
+      <Filter>AutoThread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,11 +194,11 @@
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1Ex.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.cpp">
-      <Filter>AutoRunning</Filter>
+    <ClCompile Include="AutoThread\CPickPlaceSequenceBuilder.cpp">
+      <Filter>AutoThread</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.cpp">
-      <Filter>AutoRunning</Filter>
+    <ClCompile Include="AutoThread\CPickPlaceTaskEx.cpp">
+      <Filter>AutoThread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

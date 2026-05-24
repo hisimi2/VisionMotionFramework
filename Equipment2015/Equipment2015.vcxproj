@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4E39A4EB-5B6F-445C-9D9A-8AB567B45086}</ProjectGuid>
     <RootNamespace>Equipment2015</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -204,6 +204,9 @@
     <ClInclude Include="Actuators\IDio.h" />
     <ClInclude Include="Actuators\IOPSwitch.h" />
     <ClInclude Include="Actuators\Load1Parts.h" />
+    <ClInclude Include="AutoThread\CPickPlaceSequenceBuilder.h" />
+    <ClInclude Include="AutoThread\CPickPlaceSequenceStrategy.h" />
+    <ClInclude Include="AutoThread\CPickPlaceTaskEx.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="Resource.h" />
@@ -211,12 +214,9 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VMFramework\DefineVAT.h" />
     <ClInclude Include="VMFramework\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
-    <ClInclude Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.h" />
     <ClInclude Include="VMFramework\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h" />
-    <ClInclude Include="VMFramework\Load1\Strategies\CPickPlaceSequenceStrategy.h" />
     <ClInclude Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
     <ClInclude Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
-    <ClInclude Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.h" />
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h" />
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1Ex.h" />
     <ClInclude Include="VMFramework\MemorySequenceStrategy.h" />
@@ -232,6 +232,8 @@
     <ClCompile Include="Actuators\COPSwitch.cpp" />
     <ClCompile Include="Actuators\CTimer.cpp" />
     <ClCompile Include="Actuators\Load1Parts.cpp" />
+    <ClCompile Include="AutoThread\CPickPlaceSequenceBuilder.cpp" />
+    <ClCompile Include="AutoThread\CPickPlaceTaskEx.cpp" />
     <ClCompile Include="Equipment2015.cpp" />
     <ClCompile Include="Equipment2015Dlg.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -240,10 +242,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\Sequences\CPickPlaceSequenceBuilder.cpp" />
     <ClCompile Include="VMFramework\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
     <ClCompile Include="VMFramework\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
-    <ClCompile Include="VMFramework\Load1\Tasks\CPickPlaceTaskEx.cpp" />
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp" />
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1Ex.cpp" />
     <ClCompile Include="VMFramework\mock\CMockDataRepository.cpp" />

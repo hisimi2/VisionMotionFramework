@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CPickPlaceSequenceBuilder.h"
 #include "Sequence.h"
-#include "VMFramework/Load1/Tasks/CPickPlaceTaskEx.h"
+#include "AutoThread/CPickPlaceTaskEx.h"
 
 namespace VMF_Load1
 {

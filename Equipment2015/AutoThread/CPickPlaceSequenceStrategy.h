@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VMFramework/MemorySequenceStrategy.h"
-#include "VMFramework/Load1/Sequences/CPickPlaceSequenceBuilder.h"
+#include "AutoThread/CPickPlaceSequenceBuilder.h"
 
 namespace VMF_Load1
 {
