@@ -1,4 +1,4 @@
-// Equipment2015Dlg.cpp : 구현 파일
+﻿// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -6,7 +6,7 @@
 #include "Equipment2015Dlg.h"
 #include "afxdialogex.h"
 
-#include "AutoThread/CPickPlaceSequenceStrategy.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,7 +14,6 @@
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
- , m_engineObserverId(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -70,15 +69,6 @@ BOOL CEquipment2015Dlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-     // VMF 결과 옵저버 등록 (this를 캡처하여 멤버 핸들러로 전달)
-     m_engineObserverId = m_engine.AddObserver([this](const VMF::VisionResultPayload& payload) {
-                                                this->HandleVmfResult(payload);
-                                              });
-
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_parts = std::make_shared<Load1Parts>();
-	m_adapter = std::make_shared<VMF_Load1::VatAdapterLoad1>(m_parts.get());
-
 	return TRUE;	// 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -124,12 +114,9 @@ HCURSOR CEquipment2015Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-using namespace AutoThread::Strategies;
-
 void CEquipment2015Dlg::OnBnClickedVisionSequence()
 {
-	if (!m_adapter)
-		return;
 
-	m_engine.StartSequence<CPickPlaceSequenceStrategy>(m_adapter.get());
+
+	
 }

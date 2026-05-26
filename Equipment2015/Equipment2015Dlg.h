@@ -9,12 +9,7 @@
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
 {
-    VMF::CVatEngineObserverAdapter m_engine;
-    std::shared_ptr<Load1Parts> m_parts;
-    std::shared_ptr<VMF_Load1::VatAdapterLoad1> m_adapter;
-
-    // Observer subscription id (for safe unsubscribe when dialog is destroyed)
-    VMF::CVatEngineObserverAdapter::ObserverId m_engineObserverId;
+    
 
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.

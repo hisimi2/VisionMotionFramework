@@ -135,16 +135,10 @@
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h">
       <Filter>VMFramework\Load1</Filter>
     </ClInclude>
-    <ClInclude Include="AutoThread\CPickPlaceSequenceBuilder.h">
+    <ClInclude Include="AutoThread\Load1PickPlaceManager.h">
       <Filter>AutoThread</Filter>
     </ClInclude>
-    <ClInclude Include="AutoThread\CPickPlaceSequenceStrategy.h">
-      <Filter>AutoThread</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoThread\CPickPlaceTaskEx.h">
-      <Filter>AutoThread</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoThread\AdapterLoad1.h">
+    <ClInclude Include="AutoThread\Load1PickPlaceExample.h">
       <Filter>AutoThread</Filter>
     </ClInclude>
   </ItemGroup>
@@ -191,13 +185,13 @@
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp">
       <Filter>VMFramework\Load1</Filter>
     </ClCompile>
-    <ClCompile Include="AutoThread\CPickPlaceSequenceBuilder.cpp">
+    <ClCompile Include="AutoThread\Load1PickPlaceSequence.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
-    <ClCompile Include="AutoThread\CPickPlaceTaskEx.cpp">
+    <ClCompile Include="AutoThread\Load1PickPlaceManager.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
-    <ClCompile Include="AutoThread\AdapterLoad1.cpp">
+    <ClCompile Include="AutoThread\Load1PickPlaceExample.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
   </ItemGroup>
@@ -210,6 +204,10 @@
     <None Include="res\Equipment2015.rc2">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="AutoThread\Load1PickPlaceSequence.h">
+      <Filter>AutoThread</Filter>
+    </None>
+    <None Include="Auto" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Equipment2015.ico">

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VMF_API.h"
 #include "ISequence.h" 
 #include "ITask.h"

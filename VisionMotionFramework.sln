@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36616.10
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Equipment2015", "Equipment2015\Equipment2015.vcxproj", "{4E39A4EB-5B6F-445C-9D9A-8AB567B45086}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisionComm", "VisionComm\VisionComm.vcxproj", "{3DB1BFD5-4592-42E4-BD33-1B2CD89F574E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisionMotionFramework", "VisionMotionFramework\VisionMotionFramework.vcxproj", "{06EDCD26-A1B9-455A-9657-B815178366DD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EquipmentCore", "EquipmentCore\EquipmentCore.vcxproj", "{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{06EDCD26-A1B9-455A-9657-B815178366DD}.Release|Win32.Build.0 = Release|Win32
 		{06EDCD26-A1B9-455A-9657-B815178366DD}.Release|x64.ActiveCfg = Release|Win32
 		{06EDCD26-A1B9-455A-9657-B815178366DD}.Release|x64.Build.0 = Release|Win32
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Debug|Win32.Build.0 = Debug|Win32
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Debug|x64.ActiveCfg = Debug|x64
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Debug|x64.Build.0 = Debug|x64
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Release|Win32.ActiveCfg = Release|Win32
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Release|Win32.Build.0 = Release|Win32
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Release|x64.ActiveCfg = Release|x64
+		{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
