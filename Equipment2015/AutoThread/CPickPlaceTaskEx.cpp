@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "CPickPlaceTaskEx.h"
-#include "VMFramework/Load1/VatAdapterLoad1Ex.h"
+#include "VatAdapterLoad1Ex.h"
 
-namespace VMF_Load1
+namespace AutoThread
 {
     namespace Task
     {

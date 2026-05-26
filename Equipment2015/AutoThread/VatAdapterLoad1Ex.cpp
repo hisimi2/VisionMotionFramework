@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "VatAdapterLoad1Ex.h"
 
-namespace VMF_Load1
+namespace AutoThread
 {
     VatAdapterLoad1Ex::VatAdapterLoad1Ex(Load1Parts* parts)
-        : VatAdapterLoad1(parts)
+        : m_parts(parts)
     {
     }
 

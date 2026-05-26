@@ -2,7 +2,7 @@
 
 #include "NonBlockingTaskBase.h"
 
-namespace VMF_Load1
+namespace AutoThread
 {
     namespace Task
     {

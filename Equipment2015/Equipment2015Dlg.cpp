@@ -124,7 +124,7 @@ HCURSOR CEquipment2015Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-using namespace VMF_Load1::Strategies;
+using namespace AutoThread::Strategies;
 
 void CEquipment2015Dlg::OnBnClickedVisionSequence()
 {

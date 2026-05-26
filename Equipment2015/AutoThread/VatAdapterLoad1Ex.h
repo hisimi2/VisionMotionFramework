@@ -1,11 +1,13 @@
 #pragma once
 
-#include "VatAdapterLoad1.h"
+#include "IActuator.h"
+#include "Actuators/Load1Parts.h"
 
-namespace VMF_Load1
+namespace AutoThread
 {
-    class VatAdapterLoad1Ex : public VatAdapterLoad1
+    class VatAdapterLoad1Ex : public VMF::IActuator
     {
+        Load1Parts* m_parts;
     public:
         explicit VatAdapterLoad1Ex(Load1Parts* parts);
         ~VatAdapterLoad1Ex() override;

@@ -2,7 +2,7 @@
 
 #include "SequenceBuilderBase.h"
 
-namespace VMF_Load1
+namespace AutoThread
 {
     namespace Sequence
     {

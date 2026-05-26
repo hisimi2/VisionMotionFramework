@@ -135,9 +135,6 @@
     <ClInclude Include="VMFramework\Load1\VatAdapterLoad1.h">
       <Filter>VMFramework\Load1</Filter>
     </ClInclude>
-    <ClInclude Include="VMFramework\Load1\VatAdapterLoad1Ex.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="AutoThread\CPickPlaceSequenceBuilder.h">
       <Filter>AutoThread</Filter>
     </ClInclude>
@@ -145,6 +142,9 @@
       <Filter>AutoThread</Filter>
     </ClInclude>
     <ClInclude Include="AutoThread\CPickPlaceTaskEx.h">
+      <Filter>AutoThread</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoThread\VatAdapterLoad1Ex.h">
       <Filter>AutoThread</Filter>
     </ClInclude>
   </ItemGroup>
@@ -191,13 +191,13 @@
     <ClCompile Include="VMFramework\Load1\VatAdapterLoad1.cpp">
       <Filter>VMFramework\Load1</Filter>
     </ClCompile>
-    <ClCompile Include="VMFramework\Load1\VatAdapterLoad1Ex.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="AutoThread\CPickPlaceSequenceBuilder.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
     <ClCompile Include="AutoThread\CPickPlaceTaskEx.cpp">
+      <Filter>AutoThread</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoThread\VatAdapterLoad1Ex.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
   </ItemGroup>
