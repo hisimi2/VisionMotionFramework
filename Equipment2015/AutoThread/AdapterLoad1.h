@@ -5,12 +5,12 @@
 
 namespace AutoThread
 {
-    class VatAdapterLoad1Ex : public VMF::IActuator
+    class AdapterLoad1 : public VMF::IActuator
     {
         Load1Parts* m_parts;
     public:
-        explicit VatAdapterLoad1Ex(Load1Parts* parts);
-        ~VatAdapterLoad1Ex() override;
+        explicit AdapterLoad1(Load1Parts* parts);
+        ~AdapterLoad1() override;
 
         VMF::ActError RailOpen();
         VMF::ActError RailClose();

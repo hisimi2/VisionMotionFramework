@@ -207,7 +207,7 @@
     <ClInclude Include="AutoThread\CPickPlaceSequenceBuilder.h" />
     <ClInclude Include="AutoThread\CPickPlaceSequenceStrategy.h" />
     <ClInclude Include="AutoThread\CPickPlaceTaskEx.h" />
-    <ClInclude Include="AutoThread\VatAdapterLoad1Ex.h" />
+    <ClInclude Include="AutoThread\AdapterLoad1.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="Resource.h" />
@@ -234,7 +234,7 @@
     <ClCompile Include="Actuators\Load1Parts.cpp" />
     <ClCompile Include="AutoThread\CPickPlaceSequenceBuilder.cpp" />
     <ClCompile Include="AutoThread\CPickPlaceTaskEx.cpp" />
-    <ClCompile Include="AutoThread\VatAdapterLoad1Ex.cpp" />
+    <ClCompile Include="AutoThread\AdapterLoad1.cpp" />
     <ClCompile Include="Equipment2015.cpp" />
     <ClCompile Include="Equipment2015Dlg.cpp" />
     <ClCompile Include="stdafx.cpp">

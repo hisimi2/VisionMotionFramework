@@ -144,7 +144,7 @@
     <ClInclude Include="AutoThread\CPickPlaceTaskEx.h">
       <Filter>AutoThread</Filter>
     </ClInclude>
-    <ClInclude Include="AutoThread\VatAdapterLoad1Ex.h">
+    <ClInclude Include="AutoThread\AdapterLoad1.h">
       <Filter>AutoThread</Filter>
     </ClInclude>
   </ItemGroup>
@@ -197,7 +197,7 @@
     <ClCompile Include="AutoThread\CPickPlaceTaskEx.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
-    <ClCompile Include="AutoThread\VatAdapterLoad1Ex.cpp">
+    <ClCompile Include="AutoThread\AdapterLoad1.cpp">
       <Filter>AutoThread</Filter>
     </ClCompile>
   </ItemGroup>

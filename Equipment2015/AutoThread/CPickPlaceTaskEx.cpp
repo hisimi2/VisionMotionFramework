@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CPickPlaceTaskEx.h"
-#include "VatAdapterLoad1Ex.h"
+#include "AdapterLoad1.h"
 
 namespace AutoThread
 {
@@ -76,9 +76,9 @@ namespace AutoThread
 
         VMF::TaskResult CPickPlaceTaskEx::HandleRailOpen(VMF::Context& ctx, VMF::IActuator* actuator)
         {
-            VatAdapterLoad1Ex* ex = dynamic_cast<VatAdapterLoad1Ex*>(actuator);
+            AdapterLoad1* ex = dynamic_cast<AdapterLoad1*>(actuator);
             if (!ex)
-                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not VatAdapterLoad1Ex.");
+                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not AdapterLoad1.");
 
             if (ex->IsRailOpen() != VMF::ActOk)
             {
@@ -104,9 +104,9 @@ namespace AutoThread
 
         VMF::TaskResult CPickPlaceTaskEx::HandlePreciserDown(VMF::Context& ctx, VMF::IActuator* actuator)
         {
-            VatAdapterLoad1Ex* ex = dynamic_cast<VatAdapterLoad1Ex*>(actuator);
+            AdapterLoad1* ex = dynamic_cast<AdapterLoad1*>(actuator);
             if (!ex)
-                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not VatAdapterLoad1Ex.");
+                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not AdapterLoad1.");
 
             if (ex->PreciserDown() != VMF::ActOk)
                 return SetErrorAndReturn(ctx, "PickPlaceEx: PreciserDown failed.");
@@ -129,9 +129,9 @@ namespace AutoThread
 
         VMF::TaskResult CPickPlaceTaskEx::HandleClampPick(VMF::Context& ctx, VMF::IActuator* actuator)
         {
-            VatAdapterLoad1Ex* ex = dynamic_cast<VatAdapterLoad1Ex*>(actuator);
+            AdapterLoad1* ex = dynamic_cast<AdapterLoad1*>(actuator);
             if (!ex)
-                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not VatAdapterLoad1Ex.");
+                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not AdapterLoad1.");
 
             if (ex->Clamp(m_clampIndex) != VMF::ActOk)
                 return SetErrorAndReturn(ctx, "PickPlaceEx: ClampPick failed.");
@@ -142,9 +142,9 @@ namespace AutoThread
 
         VMF::TaskResult CPickPlaceTaskEx::HandleVacuumOn(VMF::Context& ctx, VMF::IActuator* actuator)
         {
-            VatAdapterLoad1Ex* ex = dynamic_cast<VatAdapterLoad1Ex*>(actuator);
+            AdapterLoad1* ex = dynamic_cast<AdapterLoad1*>(actuator);
             if (!ex)
-                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not VatAdapterLoad1Ex.");
+                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not AdapterLoad1.");
 
             if (ex->Vacuum(m_vacuumIndex) != VMF::ActOk)
                 return SetErrorAndReturn(ctx, "PickPlaceEx: VacuumOn failed.");
@@ -191,9 +191,9 @@ namespace AutoThread
 
         VMF::TaskResult CPickPlaceTaskEx::HandleReleasePlace(VMF::Context& ctx, VMF::IActuator* actuator)
         {
-            VatAdapterLoad1Ex* ex = dynamic_cast<VatAdapterLoad1Ex*>(actuator);
+            AdapterLoad1* ex = dynamic_cast<AdapterLoad1*>(actuator);
             if (!ex)
-                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not VatAdapterLoad1Ex.");
+                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not AdapterLoad1.");
 
             if (ex->Release(m_clampIndex) != VMF::ActOk)
                 return SetErrorAndReturn(ctx, "PickPlaceEx: ReleasePlace failed.");
@@ -204,9 +204,9 @@ namespace AutoThread
 
         VMF::TaskResult CPickPlaceTaskEx::HandleBlowOn(VMF::Context& ctx, VMF::IActuator* actuator)
         {
-            VatAdapterLoad1Ex* ex = dynamic_cast<VatAdapterLoad1Ex*>(actuator);
+            AdapterLoad1* ex = dynamic_cast<AdapterLoad1*>(actuator);
             if (!ex)
-                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not VatAdapterLoad1Ex.");
+                return SetErrorAndReturn(ctx, "PickPlaceEx: actuator is not AdapterLoad1.");
 
             if (ex->Blow(m_vacuumIndex) != VMF::ActOk)
                 return SetErrorAndReturn(ctx, "PickPlaceEx: BlowOn failed.");

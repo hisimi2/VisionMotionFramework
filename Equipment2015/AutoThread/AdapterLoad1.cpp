@@ -1,18 +1,18 @@
 #include "StdAfx.h"
-#include "VatAdapterLoad1Ex.h"
+#include "AdapterLoad1.h"
 
 namespace AutoThread
 {
-    VatAdapterLoad1Ex::VatAdapterLoad1Ex(Load1Parts* parts)
+    AdapterLoad1::AdapterLoad1(Load1Parts* parts)
         : m_parts(parts)
     {
     }
 
-    VatAdapterLoad1Ex::~VatAdapterLoad1Ex()
+    AdapterLoad1::~AdapterLoad1()
     {
     }
 
-    Load1Parts* VatAdapterLoad1Ex::GetParts()
+    Load1Parts* AdapterLoad1::GetParts()
     {
         // base class의 m_parts가 private이면 protected로 바꾸거나
         // base에 getter를 추가하는 것이 더 좋음.
@@ -21,119 +21,119 @@ namespace AutoThread
         return nullptr;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::RailOpen()
+    VMF::ActError AdapterLoad1::RailOpen()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadRail.open(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::RailClose()
+    VMF::ActError AdapterLoad1::RailClose()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadRail.close(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsRailOpen()
+    VMF::ActError AdapterLoad1::IsRailOpen()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadRail.isOpen() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsRailClose()
+    VMF::ActError AdapterLoad1::IsRailClose()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadRail.isClose() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::BufferForward()
+    VMF::ActError AdapterLoad1::BufferForward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadBuffer.forward(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::BufferBackward()
+    VMF::ActError AdapterLoad1::BufferBackward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadBuffer.backward(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsBufferForward()
+    VMF::ActError AdapterLoad1::IsBufferForward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadBuffer.isForward() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsBufferBackward()
+    VMF::ActError AdapterLoad1::IsBufferBackward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadBuffer.isBackward() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::PusherForward()
+    VMF::ActError AdapterLoad1::PusherForward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPusher.forward(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::PusherBackward()
+    VMF::ActError AdapterLoad1::PusherBackward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPusher.backward(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsPusherForward()
+    VMF::ActError AdapterLoad1::IsPusherForward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPusher.isForward() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsPusherBackward()
+    VMF::ActError AdapterLoad1::IsPusherBackward()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPusher.isBackward() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::PreciserUp()
+    VMF::ActError AdapterLoad1::PreciserUp()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPreciser.up(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::PreciserDown()
+    VMF::ActError AdapterLoad1::PreciserDown()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPreciser.down(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsPreciserUp()
+    VMF::ActError AdapterLoad1::IsPreciserUp()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPreciser.isUp() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsPreciserDown()
+    VMF::ActError AdapterLoad1::IsPreciserDown()
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
         return parts->LoadPreciser.isDown() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::Clamp(int index)
+    VMF::ActError AdapterLoad1::Clamp(int index)
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
@@ -141,7 +141,7 @@ namespace AutoThread
         return parts->TransferClamp[index].clamp(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::Release(int index)
+    VMF::ActError AdapterLoad1::Release(int index)
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
@@ -149,7 +149,7 @@ namespace AutoThread
         return parts->TransferClamp[index].release(true) ? VMF::ActOk : VMF::ActFail;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsClamp(int index)
+    VMF::ActError AdapterLoad1::IsClamp(int index)
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
@@ -157,7 +157,7 @@ namespace AutoThread
         return parts->TransferClamp[index].isClamp() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsRelease(int index)
+    VMF::ActError AdapterLoad1::IsRelease(int index)
     {
         Load1Parts* parts = GetParts();
         if (!parts) return VMF::ActNoParts;
@@ -165,26 +165,26 @@ namespace AutoThread
         return parts->TransferClamp[index].isRelease() ? VMF::ActOk : VMF::ActWait;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::Vacuum(int index)
+    VMF::ActError AdapterLoad1::Vacuum(int index)
     {
         // Load1Parts에 vacuum 계열 멤버가 없으므로 실제 적용 시 멤버 추가 필요
         (void)index;
         return VMF::ActNotReady;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::Blow(int index)
+    VMF::ActError AdapterLoad1::Blow(int index)
     {
         (void)index;
         return VMF::ActNotReady;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsVacuum(int index)
+    VMF::ActError AdapterLoad1::IsVacuum(int index)
     {
         (void)index;
         return VMF::ActNotReady;
     }
 
-    VMF::ActError VatAdapterLoad1Ex::IsBlow(int index)
+    VMF::ActError AdapterLoad1::IsBlow(int index)
     {
         (void)index;
         return VMF::ActNotReady;
