@@ -5,7 +5,7 @@
 
 #include "EC_API.h"
 
-namespace EquipmentCore
+namespace EC
 {
     /// <summary>
     /// 시퀀스 실행을 위한 콜백 인터페이스

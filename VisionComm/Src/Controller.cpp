@@ -17,7 +17,7 @@
 #include "IFramer.h"
 #include "FixedLengthFramer.h"
 
-namespace VisionComm
+namespace VC
 {
 	struct Controller::Impl
 	{

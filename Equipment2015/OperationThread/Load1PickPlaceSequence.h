@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EquipmentCore.h"
 #include "Actuators/Load1Parts.h"
@@ -26,7 +26,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class Load1PickPlaceSequence : public EquipmentCore::ISequenceExecutable
+    class Load1PickPlaceSequence : public EC::ISequenceExecutable
     {
     public:
         /// <summary>

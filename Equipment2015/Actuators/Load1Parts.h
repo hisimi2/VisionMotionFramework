@@ -17,30 +17,27 @@ public:
     ~Load1Parts();
 
     // 주요 축
-    OneAxis                             LOAD1_X;
-    OneAxis                             LOAD1_Y;
-    OneAxis                             LOAD1_Z;
-    OneAxis                             LOAD_TABLE1;
-    OneAxis                             LOAD_TABLE2;
-
-    // Lamps
-    CLamp                               VisionLED_Left;
-    CLamp                               VisionLED_Right;
-    CLamp                               VisionLED_Lower;
+    OneAxis                             AxisX;
+    OneAxis                             AxisY;
+    OneAxis                             AxisZ;
+    OneAxis                             AxisTable1;
+    OneAxis                             AxisTable2;
+   
 
     // 실린더
-    CForBackCylinder                    LoadBuffer;
-    COpenCloseCylinder                  LoadRail;
-    CForBackCylinder                    LoadPusher;
-    CUpDownCylinder                     LoadPreciser;
-    CNarrowWideCylinder                 LoadHandYPitch;
+    CForBackCylinder                    CylBuffer;
+    CNarrowWideCylinder                 CylYPitch;
 
     // Setplate / Transfer clamp
-    std::vector<CUpDownCylinder>        Setplate;
-    std::vector<CClampReleaseCylinder>  TransferClamp;
-    std::vector<CUpDownCylinder>        LoadPreciserSub;
-
+    std::vector<CUpDownCylinder>        CylSetplate;
+    std::vector<CClampReleaseCylinder>  CylTransfer;
+    
     // Pick & Place 확장용 Vacuum/Blow
     std::vector<CVaccumBlowCylinder>   PickVacuum;
+
+    // Lamps
+    CLamp                               LampLeft;
+    CLamp                               LampRight;
+    CLamp                               LampLower;
 };
 

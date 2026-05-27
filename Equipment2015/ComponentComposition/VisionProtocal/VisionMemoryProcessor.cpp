@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "VisionMemoryProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
@@ -12,7 +12,7 @@ namespace VMF
 {
     VisionMemoryProcessor::VisionMemoryProcessor()
     {
-        VisionComm::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
+        VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
         disp.RegisterHandler(VisionMemoryProtocol::Measure,
             [this](int s, int f, std::vector<uint8_t>&& body, int serverIndex)
@@ -71,12 +71,12 @@ namespace VMF
         const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
         bodyBytes.assign(p, p + sizeof(body));
 
-        VisionComm::SECSPacket secsPkt;
+        VC::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
         secsPkt.SetProtocol(VisionMemoryProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
-        return (m_ctrl.SendPacketAsync(secsPkt) == VisionComm::VisionOK);
+        return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
     }
 
     bool VisionMemoryProcessor::RequestInspReadyAsync(const StringMap& params)
@@ -112,12 +112,12 @@ namespace VMF
         const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
         bodyBytes.assign(p, p + sizeof(body));
 
-        VisionComm::SECSPacket secsPkt;
+        VC::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nCmd);
         secsPkt.SetProtocol(VisionMemoryProtocol::ControlRequest);
         secsPkt.SetBody(bodyBytes);
 
-        return (m_ctrl.SendPacketAsync(secsPkt) == VisionComm::VisionOK);
+        return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
     }
 
     bool VisionMemoryProcessor::RequestMeasureAsync(const StringMap& params)
@@ -145,12 +145,12 @@ namespace VMF
         const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
         bodyBytes.assign(p, p + sizeof(body));
 
-        VisionComm::SECSPacket secsPkt;
+        VC::SECSPacket secsPkt;
         secsPkt.SetCorrelationId(body.nDataID);
         secsPkt.SetProtocol(VisionMemoryProtocol::Measure);
         secsPkt.SetBody(bodyBytes);
 
-        return (m_ctrl.SendPacketAsync(secsPkt) == VisionComm::VisionOK);
+        return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
     }
 
     bool VisionMemoryProcessor::RequestDeviceCheckAsync(const StringMap& params)

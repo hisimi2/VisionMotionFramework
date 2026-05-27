@@ -30,7 +30,7 @@ namespace VMF_Load1
     {
         if (!m_parts) return VMF::ActFail;
 
-        m_parts->LOAD1_Z.Move(targetZ);
+        m_parts->AxisZ.Move(targetZ);
         return VMF::ActOk;
     }
 
@@ -39,36 +39,36 @@ namespace VMF_Load1
         if (!m_parts) return VMF::ActFail;
 
         // X,Y축이 움직이기 위한 Z축 위치 확인
-        //if(m_parts->LOAD1_Z.GetCurrentPosition() > 0) return ActuatorFAIL;
+        //if(m_parts->AxisZ.GetCurrentPosition() > 0) return ActuatorFAIL;
 
         // X,Y 이동
-        m_parts->LOAD1_X.Move(pos[0]);
-        m_parts->LOAD1_Y.Move(pos[1]);
+        m_parts->AxisX.Move(pos[0]);
+        m_parts->AxisY.Move(pos[1]);
 
-        // Pitch 변경
-        if (action == VMF::Narrow)
+      // Pitch 변경
+     if (action == VMF::Narrow)
         {
-            m_parts->LoadHandYPitch.narrow(true);
+       m_parts->CylYPitch.narrow(true);
         }
         else
         {
-            m_parts->LoadHandYPitch.wide(true);
+   m_parts->CylYPitch.wide(true);
         }
 
         if (pos.size() > 4)
         {
             // Loader Buffer, Table 이동
-            m_parts->LOAD_TABLE1.Move(pos[3]);
-            m_parts->LOAD_TABLE2.Move(pos[4]);
-        }
+         m_parts->AxisTable1.Move(pos[3]);
+            m_parts->AxisTable2.Move(pos[4]);
+    }
         else
         {
-            // Loader Buffer, Table 치우기
-            m_parts->LOAD_TABLE1.Move(100);
-            m_parts->LOAD_TABLE2.Move(100);
+       // Loader Buffer, Table 치우기
+     m_parts->AxisTable1.Move(100);
+ m_parts->AxisTable2.Move(100);
         }
 
-        m_parts->LoadBuffer.backward(true);
+        m_parts->CylBuffer.backward(true);
 
 
         return VMF::ActOk;
@@ -76,7 +76,7 @@ namespace VMF_Load1
 
     VMF::ActError VatAdapterLoad1::isMoveZ(double targetZ)
     {
-        double currentposZ = m_parts->LOAD1_Z.GetEncoder();
+ double currentposZ = m_parts->AxisZ.GetEncoder();
         double diff = abs(currentposZ - targetZ);
 
         if (diff > 1)
@@ -84,54 +84,54 @@ namespace VMF_Load1
             return VMF::ActFail;
         }
 
-        return VMF::ActOk;
+    return VMF::ActOk;
     }
 
     VMF::ActError VatAdapterLoad1::isMove(std::vector<double> pos, VMF::PitchStatus action)
     {
-        double currentposX = m_parts->LOAD1_X.GetEncoder();
-        double currentposY = m_parts->LOAD1_Y.GetEncoder();
+      double currentposX = m_parts->AxisX.GetEncoder();
+        double currentposY = m_parts->AxisY.GetEncoder();
 
         double diffX = abs(currentposX - pos[0]);
-        double diffy = abs(currentposY - pos[1]);
+   double diffy = abs(currentposY - pos[1]);
 
         if (diffX > 1 || diffy > 1)
         {
-            return VMF::ActFail;
+  return VMF::ActFail;
         }
 
-        if (action == VMF::Narrow && !m_parts->LoadHandYPitch.isNarrow())
+        if (action == VMF::Narrow && !m_parts->CylYPitch.isNarrow())
+  {
+          return VMF::ActFail;
+        }
+        else if (action == VMF::Wide && !m_parts->CylYPitch.isWide())
         {
             return VMF::ActFail;
         }
-        else if (action == VMF::Wide && !m_parts->LoadHandYPitch.isWide())
-        {
-            return VMF::ActFail;
-        }
 
 
-        double currentTablepos1 = m_parts->LOAD_TABLE1.GetEncoder();
-        double currentTablepos2 = m_parts->LOAD_TABLE2.GetEncoder();
+        double currentTablepos1 = m_parts->AxisTable1.GetEncoder();
+        double currentTablepos2 = m_parts->AxisTable2.GetEncoder();
 
-        if (pos.size() > 4)
+     if (pos.size() > 4)
         {
             double diffTable1 = abs(currentTablepos1 - pos[3]);
             double diffTable2 = abs(currentTablepos2 - pos[4]);
 
-            if (diffTable1 > 1 || diffTable2 > 1)
-            {
-                return VMF::ActFail;
-            }
+    if (diffTable1 > 1 || diffTable2 > 1)
+   {
+         return VMF::ActFail;
+         }
         }
-        else
+ else
         {
-            if (currentTablepos1 < 0 || currentTablepos2 < 0)
-            {
-                return VMF::ActFail;
+         if (currentTablepos1 < 0 || currentTablepos2 < 0)
+      {
+     return VMF::ActFail;
             }
         }
 
-        if (!m_parts->LoadBuffer.isBackward())
+        if (!m_parts->CylBuffer.isBackward())
         {
             return  VMF::ActFail;
         }
@@ -142,9 +142,9 @@ namespace VMF_Load1
 	std::vector<double> VatAdapterLoad1::getPosition()
     {
 		std::vector<double> vposition;
-		vposition.push_back(m_parts->LOAD1_X.GetEncoder());
-		vposition.push_back(m_parts->LOAD1_Y.GetEncoder());
-		vposition.push_back(m_parts->LOAD1_Z.GetEncoder());
+		vposition.push_back(m_parts->AxisX.GetEncoder());
+		vposition.push_back(m_parts->AxisY.GetEncoder());
+		vposition.push_back(m_parts->AxisZ.GetEncoder());
 
         return vposition;
     }
@@ -153,10 +153,10 @@ namespace VMF_Load1
 	{
 		std::vector<double> vpulse;
 
-		vpulse.push_back(m_parts->LOAD1_X.GetEncoder());
-		vpulse.push_back(m_parts->LOAD1_Y.GetEncoder());
-		vpulse.push_back(m_parts->LOAD_TABLE1.GetEncoder());
-		vpulse.push_back(m_parts->LOAD_TABLE2.GetEncoder());
+		vpulse.push_back(m_parts->AxisX.GetEncoder());
+		vpulse.push_back(m_parts->AxisY.GetEncoder());
+		vpulse.push_back(m_parts->AxisTable1.GetEncoder());
+		vpulse.push_back(m_parts->AxisTable2.GetEncoder());
 
 		return vpulse;
 	}
@@ -169,15 +169,15 @@ namespace VMF_Load1
         switch (camIndex)
         {
         case 0:
-            m_parts->VisionLED_Left.SetStatus(on);
-            break;
-        case 1:
-            m_parts->VisionLED_Right.SetStatus(on);
+    m_parts->LampLeft.SetStatus(on);
+       break;
+  case 1:
+      m_parts->LampRight.SetStatus(on);
             break;
         case 2:
-            m_parts->VisionLED_Lower.SetStatus(on);
-            break;
-        }
+            m_parts->LampLower.SetStatus(on);
+     break;
+     }
 
 		return 1;
 	}
@@ -187,15 +187,15 @@ namespace VMF_Load1
 		if (!m_parts) return 0;
 
         switch (camIndex)
-        {
+ {
         case 0:
-            outOn = m_parts->VisionLED_Left.GetStatus();
+  outOn = m_parts->LampLeft.GetStatus();
             break;
-        case 1:
-            outOn = m_parts->VisionLED_Right.GetStatus();
+ case 1:
+   outOn = m_parts->LampRight.GetStatus();
             break;
         case 2:
-            outOn = m_parts->VisionLED_Lower.GetStatus();
+  outOn = m_parts->LampLower.GetStatus();
             break;
         default:
             return 0;

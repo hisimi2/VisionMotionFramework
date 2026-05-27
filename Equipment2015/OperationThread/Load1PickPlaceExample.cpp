@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1PickPlaceExample.h"
 #include "Load1PickPlaceManager.h"
 #include "Actuators/Load1Parts.h"

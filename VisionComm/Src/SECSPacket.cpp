@@ -3,7 +3,7 @@
 #include <cstring>
 #include <cstdint>
 
-namespace VisionComm
+namespace VC
 {
     SECSPacket::SECSPacket()
     {
@@ -116,5 +116,5 @@ namespace VisionComm
         return false;
     }
 
-} // namespace VisionCommm
+} // namespace VCm
 

@@ -7,7 +7,7 @@
 
 
 
-namespace EquipmentCore
+namespace EC
 {
     /// <summary>
     /// 상태머신과 함께 시퀀스를 스레드에서 실행하는 실행기

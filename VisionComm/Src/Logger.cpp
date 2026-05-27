@@ -5,7 +5,7 @@
 #include <ctime>
 #include <sstream>
 
-namespace VisionComm
+namespace VC
 {
 
     static std::string CurrentTimeString()
@@ -157,5 +157,5 @@ namespace VisionComm
         }
     }
 
-} // namespace VisionCommm
+} // namespace VCm
 

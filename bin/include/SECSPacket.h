@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "IVisionPacket.h"
 #include "VisionCommAPI.h"
 #include "VisionProtocol.h"
 #include <vector>
 
-namespace VisionComm
+namespace VC
 {
     struct SECSPacketHeader 
     {
@@ -50,5 +50,5 @@ namespace VisionComm
         ByteArray m_body;
     };
 
-} // namespace VisionCommm
+} // namespace VCm
 

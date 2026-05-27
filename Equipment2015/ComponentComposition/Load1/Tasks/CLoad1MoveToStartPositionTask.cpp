@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "CLoad1MoveToStartPositionTask.h"
 #include "ComponentComposition/DefineVAT.h"
 

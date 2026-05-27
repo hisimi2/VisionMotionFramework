@@ -6,7 +6,7 @@
 #include <fstream>
 #include <mutex> // boost::mutex 대신 C++ 표준 라이브러리 사용
 
-namespace VisionComm
+namespace VC
 {
     class Logger : public ILogger 
     {
@@ -43,5 +43,5 @@ namespace VisionComm
         bool m_useFile;
     };
 
-} // namespace VisionCommm
+} // namespace VCm
 

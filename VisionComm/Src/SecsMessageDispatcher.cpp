@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace VisionComm
+namespace VC
 {
     struct SecsMessageDispatcher::Impl
     {
@@ -116,5 +116,5 @@ namespace VisionComm
         OnReceive(header.nS, header.nF, std::move(body), 0);
     }
 
-} // namespace VisionCommm
+} // namespace VCm
 

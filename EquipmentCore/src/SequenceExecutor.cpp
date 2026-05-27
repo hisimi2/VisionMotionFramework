@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "SequenceExecutor.h"
 
-namespace EquipmentCore
+namespace EC
 {
     SequenceExecutor::SequenceExecutor(SequenceStateMachinePtr stateMachine)
         : m_stateMachine(stateMachine)

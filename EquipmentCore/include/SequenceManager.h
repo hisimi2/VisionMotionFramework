@@ -5,7 +5,7 @@
 #include "ISequenceExecutable.h"
 #include <memory>
 
-namespace EquipmentCore
+namespace EC
 {
     /// <summary>
     /// 시퀀스 실행을 관리하는 고수준 매니저

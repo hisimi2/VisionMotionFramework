@@ -1,10 +1,10 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1PickPlaceManager.h"
 
 namespace OperationThread
 {
     Load1PickPlaceManager::Load1PickPlaceManager()
-        : m_manager(std::make_shared<EquipmentCore::SequenceManager>())
+        : m_manager(std::make_shared<EC::SequenceManager>())
     {
     }
 
@@ -53,7 +53,7 @@ namespace OperationThread
         m_manager->Terminate();
     }
 
-    EquipmentCore::SequenceState Load1PickPlaceManager::GetState() const
+    EC::SequenceState Load1PickPlaceManager::GetState() const
     {
         return m_manager->GetState();
     }

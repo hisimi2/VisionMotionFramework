@@ -4,7 +4,7 @@
 #include <memory>  // std::shared_ptr, std::unique_ptr 사용을 위한 추가
 #include <cstdint> // uint8_t 사용을 위한 추가
 
-namespace VisionComm
+namespace VC
 {
     using ByteVector = std::vector<uint8_t>;
 
@@ -24,5 +24,5 @@ namespace VisionComm
 
     using IFramerPtr = std::shared_ptr<IFramer>;
 
-} // namespace VisionCommm
+} // namespace VCm
 

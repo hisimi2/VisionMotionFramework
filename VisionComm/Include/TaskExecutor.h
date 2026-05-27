@@ -5,7 +5,7 @@
 
 #include "IScheduler.h"
 
-namespace VisionComm
+namespace VC
 {
     using WorkTask = std::function<void()>;
 

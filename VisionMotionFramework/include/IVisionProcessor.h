@@ -49,7 +49,7 @@ namespace VMF
     public:
         using DataMap = StringMap;
         virtual ~IAsyncVisionProcessor() = default;
-        virtual VisionComm::Status Initialize(const VisionConnectionConfig& config) = 0;
+        virtual VC::Status Initialize(const VisionConnectionConfig& config) = 0;
         virtual void Disconnect() = 0;
         virtual bool IsConnected() const = 0;
         virtual bool RequestSetCokAsync(const StringMap& params)        = 0;

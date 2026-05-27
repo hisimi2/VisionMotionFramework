@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "SequenceManager.h"
 
-namespace EquipmentCore
+namespace EC
 {
     SequenceManager::SequenceManager()
         : m_stateMachine(std::make_shared<SequenceStateMachine>())

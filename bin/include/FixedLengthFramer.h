@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "IFramer.h"
 #include <vector>
 
-namespace VisionComm
+namespace VC
 {
 	class FixedLengthFramer : public IFramer
 	{

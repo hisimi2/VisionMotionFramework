@@ -7,7 +7,7 @@
 #include "ITransport.h"
 #include "VisionCommAPI.h" 
 
-namespace VisionComm
+namespace VC
 {
     using ByteArray = std::vector<uint8_t>;
     using RecvCallback = std::function<void(ByteArray&&)>;
@@ -43,5 +43,5 @@ namespace VisionComm
         struct Impl;
         std::unique_ptr<Impl> m_pImpl;
     };
-} // namespace VisionCommm
+} // namespace VCm
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1PickPlaceSequence.h"
 #include <iostream>
 #include <sstream>
@@ -180,9 +180,9 @@ namespace OperationThread
     {
         LogStep("HandleRailOpen");
 
-        if (!m_parts->LoadRail.isOpen())
+        if (!m_parts->CylBuffer.isBackward())
         {
-            m_parts->LoadRail.open(false);
+            m_parts->CylBuffer.backward(false);
         }
 
         return true;
@@ -192,8 +192,8 @@ namespace OperationThread
     {
         LogStep("HandleMovePickPositionXY");
 
-        m_parts->LOAD1_X.Move(m_pickX);
-        m_parts->LOAD1_Y.Move(m_pickY);
+        m_parts->AxisX.Move(m_pickX);
+        m_parts->AxisY.Move(m_pickY);
 
         m_stepStartTime = std::chrono::steady_clock::now();
         return false; // 타임아웃 대기
@@ -203,7 +203,9 @@ namespace OperationThread
     {
         LogStep("HandlePreciserDown");
 
-        m_parts->LoadPreciser.down(false);
+        // 모든 Setplate 실린더를 down
+        for (auto& cyl : m_parts->CylSetplate)
+            cyl.down(false);
 
         return true;
     }
@@ -212,7 +214,7 @@ namespace OperationThread
     {
         LogStep("HandleMovePickPositionZ");
 
-        m_parts->LOAD1_Z.Move(m_pickZ);
+        m_parts->AxisZ.Move(m_pickZ);
 
         m_stepStartTime = std::chrono::steady_clock::now();
         return false; // 타임아웃 대기
@@ -222,9 +224,9 @@ namespace OperationThread
     {
         LogStep("HandleClampPick");
 
-        if (m_clampIndex >= 0 && m_clampIndex < static_cast<int>(m_parts->TransferClamp.size()))
+        if (m_clampIndex >= 0 && m_clampIndex < static_cast<int>(m_parts->CylTransfer.size()))
         {
-            m_parts->TransferClamp[m_clampIndex].clamp(false);
+            m_parts->CylTransfer[m_clampIndex].clamp(false);
         }
 
         return true;
@@ -246,7 +248,7 @@ namespace OperationThread
     {
         LogStep("HandleMoveSafeZAfterPick");
 
-        m_parts->LOAD1_Z.Move(m_safeZ);
+        m_parts->AxisZ.Move(m_safeZ);
 
         m_stepStartTime = std::chrono::steady_clock::now();
         return false; // 타임아웃 대기
@@ -256,8 +258,8 @@ namespace OperationThread
     {
         LogStep("HandleMovePlacePositionXY");
 
-        m_parts->LOAD1_X.Move(m_placeX);
-        m_parts->LOAD1_Y.Move(m_placeY);
+        m_parts->AxisX.Move(m_placeX);
+        m_parts->AxisY.Move(m_placeY);
 
         m_stepStartTime = std::chrono::steady_clock::now();
         return false; // 타임아웃 대기
@@ -267,7 +269,7 @@ namespace OperationThread
     {
         LogStep("HandleMovePlacePositionZ");
 
-        m_parts->LOAD1_Z.Move(m_placeZ);
+        m_parts->AxisZ.Move(m_placeZ);
 
         m_stepStartTime = std::chrono::steady_clock::now();
         return false; // 타임아웃 대기
@@ -277,9 +279,9 @@ namespace OperationThread
     {
         LogStep("HandleReleasePlace");
 
-        if (m_clampIndex >= 0 && m_clampIndex < static_cast<int>(m_parts->TransferClamp.size()))
+        if (m_clampIndex >= 0 && m_clampIndex < static_cast<int>(m_parts->CylTransfer.size()))
         {
-            m_parts->TransferClamp[m_clampIndex].release(false);
+            m_parts->CylTransfer[m_clampIndex].release(false);
         }
 
         return true;
@@ -301,7 +303,7 @@ namespace OperationThread
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
-        m_parts->LOAD1_Z.Move(m_safeZ);
+        m_parts->AxisZ.Move(m_safeZ);
 
         m_stepStartTime = std::chrono::steady_clock::now();
         return false; // 타임아웃 대기

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IVisionPacket.h"
 #include "SECSPacket.h"
@@ -10,7 +10,7 @@
 #include <memory>
 #include <functional>
 
-namespace VisionComm
+namespace VC
 {
     class IScheduler;
 
@@ -39,5 +39,5 @@ namespace VisionComm
         std::unique_ptr<Impl> m_pImpl;
     };
 
-} // namespace VisionCommm
+} // namespace VCm
 

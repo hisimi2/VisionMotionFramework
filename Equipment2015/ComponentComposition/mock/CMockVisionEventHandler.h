@@ -16,7 +16,7 @@ namespace VMF
         virtual ~CMockVisionEventHandler();
 
         // IAsyncVisionProcessor
-        virtual VisionComm::Status Initialize(const VisionConnectionConfig& config);
+        virtual VC::Status Initialize(const VisionConnectionConfig& config);
         virtual void Disconnect();
         virtual bool IsConnected() const;
 

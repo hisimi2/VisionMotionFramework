@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VisionCommAPI.h"
 #include "IVisionPacket.h" 
@@ -13,7 +13,7 @@
 #include <string>
 #include <memory>         
 
-namespace VisionComm
+namespace VC
 {
     class SecsMessageDispatcher; // 전방 선언
 
@@ -46,5 +46,5 @@ namespace VisionComm
         std::shared_ptr<Impl> m_pImpl;
     };
 
-} // namespace VisionCommm
+} // namespace VCm
 

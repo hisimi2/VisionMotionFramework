@@ -6,7 +6,7 @@
 #include <functional> 
 #include <memory>
 
-namespace VisionComm
+namespace VC
 {
     using ByteVector = std::vector<uint8_t>;
     using TransportReceiveCallback = std::function<void(ByteVector&&)>;
@@ -29,5 +29,5 @@ namespace VisionComm
 
     using ITransportPtr = std::shared_ptr<ITransport>;
 
-} // namespace VisionCommm
+} // namespace VCm
 

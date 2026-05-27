@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 #include <vector>
 #include <string>
 #include <cstdint>
 
 #include "VisionCommAPI.h"
 
-namespace VisionComm
+namespace VC
 {
 	// 장비/통신 관련 상태
 	enum Status 
@@ -50,5 +50,5 @@ namespace VisionComm
 		virtual bool ParseResponse(int& dataId, int& nRet, std::vector<std::string>& results) const = 0;
 	};
 
-} // namespace VisionCommm
+} // namespace VCm
 

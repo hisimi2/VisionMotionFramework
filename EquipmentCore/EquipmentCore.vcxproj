@@ -192,6 +192,7 @@
     <ClCompile Include="src\SequenceExecutor.cpp" />
     <ClCompile Include="src\SequenceManager.cpp" />
     <ClCompile Include="src\SequenceStateMachine.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -207,6 +208,7 @@
     <ClInclude Include="include\SequenceExecutor.h" />
     <ClInclude Include="include\SequenceManager.h" />
     <ClInclude Include="include\SequenceStateMachine.h" />
+    <ClInclude Include="include\Utils.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

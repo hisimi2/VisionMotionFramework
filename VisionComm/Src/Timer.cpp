@@ -3,7 +3,7 @@
 
 #include <chrono> // std::chrono 사용을 위한 포함
 
-namespace VisionComm{
+namespace VC{
 
 Timer::Timer()
 {
@@ -33,5 +33,5 @@ long Timer::ElapsedMillis() const
     return static_cast<long>(ms.count());
 }
 
-} // namespace VisionCommm
+} // namespace VCm
 

@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 #include <cstddef>
 #include <functional>
 #include <memory>
 
 #include "IScheduler.h"
 
-namespace VisionComm
+namespace VC
 {
     using WorkTask = std::function<void()>;
 

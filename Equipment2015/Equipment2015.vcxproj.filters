@@ -141,6 +141,9 @@
     <ClInclude Include="ComponentComposition\Load1\VatAdapterLoad1.h">
       <Filter>ComponentComposition\Sequence</Filter>
     </ClInclude>
+    <ClInclude Include="Actuators\Load2Parts.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">
@@ -193,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="ComponentComposition\Load1\VatAdapterLoad1.cpp">
       <Filter>ComponentComposition\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="Actuators\Load2Parts.cpp">
+      <Filter>Actuators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

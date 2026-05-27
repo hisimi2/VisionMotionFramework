@@ -204,6 +204,7 @@
     <ClInclude Include="Actuators\IDio.h" />
     <ClInclude Include="Actuators\IOPSwitch.h" />
     <ClInclude Include="Actuators\Load1Parts.h" />
+    <ClInclude Include="Actuators\Load2Parts.h" />
     <ClInclude Include="ComponentComposition\DefineVAT.h" />
     <ClInclude Include="ComponentComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
     <ClInclude Include="ComponentComposition\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="Actuators\COPSwitch.cpp" />
     <ClCompile Include="Actuators\CTimer.cpp" />
     <ClCompile Include="Actuators\Load1Parts.cpp" />
+    <ClCompile Include="Actuators\Load2Parts.cpp" />
     <ClCompile Include="ComponentComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
     <ClCompile Include="ComponentComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
     <ClCompile Include="ComponentComposition\Load1\VatAdapterLoad1.cpp" />

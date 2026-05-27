@@ -9,7 +9,7 @@
 #include "SequenceManager.h"
 #include "ISequenceExecutable.h"
 
-namespace EquipmentCore
+namespace EC
 {
     // 편의용 타입 정의
     using StateMachinePtr = SequenceStateMachinePtr;

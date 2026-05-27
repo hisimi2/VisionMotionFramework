@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include <functional> 
 
-namespace VisionComm
+namespace VC
 {
     using SchedulerTask = std::function<void()>;
 
@@ -15,5 +15,5 @@ namespace VisionComm
         virtual void Stop() = 0;
     };
 
-} // namespace VisionCommm
+} // namespace VCm
 

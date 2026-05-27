@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "SequenceStateMachine.h"
 
-namespace EquipmentCore
+namespace EC
 {
     SequenceStateMachine::SequenceStateMachine()
         : m_currentState(SequenceState::Stop)

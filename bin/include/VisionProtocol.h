@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-namespace VisionComm
+namespace VC
 {
     struct VisionProtocolId
     {

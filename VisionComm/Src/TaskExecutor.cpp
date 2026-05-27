@@ -8,7 +8,7 @@
 #include <deque>
 #include <chrono>
 
-namespace VisionComm
+namespace VC
 {
     struct TaskExecutor::Impl
     {

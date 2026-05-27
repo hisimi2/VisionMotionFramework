@@ -5,7 +5,7 @@
 #include <memory>
 #include "EC_API.h"
 
-namespace EquipmentCore
+namespace EC
 {
     /// <summary>
     /// 시퀀스 실행 상태를 관리하는 상태머신

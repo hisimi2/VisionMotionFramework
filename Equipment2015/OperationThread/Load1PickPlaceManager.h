@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EquipmentCore.h"
 #include "Load1PickPlaceSequence.h"
@@ -42,7 +42,7 @@ namespace OperationThread
         /// <summary>
         /// 현재 상태 반환
         /// </summary>
-        EquipmentCore::SequenceState GetState() const;
+        EC::SequenceState GetState() const;
 
         /// <summary>
         /// 상태 문자열 반환
@@ -95,7 +95,7 @@ namespace OperationThread
         int GetSuccessCount() const;
 
     private:
-        EquipmentCore::SequenceManagerPtr m_manager;
+        EC::SequenceManagerPtr m_manager;
         Load1PickPlaceSequencePtr m_sequence;
         Load1Parts* m_parts;
     };

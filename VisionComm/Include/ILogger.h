@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace VisionComm
+namespace VC
 {
     class ILogger
     {
@@ -16,5 +16,5 @@ namespace VisionComm
         virtual void LogDebug(const std::string& message) = 0;
     };
 
-} // namespace VisionCommm
+} // namespace VCm
 
