@@ -18,40 +18,40 @@ namespace OperationThread
         ~Load2PickPlaceManager();
 
         /// <summary>
- /// Pick & Place 작업 시작
+        /// Pick & Place 작업 시작
         /// </summary>
- /// <param name="parts">Load2Parts 객체</param>
- /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
-     void Start(Load2Parts* parts, int repeatCount = 1);
+        /// <param name="parts">Load2Parts 객체</param>
+        /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
+        void Start(Load2Parts* parts, int repeatCount = 1);
 
-   /// <summary>
-      /// 작업 일시 중지
+        /// <summary>
+        /// 작업 일시 중지
         /// </summary>
         void Pause();
 
-   /// <summary>
+        /// <summary>
         /// 작업 재개
         /// </summary>
-    void Resume();
+        void Resume();
 
-/// <summary>
+        /// <summary>
         /// 작업 완전 종료
-  /// </summary>
- void Terminate();
+        /// </summary>
+        void Terminate();
 
- /// <summary>
+        /// <summary>
         /// 현재 상태 반환
         /// </summary>
         EC::SequenceState GetState() const;
 
-   /// <summary>
+        /// <summary>
         /// 상태 문자열 반환
         /// </summary>
         std::string GetStateString() const;
 
-     /// <summary>
+        /// <summary>
         /// 작업 완료 여부 확인
-     /// </summary>
+        /// </summary>
         bool IsComplete() const;
 
         /// <summary>
@@ -61,43 +61,43 @@ namespace OperationThread
 
         /// <summary>
         /// 작업 완료까지 대기
-      /// </summary>
+        /// </summary>
         void WaitForCompletion();
 
         /// <summary>
- /// Pick 위치 설정
+        /// Pick 위치 설정
         /// </summary>
         void SetPickPosition(double x, double z);
 
-      /// <summary>
+        /// <summary>
         /// Place 위치 설정
         /// </summary>
         void SetPlacePosition(double x, double z);
 
         /// <summary>
-  /// Safe Z 설정
-   /// </summary>
+        /// Safe Z 설정
+        /// </summary>
         void SetSafeZ(double z);
 
         /// <summary>
         /// 타임아웃 설정
         /// </summary>
-  void SetMoveTimeout(long timeoutMs);
+        void SetMoveTimeout(long timeoutMs);
 
         /// <summary>
-   /// 현재 반복 횟수
+        /// 현재 반복 횟수
         /// </summary>
         int GetCurrentIteration() const;
 
-     /// <summary>
+        /// <summary>
         /// 성공한 작업 수
-  /// </summary>
+        /// </summary>
         int GetSuccessCount() const;
 
     private:
         EC::SequenceManagerPtr m_manager;
         Load2PickPlaceSequencePtr m_sequence;
-    Load2Parts* m_parts;
+        Load2Parts* m_parts;
     };
 
     using Load2PickPlaceManagerPtr = std::shared_ptr<Load2PickPlaceManager>;

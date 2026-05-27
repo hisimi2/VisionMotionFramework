@@ -4,9 +4,9 @@
 namespace OperationThread
 {
     Load2PickPlaceManager::Load2PickPlaceManager()
-    : m_parts(nullptr)
+        : m_parts(nullptr)
     {
-      m_manager = std::make_shared<EC::SequenceManager>();
+        m_manager = std::make_shared<EC::SequenceManager>();
     }
 
     Load2PickPlaceManager::~Load2PickPlaceManager()
@@ -21,26 +21,26 @@ namespace OperationThread
     {
         m_parts = parts;
         m_sequence = std::make_shared<Load2PickPlaceSequence>(parts, repeatCount);
-m_manager->Start(m_sequence);
+        m_manager->Start(m_sequence);
     }
 
     void Load2PickPlaceManager::Pause()
     {
- if (m_manager)
+        if (m_manager)
         {
-     m_manager->Pause();
+            m_manager->Pause();
         }
     }
 
     void Load2PickPlaceManager::Resume()
-  {
-   if (m_manager)
+    {
+        if (m_manager)
         {
-  m_manager->Resume();
+            m_manager->Resume();
         }
     }
 
-void Load2PickPlaceManager::Terminate()
+    void Load2PickPlaceManager::Terminate()
     {
         if (m_manager)
         {
@@ -80,7 +80,7 @@ void Load2PickPlaceManager::Terminate()
     {
         if (m_sequence)
         {
-m_sequence->SetPickPosition(x, z);
+            m_sequence->SetPickPosition(x, z);
         }
     }
 
@@ -88,15 +88,15 @@ m_sequence->SetPickPosition(x, z);
     {
         if (m_sequence)
         {
-      m_sequence->SetPlacePosition(x, z);
+            m_sequence->SetPlacePosition(x, z);
         }
     }
 
     void Load2PickPlaceManager::SetSafeZ(double z)
     {
-    if (m_sequence)
+        if (m_sequence)
         {
-         m_sequence->SetSafeZ(z);
+            m_sequence->SetSafeZ(z);
         }
     }
 
@@ -104,7 +104,7 @@ m_sequence->SetPickPosition(x, z);
     {
         if (m_sequence)
         {
-     m_sequence->SetMoveTimeout(timeoutMs);
+            m_sequence->SetMoveTimeout(timeoutMs);
         }
     }
 
@@ -115,6 +115,6 @@ m_sequence->SetPickPosition(x, z);
 
     int Load2PickPlaceManager::GetSuccessCount() const
     {
-  return m_sequence ? m_sequence->GetSuccessCount() : 0;
+        return m_sequence ? m_sequence->GetSuccessCount() : 0;
     }
 }

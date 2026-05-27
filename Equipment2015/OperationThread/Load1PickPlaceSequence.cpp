@@ -1,14 +1,11 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1PickPlaceSequence.h"
 #include <iostream>
 #include <sstream>
 
 namespace OperationThread
 {
-    Load1PickPlaceSequence::Load1PickPlaceSequence(
-        Load1Parts* parts,
-        int repeatCount
-    )
+    Load1PickPlaceSequence::Load1PickPlaceSequence(Load1Parts* parts, int repeatCount)
         : m_parts(parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)

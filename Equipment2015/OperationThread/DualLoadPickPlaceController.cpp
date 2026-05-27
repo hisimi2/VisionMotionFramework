@@ -173,33 +173,33 @@ namespace OperationThread
                 {
                     m_load2Manager->Resume();
                     std::cout << "[Load2] Resumed by switch" << std::endl;
-         }
-       }
-          // 스위치가 OFF일 때: Pause
+                }
+            }
+            // 스위치가 OFF일 때: Pause
             else
-          {
-            std::string load1State = m_load1Manager->GetStateString();
-            std::string load2State = m_load2Manager->GetStateString();
+            {
+                std::string load1State = m_load1Manager->GetStateString();
+                std::string load2State = m_load2Manager->GetStateString();
 
-         if (load1State == "Run")
-      {
-       m_load1Manager->Pause();
-       std::cout << "[Load1] Paused by switch" << std::endl;
-         }
-
-              if (load2State == "Run")
+                if (load1State == "Run")
                 {
-       m_load2Manager->Pause();
-             std::cout << "[Load2] Paused by switch" << std::endl;
-              }
-         }
+                    m_load1Manager->Pause();
+                    std::cout << "[Load1] Paused by switch" << std::endl;
+                }
 
-                // 둘 다 완료되면 루프 종료
-       if (IsBothComplete())
-          {
-           m_running = false;
-    std::cout << "[DualLoadPickPlaceController] Both sequences completed" << std::endl;
-          }
-          }
+                if (load2State == "Run")
+                {
+                    m_load2Manager->Pause();
+                    std::cout << "[Load2] Paused by switch" << std::endl;
+                }
+            }
+
+            // 둘 다 완료되면 루프 종료
+            if (IsBothComplete())
+            {
+                m_running = false;
+                std::cout << "[DualLoadPickPlaceController] Both sequences completed" << std::endl;
+            }
+        }
     }
 }

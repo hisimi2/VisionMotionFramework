@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1PickPlaceManager.h"
 
 namespace OperationThread
@@ -21,10 +21,7 @@ namespace OperationThread
         m_parts = parts;
 
         // 시퀀스 생성
-        m_sequence = std::make_shared<Load1PickPlaceSequence>(
-            parts,
-            repeatCount
-        );
+        m_sequence = std::make_shared<Load1PickPlaceSequence>(parts, repeatCount);
 
         // 기본 파라미터 설정
         m_sequence->SetPickPosition(100.0, 200.0, -10.0);
