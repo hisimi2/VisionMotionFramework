@@ -144,6 +144,9 @@
     <ClInclude Include="Actuators\Load2Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
+    <ClInclude Include="OperationThread\Load2PickPlaceSequence.h">
+      <Filter>OperationThread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="Actuators\Load2Parts.cpp">
       <Filter>Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationThread\Load2PickPlaceSequence.cpp">
+      <Filter>OperationThread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

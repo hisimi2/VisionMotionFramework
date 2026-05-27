@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actuators\CAxisController.h"
 #include "Actuators\CUpDownCylinder.h"
 #include "Actuators\CForBackCylinder.h"
@@ -22,7 +22,6 @@ public:
     OneAxis                             AxisZ;
     OneAxis                             AxisTable1;
     OneAxis                             AxisTable2;
-   
 
     // 실린더
     CForBackCylinder                    CylBuffer;
@@ -33,7 +32,7 @@ public:
     std::vector<CClampReleaseCylinder>  CylTransfer;
     
     // Pick & Place 확장용 Vacuum/Blow
-    std::vector<CVaccumBlowCylinder>   PickVacuum;
+    std::vector<CVaccumBlowCylinder>    PickVacuum;
 
     // Lamps
     CLamp                               LampLeft;

@@ -1,7 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1PickPlaceExample.h"
 #include "Load1PickPlaceManager.h"
 #include "Actuators/Load1Parts.h"
+#include "Actuators/COPSwitch.h"
 #include <iostream>
 
 namespace OperationThread
@@ -11,6 +12,10 @@ namespace OperationThread
         try
         {
             std::cout << "=== Basic Pick & Place Example ===" << std::endl;
+
+            COPSwitch startSwitch("StartSwitch");
+
+            startSwitch.getStatus(); // 스위치 상태 확인 (예: true/false)
 
             // 1. Load1Parts 생성
             Load1Parts parts;

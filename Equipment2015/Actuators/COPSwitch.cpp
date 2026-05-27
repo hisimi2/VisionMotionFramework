@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "COPSwitch.h"
 
 // static 멤버 변수 초기화
@@ -71,7 +71,7 @@ void COPSwitch::setOutput(const std::vector<int>& outputs)
     m_outputs = outputs;
 }
 
-bool COPSwitch::getSwitchStatus()
+bool COPSwitch::getStatus()
 {
     bool ret;
     EnterCriticalSection(&m_logicMutex);
@@ -80,7 +80,7 @@ bool COPSwitch::getSwitchStatus()
     return ret;
 }
 
-void COPSwitch::setSwitchStatus(bool bStatus)
+void COPSwitch::setStatus(bool bStatus)
 {
     EnterCriticalSection(&m_logicMutex);
     if (m_status != bStatus)
@@ -99,16 +99,16 @@ bool COPSwitch::sequence()
     switch (m_type)
     {
     case IOPSwitch::KEEP:
-        setSwitchStatus(in_sensor);
+        setStatus(in_sensor);
         break;
     case IOPSwitch::PUSH:
-        setSwitchStatus(in_sensor);
+        setStatus(in_sensor);
         break;
     case IOPSwitch::TOGGLE:
         if (in_sensor && !m_toggleFlag)
         {
             m_toggleFlag = true;
-            setSwitchStatus(!getSwitchStatus());
+            setStatus(!getStatus());
         }
         else if (!in_sensor)
         {
@@ -121,7 +121,7 @@ bool COPSwitch::sequence()
 
     if (m_isBlink)
     {
-        if (getSwitchStatus())
+        if (getStatus())
         {
             if (m_BlinkTimer && m_BlinkTimer->isOver())
             {
@@ -136,14 +136,14 @@ bool COPSwitch::sequence()
     }
     else
     {
-        setLED(getSwitchStatus());
+        setLED(getStatus());
     }
 
     if (m_pGroup)
     {
-        if (getSwitchStatus())
+        if (getStatus())
         {
-            m_pGroup->setSwitchStatus(false);
+            m_pGroup->setStatus(false);
         }
     }
 

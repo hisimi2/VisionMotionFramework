@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // 전방선언: 실제 정의는 다른 헤더에 존재합니다.
 class IPeriodicTask;
@@ -14,8 +14,8 @@ public:
     virtual ~IOPSwitch() {}
 
     // 스위치 고유 기능
-    virtual bool getSwitchStatus() = 0;
-    virtual void setSwitchStatus(bool bStatus) = 0;
+    virtual bool getStatus() = 0;
+    virtual void setStatus(bool bStatus) = 0;
     
     // 설정 관련 메서드 (체이닝 지원)
     virtual IOPSwitch& setGroup(IOPSwitch* pObject) = 0;

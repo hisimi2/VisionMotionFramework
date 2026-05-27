@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include "IOPSwitch.h"
@@ -15,8 +15,8 @@ public:
     virtual ~COPSwitch();
 
     // IOPSwitch (및 IPeriodicTask) 인터페이스 구현
-    bool getSwitchStatus();
-    void setSwitchStatus(bool bStatus);
+    bool getStatus();
+    void setStatus(bool bStatus);
     
     IOPSwitch& setGroup(IOPSwitch* pObject);
     IOPSwitch& setBlink(bool bStatus);

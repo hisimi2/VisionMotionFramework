@@ -1,15 +1,12 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1Parts.h"
-#include <sstream>
 
 #include "Utils.h"
+#include <sstream>
 
-
-// 구성 크기(필요 시 변경)
-static const int LOADPRECISER_SUB_COUNT = 4;
 static const int SETPLATE_COUNT = 2;
-static const int TRANSFERCLAMP_COUNT = 2;
-
+static const int TRANSFER_COUNT = 2;
+static const int VACCUM_COUNT   = 24;
 
 Load1Parts::Load1Parts()
     : AxisX("LOAD1_X")
@@ -32,14 +29,14 @@ Load1Parts::Load1Parts()
 
     // TransferClamp 초기화
     CylTransfer.clear();
-    for (int i = 0; i < TRANSFERCLAMP_COUNT; ++i)
+    for (int i = 0; i < TRANSFER_COUNT; ++i)
     {
         CylTransfer.emplace_back(std::string("TransferClamp_") + EC::IntToString(i));
     }
 
     // Vacuum 초기화
     PickVacuum.clear();
-    for (int i = 0; i < TRANSFERCLAMP_COUNT; ++i)
+    for (int i = 0; i < VACCUM_COUNT; ++i)
     {
         PickVacuum.emplace_back(std::string("PickVacuum_") + EC::IntToString(i));
     }
