@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1PickPlaceManager.h"
 
-namespace AutoThread
+namespace OperationThread
 {
     Load1PickPlaceManager::Load1PickPlaceManager()
         : m_manager(std::make_shared<EquipmentCore::SequenceManager>())

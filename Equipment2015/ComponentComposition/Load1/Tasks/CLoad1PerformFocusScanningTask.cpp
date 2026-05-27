@@ -1,6 +1,6 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformFocusScanningTask.h"
-#include "VMFramework/DefineVAT.h"
+#include "ComponentComposition/DefineVAT.h"
 
 using namespace VMF_Load1::Task;
 

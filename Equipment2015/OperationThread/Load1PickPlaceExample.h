@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-namespace AutoThread
+namespace OperationThread
 {
     /// <summary>
     /// Load1 Pick & Place 상태머신 사용 예제

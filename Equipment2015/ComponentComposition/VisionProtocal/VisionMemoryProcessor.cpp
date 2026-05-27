@@ -1,9 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "VisionMemoryProcessor.h"
-
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "VMFramework/VisionProtocal/VisionMemoryKeys.h"
+#include "ComponentComposition/VisionProtocal/VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 #include <vector>

@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "EquipmentCore.h"
 #include "Actuators/Load1Parts.h"
 #include <memory>
 #include <vector>
 
-namespace AutoThread
+namespace OperationThread
 {
     /// <summary>
     /// Load1 Pick & Place 시퀀스 상태머신

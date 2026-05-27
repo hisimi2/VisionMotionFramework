@@ -1,10 +1,10 @@
-﻿// Equipment2015Dlg.h : 헤더 파일
+// Equipment2015Dlg.h : 헤더 파일
 //
 
 #pragma once
 
 #include "Orchestrator.h"
-#include "VMFramework/Load1/VatAdapterLoad1.h"
+#include "ComponentComposition/Load1/VatAdapterLoad1.h"
 
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx

@@ -1,7 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "VisionProcessorBase.h"
-#include "VMFramework/VisionProtocal/VisionMemoryKeys.h"
+#include "ComponentComposition/VisionProtocal/VisionMemoryKeys.h"
 
 #include <vector>
 #include <string>

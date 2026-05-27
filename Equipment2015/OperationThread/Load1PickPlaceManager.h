@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "EquipmentCore.h"
 #include "Load1PickPlaceSequence.h"
 #include "Actuators/Load1Parts.h"
 #include <memory>
 
-namespace AutoThread
+namespace OperationThread
 {
     /// <summary>
     /// Load1 Pick & Place 매니저
