@@ -13,7 +13,7 @@ namespace OperationThread
     {
         if (m_manager)
         {
-         m_manager->Terminate();
+            m_manager->Terminate();
         }
     }
 
