@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Actuators\CAxisController.h"
 #include "Actuators\CUpDownCylinder.h"
 #include "Actuators\CForBackCylinder.h"

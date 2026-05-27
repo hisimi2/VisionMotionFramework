@@ -96,9 +96,6 @@
     <ClInclude Include="Actuators\Load1Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\Load1PickPlaceExample.h">
-      <Filter>OperationThread</Filter>
-    </ClInclude>
     <ClInclude Include="OperationThread\Load1PickPlaceManager.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
@@ -147,6 +144,15 @@
     <ClInclude Include="OperationThread\Load2PickPlaceSequence.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
+    <ClInclude Include="OperationThread\DualLoadPickPlaceController.h">
+      <Filter>OperationThread</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationThread\DualLoadPickPlaceExample.h">
+      <Filter>OperationThread</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationThread\Load2PickPlaceManager.h">
+      <Filter>OperationThread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">
@@ -172,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="Actuators\Load1Parts.cpp">
       <Filter>Actuators</Filter>
-    </ClCompile>
-    <ClCompile Include="OperationThread\Load1PickPlaceExample.cpp">
-      <Filter>OperationThread</Filter>
     </ClCompile>
     <ClCompile Include="OperationThread\Load1PickPlaceManager.cpp">
       <Filter>OperationThread</Filter>
@@ -204,6 +207,15 @@
       <Filter>Actuators</Filter>
     </ClCompile>
     <ClCompile Include="OperationThread\Load2PickPlaceSequence.cpp">
+      <Filter>OperationThread</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationThread\DualLoadPickPlaceController.cpp">
+      <Filter>OperationThread</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationThread\DualLoadPickPlaceExample.cpp">
+      <Filter>OperationThread</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationThread\Load2PickPlaceManager.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
   </ItemGroup>

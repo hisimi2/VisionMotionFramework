@@ -219,9 +219,11 @@
     <ClInclude Include="ComponentComposition\VisionProtocal\VisionPacketMemory.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
-    <ClInclude Include="OperationThread\Load1PickPlaceExample.h" />
+    <ClInclude Include="OperationThread\DualLoadPickPlaceController.h" />
+    <ClInclude Include="OperationThread\DualLoadPickPlaceExample.h" />
     <ClInclude Include="OperationThread\Load1PickPlaceManager.h" />
     <ClInclude Include="OperationThread\Load1PickPlaceSequence.h" />
+    <ClInclude Include="OperationThread\Load2PickPlaceManager.h" />
     <ClInclude Include="OperationThread\Load2PickPlaceSequence.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -242,9 +244,11 @@
     <ClCompile Include="ComponentComposition\VisionProtocal\VisionMemoryProcessor.cpp" />
     <ClCompile Include="Equipment2015.cpp" />
     <ClCompile Include="Equipment2015Dlg.cpp" />
-    <ClCompile Include="OperationThread\Load1PickPlaceExample.cpp" />
+    <ClCompile Include="OperationThread\DualLoadPickPlaceController.cpp" />
+    <ClCompile Include="OperationThread\DualLoadPickPlaceExample.cpp" />
     <ClCompile Include="OperationThread\Load1PickPlaceManager.cpp" />
     <ClCompile Include="OperationThread\Load1PickPlaceSequence.cpp" />
+    <ClCompile Include="OperationThread\Load2PickPlaceManager.cpp" />
     <ClCompile Include="OperationThread\Load2PickPlaceSequence.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

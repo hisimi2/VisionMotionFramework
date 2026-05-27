@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // 전방선언: 실제 정의는 다른 헤더에 존재합니다.
 class IPeriodicTask;
