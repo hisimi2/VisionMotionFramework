@@ -33,7 +33,7 @@ namespace OperationThread
         /// <summary>
         /// Pick & Place 작업 상태
         /// </summary>
-        enum class PickPlaceStep
+        enum class PickPlaceStep 
         {
             RailOpen,                   // 0. 레일 열기
             MovePickPositionXY,         // 1. Pick 위치로 XY 이동

@@ -14,10 +14,6 @@ class Load2Parts;
 
 namespace OperationThread
 {
-    /// <summary>
-    /// Load1과 Load2 Pick & Place 작업을 멀티스레드로 관리하는 매니저 클래스
-
-    /// </summary>
     class ThreadsManager
     {
     public:
@@ -25,22 +21,19 @@ namespace OperationThread
         ~ThreadsManager();
 
         /// <summary>
-        /// Load1과 Load2 Pick & Place 시작 (멀티스레드)
+        /// 시퀀스 모두 시작
         /// </summary>
-        /// <param name="load1Parts">Load1Parts 객체</param>
-        /// <param name="load2Parts">Load2Parts 객체</param>
-        /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
         void Start();
 
         /// <summary>
-        /// 두 시퀀스 모두 종료
+        /// 시퀀스 모두 종료
         /// </summary>
         void Stop();
 
-
+        /// <summary>
+        /// 시퀀스 모두 완료 여부
+        /// </summary>
         bool IsComplete();
-
-       
 
     private:
         /// <summary>
@@ -56,14 +49,14 @@ namespace OperationThread
         COPSwitch* m_startSwitch;
 
         std::vector<EC::SequenceManagerPtr> m_Managers;
-        
         std::thread m_monitoringThread;
+
         bool m_running;
         bool m_stopRequested;
 
         mutable std::mutex m_mutex;
 
-        int AddSequence(EC::SequenceExecutablePtr sequence);
+        int AddThread(EC::SequenceExecutablePtr sequence);
     };
 
     using ThreadsManagerPtr = std::shared_ptr<ThreadsManager>;

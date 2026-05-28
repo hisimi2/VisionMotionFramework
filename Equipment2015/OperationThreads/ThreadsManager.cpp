@@ -22,11 +22,11 @@ namespace OperationThread
         Load1Parts load1Parts;
         Load2Parts load2Parts;
 
-        AddSequence(std::make_shared<ThreadLoad1>((LPVOID)&load1Parts, repeatCount));
-        AddSequence(std::make_shared<ThreadLoad2>((LPVOID)&load2Parts, repeatCount));
+        AddThread(std::make_shared<ThreadLoad1>((LPVOID)&load1Parts, repeatCount));
+        AddThread(std::make_shared<ThreadLoad2>((LPVOID)&load2Parts, repeatCount));
     }
 
-    int ThreadsManager::AddSequence(EC::SequenceExecutablePtr sequence)
+    int ThreadsManager::AddThread(EC::SequenceExecutablePtr sequence)
     {
         m_Managers.push_back(std::make_shared<EC::SequenceManager>(sequence));
 

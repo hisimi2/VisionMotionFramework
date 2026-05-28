@@ -17,7 +17,7 @@ namespace OperationThread
     class ThreadLoad2 : public EC::ISequenceExecutable
     {
     public:
-        enum class PickPlaceStep
+        enum class PickPlaceStep 
         {
             RailOpen = 0,
             MovePickPositionXZ,
