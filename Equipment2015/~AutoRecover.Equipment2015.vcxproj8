@@ -219,10 +219,10 @@
     <ClInclude Include="ComponentComposition\VisionProtocal\VisionPacketMemory.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
-    <ClInclude Include="OperationThreads\ThreadBase.h" />
-    <ClInclude Include="OperationThreads\ThreadLoad1.h" />
-    <ClInclude Include="OperationThreads\ThreadLoad2.h" />
-    <ClInclude Include="OperationThreads\ThreadsManager.h" />
+    <ClInclude Include="OperationThread\ThreadsManager.h" />
+    <ClInclude Include="OperationThread\ThreadLoad1.h" />
+    <ClInclude Include="OperationThread\ThreadLoad2.h" />
+    <ClInclude Include="OperationThread\ThreadBase.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -242,10 +242,10 @@
     <ClCompile Include="ComponentComposition\VisionProtocal\VisionMemoryProcessor.cpp" />
     <ClCompile Include="Equipment2015.cpp" />
     <ClCompile Include="Equipment2015Dlg.cpp" />
-    <ClCompile Include="OperationThreads\ThreadBase.cpp" />
-    <ClCompile Include="OperationThreads\ThreadLoad1.cpp" />
-    <ClCompile Include="OperationThreads\ThreadLoad2.cpp" />
-    <ClCompile Include="OperationThreads\ThreadsManager.cpp" />
+    <ClCompile Include="OperationThread\ThreadsManager.cpp" />
+    <ClCompile Include="OperationThread\ThreadLoad1.cpp" />
+    <ClCompile Include="OperationThread\ThreadLoad2.cpp" />
+    <ClCompile Include="OperationThread\ThreadBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

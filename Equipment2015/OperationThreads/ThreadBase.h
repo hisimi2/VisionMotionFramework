@@ -1,15 +1,15 @@
-#pragma once
+﻿#pragma once
 #include "EquipmentCore.h"
 #include <chrono>
 #include <string>
 
 namespace OperationThread
 {
-    class PickPlaceSequenceBase : public EC::ISequenceExecutable
+    class ThreadBase : public EC::ISequenceExecutable
     {
     public:
-        PickPlaceSequenceBase(int repeatCount = 0);
-        virtual ~PickPlaceSequenceBase() override = default;
+        ThreadBase(int repeatCount = 0);
+        virtual ~ThreadBase() override = default;
 
         void OnInitialize() override;
         bool OnPoll() override;

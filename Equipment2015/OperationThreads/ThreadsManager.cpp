@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "AutomatedThreadsManager.h"
+#include "ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>
 #include <mutex>
@@ -8,12 +8,12 @@
 #include "Actuators/Load1Parts.h"
 #include "Actuators/Load2Parts.h"
 
-#include "Load1RobotSequence.h"
-#include "Load2RobotSequence.h"
+#include "ThreadLoad1.h"
+#include "ThreadLoad2.h"
 
 namespace OperationThread
 {
-    AutomatedThreadsManager::AutomatedThreadsManager(COPSwitch* startSwitch)
+    ThreadsManager::ThreadsManager(COPSwitch* startSwitch)
         : m_startSwitch(startSwitch)
         , m_running(false)
         , m_stopRequested(false)
@@ -22,23 +22,23 @@ namespace OperationThread
         Load1Parts load1Parts;
         Load2Parts load2Parts;
 
-        AddSequence(std::make_shared<Load1RobotSequence>((LPVOID)&load1Parts, repeatCount));
-        AddSequence(std::make_shared<Load2RobotSequence>((LPVOID)&load2Parts, repeatCount));
+        AddSequence(std::make_shared<ThreadLoad1>((LPVOID)&load1Parts, repeatCount));
+        AddSequence(std::make_shared<ThreadLoad2>((LPVOID)&load2Parts, repeatCount));
     }
 
-    int AutomatedThreadsManager::AddSequence(EC::SequenceExecutablePtr sequence)
+    int ThreadsManager::AddSequence(EC::SequenceExecutablePtr sequence)
     {
         m_Managers.push_back(std::make_shared<EC::SequenceManager>(sequence));
 
         return static_cast<int>(m_Managers.size() - 1);
     }
 
-    AutomatedThreadsManager::~AutomatedThreadsManager()
+    ThreadsManager::~ThreadsManager()
     {
         Stop();
     }
 
-    void AutomatedThreadsManager::Start()
+    void ThreadsManager::Start()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -56,13 +56,13 @@ namespace OperationThread
             manager->Start();
         }
 
-        std::cout << "[AutomatedThreadsManager] Load1 and Load2 sequences started" << std::endl;
+        std::cout << "[ThreadsManager] Load1 and Load2 sequences started" << std::endl;
 
         // 스위치 모니터링 스레드 시작
-        m_monitoringThread = std::thread(&AutomatedThreadsManager::SwitchMonitoringThread, this);
+        m_monitoringThread = std::thread(&ThreadsManager::SwitchMonitoringThread, this);
     }
 
-    void AutomatedThreadsManager::Stop()
+    void ThreadsManager::Stop()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_stopRequested = true;
@@ -80,12 +80,12 @@ namespace OperationThread
             manager->Terminate();
         }
 
-        std::cout << "[AutomatedThreadsManager] Stopped" << std::endl;
+        std::cout << "[ThreadsManager] Stopped" << std::endl;
     }
 
-    void AutomatedThreadsManager::SwitchMonitoringThread()
+    void ThreadsManager::SwitchMonitoringThread()
     {
-        std::cout << "[AutomatedThreadsManager] Switch monitoring thread started" << std::endl;
+        std::cout << "[ThreadsManager] Switch monitoring thread started" << std::endl;
 
         try
         {
@@ -97,13 +97,13 @@ namespace OperationThread
         }
         catch (const std::exception& ex)
         {
-            std::cerr << "[AutomatedThreadsManager] Error in monitoring thread: " << ex.what() << std::endl;
+            std::cerr << "[ThreadsManager] Error in monitoring thread: " << ex.what() << std::endl;
         }
 
-        std::cout << "[AutomatedThreadsManager] Switch monitoring thread ended" << std::endl;
+        std::cout << "[ThreadsManager] Switch monitoring thread ended" << std::endl;
     }
 
-    bool AutomatedThreadsManager::IsComplete()
+    bool ThreadsManager::IsComplete()
     {
         for (const auto& manager : m_Managers)
         {
@@ -115,7 +115,7 @@ namespace OperationThread
         return true;
     }
 
-    void AutomatedThreadsManager::MonitorLoop()
+    void ThreadsManager::MonitorLoop()
     {
         if (!m_startSwitch)
         {
@@ -163,7 +163,7 @@ namespace OperationThread
             if (IsComplete())
             {
                 m_running = false;
-                std::cout << "[AutomatedThreadsManager] Both sequences completed" << std::endl;
+                std::cout << "[ThreadsManager] Both sequences completed" << std::endl;
             }
         }
     }

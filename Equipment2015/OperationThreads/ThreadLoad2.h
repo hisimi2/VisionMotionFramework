@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include "EquipmentCore.h"
-#include "PickPlaceSequenceBase.h"
+#include "ThreadBase.h"
 
 class Load2Parts;
 
@@ -14,7 +14,7 @@ namespace OperationThread
     /// Load2 Pick & Place 시퀀스 구현
     /// EquipmentCore의 ISequenceExecutable 인터페이스를 구현
     /// </summary>
-    class Load2RobotSequence : public EC::ISequenceExecutable
+    class ThreadLoad2 : public EC::ISequenceExecutable
     {
     public:
         enum class PickPlaceStep
@@ -32,8 +32,8 @@ namespace OperationThread
             Complete
         };
 
-        Load2RobotSequence(LPVOID parts, int repeatCount = 0);
-        ~Load2RobotSequence() override;
+        ThreadLoad2(LPVOID parts, int repeatCount = 0);
+        ~ThreadLoad2() override;
 
         // ISequenceExecutable 구현
         void OnInitialize() override;
@@ -97,6 +97,6 @@ namespace OperationThread
         std::chrono::steady_clock::time_point m_stepStartTime;
     };
 
-    using Load2RobotSequencePtr = std::shared_ptr<Load2RobotSequence>;
+    using ThreadLoad2Ptr = std::shared_ptr<ThreadLoad2>;
 
 } // namespace OperationThread

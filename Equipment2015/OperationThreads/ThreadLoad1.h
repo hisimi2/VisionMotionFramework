@@ -4,7 +4,7 @@
 #include "Actuators/Load1Parts.h"
 #include <memory>
 #include <vector>
-#include "PickPlaceSequenceBase.h"
+#include "ThreadBase.h"
 
 namespace OperationThread
 {
@@ -27,7 +27,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class Load1RobotSequence : public PickPlaceSequenceBase
+    class ThreadLoad1 : public ThreadBase
     {
     public:
         /// <summary>
@@ -57,11 +57,11 @@ namespace OperationThread
         /// <param name="parts">Load1Parts 객체</param>
         /// <param name="adapter">AdapterLoad1 객체</param>
         /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
-        Load1RobotSequence(LPVOID parts, int repeatCount = 0);
+        ThreadLoad1(LPVOID parts, int repeatCount = 0);
 
-        ~Load1RobotSequence() override;
+        ~ThreadLoad1() override;
 
-        // PickPlaceSequenceBase 구현
+        // ThreadBase 구현
         void OnInitialize() override;
         bool HandleStep(int step) override;
         int GetStepCount() const override { return static_cast<int>(PickPlaceStep::Complete) + 1; }
@@ -139,5 +139,5 @@ namespace OperationThread
         void LogStep(const std::string& message);
     };
 
-    using Load1RobotSequencePtr = std::shared_ptr<Load1RobotSequence>;
+    using ThreadLoad1Ptr = std::shared_ptr<ThreadLoad1>;
 }

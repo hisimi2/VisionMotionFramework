@@ -18,11 +18,11 @@ namespace OperationThread
     /// Load1과 Load2 Pick & Place 작업을 멀티스레드로 관리하는 매니저 클래스
 
     /// </summary>
-    class AutomatedThreadsManager
+    class ThreadsManager
     {
     public:
-        explicit AutomatedThreadsManager(COPSwitch* startSwitch);
-        ~AutomatedThreadsManager();
+        explicit ThreadsManager(COPSwitch* startSwitch);
+        ~ThreadsManager();
 
         /// <summary>
         /// Load1과 Load2 Pick & Place 시작 (멀티스레드)
@@ -66,5 +66,5 @@ namespace OperationThread
         int AddSequence(EC::SequenceExecutablePtr sequence);
     };
 
-    using AutomatedThreadsManagerPtr = std::shared_ptr<AutomatedThreadsManager>;
+    using ThreadsManagerPtr = std::shared_ptr<ThreadsManager>;
 }

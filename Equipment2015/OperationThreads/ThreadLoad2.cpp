@@ -1,12 +1,12 @@
 ﻿#include "stdafx.h"
-#include "Load2RobotSequence.h"
+#include "ThreadLoad2.h"
 #include <iostream>
 #include <sstream>
 #include "Actuators\Load2Parts.h"
 
 namespace OperationThread
 {
-    Load2RobotSequence::Load2RobotSequence(LPVOID parts, int repeatCount)
+    ThreadLoad2::ThreadLoad2(LPVOID parts, int repeatCount)
         : m_parts((Load2Parts*)parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)
@@ -21,24 +21,24 @@ namespace OperationThread
     {
     }
 
-    Load2RobotSequence::~Load2RobotSequence()
+    ThreadLoad2::~ThreadLoad2()
     {
     }
 
-    void Load2RobotSequence::OnInitialize()
+    void ThreadLoad2::OnInitialize()
     {
         if (!m_parts)
-        throw std::runtime_error("Load2RobotSequence: Parts is null");
+        throw std::runtime_error("ThreadLoad2: Parts is null");
 
         m_initialized = true;
         m_currentIteration = 0;
         m_successCount = 0;
         m_currentStep = PickPlaceStep::RailOpen;
 
-        LogStep("Load2RobotSequence initialized");
+        LogStep("ThreadLoad2 initialized");
     }
 
-    bool Load2RobotSequence::OnPoll()
+    bool ThreadLoad2::OnPoll()
     {
         if (!m_initialized)
             return false;
@@ -102,61 +102,61 @@ namespace OperationThread
         }
     }
 
-    void Load2RobotSequence::OnCleanup()
+    void ThreadLoad2::OnCleanup()
     {
-        LogStep("Load2RobotSequence cleanup completed");
+        LogStep("ThreadLoad2 cleanup completed");
     }
 
-    void Load2RobotSequence::OnError(const std::string& errorMsg)
+    void ThreadLoad2::OnError(const std::string& errorMsg)
     {
         m_lastError = errorMsg;
-        std::cerr << "Load2RobotSequence Error: " << errorMsg << std::endl;
+        std::cerr << "ThreadLoad2 Error: " << errorMsg << std::endl;
     }
 
-    void Load2RobotSequence::SetPickPosition(double x, double z)
+    void ThreadLoad2::SetPickPosition(double x, double z)
     {
         m_pickX = x;
         m_pickZ = z;
     }
 
-    void Load2RobotSequence::SetPlacePosition(double x, double z)
+    void ThreadLoad2::SetPlacePosition(double x, double z)
     {
         m_placeX = x;
         m_placeZ = z;
     }
 
-    void Load2RobotSequence::SetSafeZ(double z)
+    void ThreadLoad2::SetSafeZ(double z)
     {
         m_safeZ = z;
     }
 
-    void Load2RobotSequence::SetMoveTimeout(long timeoutMs)
+    void ThreadLoad2::SetMoveTimeout(long timeoutMs)
     {
         m_moveTimeoutMs = timeoutMs;
     }
 
-    void Load2RobotSequence::SetVacuumIndex(int index)
+    void ThreadLoad2::SetVacuumIndex(int index)
     {
         m_vacuumIndex = index;
     }
 
-    Load2RobotSequence::PickPlaceStep Load2RobotSequence::GetCurrentStep() const
+    ThreadLoad2::PickPlaceStep ThreadLoad2::GetCurrentStep() const
     {
         return m_currentStep;
     }
 
-    int Load2RobotSequence::GetCurrentIteration() const
+    int ThreadLoad2::GetCurrentIteration() const
     {
         return m_currentIteration;
     }
 
-    int Load2RobotSequence::GetSuccessCount() const
+    int ThreadLoad2::GetSuccessCount() const
     {
         return m_successCount;
     }
 
     // ============= 단계 처리 함수들 =============
-    bool Load2RobotSequence::HandleRailOpen()
+    bool ThreadLoad2::HandleRailOpen()
     {
         LogStep("HandleRailOpen");
 
@@ -168,7 +168,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2RobotSequence::HandleMovePickPositionXZ()
+    bool ThreadLoad2::HandleMovePickPositionXZ()
     {
         LogStep("HandleMovePickPositionXZ");
 
@@ -179,7 +179,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2RobotSequence::HandlePreciserDown()
+    bool ThreadLoad2::HandlePreciserDown()
     {
         LogStep("HandlePreciserDown");
 
@@ -188,7 +188,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2RobotSequence::HandleVacuumOn()
+    bool ThreadLoad2::HandleVacuumOn()
     {
         LogStep("HandleVacuumOn");
 
@@ -200,7 +200,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2RobotSequence::HandleMoveSafeZAfterPick()
+    bool ThreadLoad2::HandleMoveSafeZAfterPick()
     {
       LogStep("HandleMoveSafeZAfterPick");
 
@@ -210,7 +210,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2RobotSequence::HandleMovePlacePositionXZ()
+    bool ThreadLoad2::HandleMovePlacePositionXZ()
     {
         LogStep("HandleMovePlacePositionXZ");
 
@@ -221,7 +221,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2RobotSequence::HandlePreciserUp()
+    bool ThreadLoad2::HandlePreciserUp()
     {
         LogStep("HandlePreciserUp");
 
@@ -230,7 +230,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2RobotSequence::HandleVacuumOff()
+    bool ThreadLoad2::HandleVacuumOff()
     {
         LogStep("HandleVacuumOff");
 
@@ -242,7 +242,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2RobotSequence::HandleMoveSafeZAfterPlace()
+    bool ThreadLoad2::HandleMoveSafeZAfterPlace()
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
@@ -252,7 +252,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2RobotSequence::HandleCheckRepeat()
+    bool ThreadLoad2::HandleCheckRepeat()
     {
         LogStep("HandleCheckRepeat");
 
@@ -281,13 +281,13 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2RobotSequence::HandleComplete()
+    bool ThreadLoad2::HandleComplete()
     {
         LogStep("HandleComplete");
         return false; // 완료
     }
 
-    void Load2RobotSequence::MoveToNextStep()
+    void ThreadLoad2::MoveToNextStep()
     {
         int nextStep = static_cast<int>(m_currentStep) + 1;
         if (nextStep <= static_cast<int>(PickPlaceStep::Complete))
@@ -296,14 +296,14 @@ namespace OperationThread
         }
     }
 
-    bool Load2RobotSequence::IsStepTimeout() const
+    bool ThreadLoad2::IsStepTimeout() const
     {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_stepStartTime).count();
         return elapsed > m_moveTimeoutMs;
     }
 
-    void Load2RobotSequence::LogStep(const std::string& message)
+    void ThreadLoad2::LogStep(const std::string& message)
     {
         std::cout << "[Load2PickPlace] " << message << std::endl;
     }

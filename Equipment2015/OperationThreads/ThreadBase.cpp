@@ -1,14 +1,14 @@
-#include "stdafx.h"
-#include "PickPlaceSequenceBase.h"
+﻿#include "stdafx.h"
+#include "ThreadBase.h"
 #include <iostream>
 
 namespace OperationThread
 {
-    PickPlaceSequenceBase::PickPlaceSequenceBase(int repeatCount)
+    ThreadBase::ThreadBase(int repeatCount)
         : m_repeatCount(repeatCount), m_currentIteration(0), m_successCount(0), m_currentStep(0),
           m_moveTimeoutMs(3000), m_initialized(false) {}
 
-    void PickPlaceSequenceBase::OnInitialize()
+    void ThreadBase::OnInitialize()
     {
         m_initialized = true;
         m_currentIteration = 0;
@@ -17,7 +17,7 @@ namespace OperationThread
         LogStep("Sequence initialized");
     }
 
-    bool PickPlaceSequenceBase::OnPoll()
+    bool ThreadBase::OnPoll()
     {
         if (!m_initialized) return false;
         try
@@ -36,22 +36,22 @@ namespace OperationThread
         }
     }
 
-    void PickPlaceSequenceBase::OnCleanup()
+    void ThreadBase::OnCleanup()
     {
         LogStep("Sequence cleanup completed");
     }
 
-    void PickPlaceSequenceBase::OnError(const std::string& errorMsg)
+    void ThreadBase::OnError(const std::string& errorMsg)
     {
         m_lastError = errorMsg;
         std::cerr << "Sequence Error: " << errorMsg << std::endl;
     }
 
-    int PickPlaceSequenceBase::GetCurrentIteration() const { return m_currentIteration; }
-    int PickPlaceSequenceBase::GetSuccessCount() const { return m_successCount; }
-    std::string PickPlaceSequenceBase::GetLastError() const { return m_lastError; }
+    int ThreadBase::GetCurrentIteration() const { return m_currentIteration; }
+    int ThreadBase::GetSuccessCount() const { return m_successCount; }
+    std::string ThreadBase::GetLastError() const { return m_lastError; }
 
-    void PickPlaceSequenceBase::MoveToNextStep()
+    void ThreadBase::MoveToNextStep()
     {
         int nextStep = m_currentStep + 1;
         if (nextStep < GetStepCount())
@@ -60,15 +60,15 @@ namespace OperationThread
         }
     }
 
-    bool PickPlaceSequenceBase::IsStepTimeout() const
+    bool ThreadBase::IsStepTimeout() const
     {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_stepStartTime).count();
         return elapsed > m_moveTimeoutMs;
     }
 
-    void PickPlaceSequenceBase::LogStep(const std::string& message)
+    void ThreadBase::LogStep(const std::string& message)
     {
-        std::cout << "[PickPlaceSequenceBase] " << message << std::endl;
+        std::cout << "[ThreadBase] " << message << std::endl;
     }
 }

@@ -1,12 +1,12 @@
 ﻿#include "stdafx.h"
-#include "Load1RobotSequence.h"
+#include "ThreadLoad1.h"
 #include <iostream>
 #include <sstream>
 
 namespace OperationThread
 {
-    Load1RobotSequence::Load1RobotSequence(LPVOID parts, int repeatCount)
-        : PickPlaceSequenceBase(repeatCount)
+    ThreadLoad1::ThreadLoad1(LPVOID parts, int repeatCount)
+        : ThreadBase(repeatCount)
         , m_parts((Load1Parts*)parts)
         , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
@@ -16,19 +16,19 @@ namespace OperationThread
     {
     }
 
-    Load1RobotSequence::~Load1RobotSequence()
+    ThreadLoad1::~ThreadLoad1()
     {
     }
 
-    void Load1RobotSequence::OnInitialize()
+    void ThreadLoad1::OnInitialize()
     {
         if (!m_parts)
-            throw std::runtime_error("Load1RobotSequence: Parts is null");
-        PickPlaceSequenceBase::OnInitialize();
-        LogStep("Load1RobotSequence initialized");
+            throw std::runtime_error("ThreadLoad1: Parts is null");
+        ThreadBase::OnInitialize();
+        LogStep("ThreadLoad1 initialized");
     }
 
-    bool Load1RobotSequence::HandleStep(int step)
+    bool ThreadLoad1::HandleStep(int step)
     {
         auto s = static_cast<PickPlaceStep>(step);
         switch (s)
@@ -68,36 +68,36 @@ namespace OperationThread
 
 
 
-    void Load1RobotSequence::SetPickPosition(double x, double y, double z)
+    void ThreadLoad1::SetPickPosition(double x, double y, double z)
     {
         m_pickX = x;
         m_pickY = y;
         m_pickZ = z;
     }
 
-    void Load1RobotSequence::SetPlacePosition(double x, double y, double z)
+    void ThreadLoad1::SetPlacePosition(double x, double y, double z)
     {
         m_placeX = x;
         m_placeY = y;
         m_placeZ = z;
     }
 
-    void Load1RobotSequence::SetSafeZ(double z)
+    void ThreadLoad1::SetSafeZ(double z)
     {
         m_safeZ = z;
     }
 
-    void Load1RobotSequence::SetMoveTimeout(long timeoutMs)
+    void ThreadLoad1::SetMoveTimeout(long timeoutMs)
     {
         m_moveTimeoutMs = timeoutMs;
     }
 
-    void Load1RobotSequence::SetClampIndex(int index)
+    void ThreadLoad1::SetClampIndex(int index)
     {
         m_clampIndex = index;
     }
 
-    void Load1RobotSequence::SetVacuumIndex(int index)
+    void ThreadLoad1::SetVacuumIndex(int index)
     {
         m_vacuumIndex = index;
     }
@@ -106,7 +106,7 @@ namespace OperationThread
 
     // ============= 단계 처리 함수들 =============
 
-    bool Load1RobotSequence::HandleRailOpen()
+    bool ThreadLoad1::HandleRailOpen()
     {
         LogStep("HandleRailOpen");
 
@@ -118,7 +118,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleMovePickPositionXY()
+    bool ThreadLoad1::HandleMovePickPositionXY()
     {
         LogStep("HandleMovePickPositionXY");
 
@@ -129,7 +129,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1RobotSequence::HandlePreciserDown()
+    bool ThreadLoad1::HandlePreciserDown()
     {
         LogStep("HandlePreciserDown");
 
@@ -140,7 +140,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleMovePickPositionZ()
+    bool ThreadLoad1::HandleMovePickPositionZ()
     {
         LogStep("HandleMovePickPositionZ");
 
@@ -150,7 +150,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1RobotSequence::HandleClampPick()
+    bool ThreadLoad1::HandleClampPick()
     {
         LogStep("HandleClampPick");
 
@@ -162,7 +162,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleVacuumOn()
+    bool ThreadLoad1::HandleVacuumOn()
     {
         LogStep("HandleVacuumOn");
 
@@ -174,7 +174,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleMoveSafeZAfterPick()
+    bool ThreadLoad1::HandleMoveSafeZAfterPick()
     {
         LogStep("HandleMoveSafeZAfterPick");
 
@@ -184,7 +184,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1RobotSequence::HandleMovePlacePositionXY()
+    bool ThreadLoad1::HandleMovePlacePositionXY()
     {
         LogStep("HandleMovePlacePositionXY");
 
@@ -195,7 +195,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1RobotSequence::HandleMovePlacePositionZ()
+    bool ThreadLoad1::HandleMovePlacePositionZ()
     {
         LogStep("HandleMovePlacePositionZ");
 
@@ -205,7 +205,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1RobotSequence::HandleReleasePlace()
+    bool ThreadLoad1::HandleReleasePlace()
     {
         LogStep("HandleReleasePlace");
 
@@ -217,7 +217,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleBlowOn()
+    bool ThreadLoad1::HandleBlowOn()
     {
         LogStep("HandleBlowOn");
 
@@ -229,7 +229,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleMoveSafeZAfterPlace()
+    bool ThreadLoad1::HandleMoveSafeZAfterPlace()
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
@@ -239,7 +239,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1RobotSequence::HandleCheckRepeat()
+    bool ThreadLoad1::HandleCheckRepeat()
     {
         LogStep("HandleCheckRepeat");
 
@@ -268,7 +268,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1RobotSequence::HandleComplete()
+    bool ThreadLoad1::HandleComplete()
     {
         LogStep("HandleComplete");
         return false; // 완료
@@ -276,7 +276,7 @@ namespace OperationThread
 
 
 
-    void Load1RobotSequence::LogStep(const std::string& message)
+    void ThreadLoad1::LogStep(const std::string& message)
     {
         std::cout << "[Load1PickPlace] " << message << std::endl;
     }
