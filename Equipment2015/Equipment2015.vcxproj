@@ -220,10 +220,10 @@
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="OperationThread\SequenceThreadManager.h" />
-    <ClInclude Include="OperationThread\Load1PickPlaceManager.h" />
-    <ClInclude Include="OperationThread\Load1PickPlaceSequence.h" />
-    <ClInclude Include="OperationThread\Load2PickPlaceManager.h" />
-    <ClInclude Include="OperationThread\Load2PickPlaceSequence.h" />
+    <ClInclude Include="OperationThread\Load1RobotManager.h" />
+    <ClInclude Include="OperationThread\Load1RobotSequence.h" />
+    <ClInclude Include="OperationThread\Load2RobotManager.h" />
+    <ClInclude Include="OperationThread\Load2RobotSequence.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -244,10 +244,10 @@
     <ClCompile Include="Equipment2015.cpp" />
     <ClCompile Include="Equipment2015Dlg.cpp" />
     <ClCompile Include="OperationThread\SequenceThreadManager.cpp" />
-    <ClCompile Include="OperationThread\Load1PickPlaceManager.cpp" />
-    <ClCompile Include="OperationThread\Load1PickPlaceSequence.cpp" />
-    <ClCompile Include="OperationThread\Load2PickPlaceManager.cpp" />
-    <ClCompile Include="OperationThread\Load2PickPlaceSequence.cpp" />
+    <ClCompile Include="OperationThread\Load1RobotManager.cpp" />
+    <ClCompile Include="OperationThread\Load1RobotSequence.cpp" />
+    <ClCompile Include="OperationThread\Load2RobotManager.cpp" />
+    <ClCompile Include="OperationThread\Load2RobotSequence.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

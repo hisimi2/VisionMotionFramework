@@ -10,8 +10,8 @@ class Load2Parts;
 
 namespace OperationThread
 {
-    class Load1PickPlaceManager;
-    class Load2PickPlaceManager;
+    class Load1RobotManager;
+    class Load2RobotManager;
 
     /// <summary>
     /// Load1과 Load2의 Pick & Place 시퀀스를 하나의 스위치로 제어하는 통합 컨트롤러
@@ -93,8 +93,8 @@ namespace OperationThread
         void MonitorLoop();
 
         COPSwitch* m_startSwitch;
-        std::shared_ptr<Load1PickPlaceManager> m_load1Manager;
-        std::shared_ptr<Load2PickPlaceManager> m_load2Manager;
+        std::shared_ptr<Load1RobotManager> m_load1Manager;
+        std::shared_ptr<Load2RobotManager> m_load2Manager;
 
         std::thread m_monitoringThread;
         bool m_running;

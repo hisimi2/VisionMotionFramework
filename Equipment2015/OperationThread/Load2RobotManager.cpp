@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "Load2PickPlaceManager.h"
-#include "Load2PickPlaceSequence.h"
+#include "Load2RobotManager.h"
+#include "Load2RobotSequence.h"
 
 namespace OperationThread
 {
-    Load2PickPlaceManager::Load2PickPlaceManager()
+    Load2RobotManager::Load2RobotManager()
      : m_manager(std::make_shared<EC::SequenceManager>())
         , m_parts(nullptr)
     {
     }
 
- Load2PickPlaceManager::~Load2PickPlaceManager()
+ Load2RobotManager::~Load2RobotManager()
     {
   if (m_manager)
         {
@@ -18,14 +18,14 @@ namespace OperationThread
         }
     }
 
-   void Load2PickPlaceManager::Start(Load2Parts* parts, int repeatCount)
+   void Load2RobotManager::Start(Load2Parts* parts, int repeatCount)
   {
         m_parts = parts;
-        m_sequence = std::make_shared<Load2PickPlaceSequence>(parts, repeatCount);
+        m_sequence = std::make_shared<Load2RobotSequence>(parts, repeatCount);
         m_manager->Start(m_sequence);
     }
 
-    void Load2PickPlaceManager::Pause()
+    void Load2RobotManager::Pause()
     {
   if (m_manager)
         {
@@ -33,7 +33,7 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceManager::Resume()
+    void Load2RobotManager::Resume()
   {
         if (m_manager)
         {
@@ -41,7 +41,7 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceManager::Terminate()
+    void Load2RobotManager::Terminate()
     {
         if (m_manager)
         {
@@ -49,22 +49,22 @@ namespace OperationThread
         }
     }
 
-    std::string Load2PickPlaceManager::GetStateString() const
+    std::string Load2RobotManager::GetStateString() const
     {
         return m_manager ? m_manager->GetStateString() : "Unknown";
     }
 
-    bool Load2PickPlaceManager::IsComplete() const
+    bool Load2RobotManager::IsComplete() const
     {
       return m_manager ? m_manager->IsComplete() : true;
     }
 
-    std::string Load2PickPlaceManager::GetLastError() const
+    std::string Load2RobotManager::GetLastError() const
     {
     return m_sequence ? m_sequence->GetLastError() : "";
     }
 
-    void Load2PickPlaceManager::WaitForCompletion()
+    void Load2RobotManager::WaitForCompletion()
     {
       if (m_manager)
         {
@@ -72,7 +72,7 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceManager::SetPickPosition(double x, double z)
+    void Load2RobotManager::SetPickPosition(double x, double z)
     {
         if (m_sequence)
         {
@@ -80,7 +80,7 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceManager::SetPlacePosition(double x, double z)
+    void Load2RobotManager::SetPlacePosition(double x, double z)
     {
       if (m_sequence)
 {
@@ -88,7 +88,7 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceManager::SetSafeZ(double z)
+    void Load2RobotManager::SetSafeZ(double z)
     {
         if (m_sequence)
       {
@@ -96,7 +96,7 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceManager::SetMoveTimeout(long timeoutMs)
+    void Load2RobotManager::SetMoveTimeout(long timeoutMs)
     {
         if (m_sequence)
   {
@@ -104,12 +104,12 @@ namespace OperationThread
      }
     }
 
-    int Load2PickPlaceManager::GetCurrentIteration() const
+    int Load2RobotManager::GetCurrentIteration() const
     {
         return m_sequence ? m_sequence->GetCurrentIteration() : 0;
     }
 
-    int Load2PickPlaceManager::GetSuccessCount() const
+    int Load2RobotManager::GetSuccessCount() const
     {
         return m_sequence ? m_sequence->GetSuccessCount() : 0;
     }

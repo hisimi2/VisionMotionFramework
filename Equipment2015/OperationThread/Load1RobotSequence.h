@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EquipmentCore.h"
 #include "Actuators/Load1Parts.h"
@@ -26,7 +26,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class Load1PickPlaceSequence : public EC::ISequenceExecutable
+    class Load1RobotSequence : public EC::ISequenceExecutable
     {
     public:
         /// <summary>
@@ -56,12 +56,12 @@ namespace OperationThread
         /// <param name="parts">Load1Parts 객체</param>
         /// <param name="adapter">AdapterLoad1 객체</param>
         /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
-        explicit Load1PickPlaceSequence(
+        explicit Load1RobotSequence(
             Load1Parts* parts,
             int repeatCount = 0
         );
 
-        ~Load1PickPlaceSequence() override;
+        ~Load1RobotSequence() override;
 
         // ISequenceExecutable 구현
         void OnInitialize() override;
@@ -157,5 +157,5 @@ namespace OperationThread
         void LogStep(const std::string& message);
     };
 
-    using Load1PickPlaceSequencePtr = std::shared_ptr<Load1PickPlaceSequence>;
+    using Load1RobotSequencePtr = std::shared_ptr<Load1RobotSequence>;
 }

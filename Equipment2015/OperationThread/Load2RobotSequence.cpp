@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "Load2PickPlaceSequence.h"
+#include "Load2RobotSequence.h"
 #include <iostream>
 #include <sstream>
 #include "Actuators\Load2Parts.h"
 
 namespace OperationThread
 {
-    Load2PickPlaceSequence::Load2PickPlaceSequence(Load2Parts* parts, int repeatCount)
+    Load2RobotSequence::Load2RobotSequence(Load2Parts* parts, int repeatCount)
         : m_parts(parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)
@@ -21,24 +21,24 @@ namespace OperationThread
     {
     }
 
-    Load2PickPlaceSequence::~Load2PickPlaceSequence()
+    Load2RobotSequence::~Load2RobotSequence()
     {
     }
 
-    void Load2PickPlaceSequence::OnInitialize()
+    void Load2RobotSequence::OnInitialize()
     {
         if (!m_parts)
-        throw std::runtime_error("Load2PickPlaceSequence: Parts is null");
+        throw std::runtime_error("Load2RobotSequence: Parts is null");
 
         m_initialized = true;
         m_currentIteration = 0;
         m_successCount = 0;
         m_currentStep = PickPlaceStep::RailOpen;
 
-        LogStep("Load2PickPlaceSequence initialized");
+        LogStep("Load2RobotSequence initialized");
     }
 
-    bool Load2PickPlaceSequence::OnPoll()
+    bool Load2RobotSequence::OnPoll()
     {
         if (!m_initialized)
             return false;
@@ -102,61 +102,61 @@ namespace OperationThread
         }
     }
 
-    void Load2PickPlaceSequence::OnCleanup()
+    void Load2RobotSequence::OnCleanup()
     {
-        LogStep("Load2PickPlaceSequence cleanup completed");
+        LogStep("Load2RobotSequence cleanup completed");
     }
 
-    void Load2PickPlaceSequence::OnError(const std::string& errorMsg)
+    void Load2RobotSequence::OnError(const std::string& errorMsg)
     {
         m_lastError = errorMsg;
-        std::cerr << "Load2PickPlaceSequence Error: " << errorMsg << std::endl;
+        std::cerr << "Load2RobotSequence Error: " << errorMsg << std::endl;
     }
 
-    void Load2PickPlaceSequence::SetPickPosition(double x, double z)
+    void Load2RobotSequence::SetPickPosition(double x, double z)
     {
         m_pickX = x;
         m_pickZ = z;
     }
 
-    void Load2PickPlaceSequence::SetPlacePosition(double x, double z)
+    void Load2RobotSequence::SetPlacePosition(double x, double z)
     {
         m_placeX = x;
         m_placeZ = z;
     }
 
-    void Load2PickPlaceSequence::SetSafeZ(double z)
+    void Load2RobotSequence::SetSafeZ(double z)
     {
         m_safeZ = z;
     }
 
-    void Load2PickPlaceSequence::SetMoveTimeout(long timeoutMs)
+    void Load2RobotSequence::SetMoveTimeout(long timeoutMs)
     {
         m_moveTimeoutMs = timeoutMs;
     }
 
-    void Load2PickPlaceSequence::SetVacuumIndex(int index)
+    void Load2RobotSequence::SetVacuumIndex(int index)
     {
         m_vacuumIndex = index;
     }
 
-    Load2PickPlaceSequence::PickPlaceStep Load2PickPlaceSequence::GetCurrentStep() const
+    Load2RobotSequence::PickPlaceStep Load2RobotSequence::GetCurrentStep() const
     {
         return m_currentStep;
     }
 
-    int Load2PickPlaceSequence::GetCurrentIteration() const
+    int Load2RobotSequence::GetCurrentIteration() const
     {
         return m_currentIteration;
     }
 
-    int Load2PickPlaceSequence::GetSuccessCount() const
+    int Load2RobotSequence::GetSuccessCount() const
     {
         return m_successCount;
     }
 
     // ============= 단계 처리 함수들 =============
-    bool Load2PickPlaceSequence::HandleRailOpen()
+    bool Load2RobotSequence::HandleRailOpen()
     {
         LogStep("HandleRailOpen");
 
@@ -168,7 +168,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2PickPlaceSequence::HandleMovePickPositionXZ()
+    bool Load2RobotSequence::HandleMovePickPositionXZ()
     {
         LogStep("HandleMovePickPositionXZ");
 
@@ -179,7 +179,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2PickPlaceSequence::HandlePreciserDown()
+    bool Load2RobotSequence::HandlePreciserDown()
     {
         LogStep("HandlePreciserDown");
 
@@ -188,7 +188,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2PickPlaceSequence::HandleVacuumOn()
+    bool Load2RobotSequence::HandleVacuumOn()
     {
         LogStep("HandleVacuumOn");
 
@@ -200,7 +200,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2PickPlaceSequence::HandleMoveSafeZAfterPick()
+    bool Load2RobotSequence::HandleMoveSafeZAfterPick()
     {
       LogStep("HandleMoveSafeZAfterPick");
 
@@ -210,7 +210,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2PickPlaceSequence::HandleMovePlacePositionXZ()
+    bool Load2RobotSequence::HandleMovePlacePositionXZ()
     {
         LogStep("HandleMovePlacePositionXZ");
 
@@ -221,7 +221,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2PickPlaceSequence::HandlePreciserUp()
+    bool Load2RobotSequence::HandlePreciserUp()
     {
         LogStep("HandlePreciserUp");
 
@@ -230,7 +230,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2PickPlaceSequence::HandleVacuumOff()
+    bool Load2RobotSequence::HandleVacuumOff()
     {
         LogStep("HandleVacuumOff");
 
@@ -242,7 +242,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2PickPlaceSequence::HandleMoveSafeZAfterPlace()
+    bool Load2RobotSequence::HandleMoveSafeZAfterPlace()
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
@@ -252,7 +252,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load2PickPlaceSequence::HandleCheckRepeat()
+    bool Load2RobotSequence::HandleCheckRepeat()
     {
         LogStep("HandleCheckRepeat");
 
@@ -281,13 +281,13 @@ namespace OperationThread
         return true;
     }
 
-    bool Load2PickPlaceSequence::HandleComplete()
+    bool Load2RobotSequence::HandleComplete()
     {
         LogStep("HandleComplete");
         return false; // 완료
     }
 
-    void Load2PickPlaceSequence::MoveToNextStep()
+    void Load2RobotSequence::MoveToNextStep()
     {
         int nextStep = static_cast<int>(m_currentStep) + 1;
         if (nextStep <= static_cast<int>(PickPlaceStep::Complete))
@@ -296,14 +296,14 @@ namespace OperationThread
         }
     }
 
-    bool Load2PickPlaceSequence::IsStepTimeout() const
+    bool Load2RobotSequence::IsStepTimeout() const
     {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_stepStartTime).count();
         return elapsed > m_moveTimeoutMs;
     }
 
-    void Load2PickPlaceSequence::LogStep(const std::string& message)
+    void Load2RobotSequence::LogStep(const std::string& message)
     {
         std::cout << "[Load2PickPlace] " << message << std::endl;
     }

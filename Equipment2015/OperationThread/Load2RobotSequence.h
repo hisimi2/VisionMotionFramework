@@ -13,7 +13,7 @@ namespace OperationThread
     /// Load2 Pick & Place 시퀀스 구현
     /// EquipmentCore의 ISequenceExecutable 인터페이스를 구현
     /// </summary>
-    class Load2PickPlaceSequence : public EC::ISequenceExecutable
+    class Load2RobotSequence : public EC::ISequenceExecutable
     {
     public:
         enum class PickPlaceStep
@@ -31,8 +31,8 @@ namespace OperationThread
             Complete
         };
 
-        explicit Load2PickPlaceSequence(Load2Parts* parts, int repeatCount = 0);
-        ~Load2PickPlaceSequence() override;
+        explicit Load2RobotSequence(Load2Parts* parts, int repeatCount = 0);
+        ~Load2RobotSequence() override;
 
         // ISequenceExecutable 구현
         void OnInitialize() override;
@@ -96,6 +96,6 @@ namespace OperationThread
         std::chrono::steady_clock::time_point m_stepStartTime;
     };
 
-    using Load2PickPlaceSequencePtr = std::shared_ptr<Load2PickPlaceSequence>;
+    using Load2RobotSequencePtr = std::shared_ptr<Load2RobotSequence>;
 
 } // namespace OperationThread

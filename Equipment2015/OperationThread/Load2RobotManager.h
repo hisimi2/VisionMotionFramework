@@ -11,18 +11,18 @@ class Load2Parts;
 
 namespace OperationThread
 {
-    class Load2PickPlaceSequence;
-    using Load2PickPlaceSequencePtr = std::shared_ptr<Load2PickPlaceSequence>;
+    class Load2RobotSequence;
+    using Load2RobotSequencePtr = std::shared_ptr<Load2RobotSequence>;
 
     /// <summary>
     /// Load2 Pick & Place 매니저
     /// EquipmentCore의 SequenceManager를 사용하여 Load2 Pick & Place 작업 관리
     /// </summary>
-    class Load2PickPlaceManager
+    class Load2RobotManager
     {
     public:
-        explicit Load2PickPlaceManager();
-        ~Load2PickPlaceManager();
+        explicit Load2RobotManager();
+        ~Load2RobotManager();
 
         /// <summary>
         /// Pick & Place 작업 시작
@@ -98,9 +98,9 @@ namespace OperationThread
 
     private:
         EC::SequenceManagerPtr m_manager;
-        Load2PickPlaceSequencePtr m_sequence;
+        Load2RobotSequencePtr m_sequence;
         Load2Parts* m_parts;
     };
 
-    using Load2PickPlaceManagerPtr = std::shared_ptr<Load2PickPlaceManager>;
+    using Load2RobotManagerPtr = std::shared_ptr<Load2RobotManager>;
 }

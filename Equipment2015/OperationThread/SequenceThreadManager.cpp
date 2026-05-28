@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SequenceThreadManager.h"
-#include "Load1PickPlaceManager.h"
-#include "Load2PickPlaceManager.h"
+#include "Load1RobotManager.h"
+#include "Load2RobotManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>
 #include <mutex>
@@ -14,8 +14,8 @@ namespace OperationThread
         , m_running(false)
         , m_stopRequested(false)
     {
-        m_load1Manager = std::make_shared<Load1PickPlaceManager>();
-        m_load2Manager = std::make_shared<Load2PickPlaceManager>();
+        m_load1Manager = std::make_shared<Load1RobotManager>();
+        m_load2Manager = std::make_shared<Load2RobotManager>();
     }
 
     SequenceThreadManager::~SequenceThreadManager()

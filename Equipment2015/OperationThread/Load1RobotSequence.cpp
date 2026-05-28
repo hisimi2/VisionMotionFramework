@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "Load1PickPlaceSequence.h"
+#include "Load1RobotSequence.h"
 #include <iostream>
 #include <sstream>
 
 namespace OperationThread
 {
-    Load1PickPlaceSequence::Load1PickPlaceSequence(Load1Parts* parts, int repeatCount)
+    Load1RobotSequence::Load1RobotSequence(Load1Parts* parts, int repeatCount)
         : m_parts(parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)
@@ -21,24 +21,24 @@ namespace OperationThread
     {
     }
 
-    Load1PickPlaceSequence::~Load1PickPlaceSequence()
+    Load1RobotSequence::~Load1RobotSequence()
     {
     }
 
-    void Load1PickPlaceSequence::OnInitialize()
+    void Load1RobotSequence::OnInitialize()
     {
         if (!m_parts)
-            throw std::runtime_error("Load1PickPlaceSequence: Parts is null");
+            throw std::runtime_error("Load1RobotSequence: Parts is null");
 
         m_initialized = true;
         m_currentIteration = 0;
         m_successCount = 0;
         m_currentStep = PickPlaceStep::RailOpen;
 
-        LogStep("Load1PickPlaceSequence initialized");
+        LogStep("Load1RobotSequence initialized");
     }
 
-    bool Load1PickPlaceSequence::OnPoll()
+    bool Load1RobotSequence::OnPoll()
     {
         if (!m_initialized)
             return false;
@@ -111,69 +111,69 @@ namespace OperationThread
         }
     }
 
-    void Load1PickPlaceSequence::OnCleanup()
+    void Load1RobotSequence::OnCleanup()
     {
-        LogStep("Load1PickPlaceSequence cleanup completed");
+        LogStep("Load1RobotSequence cleanup completed");
     }
 
-    void Load1PickPlaceSequence::OnError(const std::string& errorMsg)
+    void Load1RobotSequence::OnError(const std::string& errorMsg)
     {
         m_lastError = errorMsg;
-        std::cerr << "Load1PickPlaceSequence Error: " << errorMsg << std::endl;
+        std::cerr << "Load1RobotSequence Error: " << errorMsg << std::endl;
     }
 
-    void Load1PickPlaceSequence::SetPickPosition(double x, double y, double z)
+    void Load1RobotSequence::SetPickPosition(double x, double y, double z)
     {
         m_pickX = x;
         m_pickY = y;
         m_pickZ = z;
     }
 
-    void Load1PickPlaceSequence::SetPlacePosition(double x, double y, double z)
+    void Load1RobotSequence::SetPlacePosition(double x, double y, double z)
     {
         m_placeX = x;
         m_placeY = y;
         m_placeZ = z;
     }
 
-    void Load1PickPlaceSequence::SetSafeZ(double z)
+    void Load1RobotSequence::SetSafeZ(double z)
     {
         m_safeZ = z;
     }
 
-    void Load1PickPlaceSequence::SetMoveTimeout(long timeoutMs)
+    void Load1RobotSequence::SetMoveTimeout(long timeoutMs)
     {
         m_moveTimeoutMs = timeoutMs;
     }
 
-    void Load1PickPlaceSequence::SetClampIndex(int index)
+    void Load1RobotSequence::SetClampIndex(int index)
     {
         m_clampIndex = index;
     }
 
-    void Load1PickPlaceSequence::SetVacuumIndex(int index)
+    void Load1RobotSequence::SetVacuumIndex(int index)
     {
         m_vacuumIndex = index;
     }
 
-    Load1PickPlaceSequence::PickPlaceStep Load1PickPlaceSequence::GetCurrentStep() const
+    Load1RobotSequence::PickPlaceStep Load1RobotSequence::GetCurrentStep() const
     {
         return m_currentStep;
     }
 
-    int Load1PickPlaceSequence::GetCurrentIteration() const
+    int Load1RobotSequence::GetCurrentIteration() const
     {
         return m_currentIteration;
     }
 
-    int Load1PickPlaceSequence::GetSuccessCount() const
+    int Load1RobotSequence::GetSuccessCount() const
     {
         return m_successCount;
     }
 
     // ============= 단계 처리 함수들 =============
 
-    bool Load1PickPlaceSequence::HandleRailOpen()
+    bool Load1RobotSequence::HandleRailOpen()
     {
         LogStep("HandleRailOpen");
 
@@ -185,7 +185,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleMovePickPositionXY()
+    bool Load1RobotSequence::HandleMovePickPositionXY()
     {
         LogStep("HandleMovePickPositionXY");
 
@@ -196,7 +196,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1PickPlaceSequence::HandlePreciserDown()
+    bool Load1RobotSequence::HandlePreciserDown()
     {
         LogStep("HandlePreciserDown");
 
@@ -207,7 +207,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleMovePickPositionZ()
+    bool Load1RobotSequence::HandleMovePickPositionZ()
     {
         LogStep("HandleMovePickPositionZ");
 
@@ -217,7 +217,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1PickPlaceSequence::HandleClampPick()
+    bool Load1RobotSequence::HandleClampPick()
     {
         LogStep("HandleClampPick");
 
@@ -229,7 +229,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleVacuumOn()
+    bool Load1RobotSequence::HandleVacuumOn()
     {
         LogStep("HandleVacuumOn");
 
@@ -241,7 +241,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleMoveSafeZAfterPick()
+    bool Load1RobotSequence::HandleMoveSafeZAfterPick()
     {
         LogStep("HandleMoveSafeZAfterPick");
 
@@ -251,7 +251,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1PickPlaceSequence::HandleMovePlacePositionXY()
+    bool Load1RobotSequence::HandleMovePlacePositionXY()
     {
         LogStep("HandleMovePlacePositionXY");
 
@@ -262,7 +262,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1PickPlaceSequence::HandleMovePlacePositionZ()
+    bool Load1RobotSequence::HandleMovePlacePositionZ()
     {
         LogStep("HandleMovePlacePositionZ");
 
@@ -272,7 +272,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1PickPlaceSequence::HandleReleasePlace()
+    bool Load1RobotSequence::HandleReleasePlace()
     {
         LogStep("HandleReleasePlace");
 
@@ -284,7 +284,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleBlowOn()
+    bool Load1RobotSequence::HandleBlowOn()
     {
         LogStep("HandleBlowOn");
 
@@ -296,7 +296,7 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleMoveSafeZAfterPlace()
+    bool Load1RobotSequence::HandleMoveSafeZAfterPlace()
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
@@ -306,7 +306,7 @@ namespace OperationThread
         return false; // 타임아웃 대기
     }
 
-    bool Load1PickPlaceSequence::HandleCheckRepeat()
+    bool Load1RobotSequence::HandleCheckRepeat()
     {
         LogStep("HandleCheckRepeat");
 
@@ -335,13 +335,13 @@ namespace OperationThread
         return true;
     }
 
-    bool Load1PickPlaceSequence::HandleComplete()
+    bool Load1RobotSequence::HandleComplete()
     {
         LogStep("HandleComplete");
         return false; // 완료
     }
 
-    void Load1PickPlaceSequence::MoveToNextStep()
+    void Load1RobotSequence::MoveToNextStep()
     {
         int nextStep = static_cast<int>(m_currentStep) + 1;
         if (nextStep <= static_cast<int>(PickPlaceStep::Complete))
@@ -350,14 +350,14 @@ namespace OperationThread
         }
     }
 
-    bool Load1PickPlaceSequence::IsStepTimeout() const
+    bool Load1RobotSequence::IsStepTimeout() const
     {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_stepStartTime).count();
         return elapsed > m_moveTimeoutMs;
     }
 
-    void Load1PickPlaceSequence::LogStep(const std::string& message)
+    void Load1RobotSequence::LogStep(const std::string& message)
     {
         std::cout << "[Load1PickPlace] " << message << std::endl;
     }

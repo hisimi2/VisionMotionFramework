@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "Load1PickPlaceManager.h"
-#include "Load1PickPlaceSequence.h"
+#include "Load1RobotManager.h"
+#include "Load1RobotSequence.h"
 
 namespace OperationThread
 {
-    Load1PickPlaceManager::Load1PickPlaceManager()
+    Load1RobotManager::Load1RobotManager()
         : m_manager(std::make_shared<EC::SequenceManager>())
     , m_parts(nullptr)
     {
     }
 
-    Load1PickPlaceManager::~Load1PickPlaceManager()
+    Load1RobotManager::~Load1RobotManager()
     {
         if (m_manager)
         {
@@ -18,13 +18,13 @@ namespace OperationThread
         }
 }
 
-    void Load1PickPlaceManager::Start(Load1Parts* parts, int repeatCount)
+    void Load1RobotManager::Start(Load1Parts* parts, int repeatCount)
     {
         if (!parts)
-      throw std::runtime_error("Load1PickPlaceManager: Load1Parts is null");
+      throw std::runtime_error("Load1RobotManager: Load1Parts is null");
 
         m_parts = parts;
-        m_sequence = std::make_shared<Load1PickPlaceSequence>(parts, repeatCount);
+        m_sequence = std::make_shared<Load1RobotSequence>(parts, repeatCount);
 
         m_sequence->SetPickPosition(100.0, 200.0, -10.0);
         m_sequence->SetPlacePosition(300.0, 150.0, -12.0);
@@ -36,7 +36,7 @@ namespace OperationThread
         m_manager->Start(m_sequence);
     }
 
-    void Load1PickPlaceManager::Pause()
+    void Load1RobotManager::Pause()
     {
       if (m_manager)
         {
@@ -44,7 +44,7 @@ namespace OperationThread
         }
     }
 
-    void Load1PickPlaceManager::Resume()
+    void Load1RobotManager::Resume()
     {
         if (m_manager)
         {
@@ -52,7 +52,7 @@ namespace OperationThread
  }
     }
 
-    void Load1PickPlaceManager::Terminate()
+    void Load1RobotManager::Terminate()
     {
         if (m_manager)
         {
@@ -60,22 +60,22 @@ namespace OperationThread
     }
     }
 
-    std::string Load1PickPlaceManager::GetStateString() const
+    std::string Load1RobotManager::GetStateString() const
     {
     return m_manager ? m_manager->GetStateString() : "Unknown";
     }
 
-    bool Load1PickPlaceManager::IsComplete() const
+    bool Load1RobotManager::IsComplete() const
     {
         return m_manager ? m_manager->IsComplete() : true;
     }
 
-    std::string Load1PickPlaceManager::GetLastError() const
+    std::string Load1RobotManager::GetLastError() const
     {
         return m_manager ? m_manager->GetLastError() : "";
     }
 
-    void Load1PickPlaceManager::WaitForCompletion()
+    void Load1RobotManager::WaitForCompletion()
     {
     if (m_manager)
         {
@@ -83,36 +83,36 @@ namespace OperationThread
         }
     }
 
-    void Load1PickPlaceManager::SetPickPosition(double x, double y, double z)
+    void Load1RobotManager::SetPickPosition(double x, double y, double z)
     {
         if (m_sequence)
       m_sequence->SetPickPosition(x, y, z);
     }
 
-    void Load1PickPlaceManager::SetPlacePosition(double x, double y, double z)
+    void Load1RobotManager::SetPlacePosition(double x, double y, double z)
     {
   if (m_sequence)
             m_sequence->SetPlacePosition(x, y, z);
     }
 
-    void Load1PickPlaceManager::SetSafeZ(double z)
+    void Load1RobotManager::SetSafeZ(double z)
     {
         if (m_sequence)
             m_sequence->SetSafeZ(z);
 }
 
-    void Load1PickPlaceManager::SetMoveTimeout(long timeoutMs)
+    void Load1RobotManager::SetMoveTimeout(long timeoutMs)
     {
       if (m_sequence)
      m_sequence->SetMoveTimeout(timeoutMs);
     }
 
-    int Load1PickPlaceManager::GetCurrentIteration() const
+    int Load1RobotManager::GetCurrentIteration() const
     {
         return m_sequence ? m_sequence->GetCurrentIteration() : 0;
     }
 
-    int Load1PickPlaceManager::GetSuccessCount() const
+    int Load1RobotManager::GetSuccessCount() const
     {
      return m_sequence ? m_sequence->GetSuccessCount() : 0;
     }

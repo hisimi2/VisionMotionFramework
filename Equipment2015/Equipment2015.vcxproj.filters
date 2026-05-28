@@ -96,10 +96,10 @@
     <ClInclude Include="Actuators\Load1Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\Load1PickPlaceManager.h">
+    <ClInclude Include="OperationThread\Load1RobotManager.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\Load1PickPlaceSequence.h">
+    <ClInclude Include="OperationThread\Load1RobotSequence.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
     <ClInclude Include="ComponentComposition\mock\CMockDataRepository.h">
@@ -141,13 +141,13 @@
     <ClInclude Include="Actuators\Load2Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\Load2PickPlaceSequence.h">
+    <ClInclude Include="OperationThread\Load2RobotSequence.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
     <ClInclude Include="OperationThread\SequenceThreadManager.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\Load2PickPlaceManager.h">
+    <ClInclude Include="OperationThread\Load2RobotManager.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
   </ItemGroup>
@@ -176,10 +176,10 @@
     <ClCompile Include="Actuators\Load1Parts.cpp">
       <Filter>Actuators</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\Load1PickPlaceManager.cpp">
+    <ClCompile Include="OperationThread\Load1RobotManager.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\Load1PickPlaceSequence.cpp">
+    <ClCompile Include="OperationThread\Load1RobotSequence.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
     <ClCompile Include="ComponentComposition\mock\CMockDataRepository.cpp">
@@ -203,13 +203,13 @@
     <ClCompile Include="Actuators\Load2Parts.cpp">
       <Filter>Actuators</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\Load2PickPlaceSequence.cpp">
+    <ClCompile Include="OperationThread\Load2RobotSequence.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
     <ClCompile Include="OperationThread\SequenceThreadManager.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\Load2PickPlaceManager.cpp">
+    <ClCompile Include="OperationThread\Load2RobotManager.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
   </ItemGroup>
