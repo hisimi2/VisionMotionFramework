@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1RobotSequence.h"
 #include <iostream>
 #include <sstream>
@@ -6,18 +6,13 @@
 namespace OperationThread
 {
     Load1RobotSequence::Load1RobotSequence(LPVOID parts, int repeatCount)
-        : m_parts((Load1Parts*)parts)
-        , m_repeatCount(repeatCount)
-        , m_currentIteration(0)
-        , m_successCount(0)
-        , m_currentStep(PickPlaceStep::RailOpen)
-        , m_moveTimeoutMs(3000)
+        : PickPlaceSequenceBase(repeatCount)
+        , m_parts((Load1Parts*)parts)
         , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
         , m_safeZ(0.0)
         , m_clampIndex(0)
         , m_vacuumIndex(0)
-        , m_initialized(false)
     {
     }
 
@@ -29,98 +24,49 @@ namespace OperationThread
     {
         if (!m_parts)
             throw std::runtime_error("Load1RobotSequence: Parts is null");
-
-        m_initialized = true;
-        m_currentIteration = 0;
-        m_successCount = 0;
-        m_currentStep = PickPlaceStep::RailOpen;
-
+        PickPlaceSequenceBase::OnInitialize();
         LogStep("Load1RobotSequence initialized");
     }
 
-    bool Load1RobotSequence::OnPoll()
+    bool Load1RobotSequence::HandleStep(int step)
     {
-        if (!m_initialized)
-            return false;
-
-        try
+        auto s = static_cast<PickPlaceStep>(step);
+        switch (s)
         {
-            bool stepComplete = false;
-
-            // 현재 단계 처리
-            switch (m_currentStep)
-            {
-            case PickPlaceStep::RailOpen:
-                stepComplete = HandleRailOpen();
-                break;
-            case PickPlaceStep::MovePickPositionXY:
-                stepComplete = HandleMovePickPositionXY();
-                break;
-            case PickPlaceStep::PreciserDown:
-                stepComplete = HandlePreciserDown();
-                break;
-            case PickPlaceStep::MovePickPositionZ:
-                stepComplete = HandleMovePickPositionZ();
-                break;
-            case PickPlaceStep::ClampPick:
-                stepComplete = HandleClampPick();
-                break;
-            case PickPlaceStep::VacuumOn:
-                stepComplete = HandleVacuumOn();
-                break;
-            case PickPlaceStep::MoveSafeZAfterPick:
-                stepComplete = HandleMoveSafeZAfterPick();
-                break;
-            case PickPlaceStep::MovePlacePositionXY:
-                stepComplete = HandleMovePlacePositionXY();
-                break;
-            case PickPlaceStep::MovePlacePositionZ:
-                stepComplete = HandleMovePlacePositionZ();
-                break;
-            case PickPlaceStep::ReleasePlace:
-                stepComplete = HandleReleasePlace();
-                break;
-            case PickPlaceStep::BlowOn:
-                stepComplete = HandleBlowOn();
-                break;
-            case PickPlaceStep::MoveSafeZAfterPlace:
-                stepComplete = HandleMoveSafeZAfterPlace();
-                break;
-            case PickPlaceStep::CheckRepeat:
-                stepComplete = HandleCheckRepeat();
-                break;
-            case PickPlaceStep::Complete:
-                stepComplete = HandleComplete();
-                break;
-            default:
-                throw std::runtime_error("Unknown step");
-            }
-
-            if (stepComplete && m_currentStep != PickPlaceStep::Complete)
-            {
-                MoveToNextStep();
-            }
-
-            // false이면 시퀀스 완료
-            return m_currentStep != PickPlaceStep::Complete;
-        }
-        catch (const std::exception& ex)
-        {
-            m_lastError = std::string("Poll error: ") + ex.what();
-            throw;
+        case PickPlaceStep::RailOpen:
+            return HandleRailOpen();
+        case PickPlaceStep::MovePickPositionXY:
+            return HandleMovePickPositionXY();
+        case PickPlaceStep::PreciserDown:
+            return HandlePreciserDown();
+        case PickPlaceStep::MovePickPositionZ:
+            return HandleMovePickPositionZ();
+        case PickPlaceStep::ClampPick:
+            return HandleClampPick();
+        case PickPlaceStep::VacuumOn:
+            return HandleVacuumOn();
+        case PickPlaceStep::MoveSafeZAfterPick:
+            return HandleMoveSafeZAfterPick();
+        case PickPlaceStep::MovePlacePositionXY:
+            return HandleMovePlacePositionXY();
+        case PickPlaceStep::MovePlacePositionZ:
+            return HandleMovePlacePositionZ();
+        case PickPlaceStep::ReleasePlace:
+            return HandleReleasePlace();
+        case PickPlaceStep::BlowOn:
+            return HandleBlowOn();
+        case PickPlaceStep::MoveSafeZAfterPlace:
+            return HandleMoveSafeZAfterPlace();
+        case PickPlaceStep::CheckRepeat:
+            return HandleCheckRepeat();
+        case PickPlaceStep::Complete:
+            return HandleComplete();
+        default:
+            throw std::runtime_error("Unknown step");
         }
     }
 
-    void Load1RobotSequence::OnCleanup()
-    {
-        LogStep("Load1RobotSequence cleanup completed");
-    }
 
-    void Load1RobotSequence::OnError(const std::string& errorMsg)
-    {
-        m_lastError = errorMsg;
-        std::cerr << "Load1RobotSequence Error: " << errorMsg << std::endl;
-    }
 
     void Load1RobotSequence::SetPickPosition(double x, double y, double z)
     {
@@ -156,20 +102,7 @@ namespace OperationThread
         m_vacuumIndex = index;
     }
 
-    Load1RobotSequence::PickPlaceStep Load1RobotSequence::GetCurrentStep() const
-    {
-        return m_currentStep;
-    }
 
-    int Load1RobotSequence::GetCurrentIteration() const
-    {
-        return m_currentIteration;
-    }
-
-    int Load1RobotSequence::GetSuccessCount() const
-    {
-        return m_successCount;
-    }
 
     // ============= 단계 처리 함수들 =============
 
@@ -321,13 +254,13 @@ namespace OperationThread
         if (m_repeatCount == 0)
         {
             // 무한 반복
-            m_currentStep = PickPlaceStep::RailOpen;
+            m_currentStep = (int)PickPlaceStep::RailOpen;
             return false;
         }
         else if (m_currentIteration < m_repeatCount)
         {
             // 반복 계속
-            m_currentStep = PickPlaceStep::RailOpen;
+            m_currentStep = (int)PickPlaceStep::RailOpen;
             return false;
         }
 
@@ -341,21 +274,7 @@ namespace OperationThread
         return false; // 완료
     }
 
-    void Load1RobotSequence::MoveToNextStep()
-    {
-        int nextStep = static_cast<int>(m_currentStep) + 1;
-        if (nextStep <= static_cast<int>(PickPlaceStep::Complete))
-        {
-            m_currentStep = static_cast<PickPlaceStep>(nextStep);
-        }
-    }
 
-    bool Load1RobotSequence::IsStepTimeout() const
-    {
-        auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_stepStartTime).count();
-        return elapsed > m_moveTimeoutMs;
-    }
 
     void Load1RobotSequence::LogStep(const std::string& message)
     {

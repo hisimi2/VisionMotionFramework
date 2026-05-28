@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "EquipmentCore.h"
 #include "Actuators/Load1Parts.h"
 #include <memory>
 #include <vector>
+#include "PickPlaceSequenceBase.h"
 
 namespace OperationThread
 {
@@ -26,7 +27,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class Load1RobotSequence : public EC::ISequenceExecutable
+    class Load1RobotSequence : public PickPlaceSequenceBase
     {
     public:
         /// <summary>
@@ -60,11 +61,10 @@ namespace OperationThread
 
         ~Load1RobotSequence() override;
 
-        // ISequenceExecutable 구현
+        // PickPlaceSequenceBase 구현
         void OnInitialize() override;
-        bool OnPoll() override;
-        void OnCleanup() override;
-        void OnError(const std::string& errorMsg) override;
+        bool HandleStep(int step) override;
+        int GetStepCount() const override { return static_cast<int>(PickPlaceStep::Complete) + 1; }
 
         /// <summary>
         /// Pick 위치 설정
@@ -99,7 +99,7 @@ namespace OperationThread
         /// <summary>
         /// 현재 단계 반환
         /// </summary>
-        PickPlaceStep GetCurrentStep() const;
+        PickPlaceStep GetCurrentStep() const { return static_cast<PickPlaceStep>(m_currentStep); }
 
         /// <summary>
         /// 현재 반복 횟수 반환
@@ -113,24 +113,12 @@ namespace OperationThread
 
     private:
         Load1Parts* m_parts;
-        int m_repeatCount;          // 0 = 무한 반복
-        int m_currentIteration;     // 현재 반복 횟수
-        int m_successCount;         // 성공한 작업 수
-
-        PickPlaceStep m_currentStep;
-        std::chrono::steady_clock::time_point m_stepStartTime;
-        long m_moveTimeoutMs;
-
         // 파라미터
         double m_pickX, m_pickY, m_pickZ;
         double m_placeX, m_placeY, m_placeZ;
         double m_safeZ;
         int m_clampIndex;
         int m_vacuumIndex;
-
-        // 상태 추적
-        bool m_initialized;
-        std::string m_lastError;
 
         // 단계 처리 함수들
         bool HandleRailOpen();
@@ -147,10 +135,7 @@ namespace OperationThread
         bool HandleMoveSafeZAfterPlace();
         bool HandleCheckRepeat();
         bool HandleComplete();
-
         // 유틸리티
-        void MoveToNextStep();
-        bool IsStepTimeout() const;
         void LogStep(const std::string& message);
     };
 

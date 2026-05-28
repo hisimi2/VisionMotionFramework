@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include <chrono>
 #include <string>
 #include <memory>
 #include "EquipmentCore.h"
+#include "PickPlaceSequenceBase.h"
 
 class Load2Parts;
 

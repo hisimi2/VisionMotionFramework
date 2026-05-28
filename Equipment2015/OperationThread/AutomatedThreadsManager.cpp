@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "AutomatedThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>
@@ -19,9 +19,11 @@ namespace OperationThread
         , m_stopRequested(false)
     {
         int repeatCount = 2;
-        Load1Parts parts;
+        Load1Parts load1Parts;
+        Load2Parts load2Parts;
 
-        AddSequence(std::make_shared<Load1RobotSequence>((LPVOID)&parts, repeatCount));
+        AddSequence(std::make_shared<Load1RobotSequence>((LPVOID)&load1Parts, repeatCount));
+        AddSequence(std::make_shared<Load2RobotSequence>((LPVOID)&load2Parts, repeatCount));
     }
 
     int AutomatedThreadsManager::AddSequence(EC::SequenceExecutablePtr sequence)
@@ -62,11 +64,10 @@ namespace OperationThread
 
     void AutomatedThreadsManager::Stop()
     {
-        {
-            std::lock_guard<std::mutex> lock(m_mutex);
-            m_stopRequested = true;
-            m_running = false;
-        }
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_stopRequested = true;
+        m_running = false;
+
 
         // 모니터링 스레드 종료 대기
         if (m_monitoringThread.joinable())
