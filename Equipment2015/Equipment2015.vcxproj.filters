@@ -16,17 +16,17 @@
     <Filter Include="Actuators">
       <UniqueIdentifier>{8949d048-fbfc-457c-8d34-1a5fcc8b46ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ComponentComposition">
-      <UniqueIdentifier>{bae83fe6-680d-4913-b671-5a5220b1898f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ComponentComposition\Mock">
-      <UniqueIdentifier>{102c0990-e520-4319-9e81-a861fce1ab0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ComponentComposition\Sequence">
-      <UniqueIdentifier>{e829f9d8-fc0f-4419-918f-a76ec11b4b4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="OperationThreads">
       <UniqueIdentifier>{40d4269c-8b6f-4f8c-8c3b-457f5f950ee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMFComposition">
+      <UniqueIdentifier>{bae83fe6-680d-4913-b671-5a5220b1898f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMFComposition\Mock">
+      <UniqueIdentifier>{102c0990-e520-4319-9e81-a861fce1ab0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMFComposition\Sequence">
+      <UniqueIdentifier>{e829f9d8-fc0f-4419-918f-a76ec11b4b4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,42 +96,6 @@
     <ClInclude Include="Actuators\Load1Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentComposition\mock\CMockDataRepository.h">
-      <Filter>ComponentComposition\Mock</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\mock\CMockVisionEventHandler.h">
-      <Filter>ComponentComposition\Mock</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\VisionProtocal\VisionMemoryKeys.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\VisionProtocal\VisionMemoryProcessor.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\VisionProtocal\VisionPacketMemory.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\DefineVAT.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\MemorySequenceStrategy.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentComposition\Load1\VatAdapterLoad1.h">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClInclude>
     <ClInclude Include="Actuators\Load2Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
@@ -146,6 +110,42 @@
     </ClInclude>
     <ClInclude Include="OperationThreads\ThreadsManager.h">
       <Filter>OperationThreads</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\DefineVAT.h">
+      <Filter>VMFComposition</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\MemorySequenceStrategy.h">
+      <Filter>VMFComposition</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\Load1\VatAdapterLoad1.h">
+      <Filter>VMFComposition</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\mock\CMockDataRepository.h">
+      <Filter>VMFComposition\Mock</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\mock\CMockVisionEventHandler.h">
+      <Filter>VMFComposition\Mock</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.h">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.h">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryKeys.h">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.h">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClInclude>
+    <ClInclude Include="VMFComposition\VisionProtocal\VisionPacketMemory.h">
+      <Filter>VMFComposition\Sequence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,24 +173,6 @@
     <ClCompile Include="Actuators\Load1Parts.cpp">
       <Filter>Actuators</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentComposition\mock\CMockDataRepository.cpp">
-      <Filter>ComponentComposition\Mock</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentComposition\mock\CMockVisionEventHandler.cpp">
-      <Filter>ComponentComposition\Mock</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentComposition\VisionProtocal\VisionMemoryProcessor.cpp">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentComposition\Load1\VatAdapterLoad1.cpp">
-      <Filter>ComponentComposition\Sequence</Filter>
-    </ClCompile>
     <ClCompile Include="Actuators\Load2Parts.cpp">
       <Filter>Actuators</Filter>
     </ClCompile>
@@ -205,6 +187,24 @@
     </ClCompile>
     <ClCompile Include="OperationThreads\ThreadsManager.cpp">
       <Filter>OperationThreads</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFComposition\Load1\VatAdapterLoad1.cpp">
+      <Filter>VMFComposition</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFComposition\mock\CMockDataRepository.cpp">
+      <Filter>VMFComposition\Mock</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFComposition\mock\CMockVisionEventHandler.cpp">
+      <Filter>VMFComposition\Mock</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp">
+      <Filter>VMFComposition\Sequence</Filter>
+    </ClCompile>
+    <ClCompile Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.cpp">
+      <Filter>VMFComposition\Sequence</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
