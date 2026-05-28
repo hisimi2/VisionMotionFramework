@@ -6,8 +6,8 @@
 
 namespace OperationThread
 {
-    Load2RobotSequence::Load2RobotSequence(Load2Parts* parts, int repeatCount)
-        : m_parts(parts)
+    Load2RobotSequence::Load2RobotSequence(void* parts, int repeatCount)
+        : m_parts((Load2Parts*)parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)
         , m_successCount(0)

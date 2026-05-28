@@ -1,11 +1,12 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "SequenceManager.h"
 
 namespace EC
 {
-    SequenceManager::SequenceManager()
+    SequenceManager::SequenceManager(SequenceExecutablePtr sequence)
         : m_stateMachine(std::make_shared<SequenceStateMachine>())
         , m_executor(std::make_shared<SequenceExecutor>(m_stateMachine))
+        , m_executable(sequence)
     {
     }
 
@@ -13,10 +14,10 @@ namespace EC
     {
     }
 
-    void SequenceManager::Start(SequenceExecutablePtr executable)
+    void SequenceManager::Start()
     {
         m_stateMachine->Start();
-        m_executor->ExecuteAsync(executable);
+        m_executor->ExecuteAsync(m_executable);
     }
 
     void SequenceManager::Pause()

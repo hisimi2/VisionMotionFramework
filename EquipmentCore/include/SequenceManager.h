@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "SequenceStateMachine.h"
 #include "SequenceExecutor.h"
@@ -14,14 +14,14 @@ namespace EC
     class EQUIPMENT_API SequenceManager
     {
     public:
-        SequenceManager();
+        SequenceManager(SequenceExecutablePtr sequence);
         ~SequenceManager();
 
         /// <summary>
         /// 시퀀스 실행을 시작합니다.
         /// </summary>
         /// <param name="executable">실행할 시퀀스 로직</param>
-        void Start(SequenceExecutablePtr executable);
+        void Start();
 
         /// <summary>
         /// 시퀀스 실행을 일시 중지합니다.
@@ -65,7 +65,9 @@ namespace EC
 
     private:
         SequenceStateMachinePtr m_stateMachine;
-        SequenceExecutorPtr m_executor;
+        SequenceExecutorPtr     m_executor;
+        SequenceExecutablePtr   m_executable;
+        
     };
 
     using SequenceManagerPtr = std::shared_ptr<SequenceManager>;

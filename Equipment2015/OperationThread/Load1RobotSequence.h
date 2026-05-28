@@ -57,7 +57,7 @@ namespace OperationThread
         /// <param name="adapter">AdapterLoad1 객체</param>
         /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
         explicit Load1RobotSequence(
-            Load1Parts* parts,
+            void* parts,
             int repeatCount = 0
         );
 

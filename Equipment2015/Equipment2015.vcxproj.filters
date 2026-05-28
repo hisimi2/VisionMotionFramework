@@ -16,9 +16,6 @@
     <Filter Include="Actuators">
       <UniqueIdentifier>{8949d048-fbfc-457c-8d34-1a5fcc8b46ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OperationThread">
-      <UniqueIdentifier>{40d4269c-8b6f-4f8c-8c3b-457f5f950ee3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ComponentComposition">
       <UniqueIdentifier>{bae83fe6-680d-4913-b671-5a5220b1898f}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="ComponentComposition\Sequence">
       <UniqueIdentifier>{e829f9d8-fc0f-4419-918f-a76ec11b4b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AutomatedThreads">
+      <UniqueIdentifier>{40d4269c-8b6f-4f8c-8c3b-457f5f950ee3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,11 +96,8 @@
     <ClInclude Include="Actuators\Load1Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\Load1RobotManager.h">
-      <Filter>OperationThread</Filter>
-    </ClInclude>
     <ClInclude Include="OperationThread\Load1RobotSequence.h">
-      <Filter>OperationThread</Filter>
+      <Filter>AutomatedThreads</Filter>
     </ClInclude>
     <ClInclude Include="ComponentComposition\mock\CMockDataRepository.h">
       <Filter>ComponentComposition\Mock</Filter>
@@ -142,13 +139,10 @@
       <Filter>Actuators</Filter>
     </ClInclude>
     <ClInclude Include="OperationThread\Load2RobotSequence.h">
-      <Filter>OperationThread</Filter>
+      <Filter>AutomatedThreads</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\SequenceThreadManager.h">
-      <Filter>OperationThread</Filter>
-    </ClInclude>
-    <ClInclude Include="OperationThread\Load2RobotManager.h">
-      <Filter>OperationThread</Filter>
+    <ClInclude Include="OperationThread\AutomatedThreadsManager.h">
+      <Filter>AutomatedThreads</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,11 +170,8 @@
     <ClCompile Include="Actuators\Load1Parts.cpp">
       <Filter>Actuators</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\Load1RobotManager.cpp">
-      <Filter>OperationThread</Filter>
-    </ClCompile>
     <ClCompile Include="OperationThread\Load1RobotSequence.cpp">
-      <Filter>OperationThread</Filter>
+      <Filter>AutomatedThreads</Filter>
     </ClCompile>
     <ClCompile Include="ComponentComposition\mock\CMockDataRepository.cpp">
       <Filter>ComponentComposition\Mock</Filter>
@@ -204,13 +195,10 @@
       <Filter>Actuators</Filter>
     </ClCompile>
     <ClCompile Include="OperationThread\Load2RobotSequence.cpp">
-      <Filter>OperationThread</Filter>
+      <Filter>AutomatedThreads</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\SequenceThreadManager.cpp">
-      <Filter>OperationThread</Filter>
-    </ClCompile>
-    <ClCompile Include="OperationThread\Load2RobotManager.cpp">
-      <Filter>OperationThread</Filter>
+    <ClCompile Include="OperationThread\AutomatedThreadsManager.cpp">
+      <Filter>AutomatedThreads</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
