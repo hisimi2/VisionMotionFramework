@@ -31,7 +31,7 @@ namespace OperationThread
             Complete
         };
 
-        explicit Load2RobotSequence(void* parts, int repeatCount = 0);
+        Load2RobotSequence(LPVOID parts, int repeatCount = 0);
         ~Load2RobotSequence() override;
 
         // ISequenceExecutable 구현

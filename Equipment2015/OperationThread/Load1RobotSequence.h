@@ -56,10 +56,7 @@ namespace OperationThread
         /// <param name="parts">Load1Parts 객체</param>
         /// <param name="adapter">AdapterLoad1 객체</param>
         /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
-        explicit Load1RobotSequence(
-            void* parts,
-            int repeatCount = 0
-        );
+        Load1RobotSequence(LPVOID parts, int repeatCount = 0);
 
         ~Load1RobotSequence() override;
 

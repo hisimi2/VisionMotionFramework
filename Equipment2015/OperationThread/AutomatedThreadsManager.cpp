@@ -21,12 +21,14 @@ namespace OperationThread
         int repeatCount = 2;
         Load1Parts parts;
 
-        AddSequence(std::make_shared<Load1RobotSequence>(parts, repeatCount));
+        AddSequence(std::make_shared<Load1RobotSequence>((LPVOID)&parts, repeatCount));
     }
 
     int AutomatedThreadsManager::AddSequence(EC::SequenceExecutablePtr sequence)
     {
         m_Managers.push_back(std::make_shared<EC::SequenceManager>(sequence));
+
+        return static_cast<int>(m_Managers.size() - 1);
     }
 
     AutomatedThreadsManager::~AutomatedThreadsManager()
