@@ -156,7 +156,6 @@ namespace OperationThread
     }
 
     // ============= 단계 처리 함수들 =============
-
     bool Load2PickPlaceSequence::HandleRailOpen()
     {
         LogStep("HandleRailOpen");

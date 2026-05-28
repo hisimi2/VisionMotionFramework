@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DualLoadPickPlaceController.h"
+#include "SequenceThreadManager.h"
 #include "Load1PickPlaceManager.h"
 #include "Load2PickPlaceManager.h"
 #include "Actuators/COPSwitch.h"
@@ -9,7 +9,7 @@
 
 namespace OperationThread
 {
-    DualLoadPickPlaceController::DualLoadPickPlaceController(COPSwitch* startSwitch)
+    SequenceThreadManager::SequenceThreadManager(COPSwitch* startSwitch)
         : m_startSwitch(startSwitch)
         , m_running(false)
         , m_stopRequested(false)
@@ -18,19 +18,19 @@ namespace OperationThread
         m_load2Manager = std::make_shared<Load2PickPlaceManager>();
     }
 
-    DualLoadPickPlaceController::~DualLoadPickPlaceController()
+    SequenceThreadManager::~SequenceThreadManager()
     {
         Stop();
     }
 
-    void DualLoadPickPlaceController::Start(Load1Parts* load1Parts, Load2Parts* load2Parts, int repeatCount)
+    void SequenceThreadManager::Start(Load1Parts* load1Parts, Load2Parts* load2Parts, int repeatCount)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 
         if (m_running)
         {
             std::cerr << "Already running. Stop before starting again." << std::endl;
-                return;
+            return;
         }
 
         m_running = true;
@@ -40,13 +40,13 @@ namespace OperationThread
         m_load1Manager->Start(load1Parts, repeatCount);
         m_load2Manager->Start(load2Parts, repeatCount);
 
-        std::cout << "[DualLoadPickPlaceController] Load1 and Load2 sequences started" << std::endl;
+        std::cout << "[SequenceThreadManager] Load1 and Load2 sequences started" << std::endl;
 
         // 스위치 모니터링 스레드 시작
-        m_monitoringThread = std::thread(&DualLoadPickPlaceController::SwitchMonitoringThread, this);
+        m_monitoringThread = std::thread(&SequenceThreadManager::SwitchMonitoringThread, this);
     }
 
-    void DualLoadPickPlaceController::Stop()
+    void SequenceThreadManager::Stop()
     {
         {
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -71,82 +71,81 @@ namespace OperationThread
             m_load2Manager->Terminate();
         }
 
-        std::cout << "[DualLoadPickPlaceController] Stopped" << std::endl;
+        std::cout << "[SequenceThreadManager] Stopped" << std::endl;
     }
 
-    bool DualLoadPickPlaceController::IsLoad1Complete() const
+    bool SequenceThreadManager::IsLoad1Complete() const
     {
         return m_load1Manager ? m_load1Manager->IsComplete() : true;
     }
 
-    bool DualLoadPickPlaceController::IsLoad2Complete() const
+    bool SequenceThreadManager::IsLoad2Complete() const
     {
         return m_load2Manager ? m_load2Manager->IsComplete() : true;
     }
 
-    bool DualLoadPickPlaceController::IsBothComplete() const
+    bool SequenceThreadManager::IsBothComplete() const
     {
         return IsLoad1Complete() && IsLoad2Complete();
     }
 
-    std::string DualLoadPickPlaceController::GetLoad1StateString() const
+    std::string SequenceThreadManager::GetLoad1StateString() const
     {
         return m_load1Manager ? m_load1Manager->GetStateString() : "Unknown";
     }
 
-    std::string DualLoadPickPlaceController::GetLoad2StateString() const
+    std::string SequenceThreadManager::GetLoad2StateString() const
     {
         return m_load2Manager ? m_load2Manager->GetStateString() : "Unknown";
     }
 
-    int DualLoadPickPlaceController::GetLoad1CurrentIteration() const
+    int SequenceThreadManager::GetLoad1CurrentIteration() const
     {
         return m_load1Manager ? m_load1Manager->GetCurrentIteration() : 0;
     }
 
-    int DualLoadPickPlaceController::GetLoad2CurrentIteration() const
+    int SequenceThreadManager::GetLoad2CurrentIteration() const
     {
         return m_load2Manager ? m_load2Manager->GetCurrentIteration() : 0;
     }
 
-    int DualLoadPickPlaceController::GetLoad1SuccessCount() const
+    int SequenceThreadManager::GetLoad1SuccessCount() const
     {
         return m_load1Manager ? m_load1Manager->GetSuccessCount() : 0;
     }
 
-    int DualLoadPickPlaceController::GetLoad2SuccessCount() const
+    int SequenceThreadManager::GetLoad2SuccessCount() const
     {
         return m_load2Manager ? m_load2Manager->GetSuccessCount() : 0;
     }
 
-    void DualLoadPickPlaceController::SwitchMonitoringThread()
+    void SequenceThreadManager::SwitchMonitoringThread()
     {
-        std::cout << "[DualLoadPickPlaceController] Switch monitoring thread started" << std::endl;
+        std::cout << "[SequenceThreadManager] Switch monitoring thread started" << std::endl;
 
         try
         {
             while (!m_stopRequested)
             {
-                    MonitorLoop();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                MonitorLoop();
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         }
         catch (const std::exception& ex)
         {
-            std::cerr << "[DualLoadPickPlaceController] Error in monitoring thread: " << ex.what() << std::endl;
+            std::cerr << "[SequenceThreadManager] Error in monitoring thread: " << ex.what() << std::endl;
         }
 
-        std::cout << "[DualLoadPickPlaceController] Switch monitoring thread ended" << std::endl;
+        std::cout << "[SequenceThreadManager] Switch monitoring thread ended" << std::endl;
     }
 
-    void DualLoadPickPlaceController::MonitorLoop()
+    void SequenceThreadManager::MonitorLoop()
     {
         if (!m_startSwitch || !m_load1Manager || !m_load2Manager)
         {
             return;
         }
 
-        // startSwitch 상태 확인
         bool switchStatus = m_startSwitch->getStatus();
         {
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -159,7 +158,6 @@ namespace OperationThread
             // 스위치가 ON일 때: Resume
             if (switchStatus)
             {
-                // 두 시퀀스가 Pause 상태이면 Resume
                 std::string load1State = m_load1Manager->GetStateString();
                 std::string load2State = m_load2Manager->GetStateString();
 
@@ -198,7 +196,7 @@ namespace OperationThread
             if (IsBothComplete())
             {
                 m_running = false;
-                std::cout << "[DualLoadPickPlaceController] Both sequences completed" << std::endl;
+                std::cout << "[SequenceThreadManager] Both sequences completed" << std::endl;
             }
         }
     }

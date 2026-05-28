@@ -17,11 +17,11 @@ namespace OperationThread
     /// Load1과 Load2의 Pick & Place 시퀀스를 하나의 스위치로 제어하는 통합 컨트롤러
     /// startSwitch 상태에 따라 두 시퀀스가 동시에 Run/Pause 상태를 유지한다.
     /// </summary>
-    class DualLoadPickPlaceController
+    class SequenceThreadManager
     {
     public:
-        explicit DualLoadPickPlaceController(COPSwitch* startSwitch);
-        ~DualLoadPickPlaceController();
+        explicit SequenceThreadManager(COPSwitch* startSwitch);
+        ~SequenceThreadManager();
 
         /// <summary>
         /// Load1과 Load2 Pick & Place 시작 (멀티스레드)
@@ -82,13 +82,13 @@ namespace OperationThread
         int GetLoad2SuccessCount() const;
 
     private:
-    /// <summary>
+        /// <summary>
         /// startSwitch 모니터링 및 제어 스레드
         /// </summary>
         void SwitchMonitoringThread();
 
         /// <summary>
-      /// 스위치 상태 모니터링 루프 (실행 중)
+        /// 스위치 상태 모니터링 루프 (실행 중)
         /// </summary>
         void MonitorLoop();
 
@@ -103,5 +103,5 @@ namespace OperationThread
         mutable std::mutex m_mutex;
     };
 
-    using DualLoadPickPlaceControllerPtr = std::shared_ptr<DualLoadPickPlaceController>;
+    using SequenceThreadManagerPtr = std::shared_ptr<SequenceThreadManager>;
 }

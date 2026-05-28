@@ -1,12 +1,19 @@
 #pragma once
 
-#include "EquipmentCore.h"
-#include "Load2PickPlaceSequence.h"
-#include "Actuators/Load2Parts.h"
 #include <memory>
+#include <string>
+
+
+#include "SequenceManager.h"
+
+class Load2Parts;
+
 
 namespace OperationThread
 {
+    class Load2PickPlaceSequence;
+    using Load2PickPlaceSequencePtr = std::shared_ptr<Load2PickPlaceSequence>;
+
     /// <summary>
     /// Load2 Pick & Place 매니저
     /// EquipmentCore의 SequenceManager를 사용하여 Load2 Pick & Place 작업 관리
@@ -38,11 +45,6 @@ namespace OperationThread
         /// 작업 완전 종료
         /// </summary>
         void Terminate();
-
-        /// <summary>
-        /// 현재 상태 반환
-        /// </summary>
-        EC::SequenceState GetState() const;
 
         /// <summary>
         /// 상태 문자열 반환

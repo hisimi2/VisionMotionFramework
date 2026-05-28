@@ -144,10 +144,7 @@
     <ClInclude Include="OperationThread\Load2PickPlaceSequence.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThread\DualLoadPickPlaceController.h">
-      <Filter>OperationThread</Filter>
-    </ClInclude>
-    <ClInclude Include="OperationThread\DualLoadPickPlaceExample.h">
+    <ClInclude Include="OperationThread\SequenceThreadManager.h">
       <Filter>OperationThread</Filter>
     </ClInclude>
     <ClInclude Include="OperationThread\Load2PickPlaceManager.h">
@@ -209,10 +206,7 @@
     <ClCompile Include="OperationThread\Load2PickPlaceSequence.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
-    <ClCompile Include="OperationThread\DualLoadPickPlaceController.cpp">
-      <Filter>OperationThread</Filter>
-    </ClCompile>
-    <ClCompile Include="OperationThread\DualLoadPickPlaceExample.cpp">
+    <ClCompile Include="OperationThread\SequenceThreadManager.cpp">
       <Filter>OperationThread</Filter>
     </ClCompile>
     <ClCompile Include="OperationThread\Load2PickPlaceManager.cpp">
