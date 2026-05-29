@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <chrono>
 #include <string>
@@ -14,7 +14,7 @@ namespace OperationThread
     /// Load2 Pick & Place 시퀀스 구현
     /// EquipmentCore의 ISequenceExecutable 인터페이스를 구현
     /// </summary>
-    class ThreadLoad2 : public EC::ISequenceExecutable
+    class ThreadLoad2 : public ThreadBase
     {
     public:
         enum class PickPlaceStep 
@@ -50,8 +50,8 @@ namespace OperationThread
 
         // 상태 조회 메서드
         PickPlaceStep GetCurrentStep() const;
-        int GetCurrentIteration() const;
-        int GetSuccessCount() const;
+        bool HandleStep(int step) override;
+        int GetStepCount() const override { return static_cast<int>(PickPlaceStep::Complete) + 1; }
 
         // 에러 메시지 조회
         std::string GetLastError() const { return m_lastError; }

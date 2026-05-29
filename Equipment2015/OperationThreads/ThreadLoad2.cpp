@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ThreadLoad2.h"
 #include <iostream>
 #include <sstream>
@@ -37,7 +37,37 @@ namespace OperationThread
 
         LogStep("ThreadLoad2 initialized");
     }
-
+    bool ThreadLoad2::HandleStep(int step)
+    {
+        auto s = static_cast<PickPlaceStep>(step);
+        switch (s)
+        {
+        case PickPlaceStep::RailOpen:
+            return HandleRailOpen();
+        case PickPlaceStep::MovePickPositionXZ:
+            return HandleMovePickPositionXZ();
+        case PickPlaceStep::PreciserDown:
+            return HandlePreciserDown();
+        case PickPlaceStep::VacuumOn:
+            return HandleVacuumOn();
+        case PickPlaceStep::MoveSafeZAfterPick:
+            return HandleMoveSafeZAfterPick();
+        case PickPlaceStep::MovePlacePositionXZ:
+            return HandleMovePlacePositionXZ();
+        case PickPlaceStep::PreciserUp:
+            return HandlePreciserUp();
+        case PickPlaceStep::VacuumOff:
+            return HandleVacuumOff();
+        case PickPlaceStep::MoveSafeZAfterPlace:
+            return HandleMoveSafeZAfterPlace();
+        case PickPlaceStep::CheckRepeat:
+            return HandleCheckRepeat();
+        case PickPlaceStep::Complete:
+            return HandleComplete();
+        default:
+            throw std::runtime_error("Unknown step");
+        }
+    }
     bool ThreadLoad2::OnPoll()
     {
         if (!m_initialized)
@@ -145,15 +175,6 @@ namespace OperationThread
         return m_currentStep;
     }
 
-    int ThreadLoad2::GetCurrentIteration() const
-    {
-        return m_currentIteration;
-    }
-
-    int ThreadLoad2::GetSuccessCount() const
-    {
-        return m_successCount;
-    }
 
     // ============= 단계 처리 함수들 =============
     bool ThreadLoad2::HandleRailOpen()

@@ -29,7 +29,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class ThreadLoad1 : public EC::TaskBase
+    class ThreadLoad1 : public ThreadBase
     {
     public:
         /// <summary>
@@ -103,15 +103,7 @@ namespace OperationThread
         /// </summary>
         PickPlaceStep GetCurrentStep() const { return static_cast<PickPlaceStep>(m_currentStep); }
 
-        /// <summary>
-        /// 현재 반복 횟수 반환
-        /// </summary>
-        int GetCurrentIteration() const;
-
-        /// <summary>
-        /// 단계별 성공 횟수 반환
-        /// </summary>
-        int GetSuccessCount() const;
+        
 
     private:
         Load1Parts* m_parts;
