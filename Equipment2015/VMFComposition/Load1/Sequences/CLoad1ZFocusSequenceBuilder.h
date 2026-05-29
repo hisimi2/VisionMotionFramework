@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "SequenceBuilderBase.h"
 
-#include "CLoad1MoveToStartPositionTask.h"
-#include "CLoad1PerformFocusScanningTask.h"
+#include "VMFComposition/Load1/Tasks/CLoad1MoveToStartPositionTask.h"
+#include "VMFComposition/Load1/Tasks/CLoad1PerformFocusScanningTask.h"
 
 namespace VMF_Load1
 {

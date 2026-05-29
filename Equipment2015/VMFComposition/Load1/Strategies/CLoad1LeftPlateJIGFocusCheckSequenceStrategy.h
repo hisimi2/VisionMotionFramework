@@ -1,7 +1,6 @@
-﻿#pragma once
-#include "MemorySequenceStrategy.h"
-
-#include "CLoad1ZFocusSequenceBuilder.h"
+#pragma once
+#include "VMFComposition/MemorySequenceStrategy.h"
+#include "VMFComposition/Load1/Sequences/CLoad1ZFocusSequenceBuilder.h"
 
 namespace VMF_Load1
 {

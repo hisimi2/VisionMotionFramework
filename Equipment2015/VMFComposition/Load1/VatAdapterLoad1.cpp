@@ -1,6 +1,5 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "VatAdapterLoad1.h"
-#include <Windows.h>
 
 namespace VMF_Load1
 {

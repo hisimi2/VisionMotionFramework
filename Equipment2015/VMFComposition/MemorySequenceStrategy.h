@@ -1,12 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "SequenceStrategyBase.h"
-
 #include "SqliteDataRepository.h"
 
-#include "VMFramework/VisionProtocal/VisionMemoryProcessor.h"
-
-#include "VMFramework/Mock/CMockDataRepository.h"
-#include "VMFramework/Mock/CMockVisionEventHandler.h"
+#include "VMFComposition/VisionProtocal/VisionMemoryProcessor.h"
+#include "VMFComposition/Mock/CMockDataRepository.h"
+#include "VMFComposition/Mock/CMockVisionEventHandler.h"
 
 #include <memory>
 

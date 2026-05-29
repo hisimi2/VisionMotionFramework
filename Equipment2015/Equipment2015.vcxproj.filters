@@ -28,6 +28,9 @@
     <Filter Include="VMFComposition\Sequence">
       <UniqueIdentifier>{e829f9d8-fc0f-4419-918f-a76ec11b4b4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VMFComposition\Vision">
+      <UniqueIdentifier>{9b68f40e-729d-456b-973b-f9f8022a9517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -114,9 +117,6 @@
     <ClInclude Include="VMFComposition\DefineVAT.h">
       <Filter>VMFComposition</Filter>
     </ClInclude>
-    <ClInclude Include="VMFComposition\MemorySequenceStrategy.h">
-      <Filter>VMFComposition</Filter>
-    </ClInclude>
     <ClInclude Include="VMFComposition\Load1\VatAdapterLoad1.h">
       <Filter>VMFComposition</Filter>
     </ClInclude>
@@ -138,13 +138,16 @@
     <ClInclude Include="VMFComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h">
       <Filter>VMFComposition\Sequence</Filter>
     </ClInclude>
+    <ClInclude Include="VMFComposition\VisionProtocal\VisionPacketMemory.h">
+      <Filter>VMFComposition\Vision</Filter>
+    </ClInclude>
     <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryKeys.h">
-      <Filter>VMFComposition\Sequence</Filter>
+      <Filter>VMFComposition\Vision</Filter>
     </ClInclude>
     <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.h">
-      <Filter>VMFComposition\Sequence</Filter>
+      <Filter>VMFComposition\Vision</Filter>
     </ClInclude>
-    <ClInclude Include="VMFComposition\VisionProtocal\VisionPacketMemory.h">
+    <ClInclude Include="VMFComposition\MemorySequenceStrategy.h">
       <Filter>VMFComposition\Sequence</Filter>
     </ClInclude>
   </ItemGroup>
@@ -204,7 +207,7 @@
       <Filter>VMFComposition\Sequence</Filter>
     </ClCompile>
     <ClCompile Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.cpp">
-      <Filter>VMFComposition\Sequence</Filter>
+      <Filter>VMFComposition\Vision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

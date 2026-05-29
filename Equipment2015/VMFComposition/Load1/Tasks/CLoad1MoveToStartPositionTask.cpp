@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 #include "CLoad1MoveToStartPositionTask.h"
+
+
 #include "VMFComposition/DefineVAT.h"
 
 using namespace VMF_Load1::Task;
