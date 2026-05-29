@@ -44,27 +44,27 @@ namespace VMF_Load1
         m_parts->AxisX.Move(pos[0]);
         m_parts->AxisY.Move(pos[1]);
 
-      // Pitch 변경
-     if (action == VMF::Narrow)
+        // Pitch 변경
+        if (action == VMF::Narrow)
         {
-       m_parts->CylYPitch.narrow(true);
+            m_parts->CylYPitch.narrow(true);
         }
         else
         {
-   m_parts->CylYPitch.wide(true);
+            m_parts->CylYPitch.wide(true);
         }
 
         if (pos.size() > 4)
         {
             // Loader Buffer, Table 이동
-         m_parts->AxisTable1.Move(pos[3]);
+            m_parts->AxisTable1.Move(pos[3]);
             m_parts->AxisTable2.Move(pos[4]);
     }
         else
         {
-       // Loader Buffer, Table 치우기
-     m_parts->AxisTable1.Move(100);
- m_parts->AxisTable2.Move(100);
+            // Loader Buffer, Table 치우기
+            m_parts->AxisTable1.Move(100);
+            m_parts->AxisTable2.Move(100);
         }
 
         m_parts->CylBuffer.backward(true);
@@ -75,7 +75,7 @@ namespace VMF_Load1
 
     VMF::ActError VatAdapterLoad1::isMoveZ(double targetZ)
     {
- double currentposZ = m_parts->AxisZ.GetEncoder();
+        double currentposZ = m_parts->AxisZ.GetEncoder();
         double diff = abs(currentposZ - targetZ);
 
         if (diff > 1)
@@ -83,25 +83,25 @@ namespace VMF_Load1
             return VMF::ActFail;
         }
 
-    return VMF::ActOk;
+        return VMF::ActOk;
     }
 
     VMF::ActError VatAdapterLoad1::isMove(std::vector<double> pos, VMF::PitchStatus action)
     {
-      double currentposX = m_parts->AxisX.GetEncoder();
+        double currentposX = m_parts->AxisX.GetEncoder();
         double currentposY = m_parts->AxisY.GetEncoder();
 
         double diffX = abs(currentposX - pos[0]);
-   double diffy = abs(currentposY - pos[1]);
+        double diffy = abs(currentposY - pos[1]);
 
         if (diffX > 1 || diffy > 1)
         {
-  return VMF::ActFail;
+            return VMF::ActFail;
         }
 
         if (action == VMF::Narrow && !m_parts->CylYPitch.isNarrow())
-  {
-          return VMF::ActFail;
+        {
+            return VMF::ActFail;
         }
         else if (action == VMF::Wide && !m_parts->CylYPitch.isWide())
         {
@@ -112,21 +112,21 @@ namespace VMF_Load1
         double currentTablepos1 = m_parts->AxisTable1.GetEncoder();
         double currentTablepos2 = m_parts->AxisTable2.GetEncoder();
 
-     if (pos.size() > 4)
+        if (pos.size() > 4)
         {
             double diffTable1 = abs(currentTablepos1 - pos[3]);
             double diffTable2 = abs(currentTablepos2 - pos[4]);
 
-    if (diffTable1 > 1 || diffTable2 > 1)
-   {
-         return VMF::ActFail;
-         }
+            if (diffTable1 > 1 || diffTable2 > 1)
+            {
+                return VMF::ActFail;
+            }
         }
- else
+        else
         {
-         if (currentTablepos1 < 0 || currentTablepos2 < 0)
-      {
-     return VMF::ActFail;
+            if (currentTablepos1 < 0 || currentTablepos2 < 0)
+            {
+                return VMF::ActFail;
             }
         }
 
@@ -168,15 +168,15 @@ namespace VMF_Load1
         switch (camIndex)
         {
         case 0:
-    m_parts->LampLeft.SetStatus(on);
-       break;
-  case 1:
-      m_parts->LampRight.SetStatus(on);
+            m_parts->LampLeft.SetStatus(on);
+            break;
+        case 1:
+            m_parts->LampRight.SetStatus(on);
             break;
         case 2:
             m_parts->LampLower.SetStatus(on);
-     break;
-     }
+            break;
+        }
 
 		return 1;
 	}
@@ -186,15 +186,15 @@ namespace VMF_Load1
 		if (!m_parts) return 0;
 
         switch (camIndex)
- {
+        {
         case 0:
-  outOn = m_parts->LampLeft.GetStatus();
+            outOn = m_parts->LampLeft.GetStatus();
             break;
- case 1:
-   outOn = m_parts->LampRight.GetStatus();
+        case 1:
+            outOn = m_parts->LampRight.GetStatus();
             break;
         case 2:
-  outOn = m_parts->LampLower.GetStatus();
+            outOn = m_parts->LampLower.GetStatus();
             break;
         default:
             return 0;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <mutex>
 #include <condition_variable>
@@ -11,7 +11,7 @@ namespace EC
     /// 시퀀스 실행 상태를 관리하는 상태머신
     /// Run(순차진행) -> Stop(대기) -> Run -> Exit(완전종료)
     /// </summary>
-    class EQUIPMENT_API SequenceStateMachine
+    class EC_API SequenceStateMachine
     {
     public:
         /// <summary>

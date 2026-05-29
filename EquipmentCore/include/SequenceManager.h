@@ -11,7 +11,7 @@ namespace EC
     /// 시퀀스 실행을 관리하는 고수준 매니저
     /// 상태머신, 실행기, 시퀀스를 통합적으로 관리합니다.
     /// </summary>
-    class EQUIPMENT_API SequenceManager
+    class EC_API SequenceManager
     {
     public:
         SequenceManager(SequenceExecutablePtr sequence);

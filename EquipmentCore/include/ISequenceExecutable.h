@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <memory>
@@ -11,7 +11,7 @@ namespace EC
     /// 시퀀스 실행을 위한 콜백 인터페이스
     /// 외부에서 실제 시퀀스 로직을 구현합니다.
     /// </summary>
-    class EQUIPMENT_API ISequenceExecutable
+    class EC_API ISequenceExecutable
     {
     public:
         virtual ~ISequenceExecutable() = default;

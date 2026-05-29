@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EquipmentCore.cpp" />
+    <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\SequenceExecutor.cpp" />
     <ClCompile Include="src\SequenceManager.cpp" />
     <ClCompile Include="src\SequenceStateMachine.cpp" />
@@ -202,12 +203,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EquipmentCore.h" />
+    <ClInclude Include="include\Context.h" />
     <ClInclude Include="include\EC_API.h" />
     <ClInclude Include="include\EquipmentCore.h" />
     <ClInclude Include="include\ISequenceExecutable.h" />
+    <ClInclude Include="include\ITask.h" />
+    <ClInclude Include="include\ParamConverterFomatter.hpp" />
     <ClInclude Include="include\SequenceExecutor.h" />
     <ClInclude Include="include\SequenceManager.h" />
     <ClInclude Include="include\SequenceStateMachine.h" />
+    <ClInclude Include="include\TaskBase.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

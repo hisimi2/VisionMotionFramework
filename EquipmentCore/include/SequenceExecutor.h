@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "SequenceStateMachine.h"
 #include "ISequenceExecutable.h"
@@ -12,7 +12,7 @@ namespace EC
     /// <summary>
     /// 상태머신과 함께 시퀀스를 스레드에서 실행하는 실행기
     /// </summary>
-    class EQUIPMENT_API SequenceExecutor
+    class EC_API SequenceExecutor
     {
     public:
         explicit SequenceExecutor(SequenceStateMachinePtr stateMachine);

@@ -13,8 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="StateMachine">
+    <Filter Include="Old">
       <UniqueIdentifier>{42e81118-0a0e-4489-a155-cbc6d9437700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine">
+      <UniqueIdentifier>{799e6e24-ac97-431a-aaf8-cab521e97e81}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,12 +31,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\SequenceStateMachine.cpp">
-      <Filter>StateMachine</Filter>
+      <Filter>Old</Filter>
     </ClCompile>
     <ClCompile Include="src\SequenceExecutor.cpp">
-      <Filter>StateMachine</Filter>
+      <Filter>Old</Filter>
     </ClCompile>
     <ClCompile Include="src\SequenceManager.cpp">
+      <Filter>Old</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Context.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils.cpp">
@@ -54,21 +60,33 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\SequenceStateMachine.h">
-      <Filter>StateMachine</Filter>
+      <Filter>Old</Filter>
     </ClInclude>
     <ClInclude Include="include\EquipmentCore.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\ISequenceExecutable.h">
-      <Filter>StateMachine</Filter>
+      <Filter>Old</Filter>
     </ClInclude>
     <ClInclude Include="include\SequenceExecutor.h">
-      <Filter>StateMachine</Filter>
+      <Filter>Old</Filter>
     </ClInclude>
     <ClInclude Include="include\SequenceManager.h">
-      <Filter>StateMachine</Filter>
+      <Filter>Old</Filter>
     </ClInclude>
     <ClInclude Include="include\EC_API.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Context.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ITask.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TaskBase.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParamConverterFomatter.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils.h">

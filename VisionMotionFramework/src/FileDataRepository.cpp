@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "FileDataRepository.h"
 #include "FileUtils.h"
 #include "CompatUtils.h" // StorageError 정의
@@ -17,7 +17,7 @@ FileDataRepository::FileDataRepository(const std::string& basePath)
 FileDataRepository::~FileDataRepository() = default; 
 
 StorageError FileDataRepository::SaveParam(const std::string& recipe, const std::string& name, const std::string& value) {
-    // LockGuardType 대신 C++11 표준 std::lock_guard 사용
+    
     std::lock_guard<std::mutex> lg(mutex_); 
     std::ofstream ofs(FileUtils::MakeParamPath(basePath_, recipe).c_str(), std::ios::app);
     if (!ofs) {
