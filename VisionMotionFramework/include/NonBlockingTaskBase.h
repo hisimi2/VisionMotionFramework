@@ -1,10 +1,8 @@
-﻿#pragma once
+#pragma once
 
-#include "Types.h"
 #include "ITask.h"
 #include "Context.h"
 #include "IActuator.h"
-#include "IDataRepository.h"
 
 #include <mutex>
 #include <chrono>
