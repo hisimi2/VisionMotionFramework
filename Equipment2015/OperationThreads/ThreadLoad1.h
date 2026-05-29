@@ -1,10 +1,12 @@
-﻿#pragma once
+#pragma once
 
 #include "EquipmentCore.h"
 #include "Actuators/Load1Parts.h"
 #include <memory>
 #include <vector>
 #include "ThreadBase.h"
+
+#include "TaskBase.h"
 
 namespace OperationThread
 {
@@ -27,7 +29,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class ThreadLoad1 : public ThreadBase
+    class ThreadLoad1 : public EC::TaskBase
     {
     public:
         /// <summary>

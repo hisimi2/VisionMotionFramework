@@ -11,6 +11,7 @@
 
 namespace EC
 {
+
     class EC_API TaskBase : public ITask
     {
     public:
@@ -18,6 +19,7 @@ namespace EC
         static const int CS_INITIALIZING = -1;  // 초기화 상태 (공통)
         static const int CS_ERROR = -2;         // 에러 상태 (공통)
         static const int CS_IDLE = -3;          // 대기 상태 (공통)
+
         TaskBase()
             : m_state_(CS_INITIALIZING)
             , m_initialized_(false)
@@ -32,7 +34,7 @@ namespace EC
 
             if (ctx.GetStopRequested())
             {
-                ctx.SetLastError("NonBlockingTaskBase: Stop requested");
+                ctx.SetLastError("TaskBase: Stop requested");
                 m_state_ = CS_ERROR;
                 return TR_ERROR;
             }
@@ -46,13 +48,13 @@ namespace EC
                 }
                 catch (const std::exception& ex)
                 {
-                    ctx.SetLastError(std::string("NonBlockingTaskBase: exception in OnInitialize: ") + ex.what());
+                    ctx.SetLastError(std::string("TaskBase: exception in OnInitialize: ") + ex.what());
                     m_state_ = CS_ERROR;
                     return TR_ERROR;
                 }
                 catch (...)
                 {
-                    ctx.SetLastError("NonBlockingTaskBase: unknown exception in OnInitialize");
+                    ctx.SetLastError("TaskBase: unknown exception in OnInitialize");
                     m_state_ = CS_ERROR;
                     return TR_ERROR;
                 }
@@ -64,13 +66,13 @@ namespace EC
             }
             catch (const std::exception& ex)
             {
-                ctx.SetLastError(std::string("NonBlockingTaskBase: exception in OnPoll: ") + ex.what());
+                ctx.SetLastError(std::string("TaskBase: exception in OnPoll: ") + ex.what());
                 m_state_ = CS_ERROR;
                 return TR_ERROR;
             }
             catch (...)
             {
-                ctx.SetLastError("NonBlockingTaskBase: unknown exception in OnPoll");
+                ctx.SetLastError("TaskBase: unknown exception in OnPoll");
                 m_state_ = CS_ERROR;
                 return TR_ERROR;
             }
