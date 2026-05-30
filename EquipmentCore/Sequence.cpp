@@ -1,13 +1,11 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "Sequence.h"
 
 #include "Utils.h"
 #include "ITask.h"
 #include "Context.h"
 
-#include <iostream>
 #include <exception>
-#include <sstream>
 #include <mutex>
 #include <chrono>
 
@@ -18,16 +16,19 @@ namespace EC
         , m_pollIntervalMs(10)
         , m_SequenceName(name)
     {
+        LogTask(makeLogPrefix(m_SequenceName) + "Sequence constructed");
     }
 
     Sequence::~Sequence()
     {
+        LogTask(makeLogPrefix(m_SequenceName) + "Sequence destructed");
     }
 
     void Sequence::AddTask(TaskPtr task)
     {
         std::lock_guard<std::mutex> lock(m_mutex); 
         m_tasks.push_back(task);
+        LogTask(makeLogPrefix(m_SequenceName) + "AddTask: " + (task ? task->GetName() : "<null>"));
     }
 
     std::string Sequence::GetSequenceName() const
@@ -37,85 +38,95 @@ namespace EC
 
     std::string Sequence::GetTaskName() const
     {
-        return m_TaskName;
+        if(m_curTask)
+            return m_curTask->GetName();
+        else
+            return "";
     }
     
     void Sequence::Abort()
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        m_abortRequested = true;
+        {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_abortRequested = true;
+        }
+        LogTask(makeLogPrefix(m_SequenceName) + "Abort requested");
+        // 락을 해제한 후 notify -> 대기 중인 스레드가 즉시 락을 획득 가능
         m_cv.notify_all();
-
     }
 
     bool Sequence::Execute(Context& context)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        // lock_guard 대신 unique_lock 사용 (TR_KEEP에서 wait_for를 위해 unlock/relock 필요)
+        std::unique_lock<std::mutex> lock(m_mutex);
         m_abortRequested = false;
+
+        LogTask(makeLogPrefix(m_SequenceName) + "Execute start");
 
         size_t idx = 0;
     
-        // 무한 루프 방지용 최대 스텝 수 제한이 필요하다면 추가, 여기선 while(true) 유지
         while (true)
         {
-            // 중단 요청 체크 (컨텍스트 또는 자체 요청)
-            bool stopReq = context.GetStopRequested();
-            if (!stopReq)
+            // 중단 요청 체크 (컨텍스트 또는 자체 요청) - 이미 락 획득 상태
+            if (context.GetStopRequested())
             {
-                 // m_abortRequested가 std::atomic<bool>이므로 락 불필요해 읽을 수 있지만 일관성을 위해 유지
-                 std::lock_guard<std::mutex> lock(m_mutex);
-                 if (m_abortRequested) stopReq = true;
+                LogTask(makeLogPrefix(m_SequenceName) + "Stop requested - aborting sequence");
+                return false;
             }
 
-            if (stopReq)
+            if (m_abortRequested)
             {
-                 return false;
+                LogTask(makeLogPrefix(m_SequenceName) + "Abort requested - aborting sequence");
+                return false;
             }
 
-            TaskPtr curTask;
+            // Task 목록 접근 - 이미 락 획득 상태
+            if (idx >= m_tasks.size())
             {
-                std::lock_guard<std::mutex> lock(m_mutex);
-                if (idx >= m_tasks.size())
-                {
-                     return true; 
-                }
-                curTask = m_tasks[idx];
+                LogTask(makeLogPrefix(m_SequenceName) + "All steps finished.");
+                return true;
             }
 
-            if (!curTask) { 
-                ++idx; 
-                continue; 
+            m_curTask = m_tasks[idx];
+            if (!m_curTask)
+            {
+                LogTask(makeLogPrefix(m_SequenceName) + "Null task at index " + std::to_string(idx) + " - skipping");
+                ++idx;
+                continue;
             }
+
+            // Task 실행 중에는 뮤텍스를 해제하여 다른 스레드가 Abort()를 호출할 수 있게 함
+            lock.unlock();
 
             TaskResult res = TR_ERROR;
             try
             {
-                m_TaskName = curTask->GetName();
-                res = curTask->Execute(context);
+                res = m_curTask->Execute(context);
             }
             catch (const std::exception& ex)
             {
+                LogTask(makeLogPrefix(m_SequenceName) + "Exception in step [" + m_curTask->GetName() + "] Execute: " + ex.what());
                 return false;
-            } catch (...)
+            }
+            catch (...)
             {
+                LogTask(makeLogPrefix(m_SequenceName) + "Unknown exception in step [" + m_curTask->GetName() + "] Execute");
                 return false;
             }
 
-            if (res != TR_KEEP)
-            {
-            }
+            // 결과 처리를 위해 뮤텍스 재획득
+            lock.lock();
+
+            LogTask(makeLogPrefix(m_SequenceName) + "Step [" + m_curTask->GetName() + "] returned: " + std::to_string(static_cast<int>(res)));
 
             switch (res)
             {
             case TR_KEEP:
             {
-                // std::condition_variable은 std::unique_lock을 요구합니다.
-                std::unique_lock<std::mutex> lock(m_mutex); 
-            
-                // Abort나 Stop 요청이 오면 즉시 깨어남, 아니면 m_pollIntervalMs 만큼 대기
+                // wait_for는 내부에서 unlock -> 대기 -> relock 수행
+                // notify나 timeout으로 깨어남
                 if (!m_abortRequested && !context.GetStopRequested())
                 {
-                    // boost::chrono -> std::chrono 교체
                     m_cv.wait_for(lock, std::chrono::milliseconds(m_pollIntervalMs));
                 }
                 break;
@@ -133,23 +144,18 @@ namespace EC
                 break;
 
             case TR_DONE:
-                LogTask(makeLogPrefix(m_SequenceName) + "Sequence signaled DONE by step");
-                // 전체 시퀀스 완료로 간주하려면 true 리턴, 
-                // 현재 스텝만 완료라면 ++idx (여기서는 시퀀스 전체 완료 의미로 해석)
+                LogTask(makeLogPrefix(m_SequenceName) + "Sequence signaled DONE by step [" + m_curTask->GetName() + "]");
                 return true;
 
             case TR_ERROR:
-                LogTask(makeLogPrefix(m_SequenceName) + "Sequence signaled ERROR by step");
+                LogTask(makeLogPrefix(m_SequenceName) + "Sequence signaled ERROR by step [" + m_curTask->GetName() + "]");
                 return false;
 
             default:
-                LogTask(makeLogPrefix(m_SequenceName) + "Step returned unknown result");
+                LogTask(makeLogPrefix(m_SequenceName) + "Step [" + m_curTask->GetName() + "] returned unknown result: " + std::to_string(static_cast<int>(res)));
                 return false;
             }
         }
-
-        LogTask(makeLogPrefix(m_SequenceName) + "Execute finished normally");
-        return true;
     }
 
 } // namespace EC

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "EC_API.h"
 #include "Context.h"
 #include "Sequence.h"
@@ -10,10 +10,10 @@ namespace EC
     public:
         SequenceBuilderBase();
         virtual ~SequenceBuilderBase();
-        SequencePtr CreateSequence(std::string sequenceName);
+        SequencePtr CreateSequence(std::string Name);
 
     protected:
-        virtual SequencePtr BuildSequence(std::string sequenceName) = 0;
+        virtual SequencePtr BuildSequence(std::string Name) = 0;
     };
 
     using SequenceBuilderPtr = std::shared_ptr<SequenceBuilderBase>;

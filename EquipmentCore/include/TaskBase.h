@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <mutex>
 #include <chrono>
@@ -89,10 +89,10 @@ namespace EC
         /// <summary>
         /// 지정한 상태로 진입합니다. 데드라인(타임아웃)은 초기화됩니다.
         /// </summary>
-        /// <param name="newStep">진입할 상태 식별자</param>
-        void EnterStep(int newStep) override
+        /// <param name="newState">진입할 상태 식별자</param>
+        void EnterState(int newState) override
         {
-            m_step_ = newStep;
+            m_step_ = newState;
             m_hasDeadline_ = false;
         }
 
@@ -118,7 +118,7 @@ namespace EC
         TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) override
         {
             ctx.SetLastError(msg);
-            EnterStep(CS_ERROR);
+            EnterState(CS_ERROR);
             return TR_ERROR;
         }
 
@@ -142,9 +142,9 @@ namespace EC
         /// </summary>
         /// <param name="newState">진입할 상태</param>
         /// <param name="timeoutMs">데드라인까지의 시간(밀리초)</param>
-        void EnterStepWithTimeout(int newStep, long timeoutMs)
+        void EnterStateWithTimeout(int newState, long timeoutMs)
         {
-            m_step_ = newStep;
+            m_step_ = newState;
 
             if (timeoutMs <= 0)
             {

@@ -42,11 +42,11 @@
     <ClCompile Include="Sequence.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="SequenceStrategyBase.cpp">
-      <Filter>StateMachine</Filter>
-    </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SequenceStrategyBase.cpp">
+      <Filter>StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,14 +95,14 @@
     <ClInclude Include="Sequence.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="SequenceStrategyBase.h">
-      <Filter>StateMachine</Filter>
-    </ClInclude>
     <ClInclude Include="ISequenceStrategy.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SequenceStrategyBase.h">
+      <Filter>StateMachine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "EC_API.h"
 #include "ISequenceStrategy.h"
 #include "SequenceBuilderBase.h"
@@ -14,6 +14,7 @@ namespace EC
     public:
         SequenceStrategyBase();
         ~SequenceStrategyBase() override = default;
+
         std::string GetSequenceName() const override = 0;
         SequenceBuilderPtr CreateBuilder() override = 0;
         void ConfigureParams(ContextPtr context) override = 0;

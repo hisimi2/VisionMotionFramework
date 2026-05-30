@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 
 #include "Context.h"
 #include "SequenceBuilderBase.h"
@@ -14,8 +14,8 @@ namespace EC
     SequenceBuilderBase::SequenceBuilderBase() {}
     SequenceBuilderBase::~SequenceBuilderBase() {}
 
-    std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(std::string sequenceName)
+    std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(std::string Name)
     {
-        return BuildSequence(sequenceName);
+        return BuildSequence(Name);
     }
 } 

@@ -1,14 +1,16 @@
-#pragma once
+﻿#pragma once
 
 #include "EC_API.h"
 
 #include "ParamConverterFomatter.hpp"
 #include <map>
 #include <mutex>
+#include <memory>
 
 namespace EC
 {
-    
+    using StringMap = std::map<std::string, std::string>;
+    using LockGuardType = std::lock_guard<std::mutex>;
 
     class EC_API Context
     {
@@ -53,8 +55,6 @@ namespace EC
         bool                    m_isStopRequested;
     };
 
-    using StringMap = std::map<std::string, std::string>;
-    using LockGuardType = std::lock_guard<std::mutex>;
     using ContextPtr = std::shared_ptr<Context>;
-} 
+}
 

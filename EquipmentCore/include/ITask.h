@@ -1,10 +1,12 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <memory>
 
 namespace EC
 {
+    class Context;
+
     enum TaskResult
     {
         TR_KEEP,    // 현재 Task 유지(다음 주기에 다시 실행)
@@ -24,7 +26,7 @@ namespace EC
         virtual TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) = 0;
 
         virtual void Abort() = 0;
-        virtual void EnterStep(int newStep) = 0;
+        virtual void EnterState(int newState) = 0;
         virtual std::string GetName() const = 0;
     };
 

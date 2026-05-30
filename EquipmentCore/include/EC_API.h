@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef EQUIPMENTCORE_EXPORTS
 #define EC_API __declspec(dllexport)

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "EC_API.h"
 #include "ISequence.h" 
 #include "ITask.h"
@@ -15,7 +15,6 @@ namespace EC
     {
     public:
         explicit Sequence(const std::string& name = "");
-        
         ~Sequence() override;
 
         bool Execute(Context& context) override;
@@ -39,8 +38,7 @@ namespace EC
         
         int m_pollIntervalMs;
         std::string m_SequenceName;
-        std::string m_TaskName;
-    };
 
-    using SequencePtr = std::unique_ptr<ISequence>;
+        TaskPtr m_curTask;
+    };
 } 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "EC_API.h"
 #include "ITask.h"
 #include <string>
@@ -19,4 +19,6 @@ namespace EC
         virtual std::string GetTaskName() const = 0;
         virtual void AddTask(TaskPtr step) = 0;
     };
+
+    using SequencePtr = std::unique_ptr<ISequence>;
 } 

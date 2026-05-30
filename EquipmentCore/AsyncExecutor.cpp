@@ -3,8 +3,6 @@
 #include "Context.h"
 
 #include "ISequence.h"
-#include "IActuator.h"
-#include "IResultSink.h"
 
 #include <chrono>
 #include <thread>
@@ -20,47 +18,39 @@ namespace EC
     {
         ISequence*      m_seq;
         Context*        m_ctx;
-        IActuator*      m_act;
 
         std::atomic<bool>* m_runningFlag;
         AsyncExecutor* m_runner;
 
-        SequenceThreadFunc(ISequence* seq, Context* ctx, IActuator* act, std::atomic<bool>* runningFlag, AsyncExecutor* runner)
-            : m_seq(seq), m_ctx(ctx), m_act(act), m_runningFlag(runningFlag), m_runner(runner)
+        SequenceThreadFunc(ISequence* seq, Context* ctx, std::atomic<bool>* runningFlag, AsyncExecutor* runner)
+            : m_seq(seq), m_ctx(ctx), m_runningFlag(runningFlag), m_runner(runner)
         {
         }
 
         void operator()()
         {
-            if (m_runner)
-            {
-                m_runner->SendResult(0, "started");
-            }
+            
 
             try
             {
                 if (m_seq && m_ctx)
                 {
-                    m_seq->Execute(*m_ctx, m_act);
+                    m_seq->Execute(*m_ctx);
                 }
 
-                if (m_runner)
-                    m_runner->SendResult(1, "completed");
+            
             }
             catch (const std::exception& ex)
             {
                 if (m_runner)
                 {
                     std::string status = std::string("aborted_exception: ") + ex.what();
-                    m_runner->SendResult(-1, status);
+                    
                 }
             }
             catch (...)
             {
-                if (m_runner)
-                {
-                    m_runner->SendResult(-1, "aborted_unknown");
-                }
+                
             }
 
             if (m_runningFlag)
@@ -98,36 +88,7 @@ namespace EC
             currentSeq.reset();
         }
 
-        void setResultSink(IResultSink* sink)
-        {
-            std::lock_guard<std::mutex> lk(mutex); 
-            resultSink = sink;
-        }
 
-        void sendResultToSink(int requestId, const std::vector<std::string>& results)
-        {
-            IResultSink* sink = nullptr;
-            {
-                std::lock_guard<std::mutex> lk(mutex);
-                sink = resultSink;
-            }
-            if (sink)
-            {
-                sink->NotifyVisionResult(requestId, results);
-            }
-        }
-
-        void sendResult(int requestId, const std::string& status)
-        {
-            if (currentSeq)
-            {
-                std::vector<std::string> msg;
-                msg.push_back(std::string("Sequence: ") + currentSeq->GetSequenceName());
-                msg.push_back(std::string("Task: ") + currentSeq->GetTaskName());
-                msg.push_back(std::string("Status: ") + status);
-                sendResultToSink(requestId, msg);
-            }
-        }
     };
 
     AsyncExecutor::AsyncExecutor()
@@ -151,24 +112,8 @@ namespace EC
         }
     }
 
-    void AsyncExecutor::SetResultSink(IResultSink* sink)
-    {
-        if (m_impl) m_impl->setResultSink(sink);
-    }
-
-    void AsyncExecutor::SendResultToSink(int requestId, const std::vector<std::string>& results)
-    {
-        if (m_impl) m_impl->sendResultToSink(requestId, results);
-    }
-
-    void AsyncExecutor::SendResult(int requestId, const std::string& status)
-    {
-        if (m_impl) m_impl->sendResult(requestId, status);
-    }
-
     bool AsyncExecutor::Start(std::unique_ptr<ISequence> seq,
-                                    std::shared_ptr<Context> ctx,
-                                    IActuator* actuator)
+                                    std::shared_ptr<Context> ctx)
     {
         if (!m_impl) return false;
         if (!seq) return false;
@@ -192,7 +137,7 @@ namespace EC
 
         try
         {
-            SequenceThreadFunc func(m_impl->currentSeq.get(), ctx.get(), actuator, &m_impl->running, this);
+            SequenceThreadFunc func(m_impl->currentSeq.get(), ctx.get(), &m_impl->running, this);
             m_impl->thread = std::thread(func); 
         }
         catch (...)
@@ -240,7 +185,6 @@ namespace EC
             {
                 std::vector<std::string> msg;
                 msg.push_back("Error: Failed to join sequence thread in WaitForCompletion.");
-                m_impl->sendResultToSink(-1, msg);
                 return false;
             }
         }
@@ -271,7 +215,6 @@ namespace EC
                 {
                     std::vector<std::string> msg;
                     msg.push_back("Error: Failed to join sequence thread during abort.");
-                    if (m_impl) m_impl->sendResultToSink(-1, msg);
                 }
             }
         }
