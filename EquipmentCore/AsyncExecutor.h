@@ -1,22 +1,23 @@
 #pragma once
 
 #include "EC_API.h"
+#include "IResultSink.h"
+#include "Context.h"
+#include "ISequence.h"
+
 #include <memory>
+#include <thread>
+#include <atomic>
+#include <mutex>
 #include <vector>
 #include <string>
 
 namespace EC 
 {
-    class Context;
-    class ISequence;
-    class IResultSink;
-
     class EC_API AsyncExecutor 
     {
     public:
         AsyncExecutor();
-        
-        // 가상 함수가 존재하므로 안전한 상속을 위해 가상 소멸자로 변경하는 것을 권장합니다.
         virtual ~AsyncExecutor();
 
         bool Start(std::unique_ptr<ISequence> seq, std::shared_ptr<Context> ctx);
@@ -26,13 +27,17 @@ namespace EC
         bool IsRunning() const;
         bool WaitForCompletion(int timeoutMs = -1);
 
-        
+        virtual void SetResultSink(IResultSink* sink);
+        void SendResult(int requestId, const std::string& status);
 
     private:
-        struct Impl;
-        
-        std::unique_ptr<Impl> m_impl;
+        void SendResultToSink(int requestId, const std::vector<std::string>& results);
 
-        
+        std::thread                     m_thread;
+        std::atomic<bool>               m_running;
+        mutable std::mutex              m_mutex;
+        std::unique_ptr<ISequence>      m_currentSeq;
+        std::shared_ptr<Context>        m_currentCtx;
+        IResultSink*                    m_resultSink;
     };
 }
