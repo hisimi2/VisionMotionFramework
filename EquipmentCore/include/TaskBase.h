@@ -15,12 +15,12 @@ namespace EC
     {
     public:
 
-        static const int CS_INITIALIZING = -1;  // 초기화 상태 (공통)
-        static const int CS_ERROR = -2;         // 에러 상태 (공통)
-        static const int CS_IDLE = -3;          // 대기 상태 (공통)
+        static const int CS_INITIALIZING    = -1;  // 초기화 상태 (공통)
+        static const int CS_ERROR           = -2;  // 에러 상태 (공통)
+        static const int CS_ABORT           = -3;  // 강제 중단 상태 (공통)
 
         TaskBase()
-            : m_state_(CS_INITIALIZING)
+            : m_step_(CS_INITIALIZING)
             , m_initialized_(false)
             , m_hasDeadline_(false)
         {
@@ -34,7 +34,7 @@ namespace EC
             if (ctx.GetStopRequested())
             {
                 ctx.SetLastError("TaskBase: Stop requested");
-                m_state_ = CS_ERROR;
+                m_step_ = CS_ERROR;
                 return TR_ERROR;
             }
 
@@ -48,13 +48,13 @@ namespace EC
                 catch (const std::exception& ex)
                 {
                     ctx.SetLastError(std::string("TaskBase: exception in OnInitialize: ") + ex.what());
-                    m_state_ = CS_ERROR;
+                    m_step_ = CS_ERROR;
                     return TR_ERROR;
                 }
                 catch (...)
                 {
                     ctx.SetLastError("TaskBase: unknown exception in OnInitialize");
-                    m_state_ = CS_ERROR;
+                    m_step_ = CS_ERROR;
                     return TR_ERROR;
                 }
             }
@@ -66,13 +66,13 @@ namespace EC
             catch (const std::exception& ex)
             {
                 ctx.SetLastError(std::string("TaskBase: exception in OnPoll: ") + ex.what());
-                m_state_ = CS_ERROR;
+                m_step_ = CS_ERROR;
                 return TR_ERROR;
             }
             catch (...)
             {
                 ctx.SetLastError("TaskBase: unknown exception in OnPoll");
-                m_state_ = CS_ERROR;
+                m_step_ = CS_ERROR;
                 return TR_ERROR;
             }
         }
@@ -83,16 +83,16 @@ namespace EC
         void Abort() override
         {
             std::lock_guard<std::mutex> lg(m_mutex_);
-            m_state_ = CS_ERROR;
+            m_step_ = CS_ERROR;
         }
 
         /// <summary>
         /// 지정한 상태로 진입합니다. 데드라인(타임아웃)은 초기화됩니다.
         /// </summary>
-        /// <param name="newState">진입할 상태 식별자</param>
-        void EnterState(int newState) override
+        /// <param name="newStep">진입할 상태 식별자</param>
+        void EnterStep(int newStep) override
         {
-            m_state_ = newState;
+            m_step_ = newStep;
             m_hasDeadline_ = false;
         }
 
@@ -118,7 +118,7 @@ namespace EC
         TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) override
         {
             ctx.SetLastError(msg);
-            EnterState(CS_ERROR);
+            EnterStep(CS_ERROR);
             return TR_ERROR;
         }
 
@@ -137,24 +137,14 @@ namespace EC
         virtual TaskResult OnPoll(Context& ctx) = 0;
 
         /// <summary>
-        /// 공통 상태(CBS_*)로 진입합니다. 데드라인은 초기화됩니다.
-        /// </summary>
-        /// <param name="state">진입할 공통 상태</param>
-        void EnterCommonState(int state)
-        {
-            m_state_ = state;
-            m_hasDeadline_ = false;
-        }
-
-        /// <summary>
         /// 지정한 상태로 진입하고 타임아웃(밀리초)을 설정합니다.
         /// timeoutMs <= 0 이면 데드라인을 사용하지 않습니다.
         /// </summary>
         /// <param name="newState">진입할 상태</param>
         /// <param name="timeoutMs">데드라인까지의 시간(밀리초)</param>
-        void EnterStateWithTimeout(int newState, long timeoutMs)
+        void EnterStepWithTimeout(int newStep, long timeoutMs)
         {
-            m_state_ = newState;
+            m_step_ = newStep;
 
             if (timeoutMs <= 0)
             {
@@ -173,7 +163,7 @@ namespace EC
         /// <returns>현재 상태 값</returns>
         int GetState() const
         {
-            return m_state_;
+            return m_step_;
         }
 
         /// <summary>
@@ -192,11 +182,10 @@ namespace EC
         }
 
     private:
-        int                                   m_state_;
+        int                                   m_step_;
         bool                                  m_initialized_;
         bool                                  m_hasDeadline_;
 
-        // 동기화 및 시간 관리 멤버를 C++ 표준 라이브러리로 대체
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
     };

@@ -14,7 +14,7 @@
 #include <string>
 #include <mutex>
 
-namespace VMF
+namespace EC
 {
     struct SequenceThreadFunc
     {
@@ -293,4 +293,4 @@ namespace VMF
         return m_impl->running.load();
     }
 
-} // namespace VMF
+} // namespace EC

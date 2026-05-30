@@ -102,9 +102,6 @@
     <ClInclude Include="Actuators\Load2Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThreads\ThreadBase.h">
-      <Filter>OperationThreads</Filter>
-    </ClInclude>
     <ClInclude Include="OperationThreads\ThreadLoad1.h">
       <Filter>OperationThreads</Filter>
     </ClInclude>
@@ -178,9 +175,6 @@
     </ClCompile>
     <ClCompile Include="Actuators\Load2Parts.cpp">
       <Filter>Actuators</Filter>
-    </ClCompile>
-    <ClCompile Include="OperationThreads\ThreadBase.cpp">
-      <Filter>OperationThreads</Filter>
     </ClCompile>
     <ClCompile Include="OperationThreads\ThreadLoad1.cpp">
       <Filter>OperationThreads</Filter>

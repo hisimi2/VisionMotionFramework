@@ -19,21 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4E39A4EB-5B6F-445C-9D9A-8AB567B45086}</ProjectGuid>
-    <RootNamespace>Equipment2015</RootNamespace>
+    <ProjectGuid>{75DB4D51-D36B-4E20-B7B5-3E63A85F94AF}</ProjectGuid>
+    <RootNamespace>EquipmentCore</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
-    <Keyword>MFCProj</Keyword>
+    <Keyword>MFCDLLProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -41,14 +41,14 @@
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -75,6 +75,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(SolutionDir)$(ProjectName)\$(Platform)\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -90,18 +92,16 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;EQUIPMENTCORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(SolutionDir)EquipmentCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;$(SolutionDir)EquipmentCore\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;sqlite3.lib;EquipmentCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>.\EquipmentCore.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
@@ -115,15 +115,15 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>.\EquipmentCore.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
@@ -139,17 +139,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\EquipmentCore.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
@@ -165,17 +165,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\EquipmentCore.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
@@ -188,77 +188,45 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actuators\CAxisController.h" />
-    <ClInclude Include="Actuators\CClampReleaseCylinder.h" />
-    <ClInclude Include="Actuators\CCylinderBase.h" />
-    <ClInclude Include="Actuators\CForBackCylinder.h" />
-    <ClInclude Include="Actuators\CLamp.h" />
-    <ClInclude Include="Actuators\CMmceIo.h" />
-    <ClInclude Include="Actuators\CNarrowWideCylinder.h" />
-    <ClInclude Include="Actuators\COpenCloseCylinder.h" />
-    <ClInclude Include="Actuators\COPSwitch.h" />
-    <ClInclude Include="Actuators\CTimer.h" />
-    <ClInclude Include="Actuators\CUpDownCylinder.h" />
-    <ClInclude Include="Actuators\CVaccumBlowCylinder.h" />
-    <ClInclude Include="Actuators\ICylinder.h" />
-    <ClInclude Include="Actuators\IDio.h" />
-    <ClInclude Include="Actuators\IOPSwitch.h" />
-    <ClInclude Include="Actuators\Load1Parts.h" />
-    <ClInclude Include="Actuators\Load2Parts.h" />
-    <ClInclude Include="Equipment2015.h" />
-    <ClInclude Include="Equipment2015Dlg.h" />
-    <ClInclude Include="OperationThreads\ThreadLoad1.h" />
-    <ClInclude Include="OperationThreads\ThreadLoad2.h" />
-    <ClInclude Include="OperationThreads\ThreadsManager.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="VMFComposition\DefineVAT.h" />
-    <ClInclude Include="VMFComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
-    <ClInclude Include="VMFComposition\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h" />
-    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
-    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
-    <ClInclude Include="VMFComposition\Load1\VatAdapterLoad1.h" />
-    <ClInclude Include="VMFComposition\MemorySequenceStrategy.h" />
-    <ClInclude Include="VMFComposition\mock\CMockDataRepository.h" />
-    <ClInclude Include="VMFComposition\mock\CMockVisionEventHandler.h" />
-    <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryKeys.h" />
-    <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.h" />
-    <ClInclude Include="VMFComposition\VisionProtocal\VisionPacketMemory.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Actuators\CCylinderBase.cpp" />
-    <ClCompile Include="Actuators\CMmceIo.cpp" />
-    <ClCompile Include="Actuators\COPSwitch.cpp" />
-    <ClCompile Include="Actuators\CTimer.cpp" />
-    <ClCompile Include="Actuators\Load1Parts.cpp" />
-    <ClCompile Include="Actuators\Load2Parts.cpp" />
-    <ClCompile Include="Equipment2015.cpp" />
-    <ClCompile Include="Equipment2015Dlg.cpp" />
-    <ClCompile Include="OperationThreads\ThreadLoad1.cpp" />
-    <ClCompile Include="OperationThreads\ThreadLoad2.cpp" />
-    <ClCompile Include="OperationThreads\ThreadsManager.cpp" />
+    <ClCompile Include="AsyncExecutor.cpp" />
+    <ClCompile Include="EquipmentCore.cpp" />
+    <ClCompile Include="Sequence.cpp" />
+    <ClCompile Include="SequenceBuilderBase.cpp" />
+    <ClCompile Include="SequenceStrategyBase.cpp" />
+    <ClCompile Include="src\Context.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
-    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
-    <ClCompile Include="VMFComposition\Load1\VatAdapterLoad1.cpp" />
-    <ClCompile Include="VMFComposition\mock\CMockDataRepository.cpp" />
-    <ClCompile Include="VMFComposition\mock\CMockVisionEventHandler.cpp" />
-    <ClCompile Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Equipment2015.rc" />
+    <ClInclude Include="AsyncExecutor.h" />
+    <ClInclude Include="EquipmentCore.h" />
+    <ClInclude Include="include\Context.h" />
+    <ClInclude Include="include\EC_API.h" />
+    <ClInclude Include="include\EquipmentCore.h" />
+    <ClInclude Include="include\ITask.h" />
+    <ClInclude Include="include\ParamConverterFomatter.hpp" />
+    <ClInclude Include="include\TaskBase.h" />
+    <ClInclude Include="include\Utils.h" />
+    <ClInclude Include="ISequence.h" />
+    <ClInclude Include="ISequenceStrategy.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sequence.h" />
+    <ClInclude Include="SequenceBuilderBase.h" />
+    <ClInclude Include="SequenceStrategyBase.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\Equipment2015.rc2" />
+    <None Include="EquipmentCore.def" />
+    <None Include="res\EquipmentCore.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\Equipment2015.ico" />
+    <ResourceCompile Include="EquipmentCore.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

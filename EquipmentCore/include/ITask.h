@@ -14,6 +14,7 @@ namespace EC
         TR_ERROR    // 에러 발생(시퀀스 중단)
     };
 
+
     class ITask
     {
     public:
@@ -23,7 +24,7 @@ namespace EC
         virtual TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) = 0;
 
         virtual void Abort() = 0;
-        virtual void EnterState(int newState) = 0;
+        virtual void EnterStep(int newStep) = 0;
         virtual std::string GetName() const = 0;
     };
 

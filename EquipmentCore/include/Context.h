@@ -8,8 +8,7 @@
 
 namespace EC
 {
-    using StringMap = std::map<std::string, std::string>;
-    using LockGuardType = std::lock_guard<std::mutex>;
+    
 
     class EC_API Context
     {
@@ -53,5 +52,9 @@ namespace EC
         std::string             m_lastError;
         bool                    m_isStopRequested;
     };
+
+    using StringMap = std::map<std::string, std::string>;
+    using LockGuardType = std::lock_guard<std::mutex>;
+    using ContextPtr = std::shared_ptr<Context>;
 } 
 

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Old">
-      <UniqueIdentifier>{42e81118-0a0e-4489-a155-cbc6d9437700}</UniqueIdentifier>
-    </Filter>
     <Filter Include="StateMachine">
       <UniqueIdentifier>{799e6e24-ac97-431a-aaf8-cab521e97e81}</UniqueIdentifier>
     </Filter>
@@ -30,19 +27,25 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\SequenceStateMachine.cpp">
-      <Filter>Old</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SequenceExecutor.cpp">
-      <Filter>Old</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SequenceManager.cpp">
-      <Filter>Old</Filter>
-    </ClCompile>
     <ClCompile Include="src\Context.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncExecutor.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="SequenceBuilderBase.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="SequenceStrategyBase.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,20 +62,8 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\SequenceStateMachine.h">
-      <Filter>Old</Filter>
-    </ClInclude>
     <ClInclude Include="include\EquipmentCore.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ISequenceExecutable.h">
-      <Filter>Old</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SequenceExecutor.h">
-      <Filter>Old</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SequenceManager.h">
-      <Filter>Old</Filter>
     </ClInclude>
     <ClInclude Include="include\EC_API.h">
       <Filter>헤더 파일</Filter>
@@ -90,6 +81,27 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncExecutor.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="SequenceBuilderBase.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="ISequence.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="SequenceStrategyBase.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="ISequenceStrategy.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
