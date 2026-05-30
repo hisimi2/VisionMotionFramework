@@ -1,9 +1,7 @@
-#pragma once
+﻿#pragma once
 
-#include <chrono>
 #include <string>
 #include <memory>
-#include "EquipmentCore.h"
 #include "TaskBase.h"
 
 class Load2Parts;
@@ -12,12 +10,12 @@ namespace OperationThread
 {
     /// <summary>
     /// Load2 Pick & Place 시퀀스 구현
-    /// EquipmentCore의 ISequenceExecutable 인터페이스를 구현
+    /// EC::TaskBase 기반 상태 기계 구현
     /// </summary>
     class ThreadLoad2 : public EC::TaskBase
     {
     public:
-        enum class PickPlaceStep 
+        enum Substep
         {
             RailOpen = 0,
             MovePickPositionXZ,
@@ -35,11 +33,7 @@ namespace OperationThread
         ThreadLoad2(LPVOID parts, int repeatCount = 0);
         ~ThreadLoad2() override;
 
-        // ISequenceExecutable 구현
-        void OnInitialize() override;
-        bool OnPoll() override;
-        void OnCleanup() override;
-        void OnError(const std::string& errorMsg) override;
+        std::string GetName() const override { return "ThreadLoad2"; }
 
         // 파라미터 설정 메서드
         void SetPickPosition(double x, double z);
@@ -49,30 +43,30 @@ namespace OperationThread
         void SetVacuumIndex(int index);
 
         // 상태 조회 메서드
-        PickPlaceStep GetCurrentStep() const;
-        bool HandleStep(int step) override;
-        int GetStepCount() const override { return static_cast<int>(PickPlaceStep::Complete) + 1; }
+        Substep GetCurrentStep() const { return static_cast<Substep>(GetState()); }
 
         // 에러 메시지 조회
         std::string GetLastError() const { return m_lastError; }
 
+    protected:
+        void OnInitialize(EC::Context& ctx) override;
+        EC::TaskResult OnPoll(EC::Context& ctx) override;
+
     private:
-    // 단계별 처리 함수
-        bool HandleRailOpen();
-        bool HandleMovePickPositionXZ();
-        bool HandlePreciserDown();
-        bool HandleVacuumOn();
-        bool HandleMoveSafeZAfterPick();
-        bool HandleMovePlacePositionXZ();
-        bool HandlePreciserUp();
-        bool HandleVacuumOff();
-        bool HandleMoveSafeZAfterPlace();
-        bool HandleCheckRepeat();
-        bool HandleComplete();
+        // 단계별 처리 함수 (TaskResult 반환)
+        EC::TaskResult HandleRailOpen(EC::Context& ctx);
+        EC::TaskResult HandleMovePickPositionXZ(EC::Context& ctx);
+        EC::TaskResult HandlePreciserDown(EC::Context& ctx);
+        EC::TaskResult HandleVacuumOn(EC::Context& ctx);
+        EC::TaskResult HandleMoveSafeZAfterPick(EC::Context& ctx);
+        EC::TaskResult HandleMovePlacePositionXZ(EC::Context& ctx);
+        EC::TaskResult HandlePreciserUp(EC::Context& ctx);
+        EC::TaskResult HandleVacuumOff(EC::Context& ctx);
+        EC::TaskResult HandleMoveSafeZAfterPlace(EC::Context& ctx);
+        EC::TaskResult HandleCheckRepeat(EC::Context& ctx);
+        EC::TaskResult HandleComplete(EC::Context& ctx);
 
         // 유틸리티 메서드
-        void MoveToNextStep();
-        bool IsStepTimeout() const;
         void LogStep(const std::string& message);
 
         // 멤버 변수
@@ -80,7 +74,6 @@ namespace OperationThread
         int m_repeatCount;
         int m_currentIteration;
         int m_successCount;
-        PickPlaceStep m_currentStep;
         long m_moveTimeoutMs;
 
         // 위치 파라미터
@@ -92,9 +85,7 @@ namespace OperationThread
         int m_vacuumIndex;
 
         // 상태
-        bool m_initialized;
         std::string m_lastError;
-        std::chrono::steady_clock::time_point m_stepStartTime;
     };
 
     using ThreadLoad2Ptr = std::shared_ptr<ThreadLoad2>;

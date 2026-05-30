@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ThreadLoad2.h"
 #include <iostream>
 #include <sstream>
@@ -6,18 +6,18 @@
 
 namespace OperationThread
 {
+    using namespace EC;
     ThreadLoad2::ThreadLoad2(LPVOID parts, int repeatCount)
-        : m_parts((Load2Parts*)parts)
+        : TaskBase()
+        , m_parts((Load2Parts*)parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)
         , m_successCount(0)
-        , m_currentStep(PickPlaceStep::RailOpen)
         , m_moveTimeoutMs(3000)
         , m_pickX(100.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeZ(-12.0)
         , m_safeZ(0.0)
         , m_vacuumIndex(0)
-        , m_initialized(false)
     {
     }
 
@@ -25,122 +25,39 @@ namespace OperationThread
     {
     }
 
-    void ThreadLoad2::OnInitialize()
+    void ThreadLoad2::OnInitialize(Context& ctx)
     {
         if (!m_parts)
-        throw std::runtime_error("ThreadLoad2: Parts is null");
+        {
+            ctx.SetLastError("ThreadLoad2: Parts is null");
+            EnterState(CS_ERROR);
+            return;
+        }
 
-        m_initialized = true;
         m_currentIteration = 0;
         m_successCount = 0;
-        m_currentStep = PickPlaceStep::RailOpen;
-
+        EnterState(RailOpen);
         LogStep("ThreadLoad2 initialized");
     }
-    bool ThreadLoad2::HandleStep(int step)
+
+    EC::TaskResult ThreadLoad2::OnPoll(Context& ctx)
     {
-        auto s = static_cast<PickPlaceStep>(step);
-        switch (s)
+        switch (GetState())
         {
-        case PickPlaceStep::RailOpen:
-            return HandleRailOpen();
-        case PickPlaceStep::MovePickPositionXZ:
-            return HandleMovePickPositionXZ();
-        case PickPlaceStep::PreciserDown:
-            return HandlePreciserDown();
-        case PickPlaceStep::VacuumOn:
-            return HandleVacuumOn();
-        case PickPlaceStep::MoveSafeZAfterPick:
-            return HandleMoveSafeZAfterPick();
-        case PickPlaceStep::MovePlacePositionXZ:
-            return HandleMovePlacePositionXZ();
-        case PickPlaceStep::PreciserUp:
-            return HandlePreciserUp();
-        case PickPlaceStep::VacuumOff:
-            return HandleVacuumOff();
-        case PickPlaceStep::MoveSafeZAfterPlace:
-            return HandleMoveSafeZAfterPlace();
-        case PickPlaceStep::CheckRepeat:
-            return HandleCheckRepeat();
-        case PickPlaceStep::Complete:
-            return HandleComplete();
-        default:
-            throw std::runtime_error("Unknown step");
+        case RailOpen:              return HandleRailOpen(ctx);
+        case MovePickPositionXZ:    return HandleMovePickPositionXZ(ctx);
+        case PreciserDown:          return HandlePreciserDown(ctx);
+        case VacuumOn:              return HandleVacuumOn(ctx);
+        case MoveSafeZAfterPick:    return HandleMoveSafeZAfterPick(ctx);
+        case MovePlacePositionXZ:   return HandleMovePlacePositionXZ(ctx);
+        case PreciserUp:            return HandlePreciserUp(ctx);
+        case VacuumOff:             return HandleVacuumOff(ctx);
+        case MoveSafeZAfterPlace:   return HandleMoveSafeZAfterPlace(ctx);
+        case CheckRepeat:           return HandleCheckRepeat(ctx);
+        case Complete:              return HandleComplete(ctx);
+        case CS_ERROR:              return TR_ERROR;
+        default:                    return SetErrorAndReturn(ctx, "ThreadLoad2: Unknown state");
         }
-    }
-    bool ThreadLoad2::OnPoll()
-    {
-        if (!m_initialized)
-            return false;
-
-        try
-        {
-            bool stepComplete = false;
-
-            // 현재 단계 처리
-            switch (m_currentStep)
-            {
-                case PickPlaceStep::RailOpen:
-                    stepComplete = HandleRailOpen();
-                    break;
-                case PickPlaceStep::MovePickPositionXZ:
-                    stepComplete = HandleMovePickPositionXZ();
-                    break;
-                case PickPlaceStep::PreciserDown:
-                    stepComplete = HandlePreciserDown();
-                    break;
-                case PickPlaceStep::VacuumOn:
-                    stepComplete = HandleVacuumOn();
-                    break;
-                case PickPlaceStep::MoveSafeZAfterPick:
-                    stepComplete = HandleMoveSafeZAfterPick();
-                    break;
-                case PickPlaceStep::MovePlacePositionXZ:
-                    stepComplete = HandleMovePlacePositionXZ();
-                    break;
-                case PickPlaceStep::PreciserUp:
-                    stepComplete = HandlePreciserUp();
-                    break;
-                case PickPlaceStep::VacuumOff:
-                    stepComplete = HandleVacuumOff();
-                    break;
-                case PickPlaceStep::MoveSafeZAfterPlace:
-                    stepComplete = HandleMoveSafeZAfterPlace();
-                    break;
-                case PickPlaceStep::CheckRepeat:
-                    stepComplete = HandleCheckRepeat();
-                    break;
-                case PickPlaceStep::Complete:
-                    stepComplete = HandleComplete();
-                    break;
-                default:
-                    throw std::runtime_error("Unknown step");
-            }
-
-            if (stepComplete && m_currentStep != PickPlaceStep::Complete)
-            {
-                MoveToNextStep();
-            }
-
-            // false이면 시퀀스 완료
-            return m_currentStep != PickPlaceStep::Complete;
-        }
-        catch (const std::exception& ex)
-        {
-            m_lastError = std::string("Poll error: ") + ex.what();
-            throw;
-        }
-    }
-
-    void ThreadLoad2::OnCleanup()
-    {
-        LogStep("ThreadLoad2 cleanup completed");
-    }
-
-    void ThreadLoad2::OnError(const std::string& errorMsg)
-    {
-        m_lastError = errorMsg;
-        std::cerr << "ThreadLoad2 Error: " << errorMsg << std::endl;
     }
 
     void ThreadLoad2::SetPickPosition(double x, double z)
@@ -170,14 +87,9 @@ namespace OperationThread
         m_vacuumIndex = index;
     }
 
-    ThreadLoad2::PickPlaceStep ThreadLoad2::GetCurrentStep() const
-    {
-        return m_currentStep;
-    }
-
-
     // ============= 단계 처리 함수들 =============
-    bool ThreadLoad2::HandleRailOpen()
+
+    EC::TaskResult ThreadLoad2::HandleRailOpen(Context& ctx)
     {
         LogStep("HandleRailOpen");
 
@@ -186,30 +98,37 @@ namespace OperationThread
             m_parts->CylRail.open(false);
         }
 
-        return true;
+        EnterState(MovePickPositionXZ);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleMovePickPositionXZ()
+    EC::TaskResult ThreadLoad2::HandleMovePickPositionXZ(Context& ctx)
     {
         LogStep("HandleMovePickPositionXZ");
 
         m_parts->AxisX.Move(m_pickX);
         m_parts->AxisZ.Move(m_pickZ);
 
-        m_stepStartTime = std::chrono::steady_clock::now();
-        return false; // 타임아웃 대기
+        EnterStateWithTimeout(PreciserDown, m_moveTimeoutMs);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandlePreciserDown()
+    EC::TaskResult ThreadLoad2::HandlePreciserDown(Context& ctx)
     {
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "ThreadLoad2: MovePickPositionXZ timeout");
+        }
+
         LogStep("HandlePreciserDown");
 
         m_parts->CylPreciser.down(false);
 
-        return true;
+        EnterState(VacuumOn);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleVacuumOn()
+    EC::TaskResult ThreadLoad2::HandleVacuumOn(Context& ctx)
     {
         LogStep("HandleVacuumOn");
 
@@ -218,40 +137,52 @@ namespace OperationThread
             m_parts->PickVacuum[m_vacuumIndex].vaccum(false);
         }
 
-        return true;
+        EnterState(MoveSafeZAfterPick);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleMoveSafeZAfterPick()
+    EC::TaskResult ThreadLoad2::HandleMoveSafeZAfterPick(Context& ctx)
     {
-      LogStep("HandleMoveSafeZAfterPick");
+        LogStep("HandleMoveSafeZAfterPick");
 
         m_parts->AxisZ.Move(m_safeZ);
 
-        m_stepStartTime = std::chrono::steady_clock::now();
-        return false; // 타임아웃 대기
+        EnterStateWithTimeout(MovePlacePositionXZ, m_moveTimeoutMs);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleMovePlacePositionXZ()
+    EC::TaskResult ThreadLoad2::HandleMovePlacePositionXZ(Context& ctx)
     {
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "ThreadLoad2: MoveSafeZAfterPick timeout");
+        }
+
         LogStep("HandleMovePlacePositionXZ");
 
         m_parts->AxisX.Move(m_placeX);
         m_parts->AxisZ.Move(m_placeZ);
 
-        m_stepStartTime = std::chrono::steady_clock::now();
-        return false; // 타임아웃 대기
+        EnterStateWithTimeout(PreciserUp, m_moveTimeoutMs);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandlePreciserUp()
+    EC::TaskResult ThreadLoad2::HandlePreciserUp(Context& ctx)
     {
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "ThreadLoad2: MovePlacePositionXZ timeout");
+        }
+
         LogStep("HandlePreciserUp");
 
         m_parts->CylPreciser.up(false);
 
-        return true;
+        EnterState(VacuumOff);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleVacuumOff()
+    EC::TaskResult ThreadLoad2::HandleVacuumOff(Context& ctx)
     {
         LogStep("HandleVacuumOff");
 
@@ -260,21 +191,27 @@ namespace OperationThread
             m_parts->PickVacuum[m_vacuumIndex].blow(false);
         }
 
-        return true;
+        EnterState(MoveSafeZAfterPlace);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleMoveSafeZAfterPlace()
+    EC::TaskResult ThreadLoad2::HandleMoveSafeZAfterPlace(Context& ctx)
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
         m_parts->AxisZ.Move(m_safeZ);
 
-        m_stepStartTime = std::chrono::steady_clock::now();
-        return false; // 타임아웃 대기
+        EnterStateWithTimeout(CheckRepeat, m_moveTimeoutMs);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleCheckRepeat()
+    EC::TaskResult ThreadLoad2::HandleCheckRepeat(Context& ctx)
     {
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "ThreadLoad2: MoveSafeZAfterPlace timeout");
+        }
+
         LogStep("HandleCheckRepeat");
 
         ++m_currentIteration;
@@ -285,43 +222,23 @@ namespace OperationThread
         LogStep(oss.str());
 
         // 반복 횟수 확인
-        if (m_repeatCount == 0)
+        if (m_repeatCount == 0 || m_currentIteration < m_repeatCount)
         {
-            // 무한 반복
-            m_currentStep = PickPlaceStep::RailOpen;
-            return false;
-        }
-        else if (m_currentIteration < m_repeatCount)
-        {
-            // 반복 계속
-            m_currentStep = PickPlaceStep::RailOpen;
-            return false;
+            // 무한 반복 또는 반복 계속
+            LogStep("Repeating cycle...");
+            EnterState(RailOpen);
+            return TR_KEEP;
         }
 
         // 반복 완료
-        return true;
+        EnterState(Complete);
+        return TR_KEEP;
     }
 
-    bool ThreadLoad2::HandleComplete()
+    EC::TaskResult ThreadLoad2::HandleComplete(Context& ctx)
     {
         LogStep("HandleComplete");
-        return false; // 완료
-    }
-
-    void ThreadLoad2::MoveToNextStep()
-    {
-        int nextStep = static_cast<int>(m_currentStep) + 1;
-        if (nextStep <= static_cast<int>(PickPlaceStep::Complete))
-        {
-            m_currentStep = static_cast<PickPlaceStep>(nextStep);
-        }
-    }
-
-    bool ThreadLoad2::IsStepTimeout() const
-    {
-        auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_stepStartTime).count();
-        return elapsed > m_moveTimeoutMs;
+        return TR_NEXT;
     }
 
     void ThreadLoad2::LogStep(const std::string& message)

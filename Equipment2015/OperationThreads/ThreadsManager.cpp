@@ -1,9 +1,12 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>
 #include <mutex>
 #include <chrono>
+
+#include "TaskBase.h"
+#include "Context.h"
 
 #include "Actuators/Load1Parts.h"
 #include "Actuators/Load2Parts.h"
@@ -18,24 +21,21 @@ namespace OperationThread
         , m_running(false)
         , m_stopRequested(false)
     {
-        int repeatCount = 2;
-        Load1Parts load1Parts;
-        Load2Parts load2Parts;
-
-        AddThread(std::make_shared<ThreadLoad1>((LPVOID)&load1Parts));
-        AddThread(std::make_shared<ThreadLoad2>((LPVOID)&load2Parts));
-    }
-
-    int ThreadsManager::AddThread(EC::SequenceExecutablePtr sequence)
-    {
-        m_Managers.push_back(std::make_shared<EC::SequenceManager>(sequence));
-
-        return static_cast<int>(m_Managers.size() - 1);
     }
 
     ThreadsManager::~ThreadsManager()
     {
         Stop();
+    }
+
+    int ThreadsManager::AddTaskRunner(std::shared_ptr<EC::TaskBase> task, std::shared_ptr<EC::Context> ctx)
+    {
+        auto runner = std::make_unique<TaskRunner>();
+        runner->task = task;
+        runner->context = ctx;
+
+        m_runners.push_back(std::move(runner));
+        return static_cast<int>(m_runners.size() - 1);
     }
 
     void ThreadsManager::Start()
@@ -48,12 +48,61 @@ namespace OperationThread
             return;
         }
 
+        // TaskRunner 초기화
+        m_runners.clear();
+
+        // Load1 Task
+        {
+            auto ctx = std::make_shared<EC::Context>();
+            auto task1 = std::make_shared<ThreadLoad1>((LPVOID)nullptr, 2);
+            AddTaskRunner(task1, ctx);
+        }
+
+        // Load2 Task
+        {
+            auto ctx = std::make_shared<EC::Context>();
+            auto task2 = std::make_shared<ThreadLoad2>((LPVOID)nullptr, 2);
+            AddTaskRunner(task2, ctx);
+        }
+
         m_running = true;
         m_stopRequested = false;
 
-        for (const auto& manager : m_Managers)
+        // 각 TaskRunner의 스레드 시작
+        for (auto& runner : m_runners)
         {
-            manager->Start();
+            auto task = runner->task;
+            auto ctx = runner->context;
+            auto completed = &runner->completed;
+            auto stopReq = &runner->stopRequested;
+
+            runner->thread = std::thread(
+                [task, ctx, completed, stopReq]()
+                {
+                    while (!stopReq->load())
+                    {
+                        if (ctx->GetStopRequested())
+                        {
+                            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                            continue;
+                        }
+
+                        EC::TaskResult res = task->Execute(*ctx);
+                        if (res == EC::TR_NEXT || res == EC::TR_DONE)
+                        {
+                            completed->store(true);
+                            return;
+                        }
+                        else if (res == EC::TR_ERROR)
+                        {
+                            completed->store(true);
+                            return;
+                        }
+
+                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                    }
+                    completed->store(true);
+                });
         }
 
         std::cout << "[ThreadsManager] Load1 and Load2 sequences started" << std::endl;
@@ -64,10 +113,30 @@ namespace OperationThread
 
     void ThreadsManager::Stop()
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
         m_stopRequested = true;
         m_running = false;
 
+        // 모든 실행 중인 스레드에 중단 요청
+        {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            for (auto& runner : m_runners)
+            {
+                runner->stopRequested = true;
+                if (runner->context)
+                {
+                    runner->context->SetStopRequested(true);
+                }
+            }
+        }
+
+        // 모든 스레드 join
+        for (auto& runner : m_runners)
+        {
+            if (runner->thread.joinable())
+            {
+                runner->thread.join();
+            }
+        }
 
         // 모니터링 스레드 종료 대기
         if (m_monitoringThread.joinable())
@@ -75,9 +144,9 @@ namespace OperationThread
             m_monitoringThread.join();
         }
 
-        for (const auto& manager : m_Managers)
         {
-            manager->Terminate();
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_runners.clear();
         }
 
         std::cout << "[ThreadsManager] Stopped" << std::endl;
@@ -105,9 +174,10 @@ namespace OperationThread
 
     bool ThreadsManager::IsComplete()
     {
-        for (const auto& manager : m_Managers)
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (const auto& runner : m_runners)
         {
-            if (!manager->IsComplete())
+            if (!runner->completed.load())
             {
                 return false;
             }
@@ -117,54 +187,43 @@ namespace OperationThread
 
     void ThreadsManager::MonitorLoop()
     {
-        if (!m_startSwitch)
+        if (!m_startSwitch || !m_running)
         {
             return;
         }
 
         bool switchStatus = m_startSwitch->getStatus();
+
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        // 스위치가 OFF일 때: 일시 중지 (Stop 요청)
+        if (!switchStatus)
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
-
-            if (!m_running)
+            for (const auto& runner : m_runners)
             {
-                return;
-            }
-
-            // 스위치가 ON일 때: Resume
-            if (switchStatus)
-            {
-                for (const auto& manager : m_Managers)
+                if (runner->context)
                 {
-                    std::string state = manager->GetStateString();
-                    if (state == "Stop")
-                    {
-                        manager->Resume();
-                        std::cout << "[Manager] Resumed by switch" << std::endl;
-                    }
-
+                    runner->context->SetStopRequested(true);
                 }
             }
-            // 스위치가 OFF일 때: Pause
-            else
+        }
+        // 스위치가 ON일 때: 재개 (Stop 요청 해제)
+        else
+        {
+            for (const auto& runner : m_runners)
             {
-                for (const auto& manager : m_Managers)
+                if (runner->context)
                 {
-                    std::string state = manager->GetStateString();
-                    if (state == "Run")
-                    {
-                        manager->Pause();
-                        std::cout << "[Manager] Paused by switch" << std::endl;
-                    }
+                    runner->context->SetStopRequested(false);
                 }
             }
+        }
 
-            // 완료되면 루프 종료
-            if (IsComplete())
-            {
-                m_running = false;
-                std::cout << "[ThreadsManager] Both sequences completed" << std::endl;
-            }
+        // 완료되면 루프 종료
+        if (IsComplete())
+        {
+            m_running = false;
+            std::cout << "[ThreadsManager] Both sequences completed" << std::endl;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "EC_API.h"
 #include "ISequenceStrategy.h"
 #include "SequenceBuilderBase.h"

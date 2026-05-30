@@ -11,7 +11,7 @@
 
 namespace EC
 {
-    class EC_API TaskBase : public ITask
+    class TaskBase : public ITask
     {
     public:
 

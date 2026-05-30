@@ -4,16 +4,23 @@
 #include <memory>
 #include <thread>
 #include <mutex>
-
-#include "ISequenceExecutable.h"
-#include "SequenceManager.h"
+#include <atomic>
 
 class COPSwitch;
 class Load1Parts;
 class Load2Parts;
 
+namespace EC
+{
+    class Context;
+    class TaskBase;
+}
+
 namespace OperationThread
 {
+    class ThreadLoad1;
+    class ThreadLoad2;
+
     class ThreadsManager
     {
     public:
@@ -36,6 +43,21 @@ namespace OperationThread
         bool IsComplete();
 
     private:
+        struct TaskRunner
+        {
+            std::shared_ptr<EC::TaskBase>       task;
+            std::shared_ptr<EC::Context>        context;
+            std::thread                         thread;
+            std::atomic<bool>                   completed;
+            std::atomic<bool>                   stopRequested;
+
+            TaskRunner()
+                : completed(false)
+                , stopRequested(false)
+            {
+            }
+        };
+
         /// <summary>
         /// startSwitch 모니터링 및 제어 스레드
         /// </summary>
@@ -46,17 +68,17 @@ namespace OperationThread
         /// </summary>
         void MonitorLoop();
 
+        int AddTaskRunner(std::shared_ptr<EC::TaskBase> task, std::shared_ptr<EC::Context> ctx);
+
         COPSwitch* m_startSwitch;
 
-        std::vector<EC::SequenceManagerPtr> m_Managers;
+        std::vector<std::unique_ptr<TaskRunner>> m_runners;
         std::thread m_monitoringThread;
 
-        bool m_running;
-        bool m_stopRequested;
+        std::atomic<bool> m_running;
+        std::atomic<bool> m_stopRequested;
 
         mutable std::mutex m_mutex;
-
-        int AddThread(EC::SequenceExecutablePtr sequence);
     };
 
     using ThreadsManagerPtr = std::shared_ptr<ThreadsManager>;

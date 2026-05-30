@@ -1,8 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Utils.h"
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include "Logger.h"
 
 namespace EC
 {
@@ -21,7 +22,6 @@ namespace EC
         return out;
     }
 
-    // 헤더 구현 시 중복 심볼 생성을 막기 위해 static -> inline 변경
     std::string makeLogPrefix(const std::string& seqName)
     {
         std::ostringstream oss;

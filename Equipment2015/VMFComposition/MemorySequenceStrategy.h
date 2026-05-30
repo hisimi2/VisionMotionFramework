@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SequenceStrategyBase.h"
 #include "SqliteDataRepository.h"
 

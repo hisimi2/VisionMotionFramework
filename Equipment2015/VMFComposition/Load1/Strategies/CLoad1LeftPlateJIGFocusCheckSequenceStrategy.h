@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VMFComposition/MemorySequenceStrategy.h"
 #include "VMFComposition/Load1/Sequences/CLoad1ZFocusSequenceBuilder.h"
 

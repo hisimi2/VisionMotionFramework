@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "VatAdapterLoad1.h"
 
 namespace VMF_Load1
