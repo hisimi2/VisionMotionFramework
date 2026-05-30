@@ -35,7 +35,7 @@ namespace EC
                 return defaultValue;
 
             T converted;
-            if (!detail::ParamConverter<T>::Convert(value, converted))
+            if (!EC::ParamConverter<T>::Convert(value, converted))
                 return defaultValue;
 
             return converted;
@@ -45,7 +45,7 @@ namespace EC
         void SetParamAs(const std::string& key, const T& value)
         {
             LockGuardType guard(m_mutex);
-            m_params[key] = detail::ParamFormatter<T>::Format(value);
+            m_params[key] = EC::ParamFormatter<T>::Format(value);
         }
 
     private:
@@ -56,5 +56,6 @@ namespace EC
     };
 
     using ContextPtr = std::shared_ptr<Context>;
+
 }
 

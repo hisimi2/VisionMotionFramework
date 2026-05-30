@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include "EquipmentCore.h"
-#include "ThreadBase.h"
+#include "TaskBase.h"
 
 class Load2Parts;
 
@@ -14,7 +14,7 @@ namespace OperationThread
     /// Load2 Pick & Place 시퀀스 구현
     /// EquipmentCore의 ISequenceExecutable 인터페이스를 구현
     /// </summary>
-    class ThreadLoad2 : public ThreadBase
+    class ThreadLoad2 : public EC::TaskBase
     {
     public:
         enum class PickPlaceStep 

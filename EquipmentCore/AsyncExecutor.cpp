@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "AsyncExecutor.h"
 #include "Context.h"
 
@@ -14,42 +14,6 @@
 
 namespace EC
 {
-    struct SequenceThreadFunc
-    {
-        ISequence*      m_seq;
-        Context*        m_ctx;
-        std::atomic<bool>* m_runningFlag;
-        AsyncExecutor*  m_runner;
-
-        SequenceThreadFunc(ISequence* seq, Context* ctx, std::atomic<bool>* runningFlag, AsyncExecutor* runner)
-            : m_seq(seq), m_ctx(ctx), m_runningFlag(runningFlag), m_runner(runner)
-        {
-        }
-
-        void operator()()
-        {
-            try
-            {
-                if (m_seq && m_ctx)
-                {
-                    m_seq->Execute(*m_ctx);
-                }
-            }
-            catch (const std::exception& ex)
-            {
-                // 예외 발생 시 로깅 (SendResult는 별도 sink 연결 필요)
-            }
-            catch (...)
-            {
-            }
-
-            if (m_runningFlag)
-            {
-                m_runningFlag->store(false);
-            }
-        }
-    };
-
     AsyncExecutor::AsyncExecutor()
         : m_running(false)
         , m_resultSink(nullptr)
@@ -73,6 +37,7 @@ namespace EC
     {
         if (!seq) return false;
 
+        ISequence* rawSeq = nullptr;
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -86,12 +51,27 @@ namespace EC
             m_running.store(true);
             m_currentSeq = std::move(seq);
             m_currentCtx = ctx;
+            rawSeq = m_currentSeq.get();
         }
 
         try
         {
-            SequenceThreadFunc func(m_currentSeq.get(), ctx.get(), &m_running, this);
-            m_thread = std::thread(std::move(func));
+            m_thread = std::thread(
+                [this, rawSeq, ctx]()
+                {
+                    try
+                    {
+                        if (rawSeq && ctx)
+                        {
+                            rawSeq->Execute(*ctx);
+                        }
+                    }
+                    catch (...)
+                    {
+                    }
+
+                    m_running.store(false);
+                });
         }
         catch (...)
         {

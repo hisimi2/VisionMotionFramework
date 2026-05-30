@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>
@@ -22,8 +22,8 @@ namespace OperationThread
         Load1Parts load1Parts;
         Load2Parts load2Parts;
 
-        AddThread(std::make_shared<ThreadLoad1>((LPVOID)&load1Parts, repeatCount));
-        AddThread(std::make_shared<ThreadLoad2>((LPVOID)&load2Parts, repeatCount));
+        AddThread(std::make_shared<ThreadLoad1>((LPVOID)&load1Parts));
+        AddThread(std::make_shared<ThreadLoad2>((LPVOID)&load2Parts));
     }
 
     int ThreadsManager::AddThread(EC::SequenceExecutablePtr sequence)
