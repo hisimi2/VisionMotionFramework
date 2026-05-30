@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <memory>
@@ -10,7 +10,7 @@ namespace EC
 
     using SequenceBuilderPtr = std::shared_ptr<SequenceBuilderBase>;
     using ContextPtr = std::shared_ptr<Context>;
-
+    
     class ISequenceStrategy
     {
     public:
@@ -27,5 +27,6 @@ namespace EC
       
     };
 
+    
     using SequenceStrategyPtr = std::shared_ptr<ISequenceStrategy>;
 }
