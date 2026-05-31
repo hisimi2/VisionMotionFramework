@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Actuators/Load1Parts.h"
 #include <memory>
@@ -6,8 +6,6 @@
 
 namespace OperationThread
 {
-
-
     /// <summary>
     /// Load1 Pick & Place 시퀀스 상태머신
     /// EC::TaskBase 기반 상태 기계 구현

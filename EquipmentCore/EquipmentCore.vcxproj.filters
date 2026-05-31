@@ -16,6 +16,9 @@
     <Filter Include="StateMachine">
       <UniqueIdentifier>{799e6e24-ac97-431a-aaf8-cab521e97e81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{46e77a17-5f0b-469f-b174-8ff6680e827e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -30,13 +33,7 @@
     <ClCompile Include="src\Context.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\AsyncExecutor.cpp">
-      <Filter>StateMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Logger.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\Sequence.cpp">
@@ -46,6 +43,15 @@
       <Filter>StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\SequenceStrategyBase.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaskBase.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,9 +83,6 @@
     <ClInclude Include="include\ParamConverterFomatter.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utils.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="include\AsyncExecutor.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
@@ -90,9 +93,6 @@
       <Filter>StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="include\ISequenceStrategy.h">
-      <Filter>StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Logger.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="include\Sequence.h">
@@ -106,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="include\TaskBase.h">
       <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Logger.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils.h">
+      <Filter>Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

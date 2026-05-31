@@ -195,7 +195,6 @@
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\SequenceBuilderBase.cpp" />
     <ClCompile Include="src\SequenceStrategyBase.cpp" />
-    <ClCompile Include="src\TaskBase.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -203,6 +202,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TaskBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EquipmentCore.h" />

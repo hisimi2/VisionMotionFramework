@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ThreadLoad2.h"
 #include <iostream>
 #include <sstream>
@@ -8,7 +8,7 @@ namespace OperationThread
 {
     using namespace EC;
     ThreadLoad2::ThreadLoad2(LPVOID parts, int repeatCount)
-        : TaskBase()
+        : TaskBase("ThreadLoad2")
         , m_parts((Load2Parts*)parts)
         , m_repeatCount(repeatCount)
         , m_currentIteration(0)

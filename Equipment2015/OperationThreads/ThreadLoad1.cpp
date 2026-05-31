@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ThreadLoad1.h"
 #include <iostream>
 #include <sstream>
@@ -8,7 +8,7 @@ namespace OperationThread
     using namespace EC;
 
     ThreadLoad1::ThreadLoad1(LPVOID parts, int repeatCount)
-        : TaskBase()
+        : TaskBase("ThreadLoad1")
         , m_parts((Load1Parts*)parts)
         , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
