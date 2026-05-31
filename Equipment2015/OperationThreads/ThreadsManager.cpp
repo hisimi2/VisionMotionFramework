@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>
@@ -11,7 +11,7 @@
 #include "Actuators/Load1Parts.h"
 #include "Actuators/Load2Parts.h"
 
-#include "ThreadLoad1.h"
+#include "Load1TaskPicking.h"
 #include "ThreadLoad2.h"
 
 namespace OperationThread
@@ -54,14 +54,14 @@ namespace OperationThread
         // Load1 Task
         {
             auto ctx = std::make_shared<EC::Context>();
-            auto task1 = std::make_shared<ThreadLoad1>((LPVOID)nullptr, 2);
+            auto task1 = std::make_shared<Load1TaskPicking>((LPVOID)nullptr);
             AddTaskRunner(task1, ctx);
         }
 
         // Load2 Task
         {
             auto ctx = std::make_shared<EC::Context>();
-            auto task2 = std::make_shared<ThreadLoad2>((LPVOID)nullptr, 2);
+            auto task2 = std::make_shared<ThreadLoad2>((LPVOID)nullptr);
             AddTaskRunner(task2, ctx);
         }
 

@@ -18,7 +18,7 @@ namespace EC
 
 namespace OperationThread
 {
-    class ThreadLoad1;
+    class Load1TaskPicking;
     class ThreadLoad2;
 
     class ThreadsManager

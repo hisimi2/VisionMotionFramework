@@ -1,17 +1,12 @@
 ﻿#pragma once
 
-#include <string>
-#include <memory>
 #include "TaskBase.h"
-
-class Load2Parts;
+#include "Actuators\Load2Parts.h"
 
 namespace OperationThread
 {
-    /// <summary>
-    /// Load2 Pick & Place 시퀀스 구현
-    /// EC::TaskBase 기반 상태 기계 구현
-    /// </summary>
+    using namespace EC;
+
     class ThreadLoad2 : public EC::TaskBase
     {
     public:
@@ -30,10 +25,9 @@ namespace OperationThread
             Complete
         };
 
-        ThreadLoad2(LPVOID parts, int repeatCount = 0);
+        ThreadLoad2(LPVOID parts);
         ~ThreadLoad2() override;
 
-        std::string GetName() const override { return "ThreadLoad2"; }
 
         // 파라미터 설정 메서드
         void SetPickPosition(double x, double z);

@@ -1,11 +1,10 @@
-#pragma once
-
+﻿#pragma once
 #include "Actuators/Load1Parts.h"
-#include <memory>
 #include "TaskBase.h"
 
 namespace OperationThread
 {
+    using namespace EC;
     /// <summary>
     /// Load1 Pick & Place 시퀀스 상태머신
     /// EC::TaskBase 기반 상태 기계 구현
@@ -25,7 +24,7 @@ namespace OperationThread
     /// 12. Move to Safe Z
     /// 13. 반복 또는 완료
     /// </summary>
-    class ThreadLoad1 : public EC::TaskBase
+    class Load1TaskPicking : public TaskBase
     {
     public:
         /// <summary>
@@ -54,11 +53,9 @@ namespace OperationThread
         /// </summary>
         /// <param name="parts">Load1Parts 객체</param>
         /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
-        ThreadLoad1(LPVOID parts, int repeatCount = 0);
+        Load1TaskPicking(LPVOID parts);
 
-        ~ThreadLoad1() override;
-
-        std::string GetName() const override { return "ThreadLoad1"; }
+        ~Load1TaskPicking() override;
 
         /// <summary>
         /// Pick 위치 설정
@@ -96,25 +93,25 @@ namespace OperationThread
         Substep GetCurrentStep() const { return static_cast<Substep>(GetState()); }
 
     protected:
-        void OnInitialize(EC::Context& ctx) override;
-        EC::TaskResult OnPoll(EC::Context& ctx) override;
+        void OnInitialize(Context& ctx) override;
+        EC::TaskResult OnPoll(Context& ctx) override;
 
     private:
         // 단계 처리 함수들 (TaskResult 반환)
-        EC::TaskResult HandleRailOpen(EC::Context& ctx);
-        EC::TaskResult HandleMovePickPositionXY(EC::Context& ctx);
-        EC::TaskResult HandlePreciserDown(EC::Context& ctx);
-        EC::TaskResult HandleMovePickPositionZ(EC::Context& ctx);
-        EC::TaskResult HandleClampPick(EC::Context& ctx);
-        EC::TaskResult HandleVacuumOn(EC::Context& ctx);
-        EC::TaskResult HandleMoveSafeZAfterPick(EC::Context& ctx);
-        EC::TaskResult HandleMovePlacePositionXY(EC::Context& ctx);
-        EC::TaskResult HandleMovePlacePositionZ(EC::Context& ctx);
-        EC::TaskResult HandleReleasePlace(EC::Context& ctx);
-        EC::TaskResult HandleBlowOn(EC::Context& ctx);
-        EC::TaskResult HandleMoveSafeZAfterPlace(EC::Context& ctx);
-        EC::TaskResult HandleCheckRepeat(EC::Context& ctx);
-        EC::TaskResult HandleComplete(EC::Context& ctx);
+        EC::TaskResult HandleRailOpen(Context& ctx);
+        EC::TaskResult HandleMovePickPositionXY(Context& ctx);
+        EC::TaskResult HandlePreciserDown(Context& ctx);
+        EC::TaskResult HandleMovePickPositionZ(Context& ctx);
+        EC::TaskResult HandleClampPick(Context& ctx);
+        EC::TaskResult HandleVacuumOn(Context& ctx);
+        EC::TaskResult HandleMoveSafeZAfterPick(Context& ctx);
+        EC::TaskResult HandleMovePlacePositionXY(Context& ctx);
+        EC::TaskResult HandleMovePlacePositionZ(Context& ctx);
+        EC::TaskResult HandleReleasePlace(Context& ctx);
+        EC::TaskResult HandleBlowOn(Context& ctx);
+        EC::TaskResult HandleMoveSafeZAfterPlace(Context& ctx);
+        EC::TaskResult HandleCheckRepeat(Context& ctx);
+        EC::TaskResult HandleComplete(Context& ctx);
 
         Load1Parts* m_parts;
 
@@ -132,8 +129,7 @@ namespace OperationThread
 
         // 유틸리티
         void LogStep(const std::string& message);
-        bool IsMovementComplete();
     };
 
-    using ThreadLoad1Ptr = std::shared_ptr<ThreadLoad1>;
+    using Load1TaskPickingPtr = std::shared_ptr<Load1TaskPicking>;
 }

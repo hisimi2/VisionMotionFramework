@@ -20,7 +20,7 @@ namespace EC
         AsyncExecutor();
         virtual ~AsyncExecutor();
 
-        bool Start(std::unique_ptr<ISequence> seq, std::shared_ptr<Context> ctx);
+        bool Start(std::unique_ptr<ISequence> seq, ContextPtr ctx);
         
         void Abort();
         void Stop();
@@ -36,7 +36,7 @@ namespace EC
         std::thread                     m_thread;
         std::atomic<bool>               m_running;
         mutable std::mutex              m_mutex;
-        std::unique_ptr<ISequence>      m_currentSeq;
+        SequencePtr                     m_currentSeq;
         std::shared_ptr<Context>        m_currentCtx;
         IResultSink*                    m_resultSink;
     };

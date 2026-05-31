@@ -1,16 +1,12 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ThreadLoad2.h"
 #include <iostream>
-#include <sstream>
-#include "Actuators\Load2Parts.h"
 
 namespace OperationThread
 {
-    using namespace EC;
-    ThreadLoad2::ThreadLoad2(LPVOID parts, int repeatCount)
+    ThreadLoad2::ThreadLoad2(LPVOID parts)
         : TaskBase("ThreadLoad2")
         , m_parts((Load2Parts*)parts)
-        , m_repeatCount(repeatCount)
         , m_currentIteration(0)
         , m_successCount(0)
         , m_moveTimeoutMs(3000)
@@ -18,6 +14,7 @@ namespace OperationThread
         , m_placeX(300.0), m_placeZ(-12.0)
         , m_safeZ(0.0)
         , m_vacuumIndex(0)
+        , m_repeatCount(1)
     {
     }
 

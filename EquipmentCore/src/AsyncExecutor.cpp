@@ -32,8 +32,7 @@ namespace EC
         m_currentCtx = nullptr;
     }
 
-    bool AsyncExecutor::Start(std::unique_ptr<ISequence> seq,
-                                    std::shared_ptr<Context> ctx)
+    bool AsyncExecutor::Start(std::unique_ptr<ISequence> seq, ContextPtr ctx)
     {
         if (!seq) return false;
 

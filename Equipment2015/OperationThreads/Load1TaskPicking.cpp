@@ -1,14 +1,12 @@
-#include "stdafx.h"
-#include "ThreadLoad1.h"
+﻿#include "stdafx.h"
+#include "Load1TaskPicking.h"
 #include <iostream>
 #include <sstream>
 
 namespace OperationThread
 {
-    using namespace EC;
-
-    ThreadLoad1::ThreadLoad1(LPVOID parts, int repeatCount)
-        : TaskBase("ThreadLoad1")
+    Load1TaskPicking::Load1TaskPicking(LPVOID parts)
+        : TaskBase("Load1TaskPicking")
         , m_parts((Load1Parts*)parts)
         , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
@@ -16,30 +14,30 @@ namespace OperationThread
         , m_clampIndex(0)
         , m_vacuumIndex(0)
         , m_moveTimeoutMs(5000)
-        , m_repeatCount(repeatCount)
         , m_currentIteration(0)
+        , m_repeatCount(2)
     {
     }
 
-    ThreadLoad1::~ThreadLoad1()
+    Load1TaskPicking::~Load1TaskPicking()
     {
     }
 
-    void ThreadLoad1::OnInitialize(Context& ctx)
+    void Load1TaskPicking::OnInitialize(Context& ctx)
     {
         if (!m_parts)
         {
-            ctx.SetLastError("ThreadLoad1: Parts is null");
+            ctx.SetLastError("Load1TaskPicking: Parts is null");
             EnterState(CS_ERROR);
             return;
         }
 
         m_currentIteration = 0;
         EnterState(RailOpen);
-        LogStep("ThreadLoad1 initialized");
+        LogStep("Load1TaskPicking initialized");
     }
 
-    TaskResult ThreadLoad1::OnPoll(Context& ctx)
+    TaskResult Load1TaskPicking::OnPoll(Context& ctx)
     {
         switch (GetState())
         {
@@ -58,49 +56,49 @@ namespace OperationThread
         case CheckRepeat:           return HandleCheckRepeat(ctx);
         case Complete:              return HandleComplete(ctx);
         case CS_ERROR:              return TR_ERROR;
-        default:                    return SetErrorAndReturn(ctx, "ThreadLoad1: Unknown state");
+        default:                    return SetErrorAndReturn(ctx, "Load1TaskPicking: Unknown state");
         }
     }
 
     // ============= 파라미터 설정 =============
 
-    void ThreadLoad1::SetPickPosition(double x, double y, double z)
+    void Load1TaskPicking::SetPickPosition(double x, double y, double z)
     {
         m_pickX = x;
         m_pickY = y;
         m_pickZ = z;
     }
 
-    void ThreadLoad1::SetPlacePosition(double x, double y, double z)
+    void Load1TaskPicking::SetPlacePosition(double x, double y, double z)
     {
         m_placeX = x;
         m_placeY = y;
         m_placeZ = z;
     }
 
-    void ThreadLoad1::SetSafeZ(double z)
+    void Load1TaskPicking::SetSafeZ(double z)
     {
         m_safeZ = z;
     }
 
-    void ThreadLoad1::SetMoveTimeout(long timeoutMs)
+    void Load1TaskPicking::SetMoveTimeout(long timeoutMs)
     {
         m_moveTimeoutMs = timeoutMs;
     }
 
-    void ThreadLoad1::SetClampIndex(int index)
+    void Load1TaskPicking::SetClampIndex(int index)
     {
         m_clampIndex = index;
     }
 
-    void ThreadLoad1::SetVacuumIndex(int index)
+    void Load1TaskPicking::SetVacuumIndex(int index)
     {
         m_vacuumIndex = index;
     }
 
     // ============= 단계 처리 함수들 =============
 
-    TaskResult ThreadLoad1::HandleRailOpen(Context& ctx)
+    TaskResult Load1TaskPicking::HandleRailOpen(Context& ctx)
     {
         LogStep("HandleRailOpen");
 
@@ -113,7 +111,7 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleMovePickPositionXY(Context& ctx)
+    TaskResult Load1TaskPicking::HandleMovePickPositionXY(Context& ctx)
     {
         LogStep("HandleMovePickPositionXY");
 
@@ -124,11 +122,11 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandlePreciserDown(Context& ctx)
+    TaskResult Load1TaskPicking::HandlePreciserDown(Context& ctx)
     {
         if (IsDeadlineExpired())
         {
-            return SetErrorAndReturn(ctx, "ThreadLoad1: MovePickPositionXY timeout");
+            return SetErrorAndReturn(ctx, "Load1TaskPicking: MovePickPositionXY timeout");
         }
 
         LogStep("HandlePreciserDown");
@@ -140,7 +138,7 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleMovePickPositionZ(Context& ctx)
+    TaskResult Load1TaskPicking::HandleMovePickPositionZ(Context& ctx)
     {
         LogStep("HandleMovePickPositionZ");
 
@@ -150,11 +148,11 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleClampPick(Context& ctx)
+    TaskResult Load1TaskPicking::HandleClampPick(Context& ctx)
     {
         if (IsDeadlineExpired())
         {
-            return SetErrorAndReturn(ctx, "ThreadLoad1: MovePickPositionZ timeout");
+            return SetErrorAndReturn(ctx, "Load1TaskPicking: MovePickPositionZ timeout");
         }
 
         LogStep("HandleClampPick");
@@ -168,7 +166,7 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleVacuumOn(Context& ctx)
+    TaskResult Load1TaskPicking::HandleVacuumOn(Context& ctx)
     {
         LogStep("HandleVacuumOn");
 
@@ -181,7 +179,7 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleMoveSafeZAfterPick(Context& ctx)
+    TaskResult Load1TaskPicking::HandleMoveSafeZAfterPick(Context& ctx)
     {
         LogStep("HandleMoveSafeZAfterPick");
 
@@ -191,11 +189,11 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleMovePlacePositionXY(Context& ctx)
+    TaskResult Load1TaskPicking::HandleMovePlacePositionXY(Context& ctx)
     {
         if (IsDeadlineExpired())
         {
-            return SetErrorAndReturn(ctx, "ThreadLoad1: MoveSafeZAfterPick timeout");
+            return SetErrorAndReturn(ctx, "Load1TaskPicking: MoveSafeZAfterPick timeout");
         }
 
         LogStep("HandleMovePlacePositionXY");
@@ -207,11 +205,11 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleMovePlacePositionZ(Context& ctx)
+    TaskResult Load1TaskPicking::HandleMovePlacePositionZ(Context& ctx)
     {
         if (IsDeadlineExpired())
         {
-            return SetErrorAndReturn(ctx, "ThreadLoad1: MovePlacePositionXY timeout");
+            return SetErrorAndReturn(ctx, "Load1TaskPicking: MovePlacePositionXY timeout");
         }
 
         LogStep("HandleMovePlacePositionZ");
@@ -222,11 +220,11 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleReleasePlace(Context& ctx)
+    TaskResult Load1TaskPicking::HandleReleasePlace(Context& ctx)
     {
         if (IsDeadlineExpired())
         {
-            return SetErrorAndReturn(ctx, "ThreadLoad1: MovePlacePositionZ timeout");
+            return SetErrorAndReturn(ctx, "Load1TaskPicking: MovePlacePositionZ timeout");
         }
 
         LogStep("HandleReleasePlace");
@@ -240,7 +238,7 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleBlowOn(Context& ctx)
+    TaskResult Load1TaskPicking::HandleBlowOn(Context& ctx)
     {
         LogStep("HandleBlowOn");
 
@@ -253,7 +251,7 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleMoveSafeZAfterPlace(Context& ctx)
+    TaskResult Load1TaskPicking::HandleMoveSafeZAfterPlace(Context& ctx)
     {
         LogStep("HandleMoveSafeZAfterPlace");
 
@@ -263,11 +261,11 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleCheckRepeat(Context& ctx)
+    TaskResult Load1TaskPicking::HandleCheckRepeat(Context& ctx)
     {
         if (IsDeadlineExpired())
         {
-            return SetErrorAndReturn(ctx, "ThreadLoad1: MoveSafeZAfterPlace timeout");
+            return SetErrorAndReturn(ctx, "Load1TaskPicking: MoveSafeZAfterPlace timeout");
         }
 
         LogStep("HandleCheckRepeat");
@@ -292,13 +290,13 @@ namespace OperationThread
         return TR_KEEP;
     }
 
-    TaskResult ThreadLoad1::HandleComplete(Context& ctx)
+    TaskResult Load1TaskPicking::HandleComplete(Context& ctx)
     {
         LogStep("HandleComplete");
         return TR_NEXT;
     }
 
-    void ThreadLoad1::LogStep(const std::string& message)
+    void Load1TaskPicking::LogStep(const std::string& message)
     {
         std::cout << "[Load1PickPlace] " << message << std::endl;
     }
