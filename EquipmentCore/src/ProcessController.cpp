@@ -39,7 +39,8 @@ namespace EC
         }
     }
 
-    bool ProcessController::RunSequence(const std::string& sequenceName)
+
+    bool ProcessController::RunActivity()
     {
         if (!m_pBuilder)
         {
@@ -51,7 +52,7 @@ namespace EC
             return false;
         }
 
-        std::unique_ptr<IActivity> seq = m_pBuilder->Create(sequenceName);
+        std::unique_ptr<IActivity> seq = m_pBuilder->Create();
 
         if (!seq) return false;
 
@@ -62,7 +63,7 @@ namespace EC
         );
     }
 
-    void ProcessController::StopSequence()
+    void ProcessController::StopActivity()
     {
         if (m_pRunner)
         {

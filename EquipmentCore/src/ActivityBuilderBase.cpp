@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "ActivityBuilderBase.h"
 
 namespace EC
@@ -6,8 +6,8 @@ namespace EC
     ActivityBuilderBase::ActivityBuilderBase() {}
     ActivityBuilderBase::~ActivityBuilderBase() {}
 
-    std::unique_ptr<IActivity> ActivityBuilderBase::Create(std::string Name)
+    std::unique_ptr<IActivity> ActivityBuilderBase::Create()
     {
-        return Build(Name);
+        return Build();
     }
 } 

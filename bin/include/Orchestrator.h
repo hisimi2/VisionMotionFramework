@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "RunController.h"
 #include "ISequenceStrategy.h"
@@ -46,10 +46,10 @@ namespace VMF
         template <typename StrategyType>
         bool StartSequence(IActuator* adapter)
         {
-        std::lock_guard<std::mutex> guard(m_seqMutex);
-        SequenceStrategyPtr strategy = std::make_shared<StrategyType>();
-        strategy->SetActuator(adapter);
-        return StartSequenceSafe(strategy);
+            std::lock_guard<std::mutex> guard(m_seqMutex);
+            SequenceStrategyPtr strategy = std::make_shared<StrategyType>();
+            strategy->SetActuator(adapter);
+            return StartSequenceSafe(strategy);
         }
 
         void StopSequence();
@@ -76,9 +76,5 @@ namespace VMF
         std::unordered_map<ObserverId, VisionResultObserver> m_observers;
         std::atomic<ObserverId> m_nextObserverId{1 };
     };
-
-    // Backward compatibility: keep the old names.
-    // Prefer using `Orchestrator` in new code.
-    using CVatEngineFacade = Orchestrator;
-    using CVatEngineObserverAdapter = Orchestrator;
+   
 } // namespace VMF

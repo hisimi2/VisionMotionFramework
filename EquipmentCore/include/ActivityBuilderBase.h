@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "EC_API.h"
 #include "Activity.h"
 
@@ -9,10 +9,10 @@ namespace EC
     public:
         ActivityBuilderBase();
         virtual ~ActivityBuilderBase();
-        ActivityPtr Create(std::string Name);
+        ActivityPtr Create();
 
     protected:
-        virtual ActivityPtr Build(std::string Name) = 0;
+        virtual ActivityPtr Build() = 0;
     };
 
     using ActivityBuilderPtr = std::shared_ptr<ActivityBuilderBase>;

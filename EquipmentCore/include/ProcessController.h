@@ -19,13 +19,15 @@ namespace EC
 
         void SetBuilder(ActivityBuilderPtr builder);
         void SetRunner(AsyncExecutorPtr runner = nullptr); 
-        bool RunSequence(const std::string& Name);
-        void StopSequence();
+        bool RunActivity();
+        void StopActivity();
 
     private:
         ActivityBuilderPtr      m_pBuilder;
         AsyncExecutorPtr        m_pRunner;
         ContextPtr              m_pCtx;
     };
+
+    using ProcessControllerPtr = std::shared_ptr<ProcessController>;
 } 
 

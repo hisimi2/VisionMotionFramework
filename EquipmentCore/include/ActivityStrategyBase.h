@@ -16,9 +16,5 @@ namespace EC
 
         ActivityBuilderPtr CreateBuilder() override = 0;
         void ConfigureParams(ContextPtr context) override = 0;
-
-    protected:
-        
-        
     };
 }

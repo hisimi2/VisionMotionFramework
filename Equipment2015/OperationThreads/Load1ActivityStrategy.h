@@ -17,8 +17,8 @@ namespace OperationThread
 
         void ConfigureParams(ContextPtr ctx)
         {
-            ctx->SetParamAs<int>("repeatCount", 2);
-            ctx->SetParamAs<int>("timeout", 3000);
+            ctx->SetParamAs<int>("repeatCount"  , 2);
+            ctx->SetParamAs<int>("timeout"      , 3000);
         }
     };
 }
