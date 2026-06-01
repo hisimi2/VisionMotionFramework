@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Utils.h"
 #include <sstream>
 #include <algorithm>
@@ -25,7 +25,7 @@ namespace EC
     std::string makeLogPrefix(const std::string& seqName)
     {
         std::ostringstream oss;
-        oss << "[Sequence:" << seqName << "] ";
+        oss << "[Activity:" << seqName << "] ";
         return oss.str();
     }
 

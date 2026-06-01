@@ -8,7 +8,7 @@
 
 class COPSwitch;
 class Load1Parts;
-class Load2Parts;
+
 
 namespace EC
 {
@@ -19,7 +19,7 @@ namespace EC
 namespace OperationThread
 {
     class Load1TaskPick;
-    class ThreadLoad2;
+
 
     class ThreadsManager
     {

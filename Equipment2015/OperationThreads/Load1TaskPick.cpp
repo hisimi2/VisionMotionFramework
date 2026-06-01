@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1TaskPick.h"
 #include <iostream>
 #include <sstream>

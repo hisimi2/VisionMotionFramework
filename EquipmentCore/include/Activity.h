@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 #include "EC_API.h"
-#include "ISequence.h" 
+#include "IActivity.h" 
 #include "ITask.h"
 
 #include <vector>
@@ -11,15 +11,15 @@
 
 namespace EC
 {
-    class EC_API Sequence : public ISequence
+    class EC_API Activity : public IActivity
     {
     public:
-        explicit Sequence(const std::string& name = "");
-        ~Sequence() override;
+        explicit Activity(const std::string& name = "");
+        ~Activity() override;
 
         bool Execute(Context& context) override;
         void Abort() override;
-        std::string GetSequenceName() const override;
+        std::string GetActivityName() const override;
         std::string GetTaskName() const override;
 
         void AddTask(TaskPtr step) override;
@@ -27,8 +27,8 @@ namespace EC
         // 폴링 간격(밀리초). 필요하면 런타임에 조정 가능.
         void SetPollIntervalMs(int ms) { m_pollIntervalMs = ms; }
 
-        Sequence(const Sequence&) = delete;
-        Sequence& operator=(const Sequence&) = delete;
+        Activity(const Activity&) = delete;
+        Activity& operator=(const Activity&) = delete;
 
     private:
         std::vector<TaskPtr> m_tasks;
@@ -37,7 +37,7 @@ namespace EC
         std::atomic<bool> m_abortRequested; 
         
         int m_pollIntervalMs;
-        std::string m_SequenceName;
+        std::string m_ActivityName;
 
         TaskPtr m_curTask;
     };

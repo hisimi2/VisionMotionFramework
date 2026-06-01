@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "EC_API.h"
 #include "IResultSink.h"
 #include "Context.h"
-#include "ISequence.h"
+#include "IActivity.h"
 
 #include <memory>
 #include <thread>
@@ -20,7 +20,7 @@ namespace EC
         AsyncExecutor();
         virtual ~AsyncExecutor();
 
-        bool Start(std::unique_ptr<ISequence> seq, ContextPtr ctx);
+        bool Start(std::unique_ptr<IActivity> seq, ContextPtr ctx);
         
         void Abort();
         void Stop();
@@ -36,7 +36,7 @@ namespace EC
         std::thread                     m_thread;
         std::atomic<bool>               m_running;
         mutable std::mutex              m_mutex;
-        SequencePtr                     m_currentSeq;
+        ActivityPtr                      m_currentSeq;
         std::shared_ptr<Context>        m_currentCtx;
         IResultSink*                    m_resultSink;
     };

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Actuators/Load1Parts.h"
 #include "TaskBase.h"
 

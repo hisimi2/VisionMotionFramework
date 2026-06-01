@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "AsyncExecutor.h"
 #include "Context.h"
 
-#include "ISequence.h"
+#include "IActivity.h"
 
 #include <chrono>
 #include <thread>
@@ -32,11 +32,11 @@ namespace EC
         m_currentCtx = nullptr;
     }
 
-    bool AsyncExecutor::Start(std::unique_ptr<ISequence> seq, ContextPtr ctx)
+    bool AsyncExecutor::Start(std::unique_ptr<IActivity> seq, ContextPtr ctx)
     {
         if (!seq) return false;
 
-        ISequence* rawSeq = nullptr;
+        IActivity* rawSeq = nullptr;
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 

@@ -9,10 +9,8 @@
 #include "Context.h"
 
 #include "Actuators/Load1Parts.h"
-#include "Actuators/Load2Parts.h"
 
 #include "Load1TaskPick.h"
-#include "ThreadLoad2.h"
 
 namespace OperationThread
 {
@@ -58,12 +56,6 @@ namespace OperationThread
             AddTaskRunner(task1, ctx);
         }
 
-        // Load2 Task
-        {
-            auto ctx = std::make_shared<EC::Context>();
-            auto task2 = std::make_shared<ThreadLoad2>((LPVOID)nullptr);
-            AddTaskRunner(task2, ctx);
-        }
 
         m_running = true;
         m_stopRequested = false;

@@ -207,9 +207,9 @@
     <ClInclude Include="Actuators\Load2Parts.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
+    <ClInclude Include="OperationThreads\Load1ActivityBuilder.h" />
     <ClInclude Include="OperationThreads\Load1TaskPick.h" />
     <ClInclude Include="OperationThreads\Load1TaskPlace.h" />
-    <ClInclude Include="OperationThreads\ThreadLoad2.h" />
     <ClInclude Include="OperationThreads\ThreadsManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -238,7 +238,6 @@
     <ClCompile Include="Equipment2015Dlg.cpp" />
     <ClCompile Include="OperationThreads\Load1TaskPick.cpp" />
     <ClCompile Include="OperationThreads\Load1TaskPlace.cpp" />
-    <ClCompile Include="OperationThreads\ThreadLoad2.cpp" />
     <ClCompile Include="OperationThreads\ThreadsManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

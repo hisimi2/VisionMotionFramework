@@ -36,13 +36,13 @@
     <ClCompile Include="src\AsyncExecutor.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sequence.cpp">
+    <ClCompile Include="src\Activity.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="src\SequenceBuilderBase.cpp">
+    <ClCompile Include="src\ActivityBuilderBase.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="src\SequenceStrategyBase.cpp">
+    <ClCompile Include="src\ActivityStrategyBase.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\Logger.cpp">
@@ -89,19 +89,19 @@
     <ClInclude Include="include\IResultSink.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="include\ISequence.h">
+    <ClInclude Include="include\IActivity.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="include\ISequenceStrategy.h">
+    <ClInclude Include="include\IActivityStrategy.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="include\Sequence.h">
+    <ClInclude Include="include\Activity.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="include\SequenceBuilderBase.h">
+    <ClInclude Include="include\ActivityBuilderBase.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="include\SequenceStrategyBase.h">
+    <ClInclude Include="include\ActivityStrategyBase.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="include\TaskBase.h">
