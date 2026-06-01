@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 #include <iostream>

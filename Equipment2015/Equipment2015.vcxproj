@@ -208,6 +208,7 @@
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="OperationThreads\Load1ActivityBuilder.h" />
+    <ClInclude Include="OperationThreads\Load1ActivityStrategy.h" />
     <ClInclude Include="OperationThreads\Load1TaskPick.h" />
     <ClInclude Include="OperationThreads\Load1TaskPlace.h" />
     <ClInclude Include="OperationThreads\ThreadsManager.h" />

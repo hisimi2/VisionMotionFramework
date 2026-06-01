@@ -195,6 +195,7 @@
     <ClCompile Include="src\Activity.cpp" />
     <ClCompile Include="src\ActivityBuilderBase.cpp" />
     <ClCompile Include="src\ActivityStrategyBase.cpp" />
+    <ClCompile Include="src\ProcessController.cpp" />
     <ClCompile Include="src\TaskBase.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -219,6 +220,7 @@
     <ClInclude Include="include\Activity.h" />
     <ClInclude Include="include\ActivityBuilderBase.h" />
     <ClInclude Include="include\ActivityStrategyBase.h" />
+    <ClInclude Include="include\ProcessController.h" />
     <ClInclude Include="include\TaskBase.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="Resource.h" />

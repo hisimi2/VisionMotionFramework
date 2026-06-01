@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EC_API.h"
 #include "IResultSink.h"
@@ -36,8 +36,10 @@ namespace EC
         std::thread                     m_thread;
         std::atomic<bool>               m_running;
         mutable std::mutex              m_mutex;
-        ActivityPtr                      m_currentSeq;
+        ActivityPtr                     m_currentSeq;
         std::shared_ptr<Context>        m_currentCtx;
         IResultSink*                    m_resultSink;
     };
+
+    using AsyncExecutorPtr = std::shared_ptr<AsyncExecutor>;
 }

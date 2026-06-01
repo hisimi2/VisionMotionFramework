@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifndef EQUIPMENTCORE_H
 #define EQUIPMENTCORE_H

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ActivityBuilderBase.h"
 
 namespace EC

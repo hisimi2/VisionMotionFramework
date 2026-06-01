@@ -23,8 +23,6 @@ namespace EC
         std::string GetTaskName() const override;
 
         void AddTask(TaskPtr step) override;
-
-        // 폴링 간격(밀리초). 필요하면 런타임에 조정 가능.
         void SetPollIntervalMs(int ms) { m_pollIntervalMs = ms; }
 
         Activity(const Activity&) = delete;

@@ -67,7 +67,6 @@ namespace OperationThread
         /// 스위치 상태 모니터링 루프 (실행 중)
         /// </summary>
         void MonitorLoop();
-
         int AddTaskRunner(std::shared_ptr<EC::TaskBase> task, std::shared_ptr<EC::Context> ctx);
 
         COPSwitch* m_startSwitch;

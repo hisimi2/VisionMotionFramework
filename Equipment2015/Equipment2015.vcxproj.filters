@@ -150,6 +150,9 @@
     <ClInclude Include="OperationThreads\Load1ActivityBuilder.h">
       <Filter>OperationThreads</Filter>
     </ClInclude>
+    <ClInclude Include="OperationThreads\Load1ActivityStrategy.h">
+      <Filter>OperationThreads</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">

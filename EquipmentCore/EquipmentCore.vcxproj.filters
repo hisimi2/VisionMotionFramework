@@ -54,6 +54,9 @@
     <ClCompile Include="src\TaskBase.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
+    <ClCompile Include="src\ProcessController.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EquipmentCore.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="include\Utils.h">
       <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ProcessController.h">
+      <Filter>StateMachine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
