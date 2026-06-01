@@ -112,7 +112,6 @@ namespace EC
             return false;
         }
 
-        m_pBuilder = builder;
 
         if (m_pProcess)
         {
@@ -120,17 +119,6 @@ namespace EC
             m_pProcess.reset();
         }
 
-        ActivityBuilderPtr builder;
-
-        try
-        {
-            builder->Create();
-        }
-        catch (...)
-        {
-            m_pBuilder.reset();
-            return false;
-        }
 
         if (!builder )
         {
