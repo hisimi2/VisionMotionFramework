@@ -23,7 +23,7 @@ namespace EC
             std::lock_guard<std::mutex> guard(m_seqMutex);
             engineToStop = m_pProcess;
             m_pProcess.reset();
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
         }
 
         if (engineToStop)
@@ -68,7 +68,7 @@ namespace EC
 
     void Orchestrator::NotifyResult(int requestId, const std::vector<std::string>& results)
     {
-        OnVisionResult(requestId, results);
+        OnResult(requestId, results);
     }
 
     void Orchestrator::NotifyObservers(const ResultPayload& payload)
@@ -88,16 +88,16 @@ namespace EC
         {
             try
             {
-            cb(payload);
+                cb(payload);
             }
             catch (...)
             {
-            // ignore observer exceptions
+                // ignore observer exceptions
             }
         }
     }
 
-    void Orchestrator::OnVisionResult(int requestId, const std::vector<std::string>& results)
+    void Orchestrator::OnResult(int requestId, const std::vector<std::string>& results)
     {
         ResultPayload payload;
         payload.requestId = requestId;
@@ -105,14 +105,14 @@ namespace EC
         NotifyObservers(payload);
     }
 
-    bool Orchestrator::StartSequenceSafe(ActivityBuilderPtr strategy)
+    bool Orchestrator::StartSequenceSafe(ActivityBuilderPtr builder)
     {
-        if (!strategy)
+        if (!builder)
         {
             return false;
         }
 
-        m_pCurrentStrategy = strategy;
+        m_pBuilder = builder;
 
         if (m_pProcess)
         {
@@ -124,17 +124,17 @@ namespace EC
 
         try
         {
-            builder = builder->Create();
+            builder->Create();
         }
         catch (...)
         {
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
         if (!builder )
         {
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
@@ -145,13 +145,13 @@ namespace EC
         }
         catch (...)
         {
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
         if (!ctx)
         {
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
@@ -162,13 +162,13 @@ namespace EC
         catch (const std::exception& ex)
         {
             ctx->SetLastError(ex.what());
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
         catch (...)
         {
             ctx->SetLastError("Unknown exception in ConfigureParams");
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
@@ -180,14 +180,14 @@ namespace EC
         {
             ctx->SetLastError(ex.what());
             m_pProcess.reset();
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
         catch (...)
         {
             ctx->SetLastError("Unknown exception creating RunController");
             m_pProcess.reset();
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
@@ -201,7 +201,7 @@ namespace EC
         {
             m_pProcess->StopActivity();
             m_pProcess.reset();
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
             return false;
         }
 
@@ -215,7 +215,7 @@ namespace EC
             std::lock_guard<std::mutex> guard(m_seqMutex);
             engineToStop = m_pProcess;
             m_pProcess.reset();
-            m_pCurrentStrategy.reset();
+            m_pBuilder.reset();
         }
 
         if (engineToStop)

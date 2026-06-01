@@ -50,12 +50,11 @@ namespace EC
         void StopSequence();
 
     protected:
-        ActivityBuilderPtr     m_pCurrentStrategy;
-        ProcessControllerPtr    m_pProcess;
+        ActivityBuilderPtr     m_pBuilder;
+        ProcessControllerPtr   m_pProcess;
 
         virtual ContextPtr CreateContext();
-        virtual void OnVisionResult(int requestId, const std::vector<std::string>& results);
-
+        virtual void OnResult(int requestId, const std::vector<std::string>& results);
         void NotifyObservers(const ResultPayload& payload);
 
     private:
@@ -64,6 +63,6 @@ namespace EC
 
         mutable std::mutex m_observerMutex;
         std::unordered_map<ObserverId, ResultObserver> m_observers;
-        std::atomic<ObserverId> m_nextObserverId{1 };
+        std::atomic<ObserverId> m_nextObserverId{1};
     };
 } 
