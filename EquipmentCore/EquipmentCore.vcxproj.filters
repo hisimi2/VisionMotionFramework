@@ -42,9 +42,6 @@
     <ClCompile Include="src\ActivityBuilderBase.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="src\ActivityStrategyBase.cpp">
-      <Filter>StateMachine</Filter>
-    </ClCompile>
     <ClCompile Include="src\Logger.cpp">
       <Filter>Helper</Filter>
     </ClCompile>
@@ -98,16 +95,10 @@
     <ClInclude Include="include\IActivity.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="include\IActivityStrategy.h">
-      <Filter>StateMachine</Filter>
-    </ClInclude>
     <ClInclude Include="include\Activity.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="include\ActivityBuilderBase.h">
-      <Filter>StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ActivityStrategyBase.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="include\TaskBase.h">

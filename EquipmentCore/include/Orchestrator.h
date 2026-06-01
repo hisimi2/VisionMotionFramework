@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ProcessController.h"
-#include "IActivityStrategy.h"
 #include "IResultSink.h"
 
 #include <mutex>
@@ -31,7 +30,7 @@ namespace EC
         ~Orchestrator() override;
 
         // IResultSink 구현
-        void NotifyVisionResult(int requestId, const std::vector<std::string>& results) override;
+        void NotifyResult(int requestId, const std::vector<std::string>& results) override;
 
         // ---- Observer API ----
         ObserverId AddObserver(ResultObserver observer);
@@ -51,19 +50,17 @@ namespace EC
         void StopSequence();
 
     protected:
-        ActivityStrategyPtr m_pCurrentStrategy;
-        ProcessControllerPtr m_pProcess;
+        ActivityBuilderPtr     m_pCurrentStrategy;
+        ProcessControllerPtr    m_pProcess;
 
         virtual ContextPtr CreateContext();
-
-        // 기본 구현: Observer 통지
         virtual void OnVisionResult(int requestId, const std::vector<std::string>& results);
 
         void NotifyObservers(const ResultPayload& payload);
 
-        private:
+    private:
         mutable std::mutex m_seqMutex;
-        bool StartSequenceSafe(ActivityStrategyPtr strategy);
+        bool StartSequenceSafe(ActivityBuilderPtr strategy);
 
         mutable std::mutex m_observerMutex;
         std::unordered_map<ObserverId, ResultObserver> m_observers;

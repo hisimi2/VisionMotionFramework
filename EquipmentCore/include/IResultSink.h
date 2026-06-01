@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 #include <string>
@@ -11,6 +11,6 @@ namespace EC
         virtual ~IResultSink() = default;
 
         // called when a new result is available
-        virtual void NotifyVisionResult(int requestId, const std::vector<std::string>& results) = 0;
+        virtual void NotifyResult(int requestId, const std::vector<std::string>& results) = 0;
     };
 }

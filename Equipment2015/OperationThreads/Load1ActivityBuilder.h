@@ -10,14 +10,12 @@ namespace OperationThread
     {
         std::shared_ptr<Load1Parts> m_parts;
 
-        virtual ActivityPtr Build(std::string Name) = 0;
-
     protected:
-        ActivityPtr Build(std::string Name) override
+        ActivityPtr Build() override
         {
             m_parts = std::make_shared<Load1Parts>();
 
-            auto activity = std::make_unique<Activity>(Name);
+            auto activity = std::make_unique<Activity>("Load1Activity");
             activity->AddTask(std::make_shared<Load1TaskPick>(m_parts));
             activity->AddTask(std::make_shared<Load1TaskPlace>(m_parts));
 

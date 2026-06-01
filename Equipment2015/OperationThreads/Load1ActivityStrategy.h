@@ -9,7 +9,6 @@ namespace OperationThread
     class Load1ActivityStrategy : public ActivityStrategyBase
     {
     public:
-
         ActivityBuilderPtr CreateBuilder()
         {
             return std::make_shared<CLoad1ActivityBuilder>();

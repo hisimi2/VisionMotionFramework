@@ -66,7 +66,7 @@ namespace EC
         m_observers.clear();
     }
 
-    void Orchestrator::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
+    void Orchestrator::NotifyResult(int requestId, const std::vector<std::string>& results)
     {
         OnVisionResult(requestId, results);
     }
@@ -105,7 +105,7 @@ namespace EC
         NotifyObservers(payload);
     }
 
-    bool Orchestrator::StartSequenceSafe(ActivityStrategyPtr strategy)
+    bool Orchestrator::StartSequenceSafe(ActivityBuilderPtr strategy)
     {
         if (!strategy)
         {
@@ -121,11 +121,10 @@ namespace EC
         }
 
         ActivityBuilderPtr builder;
-       
 
         try
         {
-            builder = strategy->CreateBuilder();
+            builder = builder->Create();
         }
         catch (...)
         {

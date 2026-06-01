@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "AsyncExecutor.h"
 #include "Context.h"
 
@@ -172,8 +172,7 @@ namespace EC
         std::lock_guard<std::mutex> lock(m_mutex);
         if (m_resultSink)
         {
-            m_resultSink->NotifyVisionResult(requestId, results);
+            m_resultSink->NotifyResult(requestId, results);
         }
     }
-
-} // namespace EC
+} 

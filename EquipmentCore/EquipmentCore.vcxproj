@@ -194,7 +194,6 @@
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Activity.cpp" />
     <ClCompile Include="src\ActivityBuilderBase.cpp" />
-    <ClCompile Include="src\ActivityStrategyBase.cpp" />
     <ClCompile Include="src\Orchestrator.cpp" />
     <ClCompile Include="src\ProcessController.cpp" />
     <ClCompile Include="src\TaskBase.cpp" />
@@ -214,14 +213,12 @@
     <ClInclude Include="include\EquipmentCore.h" />
     <ClInclude Include="include\IResultSink.h" />
     <ClInclude Include="include\IActivity.h" />
-    <ClInclude Include="include\IActivityStrategy.h" />
     <ClInclude Include="include\ITask.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\ParamConverterFomatter.hpp" />
     <ClInclude Include="include\Activity.h" />
     <ClInclude Include="include\ActivityBuilderBase.h" />
-    <ClInclude Include="include\ActivityStrategyBase.h" />
     <ClInclude Include="include\ProcessController.h" />
     <ClInclude Include="include\TaskBase.h" />
     <ClInclude Include="include\Utils.h" />
