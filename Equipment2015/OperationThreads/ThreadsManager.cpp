@@ -11,7 +11,7 @@
 #include "Actuators/Load1Parts.h"
 #include "Actuators/Load2Parts.h"
 
-#include "Load1TaskPicking.h"
+#include "Load1TaskPick.h"
 #include "ThreadLoad2.h"
 
 namespace OperationThread
@@ -54,7 +54,7 @@ namespace OperationThread
         // Load1 Task
         {
             auto ctx = std::make_shared<EC::Context>();
-            auto task1 = std::make_shared<Load1TaskPicking>((LPVOID)nullptr);
+            auto task1 = std::make_shared<Load1TaskPick>((LPVOID)nullptr);
             AddTaskRunner(task1, ctx);
         }
 

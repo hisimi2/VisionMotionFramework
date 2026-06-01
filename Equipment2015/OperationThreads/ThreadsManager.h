@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -18,7 +18,7 @@ namespace EC
 
 namespace OperationThread
 {
-    class Load1TaskPicking;
+    class Load1TaskPick;
     class ThreadLoad2;
 
     class ThreadsManager

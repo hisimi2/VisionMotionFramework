@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <memory>
@@ -15,7 +15,6 @@ namespace EC
         TR_DONE,    // 전체 Task 완료(명시적)
         TR_ERROR    // 에러 발생(시퀀스 중단)
     };
-
 
     class ITask
     {
