@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load2TaskPlace.h"
 #include <iostream>
 #include <sstream>
