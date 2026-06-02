@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1TaskPick.h"
 #include <iostream>
 #include <sstream>
@@ -39,7 +39,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPick::OnPoll(Context& ctx)
     {
-        switch (GetState())
+        switch (GetStep())
         {
         case RailOpen:              return HandleRailOpen(ctx);
         case MovePickPositionXY:    return HandleMovePickPositionXY(ctx);

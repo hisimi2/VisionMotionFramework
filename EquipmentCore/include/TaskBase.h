@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <mutex>
 #include <chrono>
@@ -65,7 +65,7 @@ namespace EC
         /// <summary>
         /// 현재 상태 식별자를 반환합니다.
         /// </summary>
-        int GetState() const;
+        int GetStep() const;
 
         /// <summary>
         /// 설정된 데드라인이 만료되었는지 검사합니다.

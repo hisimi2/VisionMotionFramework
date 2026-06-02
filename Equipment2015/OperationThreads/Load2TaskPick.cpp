@@ -35,7 +35,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPick::OnPoll(Context& ctx)
     {
-        switch (GetState())
+        switch (GetStep())
         {
         case RailOpen:              return HandleRailOpen(ctx);
         case MovePickPositionX:     return HandleMovePickPositionX(ctx);

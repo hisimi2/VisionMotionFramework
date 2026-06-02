@@ -13,20 +13,6 @@ namespace EC
 
     TaskResult TaskBase::Execute(Context& ctx)
     {
-        // Stop 요청 체크
-        if (ctx.isStop())
-        {
-            ctx.SetLastError("TaskBase: Stop requested");
-            m_step_ = CS_ERROR;
-            return TR_ERROR;
-        }
-
-        // Pause 체크
-        if (ctx.isPause())
-        {
-            return TR_KEEP;
-        }
-
         // --- 1회 초기화 ---
         if (!m_initialized_)
         {
@@ -112,7 +98,7 @@ namespace EC
         }
     }
 
-    int TaskBase::GetState() const
+    int TaskBase::GetStep() const
     {
         return m_step_;
     }

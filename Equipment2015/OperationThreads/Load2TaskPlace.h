@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actuators/Load2Parts.h"
 #include "TaskBase.h"
 
@@ -66,7 +66,7 @@ namespace OperationThread
         /// <summary>
         /// 현재 단계 반환
         /// </summary>
-        Substep GetCurrentStep() const { return static_cast<Substep>(GetState()); }
+        Substep GetCurrentStep() const { return static_cast<Substep>(GetStep()); }
 
     protected:
         void OnInitialize(Context& ctx) override;
