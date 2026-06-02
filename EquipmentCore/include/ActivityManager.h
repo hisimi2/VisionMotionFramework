@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EC_API.h"
 #include "ActivityBuilderBase.h"
@@ -56,12 +56,24 @@ namespace EC
     ///   mgr->RegisterActivity<CLoad2ActivityBuilder>("Load2");
     ///   
     ///   // 2. 전체 실행
-    ///   mgr->StartAll();
-    ///   
-    ///   // 3. 개별 중단
+    ///   mgr->ResumeAll();
+    ///
+    ///   // 3. 전체 대기
+    ///   mgr->PauseAll();
+    ///
+    ///   // 4. 전체 중단
+    ///   mgr->StopAll();
+    ///
+    ///   // 5. 개별 실행
+    ///   mgr->ResumeActivity("Load1");
+    ///
+    ///   // 6. 개별 대기
+    ///   mgr->PauseActivity("Load1");
+    /// 
+    ///   // 7. 개별 중단
     ///   mgr->StopActivity("Load1");
     ///   
-    ///   // 4. 결과 관찰
+    ///   // 8. 결과 관찰
     ///   mgr->AddObserver([](auto& name, int id, auto& results) {
     ///       std::cout << name << " completed" << std::endl;
     ///   });
@@ -114,11 +126,16 @@ namespace EC
         /// </summary>
         void StartAll();
 
-        /// <summary>
+/// <summary>
         /// 모든 Activity 실행 재개 (Resume)
         /// 각 Activity의 Context에 Resume 상태를 설정합니다.
         /// </summary>
         void ResumeAll();
+
+        /// <summary>
+        /// 특정 Activity 실행 재개 (Resume)
+        /// </summary>
+        bool ResumeActivity(const std::string& name);
 
         /// <summary>
         /// 모든 Activity 일시 정지 (Pause)
@@ -126,6 +143,11 @@ namespace EC
         /// Task 실행 시 isPause()가 true이면 TR_KEEP 반환하여 대기합니다.
         /// </summary>
         void PauseAll();
+
+        /// <summary>
+        /// 특정 Activity 일시 정지 (Pause)
+        /// </summary>
+        bool PauseActivity(const std::string& name);
 
         /// <summary>
         /// 특정 Activity 중단

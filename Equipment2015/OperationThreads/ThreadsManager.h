@@ -50,10 +50,15 @@ namespace OperationThread
         /// </summary>
         void StopActivity(const std::string& name);
 
-        /// <summary>
-        /// 모든 Activity 중단
+/// <summary>
+        /// 특정 Activity 실행 재개
         /// </summary>
-        void StopAll();
+        void ResumeActivity(const std::string& name);
+
+        /// <summary>
+        /// 특정 Activity 일시 정지
+        /// </summary>
+        void PauseActivity(const std::string& name);
 
         /// <summary>
         /// 특정 Activity 실행 중 여부

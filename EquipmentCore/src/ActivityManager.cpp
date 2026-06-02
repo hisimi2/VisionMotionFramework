@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ActivityManager.h"
 #include "Context.h"
 #include "IActivity.h"
@@ -336,7 +336,7 @@ namespace EC
 
 // ============ Pause / Resume (전체 제어) ============
 
-    void ActivityManager::PauseAll()
+void ActivityManager::PauseAll()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         for (auto& kv : m_activities)
@@ -347,6 +347,20 @@ namespace EC
                 entry->ctx->SetPause();
             }
         }
+    }
+
+    bool ActivityManager::PauseActivity(const std::string& name)
+    {
+        auto entry = FindActivity(name);
+        if (!entry)
+            return false;
+
+        if (entry->ctx)
+        {
+            entry->ctx->SetPause();
+            return true;
+        }
+        return false;
     }
 
     void ActivityManager::ResumeAll()
@@ -360,6 +374,20 @@ namespace EC
                 entry->ctx->SetResume();
             }
         }
+    }
+
+    bool ActivityManager::ResumeActivity(const std::string& name)
+    {
+        auto entry = FindActivity(name);
+        if (!entry)
+            return false;
+
+        if (entry->ctx)
+        {
+            entry->ctx->SetResume();
+            return true;
+        }
+        return false;
     }
 
     // ============ 내부 헬퍼 ============

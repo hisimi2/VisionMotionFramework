@@ -146,35 +146,35 @@ void CEquipment2015Dlg::OnBnClickedStopAll()
 void CEquipment2015Dlg::OnBnClickedResumeLoad1()
 {
     OutputDebugString(_T("[UI] Resume Load1...\n"));
-    //m_threadsMgr.GetManager().ResumeLoad1();
+    m_threadsMgr.GetManager().ResumeActivity("Load1");
 }
 
 void CEquipment2015Dlg::OnBnClickedPauseLoad1()
 {
     OutputDebugString(_T("[UI] Pause Load1...\n"));
-    //m_threadsMgr.GetManager().PauseLoad1();
+    m_threadsMgr.GetManager().PauseActivity("Load1");
 }
 
 void CEquipment2015Dlg::OnBnClickedStopLoad1()
 {
     OutputDebugString(_T("[UI] Stop Load1...\n"));
-    //m_threadsMgr.GetManager().StopLoad1();
+    m_threadsMgr.GetManager().StopActivity("Load1");
 }
 
 void CEquipment2015Dlg::OnBnClickedResumeLoad2()
 {
     OutputDebugString(_T("[UI] Resume Load2...\n"));
-    //m_threadsMgr.GetManager().ResumeLoad2();
+    m_threadsMgr.GetManager().ResumeActivity("Load2");
 }
 
 void CEquipment2015Dlg::OnBnClickedPauseLoad2()
 {
     OutputDebugString(_T("[UI] Pause Load2...\n"));
-    //m_threadsMgr.GetManager().PauseLoad2();
+    m_threadsMgr.GetManager().PauseActivity("Load2");
 }
 
 void CEquipment2015Dlg::OnBnClickedStopLoad2()
 {
     OutputDebugString(_T("[UI] Stop Load2...\n"));
-    //m_threadsMgr.GetManager().StopLoad2();
+    m_threadsMgr.GetManager().StopActivity("Load2");
 }

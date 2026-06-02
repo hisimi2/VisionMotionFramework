@@ -104,6 +104,18 @@ namespace OperationThread
         std::cout << "[ThreadsManager] All activities stopped." << std::endl;
     }
 
+    void ThreadsManager::ResumeActivity(const std::string& name)
+    {
+        std::cout << "[ThreadsManager] Resuming activity: " << name << std::endl;
+        m_mgr.ResumeActivity(name);
+    }
+
+    void ThreadsManager::PauseActivity(const std::string& name)
+    {
+        std::cout << "[ThreadsManager] Pausing activity: " << name << std::endl;
+        m_mgr.PauseActivity(name);
+    }
+
     bool ThreadsManager::IsRunning(const std::string& name) const
     {
         return m_mgr.IsRunning(name);
