@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "Activity.h"
 
 #include "Utils.h"
@@ -65,7 +65,7 @@ namespace EC
         while (true)
         {
             // 중단 요청 체크 (Context 기반 — 단일 중단 메커니즘)
-            if (ctx.GetStopRequested())
+            if (ctx.isStop())
             {
                 LogTask(makeLogPrefix(m_ActivityName) + "Stop requested - aborting Activity");
                 return false;
@@ -111,7 +111,7 @@ namespace EC
             {
             case TR_KEEP:
                 // 단순 sleep — condition_variable 불필요
-                if (!ctx.GetStopRequested())
+                if (ctx.isResume())
                 {
                     std::this_thread::sleep_for(std::chrono::milliseconds(m_pollIntervalMs));
                 }

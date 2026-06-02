@@ -145,7 +145,7 @@ namespace EC
         std::lock_guard<std::mutex> lock(m_mutex);
         if (m_running.load() && m_currentCtx)
         {
-            m_currentCtx->SetStopRequested(true);
+            m_currentCtx->SetStop();
         }
     }
 

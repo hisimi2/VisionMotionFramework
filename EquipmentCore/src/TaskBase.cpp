@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "TaskBase.h"
 
 namespace EC
@@ -13,15 +13,21 @@ namespace EC
 
     TaskResult TaskBase::Execute(Context& ctx)
     {
-        // Stop 요청 체크 (lock 외부에서 먼저 확인)
-        if (ctx.GetStopRequested())
+        // Stop 요청 체크
+        if (ctx.isStop())
         {
             ctx.SetLastError("TaskBase: Stop requested");
             m_step_ = CS_ERROR;
             return TR_ERROR;
         }
 
-        // --- 1회 초기화 (lock 외부에서 상태만 확인, 초기화 자체는 내부에서 처리) ---
+        // Pause 체크
+        if (ctx.isPause())
+        {
+            return TR_KEEP;
+        }
+
+        // --- 1회 초기화 ---
         if (!m_initialized_)
         {
             m_initialized_ = true;
@@ -43,7 +49,7 @@ namespace EC
             }
         }
 
-        // --- 상태가 에러이면 바로 반환 ---
+        // 에러 상태면 바로 반환
         if (m_step_ == CS_ERROR)
         {
             return TR_ERROR;
@@ -82,11 +88,6 @@ namespace EC
     std::string TaskBase::GetName() const
     {
         return m_name;
-    }
-
-    std::mutex& TaskBase::GetMutex()
-    {
-        return m_mutex_;
     }
 
     TaskResult TaskBase::SetErrorAndReturn(Context& ctx, const std::string& msg)
