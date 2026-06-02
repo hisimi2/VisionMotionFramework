@@ -51,10 +51,7 @@
     <ClCompile Include="src\TaskBase.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcessController.cpp">
-      <Filter>StateMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Orchestrator.cpp">
+    <ClCompile Include="src\ActivityManager.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,10 +107,7 @@
     <ClInclude Include="include\Utils.h">
       <Filter>Helper</Filter>
     </ClInclude>
-    <ClInclude Include="include\ProcessController.h">
-      <Filter>StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Orchestrator.h">
+    <ClInclude Include="include\ActivityManager.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
   </ItemGroup>

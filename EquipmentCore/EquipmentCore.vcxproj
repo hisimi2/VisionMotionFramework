@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
@@ -189,13 +189,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EquipmentCore.cpp" />
+    <ClCompile Include="src\ActivityManager.cpp" />
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Activity.cpp" />
     <ClCompile Include="src\ActivityBuilderBase.cpp" />
-    <ClCompile Include="src\Orchestrator.cpp" />
-    <ClCompile Include="src\ProcessController.cpp" />
     <ClCompile Include="src\TaskBase.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -207,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EquipmentCore.h" />
+    <ClInclude Include="include\ActivityManager.h" />
     <ClInclude Include="include\AsyncExecutor.h" />
     <ClInclude Include="include\Context.h" />
     <ClInclude Include="include\EC_API.h" />
@@ -215,11 +215,9 @@
     <ClInclude Include="include\IActivity.h" />
     <ClInclude Include="include\ITask.h" />
     <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\ParamConverterFomatter.hpp" />
     <ClInclude Include="include\Activity.h" />
     <ClInclude Include="include\ActivityBuilderBase.h" />
-    <ClInclude Include="include\ProcessController.h" />
     <ClInclude Include="include\TaskBase.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="Resource.h" />

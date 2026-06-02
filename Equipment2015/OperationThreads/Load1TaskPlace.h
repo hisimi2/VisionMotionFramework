@@ -24,9 +24,8 @@ namespace OperationThread
         /// <summary>
         /// Load1 Pick & Place 시퀀스 생성자
         /// </summary>
-        /// <param name="parts">Load1Parts 객체</param>
-        /// <param name="repeatCount">반복 횟수 (0 = 무한 반복)</param>
-        Load1TaskPlace(LPVOID parts);
+        /// <param name="parts">Load1Parts 객체 (shared_ptr)</param>
+        Load1TaskPlace(std::shared_ptr<Load1Parts> parts);
 
         ~Load1TaskPlace() override;
 
@@ -80,7 +79,7 @@ namespace OperationThread
         TaskResult HandleCheckRepeat(Context& ctx);
         TaskResult HandleComplete(Context& ctx);
 
-        Load1Parts* m_parts;
+        std::shared_ptr<Load1Parts> m_parts;  // ✅ shared_ptr
 
         // 파라미터
         double m_pickX, m_pickY, m_pickZ;

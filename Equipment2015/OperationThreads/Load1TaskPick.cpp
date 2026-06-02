@@ -5,9 +5,9 @@
 
 namespace OperationThread
 {
-    Load1TaskPick::Load1TaskPick(LPVOID parts)
+    Load1TaskPick::Load1TaskPick(std::shared_ptr<Load1Parts> parts)
         : TaskBase("Load1TaskPick")
-        , m_parts((Load1Parts*)parts)
+        , m_parts(parts)
         , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
         , m_safeZ(0.0)

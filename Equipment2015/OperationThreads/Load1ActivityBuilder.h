@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ActivityBuilderBase.h"
 #include "Load1TaskPick.h"
 #include "Load1TaskPlace.h"
@@ -20,6 +20,12 @@ namespace OperationThread
             activity->AddTask(std::make_shared<Load1TaskPlace>(m_parts));
 
             return ActivityPtr(activity.release());
+        }
+
+        void ConfigureParams(ContextPtr ctx)
+        {
+            ctx->SetParamAs<int>("repeatCount", 2);
+            ctx->SetParamAs<int>("timeout", 3000);
         }
     };
 }
