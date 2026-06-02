@@ -16,18 +16,25 @@ namespace EC
         TR_ERROR    // 에러 발생(시퀀스 중단)
     };
 
+    /// <summary>
+    /// Task 실행 인터페이스
+    /// 각 Task는 Execute()가 반복 호출되며 상태머신을 통해 단계별 작업을 수행합니다.
+    /// </summary>
     class ITask
     {
     public:
         virtual ~ITask() = default;
 
+        /// <summary>
+        /// Task 실행 (Activity에 의해 반복 호출됨)
+        /// </summary>
         virtual TaskResult Execute(Context& ctx) = 0;
-        virtual TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) = 0;
 
-        virtual void Abort() = 0;
-        virtual void EnterState(int newState) = 0;
+        /// <summary>
+        /// Task 이름 반환
+        /// </summary>
         virtual std::string GetName() const = 0;
     };
 
     using TaskPtr = std::shared_ptr<ITask>;
-} 
+}

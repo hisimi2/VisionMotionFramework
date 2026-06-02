@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EC_API.h"
 
@@ -14,6 +14,13 @@ namespace EC
 
     class EC_API Context
     {
+        enum RequestFlag
+        {
+            Resume  = 1,
+            Pause   = 2,
+            Stop    = 4
+        };
+
     public:
         Context();
         ~Context();
@@ -24,8 +31,13 @@ namespace EC
         void SetLastError(const std::string& error);
         const std::string& GetLastError() const;
 
-        void SetStopRequested(bool stop);
-        bool GetStopRequested() const;
+        void SetResume();
+        void SetPause();
+        void SetStop();
+        
+        bool isResume() const;
+        bool isPause() const;
+        bool isStop() const;
 
         template <typename T>
         T GetParamAs(const std::string& key, const T& defaultValue) const
@@ -52,7 +64,7 @@ namespace EC
         mutable std::mutex      m_mutex;
         StringMap               m_params;
         std::string             m_lastError;
-        bool                    m_isStopRequested;
+        RequestFlag             m_isRequested;
     };
 
     using ContextPtr = std::shared_ptr<Context>;

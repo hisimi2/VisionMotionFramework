@@ -16,9 +16,8 @@ namespace EC
         virtual bool Execute(Context& context) = 0;
         virtual void Abort() = 0;
         virtual std::string GetActivityName() const = 0;
-        virtual std::string GetTaskName() const = 0;
         virtual void AddTask(TaskPtr step) = 0;
     };
 
     using ActivityPtr = std::unique_ptr<IActivity>;
-} 
+}

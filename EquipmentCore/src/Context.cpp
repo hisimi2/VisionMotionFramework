@@ -1,16 +1,41 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Context.h"
-
 #include "Utils.h"
 
 namespace EC
 {
-    Context::Context() : m_isStopRequested(false)
+    Context::Context() : m_isRequested(Pause)
     {
     }
-
-    // 소멸자는 헤더 파일에 명시되어 있다면 cpp에 포함하지만 본 파일 구현에서는 간결한 형태로 둡니다
+    
     Context::~Context() = default;
+
+    void Context::SetResume()
+    {
+        m_isRequested = Resume;
+    }
+    void Context::SetPause()
+    {
+        m_isRequested = Pause;
+    }
+    void Context::SetStop()
+    {
+        m_isRequested = Stop;
+    }
+
+    bool Context::isResume() const
+    {
+        return m_isRequested == Resume;
+
+    }
+    bool Context::isPause() const
+    {
+        return m_isRequested == Pause;
+    }
+    bool Context::isStop() const
+    {
+        return m_isRequested == Stop;
+    }
 
     void Context::SetLastError(const std::string& error)
     {
@@ -22,18 +47,6 @@ namespace EC
     {
         // m_lastError 반환 시 동기화 여부는 설계 정책에 따르나, 기본적으로 std::string 참조형이므로 외부에선 주의가 필요합니다.
         return m_lastError;
-    }
-
-    void Context::SetStopRequested(bool stop)
-    {
-        LockGuardType guard(m_mutex);
-        m_isStopRequested = stop;
-    }
-
-    bool Context::GetStopRequested() const
-    {
-        LockGuardType guard(m_mutex);
-        return m_isStopRequested;
     }
 
     void Context::SetParams(const StringMap& params)

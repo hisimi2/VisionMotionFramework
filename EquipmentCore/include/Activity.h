@@ -6,8 +6,7 @@
 #include <vector>
 #include <string>
 #include <mutex>
-#include <condition_variable>
-#include <atomic>
+#include <thread>
 
 namespace EC
 {
@@ -20,7 +19,6 @@ namespace EC
         bool Execute(Context& context) override;
         void Abort() override;
         std::string GetActivityName() const override;
-        std::string GetTaskName() const override;
 
         void AddTask(TaskPtr step) override;
         void SetPollIntervalMs(int ms) { m_pollIntervalMs = ms; }
@@ -30,13 +28,9 @@ namespace EC
 
     private:
         std::vector<TaskPtr> m_tasks;
-        std::mutex m_mutex;
-        std::condition_variable m_cv;
-        std::atomic<bool> m_abortRequested; 
-        
-        int m_pollIntervalMs;
-        std::string m_ActivityName;
+        mutable std::mutex   m_taskMutex;
 
-        TaskPtr m_curTask;
+        int         m_pollIntervalMs;
+        std::string m_ActivityName;
     };
-} 
+}

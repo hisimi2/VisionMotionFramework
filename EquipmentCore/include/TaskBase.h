@@ -27,14 +27,13 @@ namespace EC
         /// <summary>
         /// 강제 중단을 요청합니다. 내부 상태를 에러 상태로 전환합니다.
         /// </summary>
-        void Abort() override;
-       
+        void Abort();
 
         /// <summary>
         /// 지정한 상태로 진입합니다. 데드라인(타임아웃)은 초기화됩니다.
         /// </summary>
         /// <param name="newState">진입할 상태 식별자</param>
-        void EnterState(int newState) override;
+        void EnterState(int newState);
 
         /// <summary>
         /// 스텝의 이름을 반환합니다. 파생 클래스에서 재정의할 수 있습니다.
@@ -52,7 +51,7 @@ namespace EC
         /// 오류 메시지를 컨텍스트에 기록하고 지정한 상태로 전이한 후 TR_ERROR를 반환합니다.
         /// 파생 클래스에서 에러 처리 및 반환을 간단히 하기 위한 헬퍼입니다.
         /// </summary>
-        TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) override;
+        TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg);
 
     protected:
         /// <summary>
