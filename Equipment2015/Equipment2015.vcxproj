@@ -213,6 +213,7 @@
     <ClInclude Include="OperationThreads\Load2ActivityBuilder.h" />
     <ClInclude Include="OperationThreads\Load2TaskPick.h" />
     <ClInclude Include="OperationThreads\Load2TaskPlace.h" />
+    <ClInclude Include="OperationThreads\ThreadsManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="OperationThreads\Load1TaskPlace.cpp" />
     <ClCompile Include="OperationThreads\Load2TaskPick.cpp" />
     <ClCompile Include="OperationThreads\Load2TaskPlace.cpp" />
+    <ClCompile Include="OperationThreads\ThreadsManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

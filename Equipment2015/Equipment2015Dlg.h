@@ -1,16 +1,14 @@
-﻿// Equipment2015Dlg.h : 헤더 파일
+// Equipment2015Dlg.h : 헤더 파일
 //
 
 #pragma once
 
-#include "Orchestrator.h"
-#include "VMFComposition/Load1/VatAdapterLoad1.h"
+#include "OperationThreads/ThreadsManager.h"
+
 
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
-{
-    
-
+{   
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
@@ -25,7 +23,7 @@ protected:
 protected:
 	HICON m_hIcon;
 
- void HandleVmfResult(const VMF::VisionResultPayload& payload);
+    
 
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
@@ -33,6 +31,21 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
 public:
-    afx_msg void OnBnClickedVisionSequence();
+    // === ThreadsManager 제어 버튼 핸들러 ===
+
+
+private:
+    OperationThread::ThreadsManager m_threadsMgr;
+public:
+    afx_msg void OnBnClickedResumeAll();
+    afx_msg void OnBnClickedPauseAll();
+    afx_msg void OnBnClickedStopAll();
+    afx_msg void OnBnClickedResumeLoad1();
+    afx_msg void OnBnClickedPauseLoad1();
+    afx_msg void OnBnClickedStopLoad1();
+    afx_msg void OnBnClickedResumeLoad2();
+    afx_msg void OnBnClickedPauseLoad2();
+    afx_msg void OnBnClickedStopLoad2();
 };

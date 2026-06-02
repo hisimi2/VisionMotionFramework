@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "Activity.h"
 
 #include "Utils.h"
@@ -86,11 +86,17 @@ namespace EC
                 continue;
             }
 
-            // Task 실행 (lock 불필요 — TaskBase 자체에서 동기화)
             TaskResult res = TR_ERROR;
             try
             {
-                res = curTask->Execute(ctx);
+                if (ctx.isResume())
+                {
+                    res = curTask->Execute(ctx);
+                }
+                else
+                {
+                    res = TR_KEEP;
+                }
             }
             catch (const std::exception& ex)
             {
@@ -110,11 +116,7 @@ namespace EC
             switch (res)
             {
             case TR_KEEP:
-                // 단순 sleep — condition_variable 불필요
-                if (ctx.isResume())
-                {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(m_pollIntervalMs));
-                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(m_pollIntervalMs));
                 break;
 
             case TR_NEXT:
@@ -122,10 +124,9 @@ namespace EC
                 break;
 
             case TR_PREV:
-                if (idx > 0)
-                    --idx;
-                else
-                    LogTask(makeLogPrefix(m_ActivityName) + "Can't Move To Prev Step. Current is First Step");
+                if (idx > 0) --idx;
+                else LogTask(makeLogPrefix(m_ActivityName) + "Can't Move To Prev Step. Current is First Step");
+
                 break;
 
             case TR_DONE:

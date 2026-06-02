@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ActivityManager.h"
 #include "Context.h"
 #include "IActivity.h"
@@ -231,7 +231,12 @@ namespace EC
     bool ActivityManager::IsRunning(const std::string& name) const
     {
         auto entry = FindActivity(name);
-        return entry && entry->running.load();
+        if (!entry) return false;
+
+        // atomic<bool> + AsyncExecutor의 실제 상태 함께 확인
+        return entry->running.load() &&
+            entry->runner &&
+            entry->runner->IsRunning();  // AsyncExecutor에 IsRunning() 필요
     }
 
     size_t ActivityManager::GetActivityCount() const
@@ -327,6 +332,34 @@ namespace EC
         if (entry)
             return entry->ctx;
         return nullptr;
+    }
+
+// ============ Pause / Resume (전체 제어) ============
+
+    void ActivityManager::PauseAll()
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& kv : m_activities)
+        {
+            auto& entry = kv.second;
+            if (entry->ctx)
+            {
+                entry->ctx->SetPause();
+            }
+        }
+    }
+
+    void ActivityManager::ResumeAll()
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& kv : m_activities)
+        {
+            auto& entry = kv.second;
+            if (entry->ctx)
+            {
+                entry->ctx->SetResume();
+            }
+        }
     }
 
     // ============ 내부 헬퍼 ============

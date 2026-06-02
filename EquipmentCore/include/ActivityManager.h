@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EC_API.h"
 #include "ActivityBuilderBase.h"
@@ -17,6 +17,9 @@ namespace EC
 {
     /// <summary>
     /// Activity 정보 (등록된 각 Activity의 상태 및 제어 인터페이스)
+    /// running	의미	설명
+    /// true	실행 중	해당 이름의 Activity가 등록되어 있고, AsyncExecutor::Start()가 성공적으로 호출되어 스레드가 동작 중
+    /// false	실행 중 아님	다음 중 하나 : ① Activity가 등록되지 않음, ② 등록만 되고 아직 StartActivity()가 호출되지 않음, ③ StopActivity()로 중단됨, ④ Activity 실행이 완료되어 종료됨
     /// </summary>
     struct EC_API ActivityEntry
     {
@@ -106,10 +109,23 @@ namespace EC
         /// </summary>
         bool StartActivity(const std::string& name);
 
-        /// <summary>
+/// <summary>
         /// 모든 등록된 Activity 실행
         /// </summary>
         void StartAll();
+
+        /// <summary>
+        /// 모든 Activity 실행 재개 (Resume)
+        /// 각 Activity의 Context에 Resume 상태를 설정합니다.
+        /// </summary>
+        void ResumeAll();
+
+        /// <summary>
+        /// 모든 Activity 일시 정지 (Pause)
+        /// 각 Activity의 Context에 Pause 상태를 설정합니다.
+        /// Task 실행 시 isPause()가 true이면 TR_KEEP 반환하여 대기합니다.
+        /// </summary>
+        void PauseAll();
 
         /// <summary>
         /// 특정 Activity 중단
