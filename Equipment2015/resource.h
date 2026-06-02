@@ -17,6 +17,9 @@
 #define IDC_PAUSE_ALL                   1007
 #define IDC_STOP_LOAD1                  1008
 #define IDC_STOP_LOAD2                  1009
+#define IDC_START_ALL                   1010
+#define IDC_START_LOAD1                 1011
+#define IDC_START_LOAD2                 1012
 
 // Next default values for new objects
 // 

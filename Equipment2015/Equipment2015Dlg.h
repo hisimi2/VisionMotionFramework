@@ -48,4 +48,7 @@ public:
     afx_msg void OnBnClickedResumeLoad2();
     afx_msg void OnBnClickedPauseLoad2();
     afx_msg void OnBnClickedStopLoad2();
+    afx_msg void OnBnClickedStartAll();
+    afx_msg void OnBnClickedStartLoad1();
+    afx_msg void OnBnClickedStartLoad2();
 };

@@ -36,6 +36,9 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
     ON_BN_CLICKED(IDC_RESUME_LOAD2, &CEquipment2015Dlg::OnBnClickedResumeLoad2)
     ON_BN_CLICKED(IDC_PAUSE_LOAD2, &CEquipment2015Dlg::OnBnClickedPauseLoad2)
     ON_BN_CLICKED(IDC_STOP_LOAD2, &CEquipment2015Dlg::OnBnClickedStopLoad2)
+	ON_BN_CLICKED(IDC_START_ALL, &CEquipment2015Dlg::OnBnClickedStartAll)
+    ON_BN_CLICKED(IDC_START_LOAD1, &CEquipment2015Dlg::OnBnClickedStartLoad1)
+    ON_BN_CLICKED(IDC_START_LOAD2, &CEquipment2015Dlg::OnBnClickedStartLoad2)
 END_MESSAGE_MAP()
 
 // CEquipment2015Dlg 메시지 처리기
@@ -124,6 +127,12 @@ HCURSOR CEquipment2015Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CEquipment2015Dlg::OnBnClickedStartAll()
+{
+    OutputDebugString(_T("[UI] Start All activities...\n"));
+    m_threadsMgr.GetManager().StartAll();
+}
+
 void CEquipment2015Dlg::OnBnClickedResumeAll()
 {
     OutputDebugString(_T("[UI] Resume All activities...\n"));
@@ -135,6 +144,12 @@ void CEquipment2015Dlg::OnBnClickedPauseAll()
 {
     OutputDebugString(_T("[UI] Pause All activities...\n"));
     m_threadsMgr.GetManager().PauseAll();
+}
+
+void CEquipment2015Dlg::OnBnClickedStartLoad1()
+{
+    OutputDebugString(_T("[UI] Start Load1...\n"));
+    m_threadsMgr.GetManager().StartActivity("Load1");
 }
 
 void CEquipment2015Dlg::OnBnClickedStopAll()
@@ -161,6 +176,12 @@ void CEquipment2015Dlg::OnBnClickedStopLoad1()
     m_threadsMgr.GetManager().StopActivity("Load1");
 }
 
+void CEquipment2015Dlg::OnBnClickedStartLoad2()
+{
+    OutputDebugString(_T("[UI] Start Load2...\n"));
+    m_threadsMgr.GetManager().StartActivity("Load2");
+}
+
 void CEquipment2015Dlg::OnBnClickedResumeLoad2()
 {
     OutputDebugString(_T("[UI] Resume Load2...\n"));
@@ -178,3 +199,4 @@ void CEquipment2015Dlg::OnBnClickedStopLoad2()
     OutputDebugString(_T("[UI] Stop Load2...\n"));
     m_threadsMgr.GetManager().StopActivity("Load2");
 }
+

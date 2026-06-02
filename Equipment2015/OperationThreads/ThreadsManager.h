@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ActivityManager.h"
 #include "Load1ActivityBuilder.h"
@@ -34,6 +34,26 @@ namespace OperationThread
         /// Activity 초기화 — 모든 Builder를 ActivityManager에 등록
         /// </summary>
         void Initialize();
+        
+        /// <summary>
+        /// 모든 등록된 Activity 실행
+        /// </summary>
+        void StartAll();
+
+        /// <summary>
+        ///  모든 실행 재개
+        /// </summary>
+        void ResumeAll();
+
+        /// <summary>
+        /// 모든 중단
+        /// </summary>
+        void PauseAll();
+
+        /// <summary>
+        /// 모든 중단
+        /// </summary>
+        void StopAll();
 
         /// <summary>
         /// 특정 Activity 실행
@@ -41,16 +61,6 @@ namespace OperationThread
         bool StartActivity(const std::string& name);
 
         /// <summary>
-        /// 모든 등록된 Activity 실행
-        /// </summary>
-        void StartAll();
-
-        /// <summary>
-        /// 특정 Activity 중단
-        /// </summary>
-        void StopActivity(const std::string& name);
-
-/// <summary>
         /// 특정 Activity 실행 재개
         /// </summary>
         void ResumeActivity(const std::string& name);
@@ -59,6 +69,11 @@ namespace OperationThread
         /// 특정 Activity 일시 정지
         /// </summary>
         void PauseActivity(const std::string& name);
+
+        /// <summary>
+        /// 특정 Activity 중단
+        /// </summary>
+        void StopActivity(const std::string& name);
 
         /// <summary>
         /// 특정 Activity 실행 중 여부
