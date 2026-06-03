@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "COPSwitch.h"
 
 // static 멤버 변수 초기화
@@ -86,8 +86,16 @@ void COPSwitch::setStatus(bool bStatus)
     if (m_status != bStatus)
     {
         m_status = bStatus;
-        // notify 호출은 현재 상속/헤더 상태에 따라 컴파일 오류 유발 가능.
+
+        if (m_pGroup)
+        {
+            if (bStatus)
+            {
+                m_pGroup->setStatus(false);
+            }
+        }
     }
+
     LeaveCriticalSection(&m_logicMutex);
 }
 

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load2TaskPick.h"
 #include <iostream>
 #include <sstream>
@@ -37,14 +37,22 @@ namespace OperationThread
     {
         switch (GetStep())
         {
-        case RailOpen:              return HandleRailOpen(ctx);
-        case MovePickPositionX:     return HandleMovePickPositionX(ctx);
-        case PreciserDown:          return HandlePreciserDown(ctx);
-        case MovePickPositionZ:     return HandleMovePickPositionZ(ctx);
-        case VacuumOn:              return HandleVacuumOn(ctx);
-        case MoveSafeZAfterPick:    return HandleMoveSafeZAfterPick(ctx);
-        case CS_ERROR:              return TR_ERROR;
-        default:                    return SetErrorAndReturn(ctx, "Load2TaskPick: Unknown state");
+        case RailOpen:
+            return HandleRailOpen(ctx);
+        case MovePickPositionX:
+            return HandleMovePickPositionX(ctx);
+        case PreciserDown:
+            return HandlePreciserDown(ctx);
+        case MovePickPositionZ:
+            return HandleMovePickPositionZ(ctx);
+        case VacuumOn:
+            return HandleVacuumOn(ctx);
+        case MoveSafeZAfterPick:
+            return HandleMoveSafeZAfterPick(ctx);
+        case CS_ERROR:
+            return TR_ERROR;
+        default:
+            return SetErrorAndReturn(ctx, "Load2TaskPick: Unknown state");
         }
     }
 

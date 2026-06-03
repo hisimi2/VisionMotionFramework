@@ -12,8 +12,15 @@
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
+    , m_StartSwitch("StartSwitch")
+    , m_StopSwitch("StopSwitch")
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+    m_StartSwitch.setGroup(&m_StopSwitch).setOption(IOPSwitch::PUSH, false);
+    m_StopSwitch.setGroup(&m_StartSwitch).setOption(IOPSwitch::PUSH, false);
+    m_StopSwitch.setStatus(true); // 초기 상태는 Stop
+
 }
 
 void CEquipment2015Dlg::DoDataExchange(CDataExchange* pDX)
@@ -27,11 +34,9 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-    ON_BN_CLICKED(IDC_RUN_ALL, &CEquipment2015Dlg::OnBnClickedRunAll)
-    ON_BN_CLICKED(IDC_PAUSE_ALL, &CEquipment2015Dlg::OnBnClickedPauseAll)
-    ON_BN_CLICKED(IDC_STOP_ALL, &CEquipment2015Dlg::OnBnClickedStopAll)
 	ON_BN_CLICKED(IDC_START, &CEquipment2015Dlg::OnBnClickedStart)
     ON_BN_CLICKED(IDC_STOP, &CEquipment2015Dlg::OnBnClickedStop)
+    ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 // CEquipment2015Dlg 메시지 처리기
@@ -78,10 +83,41 @@ BOOL CEquipment2015Dlg::OnInitDialog()
 		OutputDebugString(msg);
 	});
 
-    m_BtnStart.SetFaceColor(RGB(0, 255, 0), TRUE); // 녹색
+    SetTimer(1, 1000, NULL); // 1초마다 타이머 이벤트 발생
 
 	return TRUE;	// 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
+
+
+void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
+{
+    // TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+    switch (nIDEvent)
+    {
+    case 1:
+        if (m_StartSwitch.getStatus())
+        {
+            OutputDebugString(_T("[UI] Start All activities...\n"));
+            m_threadsMgr.GetManager().RunAll();
+
+            m_BtnStart.SetFaceColor(RGB(0, 255, 0));
+            m_BtnStop.SetFaceColor(RGB(240, 240, 240));
+        }
+        else 
+        {
+            OutputDebugString(_T("[UI] Pause All activities...\n"));
+            m_threadsMgr.GetManager().PauseAll();
+
+            m_BtnStart.SetFaceColor(RGB(240, 240, 240));
+            m_BtnStop.SetFaceColor(RGB(255, 0, 0));
+        }
+        break;
+    }
+
+    CDialogEx::OnTimer(nIDEvent);
+}
+
+
 
 void CEquipment2015Dlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
@@ -125,32 +161,14 @@ HCURSOR CEquipment2015Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CEquipment2015Dlg::OnBnClickedRunAll()
-{
-    OutputDebugString(_T("[UI] Run All activities...\n"));
-    m_threadsMgr.GetManager().RunAll();
-}
-
-void CEquipment2015Dlg::OnBnClickedPauseAll()
-{
-    OutputDebugString(_T("[UI] Pause All activities...\n"));
-    m_threadsMgr.GetManager().PauseAll();
-}
-
-void CEquipment2015Dlg::OnBnClickedStopAll()
-{
-    OutputDebugString(_T("[UI] Stop All activities...\n"));
-    m_threadsMgr.GetManager().StopAll();
-}
-
-
-
 void CEquipment2015Dlg::OnBnClickedStart()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    m_StartSwitch.setStatus(true);
 }
 
 void CEquipment2015Dlg::OnBnClickedStop()
 {
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    m_StopSwitch.setStatus(true);
 }
+
+

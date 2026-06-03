@@ -4,11 +4,14 @@
 #pragma once
 
 #include "OperationThreads/ThreadsManager.h"
-
+#include "Actuators/COPSwitch.h"
 
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
-{   
+{
+    COPSwitch m_StartSwitch;
+    COPSwitch m_StopSwitch;
+
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
@@ -37,11 +40,9 @@ public:
 private:
     OperationThread::ThreadsManager m_threadsMgr;
 public:
-    afx_msg void OnBnClickedRunAll();
-    afx_msg void OnBnClickedPauseAll();
-    afx_msg void OnBnClickedStopAll();
 	afx_msg void OnBnClickedStart();
 	afx_msg void OnBnClickedStop();
 	CMFCButton m_BtnStart;
 	CMFCButton m_BtnStop;
+    afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

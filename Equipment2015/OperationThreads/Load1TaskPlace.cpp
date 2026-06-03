@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1TaskPlace.h"
 #include <iostream>
 #include <sstream>
@@ -41,16 +41,26 @@ namespace OperationThread
     {
         switch (GetStep())
         {
-        case RailOpen:              return HandleRailOpen(ctx);
-        case MovePlacePositionXY:   return HandleMovePlacePositionXY(ctx);
-        case MovePlacePositionZ:    return HandleMovePlacePositionZ(ctx);
-        case ReleasePlace:          return HandleReleasePlace(ctx);
-        case BlowOn:                return HandleBlowOn(ctx);
-        case MoveSafeZAfterPlace:   return HandleMoveSafeZAfterPlace(ctx);
-        case CheckRepeat:           return HandleCheckRepeat(ctx);
-        case Complete:              return HandleComplete(ctx);
-        case CS_ERROR:              return TR_ERROR;
-        default:                    return SetErrorAndReturn(ctx, "Load1TaskPlace: Unknown state");
+        case RailOpen:
+            return HandleRailOpen(ctx);
+        case MovePlacePositionXY:
+            return HandleMovePlacePositionXY(ctx);
+        case MovePlacePositionZ:
+            return HandleMovePlacePositionZ(ctx);
+        case ReleasePlace:
+            return HandleReleasePlace(ctx);
+        case BlowOn:
+            return HandleBlowOn(ctx);
+        case MoveSafeZAfterPlace:
+            return HandleMoveSafeZAfterPlace(ctx);
+        case CheckRepeat:
+            return HandleCheckRepeat(ctx);
+        case Complete:
+            return HandleComplete(ctx);
+        case CS_ERROR:
+            return TR_ERROR;
+        default:
+            return SetErrorAndReturn(ctx, "Load1TaskPlace: Unknown state");
         }
     }
 

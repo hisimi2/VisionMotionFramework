@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load2TaskPlace.h"
 #include <iostream>
 #include <sstream>
@@ -36,14 +36,22 @@ namespace OperationThread
     {
         switch (GetStep())
         {
-        case MovePlacePositionX:    return HandleMovePlacePositionX(ctx);
-        case PusherForward:         return HandlePusherForward(ctx);
-        case MovePlacePositionZ:    return HandleMovePlacePositionZ(ctx);
-        case BlowOn:                return HandleBlowOn(ctx);
-        case PusherBackward:        return HandlePusherBackward(ctx);
-        case MoveSafeZAfterPlace:   return HandleMoveSafeZAfterPlace(ctx);
-        case CS_ERROR:              return TR_ERROR;
-        default:                    return SetErrorAndReturn(ctx, "Load2TaskPlace: Unknown state");
+        case MovePlacePositionX:
+            return HandleMovePlacePositionX(ctx);
+        case PusherForward:
+            return HandlePusherForward(ctx);
+        case MovePlacePositionZ:
+            return HandleMovePlacePositionZ(ctx);
+        case BlowOn:
+            return HandleBlowOn(ctx);
+        case PusherBackward:
+            return HandlePusherBackward(ctx);
+        case MoveSafeZAfterPlace:
+            return HandleMoveSafeZAfterPlace(ctx);
+        case CS_ERROR:
+            return TR_ERROR;
+        default:
+            return SetErrorAndReturn(ctx, "Load2TaskPlace: Unknown state");
         }
     }
 
