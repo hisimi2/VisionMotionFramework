@@ -28,6 +28,7 @@ void CEquipment2015Dlg::DoDataExchange(CDataExchange* pDX)
     CDialogEx::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_START, m_BtnStart);
     DDX_Control(pDX, IDC_STOP, m_BtnStop);
+    DDX_Control(pDX, IDC_LOG_EDIT, m_LogEdit);
 }
 
 BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
@@ -74,14 +75,25 @@ BOOL CEquipment2015Dlg::OnInitDialog()
 	// ThreadsManager 초기화 — Load1, Load2 등록
 	m_threadsMgr.Initialize();
 
-	// 결과 Observer 등록 (UI 업데이트)
-	m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
-	{
-		CString msg;
-		msg.Format(_T("[%hs] completed (requestId=%d, results=%d)\r\n"),
-			name.c_str(), requestId, (int)results.size());
-		OutputDebugString(msg);
-	});
+    // Observer에서 UI로 결과 출력
+    m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
+    {
+        CString msg;
+        msg.Format(_T("[%hs] completed (requestId=%d)\r\n"),
+            name.c_str(), requestId);
+
+        // 각 결과를 로그에 추가
+        for (const auto& result : results)
+        {
+            CString line;
+            line.Format(_T("  - %hs\r\n"), result.c_str());
+            msg += line;
+        }
+
+        // UI 스레드에서 안전하게 출력
+        m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+        m_LogEdit.ReplaceSel(msg);
+    });
 
     SetTimer(1, 1000, NULL); // 1초마다 타이머 이벤트 발생
 

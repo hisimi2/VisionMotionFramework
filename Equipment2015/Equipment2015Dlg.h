@@ -45,4 +45,5 @@ public:
 	CMFCButton m_BtnStart;
 	CMFCButton m_BtnStop;
     afx_msg void OnTimer(UINT_PTR nIDEvent);
+    CEdit m_LogEdit;
 };
