@@ -1,4 +1,4 @@
-// Equipment2015Dlg.cpp : 구현 파일
+﻿// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START, &CEquipment2015Dlg::OnBnClickedStart)
     ON_BN_CLICKED(IDC_STOP, &CEquipment2015Dlg::OnBnClickedStop)
     ON_WM_TIMER()
+    ON_MESSAGE(WM_ACTIVITY_RESULT, &CEquipment2015Dlg::OnActivityResult)
 END_MESSAGE_MAP()
 
 // CEquipment2015Dlg 메시지 처리기
@@ -75,24 +76,20 @@ BOOL CEquipment2015Dlg::OnInitDialog()
 	// ThreadsManager 초기화 — Load1, Load2 등록
 	m_threadsMgr.Initialize();
 
-    // Observer에서 UI로 결과 출력
+    // Observer에서 UI로 결과 출력 — PostMessage로 UI 스레드에 전달
     m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
     {
-        CString msg;
-        msg.Format(_T("[%hs] completed (requestId=%d)\r\n"),
-            name.c_str(), requestId);
+        ActivityResultData* pData = new ActivityResultData();
+        pData->activityName = name.c_str();
+        pData->requestId = requestId;
 
-        // 각 결과를 로그에 추가
         for (const auto& result : results)
         {
-            CString line;
-            line.Format(_T("  - %hs\r\n"), result.c_str());
-            msg += line;
+            pData->detail += CString(result.c_str()) + _T("\r\n");
         }
 
-        // UI 스레드에서 안전하게 출력
-        m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
-        m_LogEdit.ReplaceSel(msg);
+        // UI 스레드로 메시지 전송 (비동기, 스레드 안전)
+        ::PostMessage(this->m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, (LPARAM)0);
     });
 
     SetTimer(1, 1000, NULL); // 1초마다 타이머 이벤트 발생
@@ -181,6 +178,26 @@ void CEquipment2015Dlg::OnBnClickedStart()
 void CEquipment2015Dlg::OnBnClickedStop()
 {
     m_StopSwitch.setStatus(true);
+}
+
+// OnActivityResult — UI 스레드에서 실행됨 (PostMessage 수신)
+LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
+{
+    ActivityResultData* pData = reinterpret_cast<ActivityResultData*>(wParam);
+    if (pData)
+    {
+        CString msg;
+        msg.Format(_T("[%s] completed (requestId=%d)\r\n%s"),
+            pData->activityName.GetString(),
+            pData->requestId,
+            pData->detail.GetString());
+
+        m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+        m_LogEdit.ReplaceSel(msg);
+
+        delete pData;
+    }
+    return 0;
 }
 
 

@@ -90,7 +90,7 @@ namespace OperationThread
         long m_moveTimeoutMs;
 
         // 유틸리티
-        void LogStep(const std::string& message);
+        void LogStep(Context& ctx, const std::string& message);
     };
 
     using Load2TaskPlacePtr = std::shared_ptr<Load2TaskPlace>;

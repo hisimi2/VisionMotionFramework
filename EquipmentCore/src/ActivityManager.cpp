@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ActivityManager.h"
 #include "Context.h"
 #include "IActivity.h"
@@ -164,6 +164,16 @@ namespace EC
             ctx->SetLastError("AsyncExecutor::Start() failed");
             return false;
         }
+
+        // RequestId 생성 및 매핑 저장 (Observer에서 Activity 식별용)
+        int requestId = m_nextRequestId.fetch_add(1);
+        {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_requestToActivity[requestId] = name;
+        }
+
+        // Context에 RequestId 저장 (Task가 SendResult 호출 시 사용)
+        ctx->SetParamAs<int>("requestId", requestId);
 
         // 상태 업데이트
         {

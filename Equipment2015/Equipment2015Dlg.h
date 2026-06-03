@@ -1,10 +1,21 @@
-// Equipment2015Dlg.h : 헤더 파일
+﻿// Equipment2015Dlg.h : 헤더 파일
 //
 
 #pragma once
 
 #include "OperationThreads/ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
+
+// PostMessage로 전달할 Activity 결과 데이터 구조체
+struct ActivityResultData
+{
+    CString activityName;
+    int     requestId = 0;
+    CString detail;
+};
+
+// 사용자 정의 메시지 ID
+#define WM_ACTIVITY_RESULT (WM_USER + 100)
 
 // CEquipment2015Dlg 대화 상자
 class CEquipment2015Dlg : public CDialogEx
@@ -31,6 +42,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+    afx_msg LRESULT OnActivityResult(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 public:

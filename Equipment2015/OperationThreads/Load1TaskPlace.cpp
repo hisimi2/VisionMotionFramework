@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1TaskPlace.h"
 #include <iostream>
 #include <sstream>
@@ -34,7 +34,7 @@ namespace OperationThread
 
         m_currentIteration = 0;
         EnterState(RailOpen);
-        LogStep("Load1TaskPlace initialized");
+        LogStep(ctx, "Load1TaskPlace initialized");
     }
 
     TaskResult Load1TaskPlace::OnPoll(Context& ctx)
@@ -104,7 +104,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPlace::HandleRailOpen(Context& ctx)
     {
-        LogStep("HandleRailOpen");
+        LogStep(ctx, "HandleRailOpen");
 
         if (!m_parts->CylBuffer.isBackward())
         {
@@ -122,7 +122,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load1TaskPlace: MoveSafeZAfterPick timeout");
         }
 
-        LogStep("HandleMovePlacePositionXY");
+        LogStep(ctx, "HandleMovePlacePositionXY");
 
         m_parts->AxisX.Move(m_placeX);
         m_parts->AxisY.Move(m_placeY);
@@ -138,7 +138,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load1TaskPlace: MovePlacePositionXY timeout");
         }
 
-        LogStep("HandleMovePlacePositionZ");
+        LogStep(ctx, "HandleMovePlacePositionZ");
 
         m_parts->AxisZ.Move(m_placeZ);
 
@@ -153,7 +153,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load1TaskPlace: MovePlacePositionZ timeout");
         }
 
-        LogStep("HandleReleasePlace");
+        LogStep(ctx, "HandleReleasePlace");
 
         if (m_clampIndex >= 0 && m_clampIndex < static_cast<int>(m_parts->CylTransfer.size()))
         {
@@ -166,7 +166,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPlace::HandleBlowOn(Context& ctx)
     {
-        LogStep("HandleBlowOn");
+        LogStep(ctx, "HandleBlowOn");
 
         if (m_vacuumIndex >= 0 && m_vacuumIndex < static_cast<int>(m_parts->PickVacuum.size()))
         {
@@ -179,7 +179,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPlace::HandleMoveSafeZAfterPlace(Context& ctx)
     {
-        LogStep("HandleMoveSafeZAfterPlace");
+        LogStep(ctx, "HandleMoveSafeZAfterPlace");
 
         m_parts->AxisZ.Move(m_safeZ);
 
@@ -194,19 +194,19 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load1TaskPlace: MoveSafeZAfterPlace timeout");
         }
 
-        LogStep("HandleCheckRepeat");
+        LogStep(ctx, "HandleCheckRepeat");
 
         ++m_currentIteration;
 
         std::ostringstream oss;
         oss << "Completed iteration: " << m_currentIteration;
-        LogStep(oss.str());
+        LogStep(ctx, oss.str());
 
         // 반복 횟수 확인
         if (m_repeatCount == 0 || m_currentIteration < m_repeatCount)
         {
             // 무한 반복 또는 반복 계속
-            LogStep("Repeating cycle...");
+            LogStep(ctx, "Repeating cycle...");
             EnterState(RailOpen);
             return TR_KEEP;
         }
@@ -218,12 +218,14 @@ namespace OperationThread
 
     TaskResult Load1TaskPlace::HandleComplete(Context& ctx)
     {
-        LogStep("HandleComplete");
+        LogStep(ctx, "HandleComplete");
         return TR_NEXT;
     }
 
-    void Load1TaskPlace::LogStep(const std::string& message)
+    void Load1TaskPlace::LogStep(Context& ctx, const std::string& message)
     {
-        std::cout << "[Load1PickPlace] " << message << std::endl;
+        std::cout << "[Load1TaskPlace] " << message << std::endl;
+        int reqId = ctx.GetParamAs<int>("requestId", 0);
+        ctx.SendResult(reqId, "[Step] " + message);
     }
 }

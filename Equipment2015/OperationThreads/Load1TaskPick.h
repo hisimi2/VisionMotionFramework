@@ -93,6 +93,7 @@ namespace OperationThread
         TaskResult HandleClampPick(Context& ctx);
         TaskResult HandleVacuumOn(Context& ctx);
         TaskResult HandleMoveSafeZAfterPick(Context& ctx);
+        TaskResult HandleComplete(Context& ctx);
 
         std::shared_ptr<Load1Parts> m_parts;  // ✅ shared_ptr로 변경
 
@@ -109,7 +110,7 @@ namespace OperationThread
         int m_currentIteration;
 
         // 유틸리티
-        void LogStep(const std::string& message);
+        void LogStep(Context& ctx, const std::string& message);
     };
 
     using Load1TaskPickPtr = std::shared_ptr<Load1TaskPick>;

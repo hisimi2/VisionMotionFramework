@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load2TaskPick.h"
 #include <iostream>
 #include <sstream>
@@ -30,7 +30,7 @@ namespace OperationThread
         }
 
         EnterState(RailOpen);
-        LogStep("Load2TaskPick initialized");
+        LogStep(ctx, "Load2TaskPick initialized");
     }
 
     TaskResult Load2TaskPick::OnPoll(Context& ctx)
@@ -88,7 +88,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPick::HandleRailOpen(Context& ctx)
     {
-        LogStep("HandleRailOpen");
+        LogStep(ctx, "HandleRailOpen");
 
         if (!m_parts->CylRail.isOpen())
         {
@@ -101,7 +101,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPick::HandleMovePickPositionX(Context& ctx)
     {
-        LogStep("HandleMovePickPositionX");
+        LogStep(ctx, "HandleMovePickPositionX");
 
         m_parts->AxisX.Move(m_pickX);
         m_parts->CylXPitch.narrow(false);
@@ -117,7 +117,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load2TaskPick: MovePickPositionX timeout");
         }
 
-        LogStep("HandlePreciserDown");
+        LogStep(ctx, "HandlePreciserDown");
 
         m_parts->CylPreciser.down(false);
 
@@ -127,7 +127,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPick::HandleMovePickPositionZ(Context& ctx)
     {
-        LogStep("HandleMovePickPositionZ");
+        LogStep(ctx, "HandleMovePickPositionZ");
 
         m_parts->AxisZ.Move(m_pickZ);
 
@@ -142,7 +142,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load2TaskPick: MovePickPositionZ timeout");
         }
 
-        LogStep("HandleVacuumOn");
+        LogStep(ctx, "HandleVacuumOn");
 
         if (m_vacuumIndex >= 0 && m_vacuumIndex < static_cast<int>(m_parts->PickVacuum.size()))
         {
@@ -155,7 +155,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPick::HandleMoveSafeZAfterPick(Context& ctx)
     {
-        LogStep("HandleMoveSafeZAfterPick");
+        LogStep(ctx, "HandleMoveSafeZAfterPick");
 
         m_parts->AxisZ.Move(m_safeZ);
 
@@ -163,8 +163,10 @@ namespace OperationThread
         return TR_NEXT;
     }
 
-    void Load2TaskPick::LogStep(const std::string& message)
+    void Load2TaskPick::LogStep(Context& ctx, const std::string& message)
     {
         std::cout << "[Load2TaskPick] " << message << std::endl;
+        int reqId = ctx.GetParamAs<int>("requestId", 0);
+        ctx.SendResult(reqId, "[Step] " + message);
     }
 }

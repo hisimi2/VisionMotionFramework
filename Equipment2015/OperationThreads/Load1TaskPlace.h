@@ -94,7 +94,7 @@ namespace OperationThread
         int m_currentIteration;
 
         // 유틸리티
-        void LogStep(const std::string& message);
+        void LogStep(Context& ctx, const std::string& message);
     };
 
     using Load1TaskPlacePtr = std::shared_ptr<Load1TaskPlace>;

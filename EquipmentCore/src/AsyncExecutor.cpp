@@ -50,6 +50,10 @@ namespace EC
             m_running.store(true);
             m_currentSeq = std::move(seq);
             m_currentCtx = ctx;
+
+            // Context에 Executor 설정 → Task가 결과를 전송할 수 있도록 함
+            ctx->SetExecutor(this);
+
             rawSeq = m_currentSeq.get();
         }
 

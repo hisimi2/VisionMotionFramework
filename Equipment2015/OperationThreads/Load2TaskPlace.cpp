@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load2TaskPlace.h"
 #include <iostream>
 #include <sstream>
@@ -29,7 +29,7 @@ namespace OperationThread
         }
 
         EnterState(MovePlacePositionX);
-        LogStep("Load2TaskPlace initialized");
+        LogStep(ctx, "Load2TaskPlace initialized");
     }
 
     TaskResult Load2TaskPlace::OnPoll(Context& ctx)
@@ -82,7 +82,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPlace::HandleMovePlacePositionX(Context& ctx)
     {
-        LogStep("HandleMovePlacePositionX");
+        LogStep(ctx, "HandleMovePlacePositionX");
 
         m_parts->AxisX.Move(m_placeX);
 
@@ -97,7 +97,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load2TaskPlace: MovePlacePositionX timeout");
         }
 
-        LogStep("HandlePusherForward");
+        LogStep(ctx, "HandlePusherForward");
 
         m_parts->CylPusher.forward(false);
 
@@ -107,7 +107,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPlace::HandleMovePlacePositionZ(Context& ctx)
     {
-        LogStep("HandleMovePlacePositionZ");
+        LogStep(ctx, "HandleMovePlacePositionZ");
 
         m_parts->AxisZ.Move(m_placeZ);
 
@@ -122,7 +122,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load2TaskPlace: MovePlacePositionZ timeout");
         }
 
-        LogStep("HandleBlowOn");
+        LogStep(ctx, "HandleBlowOn");
 
         if (m_vacuumIndex >= 0 && m_vacuumIndex < static_cast<int>(m_parts->PickVacuum.size()))
         {
@@ -135,7 +135,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPlace::HandlePusherBackward(Context& ctx)
     {
-        LogStep("HandlePusherBackward");
+        LogStep(ctx, "HandlePusherBackward");
 
         m_parts->CylPusher.backward(false);
 
@@ -145,7 +145,7 @@ namespace OperationThread
 
     TaskResult Load2TaskPlace::HandleMoveSafeZAfterPlace(Context& ctx)
     {
-        LogStep("HandleMoveSafeZAfterPlace");
+        LogStep(ctx, "HandleMoveSafeZAfterPlace");
 
         m_parts->AxisZ.Move(m_safeZ);
 
@@ -153,8 +153,10 @@ namespace OperationThread
         return TR_NEXT;
     }
 
-    void Load2TaskPlace::LogStep(const std::string& message)
+    void Load2TaskPlace::LogStep(Context& ctx, const std::string& message)
     {
         std::cout << "[Load2TaskPlace] " << message << std::endl;
+        int reqId = ctx.GetParamAs<int>("requestId", 0);
+        ctx.SendResult(reqId, "[Step] " + message);
     }
 }

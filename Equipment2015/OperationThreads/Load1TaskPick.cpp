@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load1TaskPick.h"
 #include <iostream>
 #include <sstream>
@@ -34,7 +34,7 @@ namespace OperationThread
 
         m_currentIteration = 0;
         EnterState(RailOpen);
-        LogStep("Load1TaskPick initialized");
+        LogStep(ctx, "Load1TaskPick initialized");
     }
 
     TaskResult Load1TaskPick::OnPoll(Context& ctx)
@@ -55,6 +55,8 @@ namespace OperationThread
             return HandleVacuumOn(ctx);
         case MoveSafeZAfterPick:
             return HandleMoveSafeZAfterPick(ctx);
+        case Complete:
+            return HandleComplete(ctx);
         case CS_ERROR:
             return TR_ERROR;
         default:
@@ -102,7 +104,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPick::HandleRailOpen(Context& ctx)
     {
-        LogStep("HandleRailOpen");
+        LogStep(ctx, "HandleRailOpen");
 
         if (!m_parts->CylBuffer.isBackward())
         {
@@ -115,7 +117,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPick::HandleMovePickPositionXY(Context& ctx)
     {
-        LogStep("HandleMovePickPositionXY");
+        LogStep(ctx, "HandleMovePickPositionXY");
 
         m_parts->AxisX.Move(m_pickX);
         m_parts->AxisY.Move(m_pickY);
@@ -131,7 +133,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load1TaskPick: MovePickPositionXY timeout");
         }
 
-        LogStep("HandlePreciserDown");
+        LogStep(ctx, "HandlePreciserDown");
 
         for (auto& cyl : m_parts->CylSetplate)
             cyl.down(false);
@@ -142,7 +144,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPick::HandleMovePickPositionZ(Context& ctx)
     {
-        LogStep("HandleMovePickPositionZ");
+        LogStep(ctx, "HandleMovePickPositionZ");
 
         m_parts->AxisZ.Move(m_pickZ);
 
@@ -157,7 +159,7 @@ namespace OperationThread
             return SetErrorAndReturn(ctx, "Load1TaskPick: MovePickPositionZ timeout");
         }
 
-        LogStep("HandleClampPick");
+        LogStep(ctx, "HandleClampPick");
 
         if (m_clampIndex >= 0 && m_clampIndex < static_cast<int>(m_parts->CylTransfer.size()))
         {
@@ -170,7 +172,7 @@ namespace OperationThread
 
     TaskResult Load1TaskPick::HandleVacuumOn(Context& ctx)
     {
-        LogStep("HandleVacuumOn");
+        LogStep(ctx, "HandleVacuumOn");
 
         if (m_vacuumIndex >= 0 && m_vacuumIndex < static_cast<int>(m_parts->PickVacuum.size()))
         {
@@ -183,16 +185,43 @@ namespace OperationThread
 
     TaskResult Load1TaskPick::HandleMoveSafeZAfterPick(Context& ctx)
     {
-        LogStep("HandleMoveSafeZAfterPick");
+        LogStep(ctx, "HandleMoveSafeZAfterPick");
 
         m_parts->AxisZ.Move(m_safeZ);
 
         EnterStateWithTimeout(Complete, m_moveTimeoutMs);
+        return TR_KEEP;
+    }
+
+    TaskResult Load1TaskPick::HandleComplete(Context& ctx)
+    {
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "Load1TaskPick: MoveSafeZAfterPick timeout");
+        }
+
+        LogStep(ctx, "HandleComplete");
+
+        ++m_currentIteration;
+
+        std::ostringstream oss;
+        oss << "Pick iteration " << m_currentIteration << " completed";
+        std::string msg = oss.str();
+        LogStep(ctx, msg);
+
+        // 결과 전송 (Observer 체인으로 전달)
+        int reqId = ctx.GetParamAs<int>("requestId", 0);
+        ctx.SendResult(reqId, msg);
+
         return TR_NEXT;
     }
 
-    void Load1TaskPick::LogStep(const std::string& message)
+    void Load1TaskPick::LogStep(Context& ctx, const std::string& message)
     {
         std::cout << "[Load1PickPlace] " << message << std::endl;
+
+        // Observer 체인으로도 전송 (Context에 저장된 requestId 사용)
+        int reqId = ctx.GetParamAs<int>("requestId", 0);
+        ctx.SendResult(reqId, "[Step] " + message);
     }
 }

@@ -1,15 +1,30 @@
 ﻿#include "stdafx.h"
 #include "Context.h"
+#include "AsyncExecutor.h"
 #include "Utils.h"
 
 namespace EC
 {
     Context::Context()
         : m_runState(RunState::Resume)
+        , m_executor(nullptr)
     {
     }
 
     Context::~Context() = default;
+
+    void Context::SetExecutor(AsyncExecutor* executor)
+    {
+        m_executor = executor;
+    }
+
+    void Context::SendResult(int requestId, const std::string& status)
+    {
+        if (m_executor)
+        {
+            m_executor->SendResult(requestId, status);
+        }
+    }
 
     void Context::SetResume()
     {
