@@ -17,6 +17,4 @@ namespace EC
         virtual std::string GetActivityName() const = 0;
         virtual void AddTask(TaskPtr step) = 0;
     };
-
-    using ActivityPtr = std::unique_ptr<IActivity>;
 }
