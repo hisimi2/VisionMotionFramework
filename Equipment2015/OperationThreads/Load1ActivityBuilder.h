@@ -1,7 +1,7 @@
-﻿#pragma once
+#pragma once
 #include "ActivityBuilderBase.h"
-#include "Load1TaskPick.h"
-#include "Load1TaskPlace.h"
+#include "Actuators\Load1Parts.h"
+
 
 namespace OperationThread
 {

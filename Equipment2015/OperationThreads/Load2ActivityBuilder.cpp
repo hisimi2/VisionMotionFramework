@@ -1,7 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load2ActivityBuilder.h"
 #include "Activity.h"
 #include "../../EquipmentCore/include/Context.h"
+
+#include "Load2TaskPick.h"
+#include "Load2TaskPlace.h"
 
 namespace OperationThread
 {

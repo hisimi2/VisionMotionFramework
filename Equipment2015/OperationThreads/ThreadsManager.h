@@ -1,13 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "ActivityManager.h"
-#include "Load1ActivityBuilder.h"
-#include "Load2ActivityBuilder.h"
 
-#include <memory>
 #include <string>
 #include <vector>
-#include <functional>
 
 namespace OperationThread
 {
