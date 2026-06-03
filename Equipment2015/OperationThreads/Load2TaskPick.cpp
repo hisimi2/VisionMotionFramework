@@ -50,6 +50,8 @@ namespace OperationThread
             return HandleVacuumOn(ctx);
         case MoveSafeZAfterPick:
             return HandleMoveSafeZAfterPick(ctx);
+        case Complete:
+            return HandleComplete(ctx);
         case CS_ERROR:
             return TR_ERROR;
         default:
@@ -161,13 +163,19 @@ namespace OperationThread
         m_parts->AxisZ.Move(m_safeZ);
 
         EnterStateWithTimeout(Complete, m_moveTimeoutMs);
+        return TR_KEEP;
+    }
+
+    TaskResult Load2TaskPick::HandleComplete(Context& ctx)
+    {
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "Load2TaskPick: MoveSafeZAfterPick timeout");
+        }
+
+        LogStep(ctx, "HandleComplete");
         return TR_NEXT;
     }
 
-    void Load2TaskPick::LogStep(Context& ctx, const std::string& message)
-    {
-        std::cout << "[Load2TaskPick] " << message << std::endl;
-        int reqId = ctx.GetParamAs<int>("requestId", 0);
-        ctx.SendResult(reqId, "[Step] " + message);
-    }
 }
+

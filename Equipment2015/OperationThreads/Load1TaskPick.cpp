@@ -10,13 +10,11 @@ namespace OperationThread
         : TaskBase("Load1TaskPick")
         , m_parts(parts)
         , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
-        , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
         , m_safeZ(0.0)
         , m_clampIndex(0)
         , m_vacuumIndex(0)
         , m_moveTimeoutMs(5000)
         , m_currentIteration(0)
-        , m_repeatCount(2)
     {
     }
 
@@ -72,13 +70,6 @@ namespace OperationThread
         m_pickX = x;
         m_pickY = y;
         m_pickZ = z;
-    }
-
-    void Load1TaskPick::SetPlacePosition(double x, double y, double z)
-    {
-        m_placeX = x;
-        m_placeY = y;
-        m_placeZ = z;
     }
 
     void Load1TaskPick::SetSafeZ(double z)
@@ -216,13 +207,5 @@ namespace OperationThread
 
         return TR_NEXT;
     }
-
-    void Load1TaskPick::LogStep(Context& ctx, const std::string& message)
-    {
-        std::cout << "[Load1PickPlace] " << message << std::endl;
-
-        // Observer 체인으로도 전송 (Context에 저장된 requestId 사용)
-        int reqId = ctx.GetParamAs<int>("requestId", 0);
-        ctx.SendResult(reqId, "[Step] " + message);
-    }
 }
+

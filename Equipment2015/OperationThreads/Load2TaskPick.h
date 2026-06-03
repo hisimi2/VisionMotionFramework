@@ -87,6 +87,7 @@ namespace OperationThread
         TaskResult HandleMovePickPositionZ(Context& ctx);
         TaskResult HandleVacuumOn(Context& ctx);
         TaskResult HandleMoveSafeZAfterPick(Context& ctx);
+        TaskResult HandleComplete(Context& ctx);
 
         std::shared_ptr<Load2Parts> m_parts;
 
@@ -98,7 +99,6 @@ namespace OperationThread
         long m_moveTimeoutMs;
 
         // 유틸리티
-        void LogStep(Context& ctx, const std::string& message);
     };
 
     using Load2TaskPickPtr = std::shared_ptr<Load2TaskPick>;

@@ -72,6 +72,11 @@ namespace EC
         /// </summary>
         bool IsDeadlineExpired() const;
 
+        /// <summary>
+        /// 로그 메시지를 콘솔과 Observer 체인(ctx.SendResult)으로 출력합니다.
+        /// </summary>
+        void LogStep(Context& ctx, const std::string& message);
+
     private:
         int                                     m_step_;
         bool                                    m_initialized_;

@@ -15,7 +15,6 @@ COPSwitch::COPSwitch(const std::string& strName)
     , m_pollIntervalMs(10)
     , m_BlinkTimer(NULL)
 {
-    InitializeCriticalSection(&m_logicMutex);
 }
 
 COPSwitch::~COPSwitch()
@@ -25,7 +24,6 @@ COPSwitch::~COPSwitch()
         delete m_BlinkTimer;
         m_BlinkTimer = NULL;
     }
-    DeleteCriticalSection(&m_logicMutex);
 }
 
 void COPSwitch::setIo(IDio* pIo)
@@ -56,7 +54,6 @@ IOPSwitch& COPSwitch::setOption(IOPSwitch::EType type, bool isBlink, unsigned in
         delete m_BlinkTimer;
         m_BlinkTimer = NULL;
     }
-    // m_pollIntervalMs는 밀리초 단위로 전달된다고 가정
     m_BlinkTimer = new CTimer(static_cast<long long>(m_pollIntervalMs));
     return *this;
 }
@@ -73,16 +70,13 @@ void COPSwitch::setOutput(const std::vector<int>& outputs)
 
 bool COPSwitch::getStatus()
 {
-    bool ret;
-    EnterCriticalSection(&m_logicMutex);
-    ret = m_status ? true : false;
-    LeaveCriticalSection(&m_logicMutex);
-    return ret;
+    std::lock_guard<std::mutex> lock(m_logicMutex);
+    return m_status;
 }
 
 void COPSwitch::setStatus(bool bStatus)
 {
-    EnterCriticalSection(&m_logicMutex);
+    std::lock_guard<std::mutex> lock(m_logicMutex);
     if (m_status != bStatus)
     {
         m_status = bStatus;
@@ -95,13 +89,11 @@ void COPSwitch::setStatus(bool bStatus)
             }
         }
     }
-
-    LeaveCriticalSection(&m_logicMutex);
 }
 
 bool COPSwitch::sequence()
 {
-    EnterCriticalSection(&m_logicMutex);
+    std::lock_guard<std::mutex> lock(m_logicMutex);
     bool in_sensor = checkInSensor();
 
     switch (m_type)
@@ -155,7 +147,6 @@ bool COPSwitch::sequence()
         }
     }
 
-    LeaveCriticalSection(&m_logicMutex);
     return true;
 }
 

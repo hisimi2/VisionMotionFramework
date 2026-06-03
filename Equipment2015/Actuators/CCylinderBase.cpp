@@ -3,12 +3,12 @@
 #include "CTimer.h"
 
 // 센서 포트 설정: 헤더와 일치하도록 const vector<UINT>& 사용
-void CCylinderBase::setSensorPortA(const vector<UINT>& list)
+void CCylinderBase::setSensorPortA(const std::vector<UINT>& list)
 {
 	m_ASensor = list;
 }
 
-void CCylinderBase::setSensorPortB(const vector<UINT>& list)
+void CCylinderBase::setSensorPortB(const std::vector<UINT>& list)
 {
 	m_BSensor = list;
 }
@@ -18,7 +18,6 @@ bool CCylinderBase::isActA()
 	bool bPortA = true;
 	bool bPortB = false;
 
-	// IN SENSOR 가 없을 경우 출력 포트로 체크(하드웨어 호출은 주석)
 	if (m_ASensor.empty() && m_BSensor.empty())
 	{
 		if (INVALID_PORT != m_nOutA)
@@ -92,7 +91,7 @@ bool CCylinderBase::isActB()
 	return (!bPortA && bPortB) ? true : false;
 }
 
-void CCylinderBase::setName(const string& strData)
+void CCylinderBase::setName(const std::string& strData)
 {
 	m_strName = strData;
 }
@@ -107,14 +106,15 @@ int CCylinderBase::actA(bool bManual)
 		if (isActA())
 		{
 			Sleep(m_uDelay);
-			return 1; // TRUE -> 1
+			return 1;
 		}
 		else
 		{
 			if (checkTimeOut.isOver())
 			{
-				return 0; // FALSE -> 0
+				return 0;
 			}
+			Sleep(10);  // CPU 점유율 방지
 		}
 	}
 }
@@ -129,14 +129,15 @@ int CCylinderBase::actB(bool bManual)
 		if (isActB())
 		{
 			Sleep(m_uDelay);
-			return 1; // TRUE -> 1
+			return 1;
 		}
 		else
 		{
 			if (checkTimeOut.isOver())
 			{
-				return 0; // FALSE -> 0
+				return 0;
 			}
+			Sleep(10);  // CPU 점유율 방지
 		}
 	}
 }

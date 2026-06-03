@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "TaskBase.h"
 #include "Context.h"
+#include <iostream>
 
 namespace EC
 {
@@ -112,5 +113,12 @@ namespace EC
         }
 
         return std::chrono::steady_clock::now() >= m_deadline_;
+    }
+
+    void TaskBase::LogStep(Context& ctx, const std::string& message)
+    {
+        std::cout << "[" << m_name << "] " << message << std::endl;
+        int reqId = ctx.GetParamAs<int>("requestId", 0);
+        ctx.SendResult(reqId, "[Step] " + message);
     }
 }

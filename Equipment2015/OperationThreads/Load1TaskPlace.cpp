@@ -9,7 +9,6 @@ namespace OperationThread
     Load1TaskPlace::Load1TaskPlace(std::shared_ptr<Load1Parts> parts)
         : TaskBase("Load1TaskPlace")
         , m_parts(parts)
-        , m_pickX(100.0), m_pickY(200.0), m_pickZ(-10.0)
         , m_placeX(300.0), m_placeY(150.0), m_placeZ(-12.0)
         , m_safeZ(0.0)
         , m_clampIndex(0)
@@ -66,13 +65,6 @@ namespace OperationThread
     }
 
     // ============= 파라미터 설정 =============
-
-    void Load1TaskPlace::SetPickPosition(double x, double y, double z)
-    {
-        m_pickX = x;
-        m_pickY = y;
-        m_pickZ = z;
-    }
 
     void Load1TaskPlace::SetPlacePosition(double x, double y, double z)
     {
@@ -221,12 +213,5 @@ namespace OperationThread
     {
         LogStep(ctx, "HandleComplete");
         return TR_NEXT;
-    }
-
-    void Load1TaskPlace::LogStep(Context& ctx, const std::string& message)
-    {
-        std::cout << "[Load1TaskPlace] " << message << std::endl;
-        int reqId = ctx.GetParamAs<int>("requestId", 0);
-        ctx.SendResult(reqId, "[Step] " + message);
     }
 }

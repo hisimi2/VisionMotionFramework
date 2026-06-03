@@ -30,11 +30,6 @@ namespace OperationThread
         ~Load1TaskPlace() override;
 
         /// <summary>
-        /// Pick 위치 설정
-        /// </summary>
-        void SetPickPosition(double x, double y, double z);
-
-        /// <summary>
         /// Place 위치 설정
         /// </summary>
         void SetPlacePosition(double x, double y, double z);
@@ -82,7 +77,6 @@ namespace OperationThread
         std::shared_ptr<Load1Parts> m_parts;  // ✅ shared_ptr
 
         // 파라미터
-        double m_pickX, m_pickY, m_pickZ;
         double m_placeX, m_placeY, m_placeZ;
         double m_safeZ;
         int m_clampIndex;
@@ -92,9 +86,6 @@ namespace OperationThread
         // 반복 관련
         int m_repeatCount;
         int m_currentIteration;
-
-        // 유틸리티
-        void LogStep(Context& ctx, const std::string& message);
     };
 
     using Load1TaskPlacePtr = std::shared_ptr<Load1TaskPlace>;

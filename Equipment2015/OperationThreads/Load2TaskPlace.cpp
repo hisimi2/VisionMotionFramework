@@ -49,6 +49,8 @@ namespace OperationThread
             return HandlePusherBackward(ctx);
         case MoveSafeZAfterPlace:
             return HandleMoveSafeZAfterPlace(ctx);
+        case Complete:
+            return HandleComplete(ctx);
         case CS_ERROR:
             return TR_ERROR;
         default:
@@ -151,13 +153,17 @@ namespace OperationThread
         m_parts->AxisZ.Move(m_safeZ);
 
         EnterStateWithTimeout(Complete, m_moveTimeoutMs);
-        return TR_NEXT;
+        return TR_KEEP;
     }
 
-    void Load2TaskPlace::LogStep(Context& ctx, const std::string& message)
+    TaskResult Load2TaskPlace::HandleComplete(Context& ctx)
     {
-        std::cout << "[Load2TaskPlace] " << message << std::endl;
-        int reqId = ctx.GetParamAs<int>("requestId", 0);
-        ctx.SendResult(reqId, "[Step] " + message);
+        if (IsDeadlineExpired())
+        {
+            return SetErrorAndReturn(ctx, "Load2TaskPlace: MoveSafeZAfterPlace timeout");
+        }
+
+        LogStep(ctx, "HandleComplete");
+        return TR_NEXT;
     }
 }

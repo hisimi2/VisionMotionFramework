@@ -5,7 +5,7 @@
 #include "IDio.h"
 #include "CTimer.h"
 #include <vector>
-
+#include <mutex>
 
 // 상속 구조 단순화: IPeriodicTask는 IOPSwitch에 포함됨
 class COPSwitch : public IOPSwitch 
@@ -48,7 +48,6 @@ private:
     unsigned int m_pollIntervalMs;
 
     CTimer* m_BlinkTimer;
-    // VS2010에서는 std::mutex가 없으므로 WinAPI CRITICAL_SECTION 사용
-    CRITICAL_SECTION m_logicMutex;
+    std::mutex m_logicMutex;
 };
 
