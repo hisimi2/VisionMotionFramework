@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ActivityManager.h"
 #include "Load1ActivityBuilder.h"
@@ -20,9 +20,13 @@ namespace OperationThread
     /// 사용 예:
     ///   ThreadsManager mgr;
     ///   mgr.Initialize();       // Load1, Load2 등록
-    ///   mgr.StartAll();         // 모두 실행
-    ///   mgr.StopActivity("Load1");  // Load1만 중단
-    ///   mgr.StopAll();          // 모두 중단
+    ///   mgr.RunAll();           // 모두 실행
+    ///   mgr.PauseAll();         // 모두 일시정지
+    ///   mgr.StopAll();          // 모든 완전종료
+    ///   mgr.RunActivity("Load1");   // Load1 실행
+    ///   mgr.PauseActivity("Load1"); // Load1 일시정지
+    ///   mgr.StopActivity("Load1");  // Load1 완전종료
+    
     /// </summary>
     class ThreadsManager
     {
@@ -36,14 +40,9 @@ namespace OperationThread
         void Initialize();
         
         /// <summary>
-        /// 모든 등록된 Activity 실행
+        /// 모든 등록된 Activity 실행 (처음 실행 또는 재개)
         /// </summary>
-        void StartAll();
-
-        /// <summary>
-        ///  모든 실행 재개
-        /// </summary>
-        void ResumeAll();
+        void RunAll();
 
         /// <summary>
         /// 모든 중단
@@ -54,27 +53,7 @@ namespace OperationThread
         /// 모든 중단
         /// </summary>
         void StopAll();
-
-        /// <summary>
-        /// 특정 Activity 실행
-        /// </summary>
-        bool StartActivity(const std::string& name);
-
-        /// <summary>
-        /// 특정 Activity 실행 재개
-        /// </summary>
-        void ResumeActivity(const std::string& name);
-
-        /// <summary>
-        /// 특정 Activity 일시 정지
-        /// </summary>
-        void PauseActivity(const std::string& name);
-
-        /// <summary>
-        /// 특정 Activity 중단
-        /// </summary>
-        void StopActivity(const std::string& name);
-
+               
         /// <summary>
         /// 특정 Activity 실행 중 여부
         /// </summary>

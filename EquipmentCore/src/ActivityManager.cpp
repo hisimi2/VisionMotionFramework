@@ -1,11 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ActivityManager.h"
 #include "Context.h"
 #include "IActivity.h"
 
 #include <memory>
 #include <string>
-#include <algorithm>
 #include <exception>
 
 namespace EC
@@ -89,20 +88,28 @@ namespace EC
 
     // ============ 실행 제어 ============
 
-    bool ActivityManager::StartActivity(const std::string& name)
+    bool ActivityManager::RunActivity(const std::string& name)
     {
         auto entry = FindActivity(name);
         if (!entry)
             return false;
 
-        if (entry->running.load())
+        // 이미 실행 중인 경우 → Resume 신호만 전송
+        if (entry->running.load() && entry->runner && entry->runner->IsRunning())
         {
-            // 이미 실행 중이면 재시작을 위해 중단
-            if (entry->runner)
+            if (entry->ctx)
             {
-                entry->runner->Stop();
-                entry->runner->WaitForCompletion(3000);
+                entry->ctx->SetResume();
             }
+            return true;
+        }
+
+        // 실행 중이 아니거나 종료된 경우 → 새로 생성하여 실행
+        // 이미 생성된 runner가 있으면 정리
+        if (entry->runner)
+        {
+            entry->runner->Stop();
+            entry->runner->WaitForCompletion(3000);
             entry->running.store(false);
         }
 
@@ -169,7 +176,7 @@ namespace EC
         return true;
     }
 
-    void ActivityManager::StartAll()
+    void ActivityManager::RunAll()
     {
         std::vector<std::string> names;
         {
@@ -182,8 +189,35 @@ namespace EC
 
         for (const auto& name : names)
         {
-            StartActivity(name);
+            RunActivity(name);
         }
+    }
+
+    void ActivityManager::PauseAll()
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& kv : m_activities)
+        {
+            auto& entry = kv.second;
+            if (entry->ctx)
+            {
+                entry->ctx->SetPause();
+            }
+        }
+    }
+
+    bool ActivityManager::PauseActivity(const std::string& name)
+    {
+        auto entry = FindActivity(name);
+        if (!entry)
+            return false;
+
+        if (entry->ctx)
+        {
+            entry->ctx->SetPause();
+            return true;
+        }
+        return false;
     }
 
     void ActivityManager::StopActivity(const std::string& name)
@@ -233,10 +267,9 @@ namespace EC
         auto entry = FindActivity(name);
         if (!entry) return false;
 
-        // atomic<bool> + AsyncExecutor의 실제 상태 함께 확인
         return entry->running.load() &&
             entry->runner &&
-            entry->runner->IsRunning();  // AsyncExecutor에 IsRunning() 필요
+            entry->runner->IsRunning();
     }
 
     size_t ActivityManager::GetActivityCount() const
@@ -288,7 +321,6 @@ namespace EC
 
     void ActivityManager::NotifyResult(int requestId, const std::vector<std::string>& results)
     {
-        // RequestId → ActivityName 매핑 조회
         std::string activityName;
         {
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -299,7 +331,6 @@ namespace EC
             }
         }
 
-        // Observer들에게 통지
         std::vector<ActivityObserver> snapshot;
         {
             std::lock_guard<std::mutex> lk(m_observerMutex);
@@ -319,7 +350,6 @@ namespace EC
             }
             catch (...)
             {
-                // ignore observer exceptions
             }
         }
     }
@@ -332,62 +362,6 @@ namespace EC
         if (entry)
             return entry->ctx;
         return nullptr;
-    }
-
-// ============ Pause / Resume (전체 제어) ============
-
-void ActivityManager::PauseAll()
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        for (auto& kv : m_activities)
-        {
-            auto& entry = kv.second;
-            if (entry->ctx)
-            {
-                entry->ctx->SetPause();
-            }
-        }
-    }
-
-    bool ActivityManager::PauseActivity(const std::string& name)
-    {
-        auto entry = FindActivity(name);
-        if (!entry)
-            return false;
-
-        if (entry->ctx)
-        {
-            entry->ctx->SetPause();
-            return true;
-        }
-        return false;
-    }
-
-    void ActivityManager::ResumeAll()
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        for (auto& kv : m_activities)
-        {
-            auto& entry = kv.second;
-            if (entry->ctx)
-            {
-                entry->ctx->SetResume();
-            }
-        }
-    }
-
-    bool ActivityManager::ResumeActivity(const std::string& name)
-    {
-        auto entry = FindActivity(name);
-        if (!entry)
-            return false;
-
-        if (entry->ctx)
-        {
-            entry->ctx->SetResume();
-            return true;
-        }
-        return false;
     }
 
     // ============ 내부 헬퍼 ============

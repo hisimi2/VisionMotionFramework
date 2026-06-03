@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ThreadsManager.h"
 
 #include <iostream>
@@ -56,7 +56,7 @@ namespace OperationThread
         }
     }
 
-    void ThreadsManager::StartAll()
+    void ThreadsManager::RunAll()
     {
         if (!m_initialized)
         {
@@ -64,22 +64,9 @@ namespace OperationThread
             return;
         }
 
-        std::cout << "[ThreadsManager] Starting all activities..." << std::endl;
-        m_mgr.StartAll();
-        std::cout << "[ThreadsManager] All activities started." << std::endl;
-    }
-
-    void ThreadsManager::ResumeAll()
-    {
-        if (!m_initialized)
-        {
-            std::cerr << "[ThreadsManager] Not initialized." << std::endl;
-            return;
-        }
-
-        std::cout << "[ThreadsManager] Resuming all activities..." << std::endl;
-        m_mgr.ResumeAll();
-        std::cout << "[ThreadsManager] All activities resumed." << std::endl;
+        std::cout << "[ThreadsManager] Running all activities..." << std::endl;
+        m_mgr.RunAll();
+        std::cout << "[ThreadsManager] All activities running." << std::endl;
     }
 
     void ThreadsManager::PauseAll()
@@ -96,44 +83,7 @@ namespace OperationThread
         std::cout << "[ThreadsManager] All activities stopped." << std::endl;
     }
 
-    bool ThreadsManager::StartActivity(const std::string& name)
-    {
-        if (!m_initialized)
-        {
-            std::cerr << "[ThreadsManager] Not initialized. Call Initialize() first." << std::endl;
-            return false;
-        }
-
-        bool result = m_mgr.StartActivity(name);
-        if (result)
-        {
-            std::cout << "[ThreadsManager] Started activity: " << name << std::endl;
-        }
-        else
-        {
-            std::cerr << "[ThreadsManager] Failed to start activity: " << name << std::endl;
-        }
-        return result;
-    }
-
-    void ThreadsManager::ResumeActivity(const std::string& name)
-    {
-        std::cout << "[ThreadsManager] Resuming activity: " << name << std::endl;
-        m_mgr.ResumeActivity(name);
-    }
-
-    void ThreadsManager::PauseActivity(const std::string& name)
-    {
-        std::cout << "[ThreadsManager] Pausing activity: " << name << std::endl;
-        m_mgr.PauseActivity(name);
-    }
-
-    void ThreadsManager::StopActivity(const std::string& name)
-    {
-        std::cout << "[ThreadsManager] Stopping activity: " << name << std::endl;
-        m_mgr.StopActivity(name);
-        std::cout << "[ThreadsManager] Activity stopped: " << name << std::endl;
-    }
+    
 
     bool ThreadsManager::IsRunning(const std::string& name) const
     {

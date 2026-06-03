@@ -18,33 +18,29 @@ CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
 
 void CEquipment2015Dlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+    CDialogEx::DoDataExchange(pDX);
+    DDX_Control(pDX, IDC_START, m_BtnStart);
+    DDX_Control(pDX, IDC_STOP, m_BtnStop);
 }
 
 BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-
-
-    ON_BN_CLICKED(IDC_RESUME_ALL, &CEquipment2015Dlg::OnBnClickedResumeAll)
+    ON_BN_CLICKED(IDC_RUN_ALL, &CEquipment2015Dlg::OnBnClickedRunAll)
     ON_BN_CLICKED(IDC_PAUSE_ALL, &CEquipment2015Dlg::OnBnClickedPauseAll)
     ON_BN_CLICKED(IDC_STOP_ALL, &CEquipment2015Dlg::OnBnClickedStopAll)
-    ON_BN_CLICKED(IDC_RESUME_LOAD1, &CEquipment2015Dlg::OnBnClickedResumeLoad1)
-    ON_BN_CLICKED(IDC_PAUSE_LOAD1, &CEquipment2015Dlg::OnBnClickedPauseLoad1)
-    ON_BN_CLICKED(IDC_STOP_LOAD1, &CEquipment2015Dlg::OnBnClickedStopLoad1)
-    ON_BN_CLICKED(IDC_RESUME_LOAD2, &CEquipment2015Dlg::OnBnClickedResumeLoad2)
-    ON_BN_CLICKED(IDC_PAUSE_LOAD2, &CEquipment2015Dlg::OnBnClickedPauseLoad2)
-    ON_BN_CLICKED(IDC_STOP_LOAD2, &CEquipment2015Dlg::OnBnClickedStopLoad2)
-	ON_BN_CLICKED(IDC_START_ALL, &CEquipment2015Dlg::OnBnClickedStartAll)
-    ON_BN_CLICKED(IDC_START_LOAD1, &CEquipment2015Dlg::OnBnClickedStartLoad1)
-    ON_BN_CLICKED(IDC_START_LOAD2, &CEquipment2015Dlg::OnBnClickedStartLoad2)
+	ON_BN_CLICKED(IDC_START, &CEquipment2015Dlg::OnBnClickedStart)
+    ON_BN_CLICKED(IDC_STOP, &CEquipment2015Dlg::OnBnClickedStop)
 END_MESSAGE_MAP()
 
 // CEquipment2015Dlg 메시지 처리기
 BOOL CEquipment2015Dlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+    // Windows 기본 비주얼 매니저로 복원
+    CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManager));
 
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 
@@ -81,6 +77,8 @@ BOOL CEquipment2015Dlg::OnInitDialog()
 			name.c_str(), requestId, (int)results.size());
 		OutputDebugString(msg);
 	});
+
+    m_BtnStart.SetFaceColor(RGB(0, 255, 0), TRUE); // 녹색
 
 	return TRUE;	// 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -127,17 +125,10 @@ HCURSOR CEquipment2015Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CEquipment2015Dlg::OnBnClickedStartAll()
+void CEquipment2015Dlg::OnBnClickedRunAll()
 {
-    OutputDebugString(_T("[UI] Start All activities...\n"));
-    m_threadsMgr.GetManager().StartAll();
-}
-
-void CEquipment2015Dlg::OnBnClickedResumeAll()
-{
-    OutputDebugString(_T("[UI] Resume All activities...\n"));
-    m_threadsMgr.GetManager().ResumeAll();
-    
+    OutputDebugString(_T("[UI] Run All activities...\n"));
+    m_threadsMgr.GetManager().RunAll();
 }
 
 void CEquipment2015Dlg::OnBnClickedPauseAll()
@@ -146,57 +137,20 @@ void CEquipment2015Dlg::OnBnClickedPauseAll()
     m_threadsMgr.GetManager().PauseAll();
 }
 
-void CEquipment2015Dlg::OnBnClickedStartLoad1()
-{
-    OutputDebugString(_T("[UI] Start Load1...\n"));
-    m_threadsMgr.GetManager().StartActivity("Load1");
-}
-
 void CEquipment2015Dlg::OnBnClickedStopAll()
 {
     OutputDebugString(_T("[UI] Stop All activities...\n"));
     m_threadsMgr.GetManager().StopAll();
 }
 
-void CEquipment2015Dlg::OnBnClickedResumeLoad1()
+
+
+void CEquipment2015Dlg::OnBnClickedStart()
 {
-    OutputDebugString(_T("[UI] Resume Load1...\n"));
-    m_threadsMgr.GetManager().ResumeActivity("Load1");
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
-void CEquipment2015Dlg::OnBnClickedPauseLoad1()
+void CEquipment2015Dlg::OnBnClickedStop()
 {
-    OutputDebugString(_T("[UI] Pause Load1...\n"));
-    m_threadsMgr.GetManager().PauseActivity("Load1");
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
-
-void CEquipment2015Dlg::OnBnClickedStopLoad1()
-{
-    OutputDebugString(_T("[UI] Stop Load1...\n"));
-    m_threadsMgr.GetManager().StopActivity("Load1");
-}
-
-void CEquipment2015Dlg::OnBnClickedStartLoad2()
-{
-    OutputDebugString(_T("[UI] Start Load2...\n"));
-    m_threadsMgr.GetManager().StartActivity("Load2");
-}
-
-void CEquipment2015Dlg::OnBnClickedResumeLoad2()
-{
-    OutputDebugString(_T("[UI] Resume Load2...\n"));
-    m_threadsMgr.GetManager().ResumeActivity("Load2");
-}
-
-void CEquipment2015Dlg::OnBnClickedPauseLoad2()
-{
-    OutputDebugString(_T("[UI] Pause Load2...\n"));
-    m_threadsMgr.GetManager().PauseActivity("Load2");
-}
-
-void CEquipment2015Dlg::OnBnClickedStopLoad2()
-{
-    OutputDebugString(_T("[UI] Stop Load2...\n"));
-    m_threadsMgr.GetManager().StopActivity("Load2");
-}
-

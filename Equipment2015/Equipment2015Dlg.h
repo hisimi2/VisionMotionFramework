@@ -23,8 +23,6 @@ protected:
 protected:
 	HICON m_hIcon;
 
-    
-
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -39,16 +37,11 @@ public:
 private:
     OperationThread::ThreadsManager m_threadsMgr;
 public:
-    afx_msg void OnBnClickedResumeAll();
+    afx_msg void OnBnClickedRunAll();
     afx_msg void OnBnClickedPauseAll();
     afx_msg void OnBnClickedStopAll();
-    afx_msg void OnBnClickedResumeLoad1();
-    afx_msg void OnBnClickedPauseLoad1();
-    afx_msg void OnBnClickedStopLoad1();
-    afx_msg void OnBnClickedResumeLoad2();
-    afx_msg void OnBnClickedPauseLoad2();
-    afx_msg void OnBnClickedStopLoad2();
-    afx_msg void OnBnClickedStartAll();
-    afx_msg void OnBnClickedStartLoad1();
-    afx_msg void OnBnClickedStartLoad2();
+	afx_msg void OnBnClickedStart();
+	afx_msg void OnBnClickedStop();
+	CMFCButton m_BtnStart;
+	CMFCButton m_BtnStop;
 };

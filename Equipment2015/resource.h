@@ -9,9 +9,13 @@
 #define IDR_MAINFRAME                   128
 #define IDC_VISION_SEQUENCE             1000
 #define IDC_RESUME_ALL                  1001
+#define IDC_RUN_ALL                     1001
 #define IDC_STOP_ALL                    1002
 #define IDC_RESUME_LOAD1                1003
+#define IDC_START                       1003
 #define IDC_RESUME_LOAD2                1004
+#define IDC_START2                      1004
+#define IDC_STOP                        1004
 #define IDC_PAUSE_LOAD1                 1005
 #define IDC_PAUSE_LOAD2                 1006
 #define IDC_PAUSE_ALL                   1007
@@ -27,7 +31,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

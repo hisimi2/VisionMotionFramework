@@ -19,7 +19,7 @@ namespace EC
     /// Activity 정보 (등록된 각 Activity의 상태 및 제어 인터페이스)
     /// running	의미	설명
     /// true	실행 중	해당 이름의 Activity가 등록되어 있고, AsyncExecutor::Start()가 성공적으로 호출되어 스레드가 동작 중
-    /// false	실행 중 아님	다음 중 하나 : ① Activity가 등록되지 않음, ② 등록만 되고 아직 StartActivity()가 호출되지 않음, ③ StopActivity()로 중단됨, ④ Activity 실행이 완료되어 종료됨
+    /// false	실행 중 아님	다음 중 하나 : ① Activity가 등록되지 않음, ② 등록만 되고 아직 RunActivity()가 호출되지 않음, ③ StopActivity()로 중단됨, ④ Activity 실행이 완료되어 종료됨
     /// </summary>
     struct EC_API ActivityEntry
     {
@@ -56,7 +56,7 @@ namespace EC
     ///   mgr->RegisterActivity<CLoad2ActivityBuilder>("Load2");
     ///   
     ///   // 2. 전체 실행
-    ///   mgr->ResumeAll();
+    ///   mgr->RunAll();
     ///
     ///   // 3. 전체 대기
     ///   mgr->PauseAll();
@@ -65,7 +65,7 @@ namespace EC
     ///   mgr->StopAll();
     ///
     ///   // 5. 개별 실행
-    ///   mgr->ResumeActivity("Load1");
+    ///   mgr->RunActivity("Load1");
     ///
     ///   // 6. 개별 대기
     ///   mgr->PauseActivity("Load1");
@@ -117,25 +117,18 @@ namespace EC
         // ============ 실행 제어 ============
 
         /// <summary>
-        /// 특정 Activity 실행
+        /// 모든 Activity 실행 (Run)
+        /// 아직 실행되지 않은 Activity는 Builder로 새로 생성하여 실행합니다.
+        /// 이미 실행 중인(Pause된) Activity는 Context에 Resume 상태를 설정합니다.
         /// </summary>
-        bool StartActivity(const std::string& name);
-
-/// <summary>
-        /// 모든 등록된 Activity 실행
-        /// </summary>
-        void StartAll();
-
-/// <summary>
-        /// 모든 Activity 실행 재개 (Resume)
-        /// 각 Activity의 Context에 Resume 상태를 설정합니다.
-        /// </summary>
-        void ResumeAll();
+        void RunAll();
 
         /// <summary>
-        /// 특정 Activity 실행 재개 (Resume)
+        /// 특정 Activity 실행 (Run)
+        /// 아직 실행되지 않은 Activity는 Builder로 새로 생성하여 실행합니다.
+        /// 이미 실행 중인(Pause된) Activity는 Context에 Resume 상태를 설정합니다.
         /// </summary>
-        bool ResumeActivity(const std::string& name);
+        bool RunActivity(const std::string& name);
 
         /// <summary>
         /// 모든 Activity 일시 정지 (Pause)
