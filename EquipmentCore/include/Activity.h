@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include <mutex>
-#include <thread>
 
 namespace EC
 {
@@ -17,7 +16,6 @@ namespace EC
         ~Activity() override;
 
         bool Execute(Context& context) override;
-        void Abort() override;
         std::string GetActivityName() const override;
 
         void AddTask(TaskPtr step) override;
@@ -28,7 +26,7 @@ namespace EC
 
     private:
         std::vector<TaskPtr> m_tasks;
-        mutable std::mutex   m_taskMutex;
+        std::mutex           m_taskMutex;
 
         int         m_pollIntervalMs;
         std::string m_ActivityName;

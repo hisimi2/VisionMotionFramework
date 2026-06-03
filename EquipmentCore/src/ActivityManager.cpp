@@ -2,6 +2,7 @@
 #include "ActivityManager.h"
 #include "Context.h"
 #include "IActivity.h"
+#include "AsyncExecutor.h"
 
 #include <memory>
 #include <string>

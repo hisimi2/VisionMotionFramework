@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "TaskBase.h"
+#include "Context.h"
 
 namespace EC
 {

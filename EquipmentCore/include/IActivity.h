@@ -14,7 +14,6 @@ namespace EC
         virtual ~IActivity() = default;
 
         virtual bool Execute(Context& context) = 0;
-        virtual void Abort() = 0;
         virtual std::string GetActivityName() const = 0;
         virtual void AddTask(TaskPtr step) = 0;
     };

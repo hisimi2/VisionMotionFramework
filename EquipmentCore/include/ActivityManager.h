@@ -2,7 +2,6 @@
 
 #include "EC_API.h"
 #include "ActivityBuilderBase.h"
-#include "AsyncExecutor.h"
 #include "IResultSink.h"
 
 #include <memory>
@@ -15,6 +14,8 @@
 
 namespace EC
 {
+    class AsyncExecutor;
+    using AsyncExecutorPtr = std::shared_ptr<AsyncExecutor>;
     /// <summary>
     /// Activity 정보 (등록된 각 Activity의 상태 및 제어 인터페이스)
     /// running	의미	설명
@@ -202,7 +203,7 @@ namespace EC
         std::unordered_map<std::string, ActivityEntryPtr> m_activities;
 
         // Observer
-        mutable std::mutex                         m_observerMutex;
+        std::mutex                         m_observerMutex;
         std::unordered_map<ActivityId, ActivityObserver> m_observers;
         std::atomic<ActivityId>                    m_nextObserverId{1};
 

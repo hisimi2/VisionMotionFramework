@@ -3,14 +3,14 @@
 #include <mutex>
 #include <chrono>
 #include <string>
-#include <exception>
-#include "Context.h"
 
 #include "EC_API.h"
 #include "ITask.h"
 
 namespace EC
 {
+    class Context;
+
     class EC_API TaskBase : public ITask
     {
     public:

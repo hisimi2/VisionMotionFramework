@@ -11,7 +11,7 @@
 #include <thread>
 
 namespace EC
-{
+{       
     Activity::Activity(const std::string& name)
         : m_pollIntervalMs(10)
         , m_ActivityName(name)
@@ -34,13 +34,6 @@ namespace EC
     std::string Activity::GetActivityName() const
     {
         return m_ActivityName;
-    }
-
-    void Activity::Abort()
-    {
-        LogTask(makeLogPrefix(m_ActivityName) + "Abort requested");
-        // Execute()는 주기적으로 Context stop flag를 확인하므로
-        // 별도의 abort 플래그 없이 Context만으로 중단 가능
     }
 
     bool Activity::Execute(Context& ctx)
@@ -126,7 +119,6 @@ namespace EC
             case TR_PREV:
                 if (idx > 0) --idx;
                 else LogTask(makeLogPrefix(m_ActivityName) + "Can't Move To Prev Step. Current is First Step");
-
                 break;
 
             case TR_DONE:
