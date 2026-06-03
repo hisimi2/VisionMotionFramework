@@ -1,7 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Load1TaskPick.h"
 #include "../../EquipmentCore/include/Context.h"
-#include <iostream>
 #include <sstream>
 
 namespace OperationThread
@@ -200,10 +199,6 @@ namespace OperationThread
         oss << "Pick iteration " << m_currentIteration << " completed";
         std::string msg = oss.str();
         LogStep(ctx, msg);
-
-        // 결과 전송 (Observer 체인으로 전달)
-        int reqId = ctx.GetParamAs<int>("requestId", 0);
-        ctx.SendResult(reqId, msg);
 
         return TR_NEXT;
     }

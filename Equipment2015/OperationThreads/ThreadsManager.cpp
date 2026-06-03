@@ -1,7 +1,6 @@
 ﻿#include "stdafx.h"
 #include "ThreadsManager.h"
 
-#include <iostream>
 #include <exception>
 
 namespace OperationThread
@@ -27,31 +26,31 @@ namespace OperationThread
         {
             // === Load1 등록 ===
             m_mgr.RegisterActivity<CLoad1ActivityBuilder>("Load1");
-            std::cout << "[ThreadsManager] Registered Load1 activity" << std::endl;
+            OutputDebugStringA("[ThreadsManager] Registered Load1 activity\n");
 
             // === Load2 등록 ===
             m_mgr.RegisterActivity<CLoad2ActivityBuilder>("Load2");
-            std::cout << "[ThreadsManager] Registered Load2 activity" << std::endl;
+            OutputDebugStringA("[ThreadsManager] Registered Load2 activity\n");
 
             // === 기본 Observer 등록 (로그 출력) ===
             m_mgr.AddObserver([](const std::string& name, int requestId, const std::vector<std::string>& results) {
-                std::cout << "[ThreadsManager] Activity [" << name 
-                          << "] completed (requestId=" << requestId 
-                          << ", results=" << results.size() << ")" << std::endl;
+                std::string msg = "[ThreadsManager] Activity [" + name + "] completed (requestId=" + std::to_string(requestId) + ", results=" + std::to_string(results.size()) + ")\n";
+                OutputDebugStringA(msg.c_str());
             });
 
             m_initialized = true;
-            std::cout << "[ThreadsManager] Initialization complete (" 
-                      << m_mgr.GetActivityCount() << " activities registered)" << std::endl;
+            std::string msg = "[ThreadsManager] Initialization complete (" + std::to_string(m_mgr.GetActivityCount()) + " activities registered)\n";
+            OutputDebugStringA(msg.c_str());
         }
         catch (const std::exception& ex)
         {
-            std::cerr << "[ThreadsManager] Initialization failed: " << ex.what() << std::endl;
+            std::string msg = std::string("[ThreadsManager] Initialization failed: ") + ex.what() + "\n";
+            OutputDebugStringA(msg.c_str());
             m_initialized = false;
         }
         catch (...)
         {
-            std::cerr << "[ThreadsManager] Initialization failed: unknown exception" << std::endl;
+            OutputDebugStringA("[ThreadsManager] Initialization failed: unknown exception\n");
             m_initialized = false;
         }
     }
@@ -60,27 +59,27 @@ namespace OperationThread
     {
         if (!m_initialized)
         {
-            std::cerr << "[ThreadsManager] Not initialized. Call Initialize() first." << std::endl;
+            OutputDebugStringA("[ThreadsManager] Not initialized. Call Initialize() first.\n");
             return;
         }
 
-        std::cout << "[ThreadsManager] Running all activities..." << std::endl;
+        OutputDebugStringA("[ThreadsManager] Running all activities...\n");
         m_mgr.RunAll();
-        std::cout << "[ThreadsManager] All activities running." << std::endl;
+        OutputDebugStringA("[ThreadsManager] All activities running.\n");
     }
 
     void ThreadsManager::PauseAll()
     {
-        std::cout << "[ThreadsManager] Pausing all activities..." << std::endl;
+        OutputDebugStringA("[ThreadsManager] Pausing all activities...\n");
         m_mgr.PauseAll();
-        std::cout << "[ThreadsManager] All activities paused." << std::endl;
+        OutputDebugStringA("[ThreadsManager] All activities paused.\n");
     }
 
     void ThreadsManager::StopAll()
     {
-        std::cout << "[ThreadsManager] Stopping all activities..." << std::endl;
+        OutputDebugStringA("[ThreadsManager] Stopping all activities...\n");
         m_mgr.StopAll();
-        std::cout << "[ThreadsManager] All activities stopped." << std::endl;
+        OutputDebugStringA("[ThreadsManager] All activities stopped.\n");
     }
 
     

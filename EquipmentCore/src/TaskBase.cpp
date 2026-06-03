@@ -117,8 +117,9 @@ namespace EC
 
     void TaskBase::LogStep(Context& ctx, const std::string& message)
     {
-        std::cout << "[" << m_name << "] " << message << std::endl;
+        std::string prefix = "[" + m_name + "] ";
+        std::cout << prefix << message << std::endl;
         int reqId = ctx.GetParamAs<int>("requestId", 0);
-        ctx.SendResult(reqId, "[Step] " + message);
+        ctx.SendResult(reqId, prefix + message);
     }
 }

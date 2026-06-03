@@ -109,16 +109,16 @@ void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
             OutputDebugString(_T("[UI] Start All activities...\n"));
             m_threadsMgr.GetManager().RunAll();
 
-            m_BtnStart.SetFaceColor(RGB(0, 255, 0));
-            m_BtnStop.SetFaceColor(RGB(240, 240, 240));
+            m_BtnStart.SetFaceColor(RGB(0, 180, 0), TRUE);
+            m_BtnStop.SetFaceColor(RGB(240, 240, 240), TRUE);
         }
         else 
         {
             OutputDebugString(_T("[UI] Pause All activities...\n"));
             m_threadsMgr.GetManager().PauseAll();
 
-            m_BtnStart.SetFaceColor(RGB(240, 240, 240));
-            m_BtnStop.SetFaceColor(RGB(255, 0, 0));
+            m_BtnStart.SetFaceColor(RGB(240, 240, 240), TRUE);
+            m_BtnStop.SetFaceColor(RGB(200, 50, 50), TRUE);
         }
         break;
     }
