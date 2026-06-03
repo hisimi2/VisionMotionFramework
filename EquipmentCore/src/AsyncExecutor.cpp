@@ -32,7 +32,7 @@ namespace EC
         m_currentCtx = nullptr;
     }
 
-    bool AsyncExecutor::Start(std::unique_ptr<IActivity> seq, ContextPtr ctx)
+    bool AsyncExecutor::Start(std::unique_ptr<IActivity> seq, std::shared_ptr<Context> ctx)
     {
         if (!seq) return false;
 

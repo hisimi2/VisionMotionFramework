@@ -227,6 +227,12 @@
     <ClCompile Include="OperationThreads\ThreadsManager.cpp">
       <Filter>OperationThreads</Filter>
     </ClCompile>
+    <ClCompile Include="OperationThreads\Load1ActivityBuilder.cpp">
+      <Filter>OperationThreads\UnitLoad1</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationThreads\Load2ActivityBuilder.cpp">
+      <Filter>OperationThreads\UnitLoad2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Equipment2015.rc">

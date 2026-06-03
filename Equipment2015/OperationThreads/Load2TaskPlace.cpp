@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Load2TaskPlace.h"
+#include "../../EquipmentCore/include/Context.h"
 #include <iostream>
 #include <sstream>
 

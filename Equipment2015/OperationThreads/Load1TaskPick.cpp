@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Load1TaskPick.h"
+#include "../../EquipmentCore/include/Context.h"
 #include <iostream>
 #include <sstream>
 
