@@ -84,8 +84,6 @@ namespace OperationThread
         OutputDebugStringA("[ThreadsManager] All activities stopped.\n");
     }
 
-    
-
     bool ThreadsManager::IsRunning(const std::string& name) const
     {
         return m_mgr.IsRunning(name);
