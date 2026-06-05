@@ -189,17 +189,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actuators\CAxisController.h" />
-    <ClInclude Include="Actuators\CClampReleaseCylinder.h" />
     <ClInclude Include="Actuators\CCylinderBase.h" />
-    <ClInclude Include="Actuators\CForBackCylinder.h" />
     <ClInclude Include="Actuators\CLamp.h" />
     <ClInclude Include="Actuators\CMmceIo.h" />
-    <ClInclude Include="Actuators\CNarrowWideCylinder.h" />
-    <ClInclude Include="Actuators\COpenCloseCylinder.h" />
     <ClInclude Include="Actuators\COPSwitch.h" />
     <ClInclude Include="Actuators\CTimer.h" />
-    <ClInclude Include="Actuators\CUpDownCylinder.h" />
-    <ClInclude Include="Actuators\CVaccumBlowCylinder.h" />
+    <ClInclude Include="Actuators\CylinderTypes.h" />
     <ClInclude Include="Actuators\ICylinder.h" />
     <ClInclude Include="Actuators\IDio.h" />
     <ClInclude Include="Actuators\IOPSwitch.h" />

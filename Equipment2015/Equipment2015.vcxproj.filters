@@ -60,13 +60,7 @@
     <ClInclude Include="Actuators\CAxisController.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="Actuators\CClampReleaseCylinder.h">
-      <Filter>Actuators</Filter>
-    </ClInclude>
     <ClInclude Include="Actuators\CCylinderBase.h">
-      <Filter>Actuators</Filter>
-    </ClInclude>
-    <ClInclude Include="Actuators\CForBackCylinder.h">
       <Filter>Actuators</Filter>
     </ClInclude>
     <ClInclude Include="Actuators\CLamp.h">
@@ -75,22 +69,10 @@
     <ClInclude Include="Actuators\CMmceIo.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="Actuators\CNarrowWideCylinder.h">
-      <Filter>Actuators</Filter>
-    </ClInclude>
-    <ClInclude Include="Actuators\COpenCloseCylinder.h">
-      <Filter>Actuators</Filter>
-    </ClInclude>
     <ClInclude Include="Actuators\COPSwitch.h">
       <Filter>Actuators</Filter>
     </ClInclude>
     <ClInclude Include="Actuators\CTimer.h">
-      <Filter>Actuators</Filter>
-    </ClInclude>
-    <ClInclude Include="Actuators\CUpDownCylinder.h">
-      <Filter>Actuators</Filter>
-    </ClInclude>
-    <ClInclude Include="Actuators\CVaccumBlowCylinder.h">
       <Filter>Actuators</Filter>
     </ClInclude>
     <ClInclude Include="Actuators\ICylinder.h">
@@ -164,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="OperationThreads\ThreadsManager.h">
       <Filter>OperationThreads</Filter>
+    </ClInclude>
+    <ClInclude Include="Actuators\CylinderTypes.h">
+      <Filter>Actuators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

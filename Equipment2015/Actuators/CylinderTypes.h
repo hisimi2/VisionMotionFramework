@@ -16,7 +16,7 @@
 class ClassName : public CCylinderBase \
 { \
 public: \
-    ClassName(std::string name, int nOnBit = 0, int nOffBit = 0) \
+    ClassName(const std::string& name, UINT nOnBit = INVALID_PORT, UINT nOffBit = INVALID_PORT) \
         : CCylinderBase(name, nOnBit, nOffBit) {} \
     int ActionA(bool bManual) { return CCylinderBase::actA(bManual); } \
     int ActionB(bool bManual) { return CCylinderBase::actB(bManual); } \
@@ -27,12 +27,12 @@ public: \
 // ============================================================================
 // 기존 6개 실린더 타입
 // ============================================================================
-DEFINE_CYLINDER(CUpDownCylinder,      up,      down,      isUp,      isDown)
-DEFINE_CYLINDER(CNarrowWideCylinder,  narrow,  wide,      isNarrow,  isWide)
-DEFINE_CYLINDER(COpenCloseCylinder,   open,    close,     isOpen,    isClose)
-DEFINE_CYLINDER(CForBackCylinder,     forward, backward,  isForward, isBackward)
-DEFINE_CYLINDER(CClampReleaseCylinder, clamp,   release,   isClamp,   isRelease)
-DEFINE_CYLINDER(CVaccumBlowCylinder,  vaccum,  blow,      isVaccum,  isBlow)
+DEFINE_CYLINDER(CUpDownCylinder,        up,      down,      isUp,      isDown)
+DEFINE_CYLINDER(CNarrowWideCylinder,    narrow,  wide,      isNarrow,  isWide)
+DEFINE_CYLINDER(COpenCloseCylinder,     open,    close,     isOpen,    isClose)
+DEFINE_CYLINDER(CForBackCylinder,       forward, backward,  isForward, isBackward)
+DEFINE_CYLINDER(CClampReleaseCylinder,  clamp,   release,   isClamp,   isRelease)
+DEFINE_CYLINDER(CVaccumBlowCylinder,    vaccum,  blow,      isVaccum,  isBlow)
 
 // ============================================================================
 // 신규 실린더 타입 추가 예시 (필요 시 주석 해제하여 사용)
