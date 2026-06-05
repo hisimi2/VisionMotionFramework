@@ -1,7 +1,6 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "COPSwitch.h"
 
-// static 멤버 변수 초기화
 IDio* COPSwitch::m_pIo = NULL;
 
 COPSwitch::COPSwitch(const std::string& strName)

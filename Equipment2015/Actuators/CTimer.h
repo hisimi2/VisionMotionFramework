@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 
-#include <ctime> // VS2010(v100) 호환을 위해 <chrono> 대신 <ctime> 사용
+#include <ctime> 
 
-// CTimer: VS2010(v100) 호환 구현 (밀리초 단위)
 class CTimer
 {
 public:

@@ -1,11 +1,6 @@
 ﻿#pragma once
 #include "Actuators\CAxisController.h"
-#include "Actuators\CUpDownCylinder.h"
-#include "Actuators\CForBackCylinder.h"
-#include "Actuators\COpenCloseCylinder.h"
-#include "Actuators\CClampReleaseCylinder.h"
-#include "Actuators\CVaccumBlowCylinder.h"
-#include "Actuators\CNarrowWideCylinder.h"
+#include "Actuators\CylinderTypes.h"
 #include "Actuators\CLamp.h"
 #include <vector>
 

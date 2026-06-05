@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include "IOPSwitch.h"
@@ -7,7 +7,6 @@
 #include <vector>
 #include <mutex>
 
-// 상속 구조 단순화: IPeriodicTask는 IOPSwitch에 포함됨
 class COPSwitch : public IOPSwitch 
 {
 public:

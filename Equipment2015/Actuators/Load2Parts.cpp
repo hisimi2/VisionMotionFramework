@@ -1,11 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load2Parts.h"
 #include <sstream>
 #include "Utils.h"
 
 static const int SETPLATE_COUNT = 2;
 static const int TRANSFERCLAMP_COUNT = 2;
-
 
 Load2Parts::Load2Parts()
     : AxisX("LOAD2_X")

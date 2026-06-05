@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CMmceIo.h"
 #include <algorithm>
 
@@ -6,7 +6,6 @@ CMmceIo::CMmceIo()
 	: m_nTotalBytes(16)
 	, m_stopIoThread(false)
 {
-	// 버퍼 초기화
 	m_inputBuffer.resize(m_nTotalBytes, 0);
 	m_outputBuffer.resize(m_nTotalBytes, 0);
 
@@ -20,7 +19,6 @@ CMmceIo::~CMmceIo()
 
 void CMmceIo::out(int nChannel, bool bStatus)
 {
-	// 범위 검사
 	if ((m_nTotalBytes * 8) <= nChannel)
 	{
 		TRACE("Buffer Number is too much high.");
