@@ -25,7 +25,7 @@ public:
         return repo;
     }
 
-    VMF::VisionEventHandlerPtr CreateVisionProcessor() override
+    VMF::VisionProcessorPtr CreateVisionProcessor() override
     {
         VMF::VisionConnectionConfig config("127.0.0.1", 8080, 3000);
         auto vm = std::make_shared<VMF::CMockVisionEventHandler>();

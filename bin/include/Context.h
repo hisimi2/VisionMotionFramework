@@ -195,12 +195,12 @@ namespace VMF
         /// <summary>
         /// 비전 명령 실행에 사용할 비전 프로세서 인터페이스를 설정합니다.
         /// </summary>
-        void SetVisionProcessor(VisionEventHandlerPtr vp);
+        void SetVisionProcessor(VisionProcessorPtr vp);
 
         /// <summary>
         /// 현재 등록된 비전 프로세서 인터페이스를 반환합니다.
         /// </summary>
-        VisionEventHandlerPtr GetVisionProcessorInterface() const;
+        VisionProcessorPtr GetVisionProcessorInterface() const;
 
         /// <summary>
         /// 데이터 조회 및 저장에 사용할 저장소 인터페이스를 설정합니다.
@@ -318,7 +318,7 @@ namespace VMF
         bool IsVisionPositionEmpty() const;
 
     private:
-        VisionEventHandlerPtr   m_processor;
+        VisionProcessorPtr   m_processor;
         DataRepositoryPtr       m_repo;
         
         mutable std::mutex      m_mutex;

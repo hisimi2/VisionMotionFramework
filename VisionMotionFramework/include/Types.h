@@ -14,7 +14,7 @@ namespace VMF
     class IComponentSetup;
     class ISequenceSetup;
     class IDataRepository;
-    class IVisionEventHandler;
+    class IVisionProcessor;
     class ISequence;
     class IActuator;
     class RunController;
@@ -26,7 +26,7 @@ namespace VMF
     using SequenceSetupPtr      = std::shared_ptr<ISequenceSetup>;
     using VisionEnginePtr          = std::shared_ptr<RunController>;
     using DataRepositoryPtr     = std::shared_ptr<IDataRepository>;
-    using VisionEventHandlerPtr = std::shared_ptr<IVisionEventHandler>;
+    using VisionProcessorPtr = std::shared_ptr<IVisionProcessor>;
     using SequenceBuilderPtr    = std::shared_ptr<SequenceBuilderBase>;
     using VisionContextPtr         = std::shared_ptr<Context>;
     using AsyncExecutorPtr      = std::shared_ptr<AsyncExecutor>;

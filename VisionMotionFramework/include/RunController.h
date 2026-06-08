@@ -5,7 +5,7 @@
 
 namespace VMF 
 {
-    class IVisionEventHandler; 
+    class IVisionProcessor; 
     class IDataRepository;
     class IActuator;
     class SequenceBuilderBase;

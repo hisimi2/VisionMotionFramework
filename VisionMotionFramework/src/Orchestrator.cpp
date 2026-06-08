@@ -101,7 +101,7 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
         }
     }
 
-    VisionContextPtr Orchestrator::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
+    VisionContextPtr Orchestrator::CreateContext(const VisionProcessorPtr& vm, DataRepositoryPtr& repo)
     {
         auto ctx = std::make_shared<Context>();
         ctx->SetVisionProcessor(vm);
@@ -135,7 +135,7 @@ if (engineToStop)
 
     // --- [직접 모드] 구현 ---
 
-    void Orchestrator::SetVisionProcessor(VisionEventHandlerPtr vp)
+    void Orchestrator::SetVisionProcessor(VisionProcessorPtr vp)
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
         m_directVisionProcessor = vp;
@@ -147,7 +147,7 @@ if (engineToStop)
         }
     }
 
-    VisionEventHandlerPtr Orchestrator::GetVisionProcessor() const
+    VisionProcessorPtr Orchestrator::GetVisionProcessor() const
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
 

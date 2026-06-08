@@ -26,6 +26,7 @@
 #define IDC_START_ALL                   1010
 #define IDC_START_LOAD1                 1011
 #define IDC_START_LOAD2                 1012
+#define IDC_VMF_DIRECT                  1013
 
 // Next default values for new objects
 // 

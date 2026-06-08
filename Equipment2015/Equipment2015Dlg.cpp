@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
     ON_WM_TIMER()
     ON_MESSAGE(WM_ACTIVITY_RESULT, &CEquipment2015Dlg::OnActivityResult)
     ON_BN_CLICKED(IDC_VMF_STATE_MACHINE, &CEquipment2015Dlg::OnBnClickedVmfStateMachine)
+    ON_BN_CLICKED(IDC_VMF_DIRECT, &CEquipment2015Dlg::OnBnClickedVmfDirect)
 END_MESSAGE_MAP()
 
 // CEquipment2015Dlg 메시지 처리기
@@ -325,50 +326,162 @@ void CEquipment2015Dlg::AccessSequenceDataExample()
     }
 }
 
+//=============================================================================
+// [예제] VMF 상태머신 모드 (State Machine) - 클릭 핸들러
+// - Orchestrator::StartSequence<T>() 사용
+// - Strategy → VP/Repo/Builder → RunController → AsyncExecutor(별도 스레드) 실행
+// - 결과는 Observer 콜백 → PostMessage → UI 로그 출력
+//=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    // === 직접 모드: Strategy의 컴포넌트 조립 로직 재사용 ===
-    // MemorySequenceStrategy의 CreateRepository/CreateVisionProcessor와
-    // CLoad1LeftPlateJIGFocusCheckSequenceStrategy의 ConfigureParams(SetParam/AddVisionPoint)를
-    // InitializeDirectWithStrategy<T>()를 통해 재사용
-
-    // 1. Orchestrator 생성
+    // --- 1. Orchestrator 생성 ---
     m_orchestrator = std::make_shared<VMF::Orchestrator>();
 
-    // 2. 옵저버 등록 (결과 출력)
+    // --- 2. Observer 등록 (시퀀스 실행 결과를 UI 로그에 출력) ---
     m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
     {
         CString msg;
-        msg.Format(_T("[VMF] RequestId=%d\r\n"), payload.requestId);
+        msg.Format(_T("[StateMachine Mode] RequestId=%d\r\n"), payload.requestId);
+
         for (const auto& result : payload.results)
+        {
             msg += CString(result.c_str()) + _T("\r\n");
+        }
 
         ActivityResultData* pData = new ActivityResultData();
-        pData->activityName = _T("VMF");
+        pData->activityName = _T("VMF_StateMachine");
         pData->requestId = payload.requestId;
         pData->detail = msg;
         ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
     });
 
-    // 3. Strategy를 통해 컴포넌트 생성/조립 (직접 모드)
-    //    → Repository 생성 (SqliteDataRepository + Initialize + migration_v1.sql)
-    //    → VisionProcessor 생성 (CMockVisionEventHandler + Initialize)
-    //    → Context 생성 + ConfigureParams (SetParam + LoadInspInitPos + AddVisionPoint)
+    // --- 3. Actuator 생성 ---
+    // ※ 실제 하드웨어 연결 시 VatAdapterLoad1(초기화파라미터) 로 교체
+    VMF::IActuator* actuator = nullptr;
+
+    // --- 4. Strategy 템플릿으로 상태머신 시작 ---
+    //    StartSequence<T>() 내부 동작:
+    //    ① CLoad1LeftPlateJIGFocusCheckSequenceStrategy 생성
+    //    ② CreateRepository() → SqliteDataRepository 생성 및 Initialize()
+    //    ③ CreateVisionProcessor() → CMockVisionEventHandler 생성 및 Initialize(config)
+    //    ④ CreateContext(vp, repo) → Context 생성, VP/Repo 연결
+    //    ⑤ ConfigureParams(ctx) → SetParam + LoadInspInitPos + AddVisionPoint
+    //    ⑥ CreateBuilder() → CLoad1ZFocusSequenceBuilder 생성
+    //    ⑦ RunController(builder, ctx, actuator) 생성
+    //    ⑧ AsyncExecutor 생성 → SetResultSink(this) → SetRunner
+    //    ⑨ RunSequence("Load1ZFocus") → 별도 스레드에서 Sequence::Execute() 실행
+    //    실행 완료 시 AsyncExecutor → IResultSink::NotifyVisionResult → Observer 콜백
+    bool started = m_orchestrator->StartSequence<
+        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
+    >(actuator);
+
+    CString msg;
+    if (started)
+    {
+        msg = _T("[StateMachine Mode] Sequence 'Load1ZFocus' started successfully. (비동기 실행)\r\n");
+        msg += _T("  - 별도 스레드에서 Sequence::Execute() 실행 중\r\n");
+        msg += _T("  - 완료 시 Observer 콜백으로 결과 수신\r\n");
+    }
+    else
+    {
+        msg = _T("[StateMachine Mode] Failed to start sequence.\r\n");
+    }
+
+    m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+    m_LogEdit.ReplaceSel(msg);
+}
+
+//=============================================================================
+// [예제] VMF 직접 모드 (Direct Mode) - 클릭 핸들러
+// - Orchestrator::InitializeDirectWithStrategy<T>() 사용
+// - Strategy의 컴포넌트 조립 로직(CreateRepository, CreateVisionProcessor, ConfigureParams)만 재사용
+// - 상태머신(RunController + AsyncExecutor)은 실행하지 않음
+// - ExecuteDirectVisionCommand()로 동기식 비전 명령 실행
+//=============================================================================
+void CEquipment2015Dlg::OnBnClickedVmfDirect()
+{
+    // --- 1. Orchestrator 생성 ---
+    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+
+    // --- 2. Observer 등록 (직접 모드에서도 Observer 가능) ---
+    m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
+    {
+        CString msg;
+        msg.Format(_T("[Direct Mode] RequestId=%d\r\n"), payload.requestId);
+
+        for (const auto& result : payload.results)
+        {
+            msg += CString(result.c_str()) + _T("\r\n");
+        }
+
+        ActivityResultData* pData = new ActivityResultData();
+        pData->activityName = _T("VMF_Direct");
+        pData->requestId = payload.requestId;
+        pData->detail = msg;
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+    });
+
+    // --- 3. Strategy를 통해 컴포넌트 생성/조립 (직접 모드) ---
+    //    InitializeDirectWithStrategy<T>() 내부 동작:
+    //    ① CLoad1LeftPlateJIGFocusCheckSequenceStrategy 생성
+    //    ② CreateRepository() → SqliteDataRepository 생성 및 Initialize()
+    //    ③ CreateVisionProcessor() → CMockVisionEventHandler 생성 및 Initialize(config)
+    //    ④ CreateContext(vp, repo) → Context 생성, VP/Repo 연결
+    //    ⑤ ConfigureParams(ctx) → SetParam + LoadInspInitPos + AddVisionPoint
+    //    ⑥ VP/Repo/Context를 m_directXXX에 저장 (RunController/AsyncExecutor 미사용)
     bool ok = m_orchestrator->InitializeDirectWithStrategy<
         VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
-    >(nullptr);  // 실제 하드웨어 시 VatAdapterLoad1* 전달
+    >(nullptr);
 
     if (!ok)
     {
-        AfxMessageBox(_T("직접 모드 초기화 실패"));
+        AfxMessageBox(_T("[Direct Mode] InitializeDirectWithStrategy failed.\r\n"
+                         "  - Check database path, migration_v1.sql, or VisionProcessor connection."));
         return;
     }
 
-    // 4. 직접 비전 명령 실행 (Strategy의 ConfigureParams에서 설정된 파라미터 사용)
-    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
+    // --- 4. 직접 비전 명령 실행 (동기식) ---
+    CString logMsg;
+    logMsg = _T("[Direct Mode] Strategy로 컴포넌트 조립 완료.\r\n");
+    logMsg += _T("  - Repository: SqliteDataRepository\r\n");
+    logMsg += _T("  - VisionProcessor: CMockVisionEventHandler\r\n");
+    logMsg += _T("  - ConfigureParams로 파라미터 설정 완료\r\n\r\n");
 
-    CString msg;
-    msg.Format(_T("[DirectMode-Strategy] Measure command %s\r\n"), cmdOk ? _T("SUCCESS") : _T("FAILED"));
+    // 4-1. Measure 명령 실행
+    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
+    logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(Measure) → %s\r\n"),
+                        cmdOk ? _T("SUCCESS") : _T("FAILED"));
+
+    // 4-2. 파라미터를 추가로 설정하여 다른 명령 실행
+    VMF::StringMap params;
+    params["ExtraParam"] = "DirectModeTest";
+    cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
+    logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(SetCok, params) → %s\r\n"),
+                        cmdOk ? _T("SUCCESS") : _T("FAILED"));
+
+    // 4-3. VisionProcessor에서 최신 데이터 조회
+    VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
+    if (vp)
+    {
+        VMF::IVisionProcessor::DataMap latestData = vp->GetLatestData(VMF::Measure);
+        logMsg += _T("  - GetLatestData(Measure) keys: ");
+        for (const auto& kv : latestData)
+        {
+            logMsg += CString(kv.first.c_str()) + _T("=") + CString(kv.second.c_str()) + _T(" ");
+        }
+        logMsg += _T("\r\n");
+    }
+
+    // --- 5. Context를 통해 저장된 파라미터 확인 ---
+    VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
+    if (ctx)
+    {
+        std::string recipe = ctx->GetSeqParam("Recipe");
+        int camIdx = ctx->GetSeqParamAs<int>("CameraIndex", -1);
+        logMsg.AppendFormat(_T("  - Context seqParams: Recipe=%s, CameraIndex=%d\r\n"),
+                            CString(recipe.c_str()), camIdx);
+    }
+
     m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
-    m_LogEdit.ReplaceSel(msg);
+    m_LogEdit.ReplaceSel(logMsg);
 }

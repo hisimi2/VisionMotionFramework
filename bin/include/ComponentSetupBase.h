@@ -27,7 +27,7 @@ namespace VMF
 
         // IComponentSetup 인터페이스 (파생 클래스에서 구현)
         // DataRepositoryPtr CreateRepository() override = 0;
-        // VisionEventHandlerPtr CreateVisionProcessor() override = 0;
+        // VisionProcessorPtr CreateVisionProcessor() override = 0;
         // void ConfigureParams(VisionContextPtr context) override = 0;
 
     protected:

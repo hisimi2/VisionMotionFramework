@@ -124,12 +124,10 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     </ClCompile>
     <ClCompile Include="src\Orchestrator.cpp" />
     <ClCompile Include="VisionMotionFramework.cpp" />
-    <ClCompile Include="src\AsyncDataRepository.cpp" />
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\RepositoryFactory.cpp" />
-    <ClCompile Include="src\SaveUtils.cpp" />
     <ClCompile Include="src\SequenceBuilderBase.cpp" />
     <ClCompile Include="src\SequenceSetupBase.cpp" />
     <ClCompile Include="src\SqliteDataRepository.cpp" />
@@ -144,7 +142,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\AsyncDataRepository.h" />
     <ClInclude Include="include\AsyncExecutor.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\Orchestrator.h" />
@@ -155,7 +152,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\IResultSink.h" />
     <ClInclude Include="include\ITask.h" />
     <ClInclude Include="include\IActuator.h" />
-    <ClInclude Include="include\IObserver.h" />
     <ClInclude Include="include\ISequence.h" />
     <ClInclude Include="include\ISequenceSetup.h" />
     <ClInclude Include="include\IComponentSetup.h" />

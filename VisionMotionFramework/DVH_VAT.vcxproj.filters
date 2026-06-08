@@ -29,9 +29,6 @@
     <ClCompile Include="src\SaveUtils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\AsyncDataRepository.cpp">
-      <Filter>DataRepositiory</Filter>
-    </ClCompile>
     <ClCompile Include="src\FileDataRepository.cpp">
       <Filter>DataRepositiory</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
     </ClInclude>
     <ClInclude Include="include\VisionSLTProcessor.h">
       <Filter>VisionProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AsyncDataRepository.h">
-      <Filter>DataRepositiory</Filter>
     </ClInclude>
     <ClInclude Include="include\FileDataRepository.h">
       <Filter>DataRepositiory</Filter>

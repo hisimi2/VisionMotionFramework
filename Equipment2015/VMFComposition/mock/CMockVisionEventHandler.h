@@ -9,7 +9,7 @@
 
 namespace VMF
 {
-    class CMockVisionEventHandler : public IVisionEventHandler
+    class CMockVisionEventHandler : public IVisionProcessor
     {
     public:
         CMockVisionEventHandler();
@@ -31,7 +31,7 @@ namespace VMF
         virtual bool IsValid(VisionCommand type) const;
         virtual bool HasReceived(VisionCommand type) const;
 
-        // IVisionEventHandler (?섏떊 肄쒕갚)
+        // IVisionProcessor (?섏떊 肄쒕갚)
         virtual void InitializeRecvThread();
 
         virtual void OnSetCok(ByteArray body);

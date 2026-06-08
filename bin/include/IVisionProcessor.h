@@ -44,30 +44,31 @@ namespace VMF
         }
     };
 
-    class VMF_API IAsyncVisionProcessor
+    class VMF_API IVisionProcessor
     {
     public:
         using DataMap = StringMap;
-        virtual ~IAsyncVisionProcessor() = default;
+        virtual ~IVisionProcessor() = default;
+
+        // 연결 관리
         virtual VC::Status Initialize(const VisionConnectionConfig& config) = 0;
         virtual void Disconnect() = 0;
         virtual bool IsConnected() const = 0;
+
+        // 비동기 명령 전송
         virtual bool RequestSetCokAsync(const StringMap& params)        = 0;
         virtual bool RequestInspReadyAsync(const StringMap& params)     = 0;
         virtual bool RequestMeasureAsync(const StringMap& params)       = 0;
         virtual bool RequestDeviceCheckAsync(const StringMap& params)   = 0;
         virtual bool RequestLightAsync(const StringMap& params)         = 0;
+
+        // 수신 데이터 조회
         virtual DataMap GetLatestData(VisionCommand type) const            = 0;
         virtual void ClearLatestData(VisionCommand type)                   = 0;
         virtual bool IsValid(VisionCommand type) const                     = 0;
         virtual bool HasReceived(VisionCommand type) const                 = 0;
-    };
 
-    class VMF_API IVisionEventHandler : public virtual IAsyncVisionProcessor
-    {
-    public:
-        ~IVisionEventHandler() override = default;
-
+        // 수신 스레드 및 콜백
         virtual void InitializeRecvThread()         = 0;
         virtual void OnSetCok(ByteArray body)       = 0;
         virtual void OnInspReady(ByteArray body)    = 0;

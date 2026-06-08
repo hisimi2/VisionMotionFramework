@@ -72,8 +72,8 @@ namespace VMF
 DataRepositoryPtr GetDataRepository();
 
         // --- [직접 모드] Strategy 없이 VisionProcessor/Repository/Context 사용 ---
-        void SetVisionProcessor(VisionEventHandlerPtr vp);
-        VisionEventHandlerPtr GetVisionProcessor() const;
+        void SetVisionProcessor(VisionProcessorPtr vp);
+        VisionProcessorPtr GetVisionProcessor() const;
         void SetDataRepository(DataRepositoryPtr repo);
 
         /// Context 획득 (직접 모드/상태머신 모드 모두 지원)
@@ -104,7 +104,7 @@ DataRepositoryPtr GetDataRepository();
             std::lock_guard<std::mutex> guard(m_seqMutex);
 
             DataRepositoryPtr repo;
-            VisionEventHandlerPtr vp;
+            VisionProcessorPtr vp;
 
             try
             {
@@ -155,7 +155,7 @@ protected:
 
             // -- Strategy가 VP, Repo, Builder 생성 --
             DataRepositoryPtr repo;
-            VisionEventHandlerPtr vp;
+            VisionProcessorPtr vp;
             SequenceBuilderPtr builder;
 
             try
@@ -234,11 +234,11 @@ protected:
         VisionEnginePtr m_pVisionEngine;
 
         // --- [직접 모드] Strategy 없이 VisionProcessor/Repository 직접 보관 ---
-        VisionEventHandlerPtr m_directVisionProcessor;
+        VisionProcessorPtr m_directVisionProcessor;
         DataRepositoryPtr     m_directDataRepository;
         VisionContextPtr         m_directContext;
 
-        virtual VisionContextPtr CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo);
+        virtual VisionContextPtr CreateContext(const VisionProcessorPtr& vm, DataRepositoryPtr& repo);
 
         // 기본 구현: Observer 통지
         virtual void OnVisionResult(int requestId, const std::vector<std::string>& results);

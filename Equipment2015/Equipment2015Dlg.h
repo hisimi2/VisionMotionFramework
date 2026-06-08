@@ -62,4 +62,5 @@ public:
     afx_msg void OnTimer(UINT_PTR nIDEvent);
     CEdit m_LogEdit;
 	afx_msg void OnBnClickedVmfStateMachine();
+    afx_msg void OnBnClickedVmfDirect();
 };

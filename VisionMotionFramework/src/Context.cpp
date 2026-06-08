@@ -29,13 +29,13 @@ namespace VMF
     // 소멸자는 헤더 파일에 명시되어 있다면 cpp에 포함하지만 본 파일 구현에서는 간결한 형태로 둡니다
     Context::~Context() = default;
 
-    void Context::SetVisionProcessor(VisionEventHandlerPtr vp)
+    void Context::SetVisionProcessor(VisionProcessorPtr vp)
     {
         LockGuardType guard(m_mutex);
         m_processor = vp;
     }
 
-    VisionEventHandlerPtr Context::GetVisionProcessorInterface() const
+    VisionProcessorPtr Context::GetVisionProcessorInterface() const
     {
         LockGuardType guard(m_mutex);
         return m_processor;

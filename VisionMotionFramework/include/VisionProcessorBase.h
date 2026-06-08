@@ -14,7 +14,7 @@
 
 namespace VMF
 {
-    class VMF_API VisionProcessorBase : public IVisionEventHandler
+    class VMF_API VisionProcessorBase : public IVisionProcessor
     {
     public:
         using DataMap = StringMap;
