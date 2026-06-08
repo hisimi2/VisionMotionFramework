@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "FileDataRepository.h"
 #include "FileUtils.h"
 #include "CompatUtils.h" // StorageError 정의

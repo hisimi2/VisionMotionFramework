@@ -1,4 +1,4 @@
--- migration_v1.sql
+﻿-- migration_v1.sql
 -- VMF SQLite Database Schema v1.0
 -- SqliteDataRepository::Initialize()에서 자동 로드됩니다.
 

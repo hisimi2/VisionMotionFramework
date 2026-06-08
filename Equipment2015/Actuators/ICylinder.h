@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 const bool MANUAL_OPERATION = true;
 

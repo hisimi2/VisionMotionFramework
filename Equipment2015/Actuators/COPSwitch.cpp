@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "COPSwitch.h"
 
 IDio* COPSwitch::m_pIo = NULL;

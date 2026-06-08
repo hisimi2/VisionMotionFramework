@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ThreadsManager.h"
 #include "Load1ActivityBuilder.h"
 #include "Load2ActivityBuilder.h"

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Load2Parts.h"
 #include <sstream>
 #include "Utils.h"
