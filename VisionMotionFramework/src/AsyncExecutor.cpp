@@ -70,68 +70,11 @@ namespace VMF
         }
     };
 
-    struct AsyncExecutor::Impl
-    {
-        std::thread                     thread;
-        std::atomic<bool>               running;
-        mutable std::mutex              mutex;
-
-        std::unique_ptr<ISequence>      currentSeq;
-        std::shared_ptr<Context>        currentCtx;
-
-        IResultSink*                    resultSink;
-
-        Impl()
-            : running(false)
-            , currentSeq()
-            , currentCtx(nullptr)
-            , resultSink(nullptr)
-        {
-        }
-
-        ~Impl()
-        {
-            if (thread.joinable())
-            {
-                try { thread.join(); } catch (...) {}
-            }
-            currentSeq.reset();
-        }
-
-        void setResultSink(IResultSink* sink)
-        {
-            std::lock_guard<std::mutex> lk(mutex); 
-            resultSink = sink;
-        }
-
-        void sendResultToSink(int requestId, const std::vector<std::string>& results)
-        {
-            IResultSink* sink = nullptr;
-            {
-                std::lock_guard<std::mutex> lk(mutex);
-                sink = resultSink;
-            }
-            if (sink)
-            {
-                sink->NotifyVisionResult(requestId, results);
-            }
-        }
-
-        void sendResult(int requestId, const std::string& status)
-        {
-            if (currentSeq)
-            {
-                std::vector<std::string> msg;
-                msg.push_back(std::string("Sequence: ") + currentSeq->GetSequenceName());
-                msg.push_back(std::string("Task: ") + currentSeq->GetTaskName());
-                msg.push_back(std::string("Status: ") + status);
-                sendResultToSink(requestId, msg);
-            }
-        }
-    };
-
     AsyncExecutor::AsyncExecutor()
-        : m_impl(std::make_unique<Impl>()) // C++14: std::make_unique 적용
+        : m_running(false)
+        , m_currentSeq()
+        , m_currentCtx(nullptr)
+        , m_resultSink(nullptr)
     {
     }
 
@@ -139,68 +82,79 @@ namespace VMF
     {
         Stop();
 
-        if (m_impl)
+        if (m_thread.joinable())
         {
-            if (m_impl->thread.joinable())
-            {
-                try { m_impl->thread.join(); } catch (...) {}
-            }
-            m_impl->currentSeq.reset();
-            m_impl->currentCtx = nullptr;
-            m_impl.reset();
+            try { m_thread.join(); } catch (...) {}
         }
+        m_currentSeq.reset();
+        m_currentCtx = nullptr;
     }
 
     void AsyncExecutor::SetResultSink(IResultSink* sink)
     {
-        if (m_impl) m_impl->setResultSink(sink);
+        std::lock_guard<std::mutex> lk(m_mutex);
+        m_resultSink = sink;
     }
 
     void AsyncExecutor::SendResultToSink(int requestId, const std::vector<std::string>& results)
     {
-        if (m_impl) m_impl->sendResultToSink(requestId, results);
+        IResultSink* sink = nullptr;
+        {
+            std::lock_guard<std::mutex> lk(m_mutex);
+            sink = m_resultSink;
+        }
+        if (sink)
+        {
+            sink->NotifyVisionResult(requestId, results);
+        }
     }
 
     void AsyncExecutor::SendResult(int requestId, const std::string& status)
     {
-        if (m_impl) m_impl->sendResult(requestId, status);
+        if (m_currentSeq)
+        {
+            std::vector<std::string> msg;
+            msg.push_back(std::string("Sequence: ") + m_currentSeq->GetSequenceName());
+            msg.push_back(std::string("Task: ") + m_currentSeq->GetTaskName());
+            msg.push_back(std::string("Status: ") + status);
+            SendResultToSink(requestId, msg);
+        }
     }
 
     bool AsyncExecutor::Start(std::unique_ptr<ISequence> seq,
                                     std::shared_ptr<Context> ctx,
                                     IActuator* actuator)
     {
-        if (!m_impl) return false;
         if (!seq) return false;
 
         {
-            std::unique_lock<std::mutex> lock(m_impl->mutex); // scoped_lock -> unique_lock
+            std::unique_lock<std::mutex> lock(m_mutex);
 
-            if (m_impl->running.load()) return false;
+            if (m_running.load()) return false;
 
-            if (m_impl->thread.joinable())
+            if (m_thread.joinable())
             {
                 lock.unlock();
-                m_impl->thread.join();
+                m_thread.join();
                 lock.lock();
             }
 
-            m_impl->running.store(true);
-            m_impl->currentSeq = std::move(seq); 
-            m_impl->currentCtx = ctx;
+            m_running.store(true);
+            m_currentSeq = std::move(seq);
+            m_currentCtx = ctx;
         }
 
         try
         {
-            SequenceThreadFunc func(m_impl->currentSeq.get(), ctx.get(), actuator, &m_impl->running, this);
-            m_impl->thread = std::thread(func); 
+            SequenceThreadFunc func(m_currentSeq.get(), ctx.get(), actuator, &m_running, this);
+            m_thread = std::thread(func);
         }
         catch (...)
         {
-            std::lock_guard<std::mutex> lock(m_impl->mutex);
-            m_impl->running.store(false);
-            m_impl->currentSeq.reset();
-            m_impl->currentCtx = nullptr;
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_running.store(false);
+            m_currentSeq.reset();
+            m_currentCtx = nullptr;
             return false;
         }
 
@@ -209,47 +163,45 @@ namespace VMF
 
     bool AsyncExecutor::WaitForCompletion(int timeoutMs)
     {
-        if (!m_impl) return true;
-
         const int pollIntervalMs = 10;
         int waited = 0;
 
         if (timeoutMs < 0)
         {
-            while (m_impl->running.load())
+            while (m_running.load())
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs)); 
+                std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs));
             }
         }
         else
         {
-            while (m_impl->running.load() && waited < timeoutMs)
+            while (m_running.load() && waited < timeoutMs)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(pollIntervalMs));
                 waited += pollIntervalMs;
             }
         }
 
-        if (m_impl->thread.joinable())
+        if (m_thread.joinable())
         {
             try
             {
-                m_impl->thread.join();
+                m_thread.join();
             }
             catch (...)
             {
                 std::vector<std::string> msg;
                 msg.push_back("Error: Failed to join sequence thread in WaitForCompletion.");
-                m_impl->sendResultToSink(-1, msg);
+                SendResultToSink(-1, msg);
                 return false;
             }
         }
 
         {
-            std::lock_guard<std::mutex> lock(m_impl->mutex);
-            m_impl->currentSeq.reset();
-            m_impl->currentCtx = nullptr;
-            m_impl->running.store(false);
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_currentSeq.reset();
+            m_currentCtx = nullptr;
+            m_running.store(false);
         }
 
         return true;
@@ -261,17 +213,17 @@ namespace VMF
 
         if (!WaitForCompletion(5000))
         {
-            if (m_impl && m_impl->thread.joinable())
+            if (m_thread.joinable())
             {
                 try
                 {
-                    m_impl->thread.join();
+                    m_thread.join();
                 }
                 catch (...)
                 {
                     std::vector<std::string> msg;
                     msg.push_back("Error: Failed to join sequence thread during abort.");
-                    if (m_impl) m_impl->sendResultToSink(-1, msg);
+                    SendResultToSink(-1, msg);
                 }
             }
         }
@@ -279,18 +231,16 @@ namespace VMF
 
     void AsyncExecutor::Stop()
     {
-        if (!m_impl) return;
-        std::lock_guard<std::mutex> lock(m_impl->mutex);
-        if (m_impl->running.load() && m_impl->currentCtx)
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if (m_running.load() && m_currentCtx)
         {
-            m_impl->currentCtx->SetStopRequested(true);
+            m_currentCtx->SetStopRequested(true);
         }
     }
 
     bool AsyncExecutor::IsRunning() const
     {
-        if (!m_impl) return false;
-        return m_impl->running.load();
+        return m_running.load();
     }
 
 } // namespace VMF

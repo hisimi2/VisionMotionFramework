@@ -327,51 +327,48 @@ void CEquipment2015Dlg::AccessSequenceDataExample()
 
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    // === 직접 모드 (상태머신 없이) 예제 ===
-    // 1. Repository 생성
-    auto repo = VMF::RepositoryFactory::CreateRepository(
-        "sqlite", "Data\\VAT_DATABASE.db;Data\\Images");
-    if (!repo)
+    // === 직접 모드: Strategy의 컴포넌트 조립 로직 재사용 ===
+    // MemorySequenceStrategy의 CreateRepository/CreateVisionProcessor와
+    // CLoad1LeftPlateJIGFocusCheckSequenceStrategy의 ConfigureParams(SetParam/AddVisionPoint)를
+    // InitializeDirectWithStrategy<T>()를 통해 재사용
+
+    // 1. Orchestrator 생성
+    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+
+    // 2. 옵저버 등록 (결과 출력)
+    m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
     {
-        AfxMessageBox(_T("Repository 생성 실패"));
+        CString msg;
+        msg.Format(_T("[VMF] RequestId=%d\r\n"), payload.requestId);
+        for (const auto& result : payload.results)
+            msg += CString(result.c_str()) + _T("\r\n");
+
+        ActivityResultData* pData = new ActivityResultData();
+        pData->activityName = _T("VMF");
+        pData->requestId = payload.requestId;
+        pData->detail = msg;
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+    });
+
+    // 3. Strategy를 통해 컴포넌트 생성/조립 (직접 모드)
+    //    → Repository 생성 (SqliteDataRepository + Initialize + migration_v1.sql)
+    //    → VisionProcessor 생성 (CMockVisionEventHandler + Initialize)
+    //    → Context 생성 + ConfigureParams (SetParam + LoadInspInitPos + AddVisionPoint)
+    bool ok = m_orchestrator->InitializeDirectWithStrategy<
+        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
+    >(nullptr);  // 실제 하드웨어 시 VatAdapterLoad1* 전달
+
+    if (!ok)
+    {
+        AfxMessageBox(_T("직접 모드 초기화 실패"));
         return;
     }
-    repo->Initialize();
 
-    // 2. VisionProcessor 생성
-    auto vp = std::make_shared<VMF::CMockVisionEventHandler>();
-    vp->Initialize(VMF::VisionConnectionConfig("127.0.0.1", 8080, 3000));
-
-    // 3. Orchestrator 초기화 (직접 모드)
-    m_orchestrator = std::make_shared<VMF::Orchestrator>();
-    m_orchestrator->SetDataRepository(std::move(repo));
-    m_orchestrator->SetVisionProcessor(vp);
-
-    // 4. Context 획득 및 파라미터 설정 (Strategy::ConfigureParams와 동일)
-    auto ctx = m_orchestrator->GetOrCreateContext();
-
-    VMF::VatParams params;
-    params.seqParams["CameraIndex"] = "6";
-    params.seqParams["HandID"] = "1";
-    params.seqParams["PkgID"] = "1";
-    params.seqParams["InspectionType"] = "6";
-
-    // Repository에서 데이터 로드 → VisionPosition 추가
-    auto loadedRepo = m_orchestrator->GetDataRepository();
-    double posX, posY, focusZ;
-    if (loadedRepo && loadedRepo->LoadInspInitPos(6, 3, 1, posX, posY, focusZ) == VMF::StorageSuccess)
-    {
-        std::vector<double> pos = { posX, posY, focusZ };
-        params.visionPositions.push_back(
-            VMF::VisionPosition(pos, 3, 6));
-    }
-    ctx->SetVatParams(params);
-
-    // 5. 직접 비전 명령 실행
-    bool ok = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
+    // 4. 직접 비전 명령 실행 (Strategy의 ConfigureParams에서 설정된 파라미터 사용)
+    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
 
     CString msg;
-    msg.Format(_T("[DirectMode] Measure command %s\r\n"), ok ? _T("SUCCESS") : _T("FAILED"));
+    msg.Format(_T("[DirectMode-Strategy] Measure command %s\r\n"), cmdOk ? _T("SUCCESS") : _T("FAILED"));
     m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
     m_LogEdit.ReplaceSel(msg);
 }

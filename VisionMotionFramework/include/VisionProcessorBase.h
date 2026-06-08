@@ -3,6 +3,9 @@
 #include <memory>
 #include <vector>
 #include <mutex> 
+#include <map>
+#include <thread>
+#include <atomic>
 
 #include "VMF_API.h"
 #include "IVisionProcessor.h"
@@ -22,11 +25,11 @@ namespace VMF
         void Start();
         void Stop();
         
-        // 상속된 가상 함수 (override 명시)
+        // 상속된 가상 함수
         void InitializeRecvThread() override;
 
         void RunLoop();
-        virtual void Process(); // 상속 구조에 따라 override 여부가 결정되나, 자식 클래스에서 오버라이드할 기본 제공 가상 함수로 보입니다.
+        virtual void Process();
 
         VC::Status Initialize(const VisionConnectionConfig& config) override;
         void Disconnect() override;
@@ -38,13 +41,12 @@ namespace VMF
         bool IsValid(VatCommand type) const override;
         bool HasReceived(VatCommand type) const override;
 
-void SetReceived(VatCommand type, bool received);
+        void SetReceived(VatCommand type, bool received);
         void ClearReceived(VatCommand type);
 
         /// <summary>
         /// 비전 프로세서의 실행 결과를 수신할 IResultSink를 등록합니다.
         /// </summary>
-        /// <param name="sink">결과를 전달받을 싱크 객체 포인터</param>
         void SetResultSink(IResultSink* sink);
 
         void StartProcessThread();
@@ -55,9 +57,17 @@ void SetReceived(VatCommand type, bool received);
         std::mutex m_mutex;
 
     private:
-        struct Impl;
-        // 이미 스마트 포인터(std::unique_ptr)가 사용되고 있음
-        std::unique_ptr<Impl> m_impl;
+        std::map<VatCommand, bool> m_received;
+        std::map<VatCommand, DataMap> m_latestData;
+
+mutable std::mutex m_dataMutex;
+        std::atomic<bool> m_processRunning;
+        std::atomic<bool> m_mainRunning;
+        
+        std::unique_ptr<std::thread> m_processThread;
+        std::unique_ptr<std::thread> m_thread;
+
+        IResultSink* m_resultSink;
 
         void SendResultToSink(int requestId, const std::vector<std::string>& results);
         void PacketLoop();

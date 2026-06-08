@@ -2,12 +2,17 @@
 
 #include "IDataRepository.h"
 #include <memory>
+#include <deque>
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 namespace VMF 
 {
     /**
      * @class AsyncDataRepository
-     * @brief IDataRepository 구현체를 비동기 큐로 래핑하여 Pimpl 패턴을 적용합니다.
+     * @brief IDataRepository 구현체를 비동기 큐로 래핑합니다.
      */
     class VMF_API AsyncDataRepository : public IDataRepository 
     {
@@ -51,11 +56,42 @@ namespace VMF
         StorageError LoadLocationIdByName(const std::string& locateName, int& locationId);
 
     private:
-        // Pimpl 관용구: 구현부 구조체 전방 선언
-        struct Impl;
-    
-        // C++14: 수동 메모리 관리(delete)에서 발생하는 누수를 막기 위해 std::unique_ptr 사용
-        std::unique_ptr<Impl> m_pImpl;
+        struct PendingZPoint {
+            int runId;
+            double zPosition;
+            double score;
+            int sampleCount;
+            std::string extraJson;
+        };
+        
+        struct PendingResult {
+            int camIndex;
+            int locationId;
+            int pkgId;
+            double newFocus;
+        };
+
+        struct PendingStatus {
+            int runId;
+            std::string status;
+            std::string resultSummaryJson;
+        };
+
+        IDataRepository* m_inner;
+        bool m_ownInner;
+
+        std::deque<PendingZPoint> m_pointQueue;
+        std::deque<PendingResult> m_resultQueue;
+        std::deque<PendingStatus> m_statusQueue;
+
+        std::mutex m_mutex;
+        std::condition_variable m_cv;
+        std::thread m_worker;
+        std::atomic<bool> m_stopRequested;
+        
+        int m_maxRetries;
+
+        void WorkerLoop();
     };
 
 } // namespace VMF

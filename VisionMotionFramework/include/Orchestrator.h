@@ -67,9 +67,60 @@ DataRepositoryPtr GetDataRepository();
         /// Context 획득 (직접 모드/상태머신 모드 모두 지원)
         VatContextPtr GetOrCreateContext();
 
-        /// 직접 비전 명령 실행 (상태머신 미사용)
+/// 직접 비전 명령 실행 (상태머신 미사용)
         bool ExecuteDirectVisionCommand(VatCommand cmd);
         bool ExecuteDirectVisionCommand(VatCommand cmd, const StringMap& params);
+
+        /// <summary>
+        /// Strategy를 통해 컴포넌트(Repository, VisionProcessor, Context)를 생성하고
+        /// 파라미터를 설정하여 직접 모드를 초기화합니다.
+        /// 상태머신을 실행하지 않고 MemorySequenceStrategy의 컴포넌트 조립 로직을 재사용합니다.
+        /// </summary>
+        template <typename StrategyType>
+        bool InitializeDirectWithStrategy(IActuator* actuator)
+        {
+            std::lock_guard<std::mutex> guard(m_seqMutex);
+
+            auto strategy = std::make_shared<StrategyType>();
+            strategy->SetActuator(actuator);
+
+            // Strategy의 CreateRepository/CreateVisionProcessor 재사용
+            DataRepositoryPtr repo;
+            VisionEventHandlerPtr vp;
+            try
+            {
+                repo = strategy->CreateRepository();
+                vp = strategy->CreateVisionProcessor();
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            if (!repo || !vp) return false;
+
+            m_directDataRepository = repo;
+            m_directVisionProcessor = vp;
+
+            // Context 생성 (CreateContext와 동일 패턴)
+            m_directContext = std::make_shared<Context>();
+            m_directContext->SetVisionProcessor(vp);
+            m_directContext->SetDataRepository(repo);
+
+            // Strategy의 ConfigureParams로 파라미터 설정
+            // (MemorySequenceStrategy의 SetParam/AddVisionPoint 헬퍼 재사용)
+            try
+            {
+                strategy->ConfigureParams(m_directContext);
+            }
+            catch (...)
+            {
+                m_directContext.reset();
+                return false;
+            }
+
+            return true;
+        }
 
 protected:
         SequenceStrategyPtr m_pCurrentStrategy;
