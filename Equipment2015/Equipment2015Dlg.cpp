@@ -155,7 +155,6 @@ void CEquipment2015Dlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// 아이콘을 그립니다.
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -218,6 +217,10 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 
 // 실행에 필요한 Actuator 구현 (실제 하드웨어 또는 Mock)
 #include "VMFComposition/Load1/VatAdapterLoad1.h"
+
+// 직접 모드에서 필요한 헤더
+#include "RepositoryFactory.h"
+#include "VMFComposition/Mock/CMockVisionEventHandler.h"
 
 // ============================================================
 // 1. Orchestrator 생성 및 옵저버 등록 (OnInitDialog 등에서)
@@ -293,7 +296,6 @@ void CEquipment2015Dlg::StopOrchestratorSequenceExample()
     if (m_orchestrator)
     {
         m_orchestrator->StopSequence();
-
         m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
         m_LogEdit.ReplaceSel(_T("[Orchestrator] Sequence stopped.\r\n"));
     }
@@ -325,5 +327,51 @@ void CEquipment2015Dlg::AccessSequenceDataExample()
 
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+    // === 직접 모드 (상태머신 없이) 예제 ===
+    // 1. Repository 생성
+    auto repo = VMF::RepositoryFactory::CreateRepository(
+        "sqlite", "Data\\VAT_DATABASE.db;Data\\Images");
+    if (!repo)
+    {
+        AfxMessageBox(_T("Repository 생성 실패"));
+        return;
+    }
+    repo->Initialize();
+
+    // 2. VisionProcessor 생성
+    auto vp = std::make_shared<VMF::CMockVisionEventHandler>();
+    vp->Initialize(VMF::VisionConnectionConfig("127.0.0.1", 8080, 3000));
+
+    // 3. Orchestrator 초기화 (직접 모드)
+    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+    m_orchestrator->SetDataRepository(std::move(repo));
+    m_orchestrator->SetVisionProcessor(vp);
+
+    // 4. Context 획득 및 파라미터 설정 (Strategy::ConfigureParams와 동일)
+    auto ctx = m_orchestrator->GetOrCreateContext();
+
+    VMF::VatParams params;
+    params.seqParams["CameraIndex"] = "6";
+    params.seqParams["HandID"] = "1";
+    params.seqParams["PkgID"] = "1";
+    params.seqParams["InspectionType"] = "6";
+
+    // Repository에서 데이터 로드 → VisionPosition 추가
+    auto loadedRepo = m_orchestrator->GetDataRepository();
+    double posX, posY, focusZ;
+    if (loadedRepo && loadedRepo->LoadInspInitPos(6, 3, 1, posX, posY, focusZ) == VMF::StorageSuccess)
+    {
+        std::vector<double> pos = { posX, posY, focusZ };
+        params.visionPositions.push_back(
+            VMF::VisionPosition(pos, 3, 6));
+    }
+    ctx->SetVatParams(params);
+
+    // 5. 직접 비전 명령 실행
+    bool ok = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
+
+    CString msg;
+    msg.Format(_T("[DirectMode] Measure command %s\r\n"), ok ? _T("SUCCESS") : _T("FAILED"));
+    m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+    m_LogEdit.ReplaceSel(msg);
 }

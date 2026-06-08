@@ -28,6 +28,7 @@ namespace VMF
         void StopSequence();
 
 DataRepositoryPtr GetRepository() const;
+        VatContextPtr GetContext() const;
 
     private:
         // 의존성 주입된 스마트 포인터들

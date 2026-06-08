@@ -51,10 +51,6 @@ protected:
     afx_msg LRESULT OnActivityResult(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
-public:
-    // === ThreadsManager 제어 버튼 핸들러 ===
-
-
 private:
     OperationThread::ThreadsManager m_threadsMgr;
     std::shared_ptr<VMF::Orchestrator> m_orchestrator;

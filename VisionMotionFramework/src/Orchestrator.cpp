@@ -42,7 +42,7 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
         {
             return m_pVatEngine->GetRepository();
         }
-        return nullptr;
+        return m_directDataRepository; // 직접 모드 지원
     }
 
     Orchestrator::ObserverId Orchestrator::AddObserver(VisionResultObserver observer)
@@ -237,9 +237,76 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
             m_pCurrentStrategy.reset();
         }
 
-        if (engineToStop)
+if (engineToStop)
         {
          engineToStop->StopSequence();
         }
     }
+
+    // --- [직접 모드] 구현 ---
+
+    void Orchestrator::SetVisionProcessor(VisionEventHandlerPtr vp)
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+        m_directVisionProcessor = vp;
+    }
+
+    VisionEventHandlerPtr Orchestrator::GetVisionProcessor() const
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+
+        // 상태머신 모드: RunController → Context → VisionProcessor
+        if (m_pVatEngine)
+        {
+            auto ctx = m_pVatEngine->GetContext();
+            if (ctx) return ctx->GetVisionProcessorInterface();
+        }
+        return m_directVisionProcessor;
+    }
+
+    void Orchestrator::SetDataRepository(DataRepositoryPtr repo)
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+        m_directDataRepository = repo;
+    }
+
+    VatContextPtr Orchestrator::GetOrCreateContext()
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+
+        // 상태머신 모드: RunController의 Context 반환
+        if (m_pVatEngine)
+        {
+            auto ctx = m_pVatEngine->GetContext();
+            if (ctx) return ctx;
+        }
+
+        // 직접 모드: 없으면 생성 (MemorySequenceStrategy와 동일 패턴)
+        if (!m_directContext)
+        {
+            m_directContext = std::make_shared<Context>();
+            if (m_directVisionProcessor)
+                m_directContext->SetVisionProcessor(m_directVisionProcessor);
+            if (m_directDataRepository)
+                m_directContext->SetDataRepository(m_directDataRepository);
+        }
+        return m_directContext;
+    }
+
+    bool Orchestrator::ExecuteDirectVisionCommand(VatCommand cmd)
+    {
+        auto ctx = GetOrCreateContext();
+        if (!ctx) return false;
+        return ctx->ExecuteVisionCommand(cmd);
+    }
+
+    bool Orchestrator::ExecuteDirectVisionCommand(VatCommand cmd, const StringMap& params)
+    {
+        auto ctx = GetOrCreateContext();
+        if (!ctx) return false;
+        for (const auto& kv : params)
+            ctx->SetVisionParamAs<std::string>(kv.first, kv.second);
+        return ctx->ExecuteVisionCommand(cmd);
+    }
+
 } // namespace VMF

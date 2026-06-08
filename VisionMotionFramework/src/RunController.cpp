@@ -37,6 +37,11 @@ DataRepositoryPtr RunController::GetRepository() const
         return nullptr; 
     }
 
+    VatContextPtr RunController::GetContext() const
+    {
+        return m_pCtx;
+    }
+
     void RunController::SetBuilder(SequenceBuilderPtr builder)
     {
         m_pBuilder = builder;
