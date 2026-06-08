@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.h : 헤더 파일
+// Equipment2015Dlg.h : 헤더 파일
 //
 
 #pragma once
@@ -58,4 +58,5 @@ public:
 	CMFCButton m_BtnStop;
     afx_msg void OnTimer(UINT_PTR nIDEvent);
     CEdit m_LogEdit;
+	afx_msg void OnBnClickedVmfStateMachine();
 };

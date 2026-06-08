@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
     ON_BN_CLICKED(IDC_STOP, &CEquipment2015Dlg::OnBnClickedStop)
     ON_WM_TIMER()
     ON_MESSAGE(WM_ACTIVITY_RESULT, &CEquipment2015Dlg::OnActivityResult)
+    ON_BN_CLICKED(IDC_VMF_STATE_MACHINE, &CEquipment2015Dlg::OnBnClickedVmfStateMachine)
 END_MESSAGE_MAP()
 
 // CEquipment2015Dlg 메시지 처리기
@@ -327,3 +328,8 @@ void CEquipment2015Dlg::AccessSequenceDataExample()
 */
 
 
+
+void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
+{
+    // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}

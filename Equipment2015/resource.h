@@ -18,6 +18,8 @@
 #define IDC_EDIT1                       1005
 #define IDC_LOG_EDIT                    1005
 #define IDC_PAUSE_LOAD2                 1006
+#define IDC_STOP2                       1006
+#define IDC_VMF_STATE_MACHINE           1006
 #define IDC_PAUSE_ALL                   1007
 #define IDC_STOP_LOAD1                  1008
 #define IDC_STOP_LOAD2                  1009
