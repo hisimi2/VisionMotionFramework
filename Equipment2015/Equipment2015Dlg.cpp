@@ -196,8 +196,134 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
         m_LogEdit.ReplaceSel(msg);
 
         delete pData;
-    }
+}
     return 0;
 }
+
+
+//=============================================================================
+// [예제] Orchestrator + Strategy 패턴을 사용한 시퀀스 실행
+// - VMF::Orchestrator를 생성하고 CLoad1LeftPlateJIGFocusCheckSequenceStrategy를
+//   실행하는 방법을 보여줍니다.
+// - 옵저버를 등록하여 실행 결과를 UI 로그에 출력합니다.
+// - 실제 하드웨어가 없는 경우 CMockActuator를 사용할 수 있습니다.
+//=============================================================================
+
+/*
+// ============================================================
+// [필요 헤더 includes]
+// ============================================================
+#include "VMF/Orchestrator.h"
+#include "VMF/IActuator.h"
+#include "VMFComposition/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
+
+// 실행에 필요한 Actuator 구현 (실제 하드웨어 또는 Mock)
+#include "VMFComposition/Load1/VatAdapterLoad1.h"
+// 또는 #include "VMFComposition/Mock/CMockActuator.h"
+
+// ============================================================
+// 1. Orchestrator 생성 및 옵저버 등록 (OnInitDialog 등에서)
+// ============================================================
+void CEquipment2015Dlg::InitOrchestratorExample()
+{
+    // 1-1. Orchestrator 인스턴스 생성
+    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+
+    // 1-2. 옵저버 등록: 시퀀스 실행 결과를 UI 로그에 표시
+    m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
+    {
+        CString msg;
+        msg.Format(_T("[Orchestrator] RequestId=%d\r\n"), payload.requestId);
+
+        for (const auto& result : payload.results)
+        {
+            msg += CString(result.c_str()) + _T("\r\n");
+        }
+
+        // UI 스레드로 전달 (PostMessage 사용)
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new ActivityResultData{
+            _T("Orchestrator"),
+            payload.requestId,
+            msg
+        }, 0);
+    });
+}
+
+// ============================================================
+// 2. Actuator 생성 및 시퀀스 실행
+// ============================================================
+void CEquipment2015Dlg::RunOrchestratorSequenceExample()
+{
+    if (!m_orchestrator)
+    {
+        AfxMessageBox(_T("Orchestrator가 초기화되지 않았습니다."));
+        return;
+    }
+
+    // 2-1. Actuator 생성 (실제 하드웨어 어댑터)
+// 실제 장비 연결 시:
+    // auto* actuator = new VMF_Load1::VatAdapterLoad1(하드웨어 초기화 파라미터);
+
+    // Mock 객체 사용 (개발/테스트용):
+    // auto* actuator = new VMF::CMockActuator();
+
+    // ※ 실제 Actuator 주입은 Equipment 프로젝트의 하드웨어 초기화 이후 수행
+    VMF::IActuator* actuator = nullptr; // 실제 구현 시 하드웨어 어댑터로 교체
+
+    // 2-2. 템플릿 메서드를 통해 Strategy 타입을 전달하여 시퀀스 시작
+    bool started = m_orchestrator->StartSequence<
+        VMF_Load1::Strategies::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
+    >(actuator);
+
+    if (started)
+    {
+        m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+        m_LogEdit.ReplaceSel(_T("[Orchestrator] Sequence started successfully.\r\n"));
+    }
+    else
+    {
+        m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+        m_LogEdit.ReplaceSel(_T("[Orchestrator] Failed to start sequence.\r\n"));
+    }
+}
+
+// ============================================================
+// 3. 시퀀스 중단
+// ============================================================
+void CEquipment2015Dlg::StopOrchestratorSequenceExample()
+{
+    if (m_orchestrator)
+    {
+        m_orchestrator->StopSequence();
+
+        m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+        m_LogEdit.ReplaceSel(_T("[Orchestrator] Sequence stopped.\r\n"));
+    }
+}
+
+// ============================================================
+// 4. 실행 결과 데이터 접근 (Orchestrator -> Context -> Repository)
+// ============================================================
+void CEquipment2015Dlg::AccessSequenceDataExample()
+{
+    if (!m_orchestrator) return;
+
+    // Orchestrator를 통해 Repository 접근
+    VMF::DataRepositoryPtr repo = m_orchestrator->GetDataRepository();
+    if (repo)
+    {
+        std::string value;
+        if (repo->LoadParam("Recipe1", "CameraIndex", value) == VMF::StorageSuccess)
+        {
+            CString msg;
+            msg.Format(_T("[Repository] Loaded param CameraIndex = %s\r\n"),
+                       CString(value.c_str()));
+
+            m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+            m_LogEdit.ReplaceSel(msg);
+        }
+    }
+}
+*/
 
 
