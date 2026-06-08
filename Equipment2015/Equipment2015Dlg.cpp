@@ -127,8 +127,6 @@ void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
     CDialogEx::OnTimer(nIDEvent);
 }
 
-
-
 void CEquipment2015Dlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
@@ -210,17 +208,16 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 // - 실제 하드웨어가 없는 경우 CMockActuator를 사용할 수 있습니다.
 //=============================================================================
 
-/*
+
 // ============================================================
 // [필요 헤더 includes]
 // ============================================================
-#include "VMF/Orchestrator.h"
-#include "VMF/IActuator.h"
+#include "Orchestrator.h"
+#include "IActuator.h"
 #include "VMFComposition/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
 
 // 실행에 필요한 Actuator 구현 (실제 하드웨어 또는 Mock)
 #include "VMFComposition/Load1/VatAdapterLoad1.h"
-// 또는 #include "VMFComposition/Mock/CMockActuator.h"
 
 // ============================================================
 // 1. Orchestrator 생성 및 옵저버 등록 (OnInitDialog 등에서)
@@ -241,12 +238,12 @@ void CEquipment2015Dlg::InitOrchestratorExample()
             msg += CString(result.c_str()) + _T("\r\n");
         }
 
-        // UI 스레드로 전달 (PostMessage 사용)
-        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new ActivityResultData{
-            _T("Orchestrator"),
-            payload.requestId,
-            msg
-        }, 0);
+// UI 스레드로 전달 (PostMessage 사용)
+        ActivityResultData* pData = new ActivityResultData();
+        pData->activityName = _T("Orchestrator");
+        pData->requestId = payload.requestId;
+        pData->detail = msg;
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
     });
 }
 
@@ -273,7 +270,7 @@ void CEquipment2015Dlg::RunOrchestratorSequenceExample()
 
     // 2-2. 템플릿 메서드를 통해 Strategy 타입을 전달하여 시퀀스 시작
     bool started = m_orchestrator->StartSequence<
-        VMF_Load1::Strategies::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
+        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
     >(actuator);
 
     if (started)
@@ -325,9 +322,6 @@ void CEquipment2015Dlg::AccessSequenceDataExample()
         }
     }
 }
-*/
-
-
 
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {

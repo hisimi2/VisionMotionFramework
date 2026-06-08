@@ -6,6 +6,10 @@
 #include "OperationThreads/ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 
+#include <memory> // std::shared_ptr
+
+namespace VMF { class Orchestrator; }
+
 // PostMessage로 전달할 Activity 결과 데이터 구조체
 struct ActivityResultData
 {
@@ -23,13 +27,15 @@ class CEquipment2015Dlg : public CDialogEx
     COPSwitch m_StartSwitch;
     COPSwitch m_StopSwitch;
 
+    void InitOrchestratorExample();
+    void RunOrchestratorSequenceExample();
+    void StopOrchestratorSequenceExample();
+    void AccessSequenceDataExample();
+
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
-// 대화 상자 데이터입니다.
-#ifdef AFX_DESIGN_TIME
     enum { IDD = IDD_EQUIPMENT2015_DIALOG };
-#endif
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
@@ -51,6 +57,7 @@ public:
 
 private:
     OperationThread::ThreadsManager m_threadsMgr;
+    std::shared_ptr<VMF::Orchestrator> m_orchestrator;
 public:
 	afx_msg void OnBnClickedStart();
 	afx_msg void OnBnClickedStop();
