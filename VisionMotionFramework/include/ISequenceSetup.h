@@ -8,10 +8,10 @@ namespace VMF
 {
     class IActuator; // GetActuator/SetActuator 등을 위한 전방 선언 추가
 
-    class ISequenceStrategy
+    class ISequenceSetup
     {
     public:
-        virtual ~ISequenceStrategy() = default;
+        virtual ~ISequenceSetup() = default;
 
         // 1. 실행할 시퀀스 이름 반환
         virtual std::string GetSequenceName() const = 0;
@@ -35,5 +35,5 @@ namespace VMF
         virtual IActuator* GetActuator() = 0;
     };
 
-    using SequenceStrategyPtr = std::shared_ptr<ISequenceStrategy>;
+    using SequenceSetupPtr = std::shared_ptr<ISequenceSetup>;
 }

@@ -1,32 +1,32 @@
 ﻿#pragma once
 #include "VMF_API.h"
-#include "ISequenceStrategy.h"
+#include "ISequenceSetup.h"
 #include "Sequence.h"
 #include <string>
 
 namespace VMF
 {
     /// <summary>
-    /// 시퀀스 실행 전략(Strategy)을 정의하는 기본 추상 클래스입니다.
+    /// 시퀀스 실행에 필요한 컴포넌트(VP, Repo, Builder) 조립을 정의하는 기본 추상 클래스입니다.
     /// <para>
-    /// 각 구체적인 전략 클래스는 이 클래스를 상속받아 시퀀스 이름, 빌더, 파라미터 설정 등을 구현해야 합니다.
+    /// 각 구체적인 Setup 클래스는 이 클래스를 상속받아 시퀀스 이름, 빌더, 파라미터 설정 등을 구현해야 합니다.
     /// </para>
     /// </summary>
-    class VMF_API SequenceStrategyBase : public ISequenceStrategy
+    class VMF_API SequenceSetupBase : public ISequenceSetup
     {
     protected:
         IActuator* m_adapter;
 
     public:
         /// <summary>
-        /// SequenceStrategyBase의 생성자입니다.
+        /// SequenceSetupBase의 생성자입니다.
         /// </summary>
-        SequenceStrategyBase();
+        SequenceSetupBase();
 
         /// <summary>
-        /// SequenceStrategyBase의 가상 소멸자입니다.
+        /// SequenceSetupBase의 가상 소멸자입니다.
         /// </summary>
-        ~SequenceStrategyBase() override = default;
+        ~SequenceSetupBase() override = default;
 
         /// <summary>
         /// 실행할 시퀀스의 이름을 반환합니다.
@@ -60,14 +60,14 @@ namespace VMF
 
         /// <summary>
         /// 액추에이터(하드웨어 제어 인터페이스)를 설정합니다.
-        /// ISequenceStrategy 인터페이스 구현입니다.
+        /// ISequenceSetup 인터페이스 구현입니다.
         /// </summary>
         /// <param name="adapter">설정할 액추에이터 포인터</param>
         void SetActuator(IActuator* adapter) override;
 
         /// <summary>
         /// 현재 설정된 액추에이터를 반환합니다.
-        /// ISequenceStrategy 인터페이스 구현입니다.
+        /// ISequenceSetup 인터페이스 구현입니다.
         /// </summary>
         /// <returns>액추에이터 포인터</returns>
         IActuator* GetActuator() override;

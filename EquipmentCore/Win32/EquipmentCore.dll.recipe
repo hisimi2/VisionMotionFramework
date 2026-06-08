@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\04.GitHub교재작업\VisionMotionFramework\EquipmentCore\Win32\EquipmentCore.dll</FullPath>
+      <FullPath>D:\project\VisionMotionFramework\EquipmentCore\Win32\EquipmentCore.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

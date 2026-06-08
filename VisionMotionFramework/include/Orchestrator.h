@@ -1,10 +1,11 @@
 ﻿#pragma once
 
 #include "RunController.h"
-#include "ISequenceStrategy.h"
+#include "ISequenceSetup.h"
 #include "IResultSink.h"
 #include "IVisionProcessor.h"
 #include "IDataRepository.h"
+#include "AsyncExecutor.h"
 
 #include <mutex>
 #include <memory>
@@ -45,13 +46,23 @@ namespace VMF
         void ClearObservers();
 
         // ---- Sequence control ----
+        /// <summary>
+        /// StrategyType을 통해 VP/Repo/Context/Builder를 조립하고 상태머신(AsyncExecutor)으로 시퀀스를 실행합니다.
+        /// </summary>
         template <typename StrategyType>
         bool StartSequence(IActuator* adapter)
         {
             std::lock_guard<std::mutex> guard(m_seqMutex);
-            SequenceStrategyPtr strategy = std::make_shared<StrategyType>();
-            strategy->SetActuator(adapter);
-            return StartSequenceSafe(strategy);
+
+            // 기존 엔진 중지
+            if (m_pVatEngine)
+            {
+                m_pVatEngine->StopSequence();
+                m_pVatEngine.reset();
+            }
+            m_pCurrentStrategy.reset();
+
+            return InitializeComponents<StrategyType>(adapter, true);
         }
 
         void StopSequence();
@@ -74,23 +85,44 @@ DataRepositoryPtr GetDataRepository();
         /// <summary>
         /// Strategy를 통해 컴포넌트(Repository, VisionProcessor, Context)를 생성하고
         /// 파라미터를 설정하여 직접 모드를 초기화합니다.
-        /// 상태머신을 실행하지 않고 MemorySequenceStrategy의 컴포넌트 조립 로직을 재사용합니다.
+        /// 상태머신을 실행하지 않고 Strategy의 컴포넌트 조립 로직을 재사용합니다.
         /// </summary>
         template <typename StrategyType>
         bool InitializeDirectWithStrategy(IActuator* actuator)
         {
             std::lock_guard<std::mutex> guard(m_seqMutex);
+            return InitializeComponents<StrategyType>(actuator, false);
+        }
 
+protected:
+        /// <summary>
+        /// Strategy 기반 컴포넌트 조립을 통합 수행하는 공통 초기화 로직.
+        /// - Strategy → VP, Repo, Builder 생성
+        /// - CreateContext(vm, repo) → Context 연결
+        /// - ConfigureParams(ctx) → 파라미터 주입
+        /// - runSequence=true: 상태머신 모드 (RunController + AsyncExecutor)
+        /// - runSequence=false: 직접 모드 (m_directXXX에 저장)
+        /// </summary>
+        template <typename StrategyType>
+        bool InitializeComponents(IActuator* actuator, bool runSequence)
+        {
+            // -- Strategy 생성 --
             auto strategy = std::make_shared<StrategyType>();
             strategy->SetActuator(actuator);
 
-            // Strategy의 CreateRepository/CreateVisionProcessor 재사용
+            // -- Strategy가 VP, Repo, Builder 생성 --
             DataRepositoryPtr repo;
             VisionEventHandlerPtr vp;
+            SequenceBuilderPtr builder;
+
             try
             {
                 repo = strategy->CreateRepository();
                 vp = strategy->CreateVisionProcessor();
+                if (runSequence)
+                {
+                    builder = strategy->CreateBuilder();
+                }
             }
             catch (...)
             {
@@ -98,32 +130,64 @@ DataRepositoryPtr GetDataRepository();
             }
 
             if (!repo || !vp) return false;
+            if (runSequence && !builder) return false;
 
-            m_directDataRepository = repo;
-            m_directVisionProcessor = vp;
+            // -- Context 생성 및 VP/Repo 연결 --
+            auto ctx = CreateContext(vp, repo);
+            if (!ctx) return false;
 
-            // Context 생성 (CreateContext와 동일 패턴)
-            m_directContext = std::make_shared<Context>();
-            m_directContext->SetVisionProcessor(vp);
-            m_directContext->SetDataRepository(repo);
-
-            // Strategy의 ConfigureParams로 파라미터 설정
-            // (MemorySequenceStrategy의 SetParam/AddVisionPoint 헬퍼 재사용)
+            // -- Strategy가 파라미터 설정 --
             try
             {
-                strategy->ConfigureParams(m_directContext);
+                strategy->ConfigureParams(ctx);
             }
             catch (...)
             {
-                m_directContext.reset();
                 return false;
+            }
+
+            // -- 모드별 분기 --
+            if (runSequence)
+            {
+                // === 상태머신 모드 ===
+                m_pCurrentStrategy = strategy;
+
+                VatActuatorPtr act = strategy->GetActuator();
+
+                try
+                {
+                    m_pVatEngine = std::make_shared<RunController>(builder, ctx, act);
+                }
+                catch (...)
+                {
+                    m_pCurrentStrategy.reset();
+                    return false;
+                }
+
+                AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
+                runner->SetResultSink(this);
+                m_pVatEngine->SetRunner(runner);
+
+                std::string seqName = strategy->GetSequenceName();
+                if (!m_pVatEngine->RunSequence(seqName))
+                {
+                    m_pVatEngine->StopSequence();
+                    m_pVatEngine.reset();
+                    m_pCurrentStrategy.reset();
+                    return false;
+                }
+            }
+            else
+            {
+                // === 직접 모드 ===
+                m_directVisionProcessor = vp;
+                m_directDataRepository = repo;
+                m_directContext = ctx;
             }
 
             return true;
         }
-
-protected:
-        SequenceStrategyPtr m_pCurrentStrategy;
+        SequenceSetupPtr m_pCurrentStrategy;
         VatEnginePtr m_pVatEngine;
 
         // --- [직접 모드] Strategy 없이 VisionProcessor/Repository 직접 보관 ---
@@ -140,7 +204,6 @@ protected:
 
         private:
         mutable std::mutex m_seqMutex;
-        bool StartSequenceSafe(SequenceStrategyPtr strategy);
 
         mutable std::mutex m_observerMutex;
         std::unordered_map<ObserverId, VisionResultObserver> m_observers;

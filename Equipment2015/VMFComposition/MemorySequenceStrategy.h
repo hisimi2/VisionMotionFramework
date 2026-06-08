@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "SequenceStrategyBase.h"
+#include "SequenceSetupBase.h"
 #include "SqliteDataRepository.h"
 
 #include "VMFComposition/VisionProtocal/VisionMemoryProcessor.h"
@@ -11,7 +11,7 @@
 /// <summary>
 /// 메모리 기반 시퀀스 전략을 위한 기본 클래스입니다.
 /// </summary>
-class MemorySequenceStrategy : public VMF::SequenceStrategyBase
+class MemorySequenceStrategy : public VMF::SequenceSetupBase
 {
 public:
     VMF::DataRepositoryPtr CreateRepository() override
@@ -35,7 +35,7 @@ public:
 
 protected:
     /// <summary>
-    /// SequenceStrategyBase.h의 ConfigureParams 구현에서 사용하여, 시퀀스 실행에 필요한 파라미터를 간편하게 설정할 수 있도록 확장합니다.
+    /// SequenceSetupBase.h의 ConfigureParams 구현에서 사용하여, 시퀀스 실행에 필요한 파라미터를 간편하게 설정할 수 있도록 확장합니다.
     /// </summary>
     // 문자열 파라미터 설정
     void SetParam(VMF::VatParams& params, const std::string& key, const std::string& value)

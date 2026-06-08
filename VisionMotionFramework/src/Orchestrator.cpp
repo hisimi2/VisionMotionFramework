@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Orchestrator.h"
 #include "RunController.h"
 #include "Context.h"
@@ -117,116 +117,6 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
         NotifyObservers(payload);
     }
 
-    bool Orchestrator::StartSequenceSafe(SequenceStrategyPtr strategy)
-    {
-        if (!strategy)
-        {
-            return false;
-        }
-
-        m_pCurrentStrategy = strategy;
-
-        if (m_pVatEngine)
-        {
-            m_pVatEngine->StopSequence();
-            m_pVatEngine.reset();
-        }
-
-        SequenceBuilderPtr builder;
-        DataRepositoryPtr repo;
-        VisionEventHandlerPtr vm;
-
-        try
-        {
-            builder = strategy->CreateBuilder();
-            repo = strategy->CreateRepository();
-            vm = strategy->CreateVisionProcessor();
-        }
-        catch (...)
-        {
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        if (!builder || !vm || !repo)
-        {
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        VatContextPtr ctx;
-        try
-        {
-            ctx = CreateContext(vm, repo);
-        }
-        catch (...)
-        {
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        if (!ctx)
-        {
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        try
-        {
-            strategy->ConfigureParams(ctx);
-        }
-        catch (const std::exception& ex)
-        {
-            ctx->SetLastError(ex.what());
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-        catch (...)
-        {
-            ctx->SetLastError("Unknown exception in ConfigureParams");
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        VatActuatorPtr actuator = strategy->GetActuator();
-
-        try
-        {
-            m_pVatEngine = std::make_shared<RunController>(builder, ctx, actuator);
-        }
-        catch (const std::exception& ex)
-        {
-            ctx->SetLastError(ex.what());
-            m_pVatEngine.reset();
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-        catch (...)
-        {
-            ctx->SetLastError("Unknown exception creating RunController");
-            m_pVatEngine.reset();
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        {
-            AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
-            runner->SetResultSink(this);
-            m_pVatEngine->SetRunner(runner);
-        }
-
-        std::string seqName = strategy->GetSequenceName();
-        if (!m_pVatEngine->RunSequence(seqName))
-        {
-            m_pVatEngine->StopSequence();
-            m_pVatEngine.reset();
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        return true;
-    }
-
     void Orchestrator::StopSequence()
     {
         VatEnginePtr engineToStop;
@@ -249,6 +139,12 @@ if (engineToStop)
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
         m_directVisionProcessor = vp;
+
+        // 직접 모드: 이미 Context가 생성된 경우에도 VP 연결 업데이트
+        if (m_directContext)
+        {
+            m_directContext->SetVisionProcessor(vp);
+        }
     }
 
     VisionEventHandlerPtr Orchestrator::GetVisionProcessor() const
@@ -268,6 +164,12 @@ if (engineToStop)
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
         m_directDataRepository = repo;
+
+        // 직접 모드: 이미 Context가 생성된 경우에도 Repo 연결 업데이트
+        if (m_directContext)
+        {
+            m_directContext->SetDataRepository(repo);
+        }
     }
 
     VatContextPtr Orchestrator::GetOrCreateContext()

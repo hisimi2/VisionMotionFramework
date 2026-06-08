@@ -65,7 +65,7 @@
     <ClCompile Include="src\SequenceBuilderBase.cpp">
       <Filter>시퀀스</Filter>
     </ClCompile>
-    <ClCompile Include="src\SequenceStrategyBase.cpp">
+    <ClCompile Include="src\SequenceSetupBase.cpp">
       <Filter>시퀀스</Filter>
     </ClCompile>
     <ClCompile Include="src\CVatEngineObserverAdapter.cpp">
@@ -161,10 +161,7 @@
     <ClInclude Include="include\Logger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\IVatSequenceStrategy.h">
-      <Filter>시퀀스</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SequenceStrategyBase.h">
+    <ClInclude Include="include\SequenceSetupBase.h">
       <Filter>시퀀스</Filter>
     </ClInclude>
     <ClInclude Include="include\SequenceBuilderBase.h">

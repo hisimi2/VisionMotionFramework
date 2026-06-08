@@ -22,7 +22,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -131,7 +131,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\SaveUtils.cpp" />
     <ClCompile Include="src\SequenceBuilderBase.cpp" />
-    <ClCompile Include="src\SequenceStrategyBase.cpp" />
+    <ClCompile Include="src\SequenceSetupBase.cpp" />
     <ClCompile Include="src\SqliteDataRepository.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
@@ -156,14 +156,14 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\IActuator.h" />
     <ClInclude Include="include\IObserver.h" />
     <ClInclude Include="include\ISequence.h" />
-    <ClInclude Include="include\ISequenceStrategy.h" />
+    <ClInclude Include="include\ISequenceSetup.h" />
     <ClInclude Include="include\IVisionProcessor.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
-    <ClInclude Include="include\SequenceStrategyBase.h" />
+    <ClInclude Include="include\SequenceSetupBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
     <ClInclude Include="include\Sequence.h" />
     <ClInclude Include="include\Types.h" />

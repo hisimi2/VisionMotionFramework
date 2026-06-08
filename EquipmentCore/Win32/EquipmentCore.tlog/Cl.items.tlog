@@ -1,0 +1,10 @@
+D:\project\VisionMotionFramework\EquipmentCore\EquipmentCore.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\EquipmentCore.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\ActivityManager.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\ActivityManager.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\AsyncExecutor.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\AsyncExecutor.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\Context.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\Context.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\Logger.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\Logger.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\Activity.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\Activity.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\ActivityBuilderBase.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\ActivityBuilderBase.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\TaskBase.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\TaskBase.obj
+D:\project\VisionMotionFramework\EquipmentCore\src\Utils.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\Utils.obj
+D:\project\VisionMotionFramework\EquipmentCore\stdafx.cpp;D:\project\VisionMotionFramework\EquipmentCore\Win32\stdafx.obj
