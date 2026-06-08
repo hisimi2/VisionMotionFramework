@@ -207,20 +207,20 @@ namespace VMF
         /// </summary>
         void SetDataRepository(DataRepositoryPtr repo);
 
-        /// <summary>
+/// <summary>
         /// 현재 등록된 데이터 저장소 인터페이스를 반환합니다.
         /// </summary>
-        DataRepositoryPtr getRepository() const;
+        DataRepositoryPtr GetRepository() const;
 
         /// <summary>
         /// 마지막 오류 메시지를 저장합니다.
         /// </summary>
         void SetLastError(const std::string& error);
 
-        /// <summary>
+/// <summary>
         /// 마지막으로 저장된 오류 메시지를 반환합니다.
         /// </summary>
-        const std::string& GetLastError() const;
+        std::string GetLastError() const;
 
         /// <summary>
         /// 작업 중지 요청 상태를 설정합니다.

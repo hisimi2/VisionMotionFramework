@@ -138,7 +138,7 @@ namespace VMF_Load1
         return  VMF::ActOk;
     }
 
-	std::vector<double> VatAdapterLoad1::getPosition()
+std::vector<double> VatAdapterLoad1::GetPosition()
     {
 		std::vector<double> vposition;
 		vposition.push_back(m_parts->AxisX.GetEncoder());
@@ -148,7 +148,7 @@ namespace VMF_Load1
         return vposition;
     }
 
-	std::vector<double> VatAdapterLoad1:: getPulse()
+	std::vector<double> VatAdapterLoad1::GetPulse()
 	{
 		std::vector<double> vpulse;
 

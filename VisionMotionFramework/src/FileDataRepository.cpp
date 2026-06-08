@@ -37,10 +37,18 @@ StorageError FileDataRepository::LoadParam(const std::string& recipe, const std:
         return StorageFileNotFound;
     }
 
-    std::string line;
+std::string line;
     while (std::getline(ifs, line)) {
+        // 빈 줄은 건너뜀
+        if (line.empty()) continue;
+
         size_t pos = line.find('=');
-        if (pos != std::string::npos && line.substr(0, pos) == name) {
+        // '='가 없거나 name이 비어있으면 건너뜀
+        if (pos == std::string::npos || name.empty()) continue;
+
+        // 키 이름의 길이가 '='의 위치와 일치하는지 확인하여 정확한 매칭 보장
+        // (예: name="abc"일 때 "abcde=value"는 일치하지 않아야 함)
+        if (pos == name.length() && line.substr(0, pos) == name) {
             outValue = line.substr(pos + 1);
             return StorageSuccess;
         }
@@ -140,17 +148,19 @@ StorageError FileDataRepository::SaveZFocusResult(int camIndex, int locationId, 
     return StorageSuccess;
 }
 
-// Picker-Cam 거리 값 저장 (Stub)
+// [Stub] Picker-Cam 거리 값 저장: FileDataRepository는 지원하지 않음 (SqliteDataRepository 사용)
 StorageError FileDataRepository::SavePickerCamDistanceResult(int camIndex, int pkgId, double narrowX, double narrowY, double wideX, double wideY) {
+    (void)camIndex; (void)pkgId; (void)narrowX; (void)narrowY; (void)wideX; (void)wideY;
 	return StorageSuccess;
 }
 
-// 검사 위치 정보 저장 (Stub)
+// [Stub] 검사 위치 정보 저장: FileDataRepository는 지원하지 않음 (SqliteDataRepository 사용)
 StorageError FileDataRepository::SaveCalibrationPosResult(int camIndex, int locationId, int pkgId, double posX, double posY) {
+    (void)camIndex; (void)locationId; (void)pkgId; (void)posX; (void)posY;
 	return StorageSuccess;
 }
 
-// 핸드 피치 정보 저장 (Stub)
+// [Stub] 핸드 피치 정보 저장: FileDataRepository는 지원하지 않음 (SqliteDataRepository 사용)
 StorageError FileDataRepository::SaveHandPitchResult(
 	int handId,
 	int pkgId,
@@ -160,10 +170,11 @@ StorageError FileDataRepository::SaveHandPitchResult(
 	double narrowY,
 	double wideX,
 	double wideY) {
+    (void)handId; (void)pkgId; (void)col; (void)row; (void)narrowX; (void)narrowY; (void)wideX; (void)wideY;
 	return StorageSuccess;
 }
 
-// 티칭 결과 저장 (Stub)
+// [Stub] 티칭 결과 저장: FileDataRepository는 지원하지 않음 (SqliteDataRepository 사용)
 StorageError FileDataRepository::SaveTeachingResult(
 	int handId,
 	int locationId,
@@ -171,11 +182,13 @@ StorageError FileDataRepository::SaveTeachingResult(
 	double posX,
 	double posY,
 	double posZ) {
+    (void)handId; (void)locationId; (void)pkgId; (void)posX; (void)posY; (void)posZ;
 	return StorageSuccess;
 }
 
 //////////////////////////////////////////////////////////
-// 검사 결과 로드 (Stub Version)
+// 검사 결과 로드 (Stub: FileDataRepository는 미지원, StorageNotFound 반환)
+// SqliteDataRepository가 실제 데이터를 제공합니다.
 //////////////////////////////////////////////////////////
 
 StorageError FileDataRepository::LoadInspInitPos(
@@ -186,10 +199,11 @@ StorageError FileDataRepository::LoadInspInitPos(
 	double& posY,
 	double& focus)
 {
+    (void)camIndex; (void)locationId; (void)pkgId;
 	posX = 0.0;
 	posY = 0.0;
 	focus = 0.0;
-	return StorageSuccess;
+	return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 
@@ -201,11 +215,12 @@ StorageError FileDataRepository::LoadPickerCamDistance(
 	double& wideRight,
 	double& wideLeft)
 {
+    (void)camIndex; (void)pkgId;
 	narrowRight = 0.0;
 	narrowLeft = 0.0;
 	wideRight = 0.0;
 	wideLeft = 0.0;
-	return StorageSuccess;
+	return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 
@@ -219,11 +234,12 @@ StorageError FileDataRepository::LoadHandPitch(
 	double& wideX,
 	double& wideY)
 {
+    (void)handId; (void)pkgId; (void)row; (void)col;
 	narrowX = 0.0;
 	narrowY = 0.0;
 	wideX = 0.0;
 	wideY = 0.0;
-	return StorageSuccess;
+	return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 
@@ -236,31 +252,38 @@ StorageError FileDataRepository::LoadTeachingResult(
 	double& posY,
 	double& posZ)
 {
+    (void)handId; (void)locationId; (void)pkgId; (void)dateoffset;
 	posX = 0.0;
 	posY = 0.0;
 	posZ = 0.0;
-	return StorageSuccess;
+	return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 StorageError FileDataRepository::LoadHandCamGroup(
 	int handId,
 	std::vector<int>& camIds)
 {
-	return StorageSuccess;
+    (void)handId;
+    camIds.clear();
+	return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 StorageError FileDataRepository::LoadCamLocationGroup(
-    int handId,
+    int camIndex,
     std::vector<int>& locateIds)
 {
-    return StorageSuccess;
+    (void)camIndex;
+    locateIds.clear();
+    return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 StorageError FileDataRepository::LoadLocationIdByName(
 	const std::string& locateName,
 	int& locationId)
 {
-	return StorageSuccess;
+    (void)locateName;
+	locationId = -1;
+	return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
 }
 
 StorageError FileDataRepository::UpdateSequenceRunStatus(int runId, const std::string& status, const std::string& resultSummaryJson)

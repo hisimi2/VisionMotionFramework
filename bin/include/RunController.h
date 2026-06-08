@@ -27,7 +27,7 @@ namespace VMF
         bool RunSequence(const std::string& sequenceName);
         void StopSequence();
 
-        DataRepositoryPtr getRepository() const;
+DataRepositoryPtr GetRepository() const;
 
     private:
         // 의존성 주입된 스마트 포인터들

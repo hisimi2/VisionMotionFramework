@@ -5,9 +5,6 @@
 #include "Sequence.h"
 #include "ISequence.h"
 
-#include "SqliteDataRepository.h"
-#include "AsyncDataRepository.h"
-#include "CompatUtils.h"
 
 #include <string>
 #include <memory> 
@@ -23,7 +20,7 @@ namespace VMF
         _mkdir(path.c_str());
     }
 
-    std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(std::string sequenceName)
+std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(const std::string& sequenceName)
     {
         return BuildSequence(sequenceName);
     }

@@ -28,11 +28,11 @@ namespace VMF
     // 소멸자 (헤더에서 선언된 명시적 소멸자와 매칭. 빈 동작이므로 default 선언 권장이나 이 파일에 유지)
     RunController::~RunController() = default;
 
-    DataRepositoryPtr RunController::getRepository() const
+DataRepositoryPtr RunController::GetRepository() const
     {
         if (m_pCtx)
         {
-            return m_pCtx->getRepository();
+            return m_pCtx->GetRepository();
         }
         return nullptr; 
     }

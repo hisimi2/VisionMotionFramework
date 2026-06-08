@@ -35,12 +35,12 @@ namespace VMF
          ClearObservers();
     }
 
-    DataRepositoryPtr Orchestrator::getDataRepository()
+DataRepositoryPtr Orchestrator::GetDataRepository()
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
         if (m_pVatEngine)
         {
-            return m_pVatEngine->getRepository();
+            return m_pVatEngine->GetRepository();
         }
         return nullptr;
     }

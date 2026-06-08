@@ -13,7 +13,6 @@
 namespace VMF 
 {
     class IActuator;
-    class IDataRepository;
 
     // C++14 호환 모던 C++ 클래스
     class VMF_API Sequence : public ISequence
@@ -45,10 +44,7 @@ namespace VMF
         int m_pollIntervalMs;
         std::string m_SequenceName;
         std::string m_TaskName;
-
-        // 리소스 홀더 (실행 중 생명주기 관리용)
-        VatActuatorPtr      m_actuator;
-        DataRepositoryPtr   m_repo;
     };
 
 } // namespace VMF
+

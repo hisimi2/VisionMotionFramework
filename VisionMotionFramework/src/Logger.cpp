@@ -88,7 +88,7 @@ namespace VMF
     {
         if (!format) return;
 
-        char buffer[2048];
+char buffer[LOG_BUFFER_SIZE];
         va_list args;
         va_start(args, format);
 

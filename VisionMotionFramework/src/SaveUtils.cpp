@@ -1,25 +1,6 @@
-﻿#include "stdafx.h"
+﻿// SaveUtils.cpp
+// SaveUtils.h가 Header-Only 템플릿으로 변경되어 이 .cpp 파일은 더 이상 사용되지 않습니다.
+// SaveWithRetries 템플릿 함수는 SaveUtils.h에 정의되어 있습니다.
 
+#include "stdafx.h"
 #include "SaveUtils.h"
-
-
-#include <thread>
-#include <chrono>
-
-namespace VMF 
-{
-    void WaitRetryDelay(int milliseconds)
-    {
-        if (milliseconds <= 0) 
-            return;
-
-        try
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-        }
-        catch (...) {
-            // 스레드 인터럽트 등 예외 무시
-        }
-    }
-
-} // namespace VMF

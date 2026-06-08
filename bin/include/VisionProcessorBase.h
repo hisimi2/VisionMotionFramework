@@ -38,8 +38,14 @@ namespace VMF
         bool IsValid(VatCommand type) const override;
         bool HasReceived(VatCommand type) const override;
 
-        void SetReceived(VatCommand type, bool received);
+void SetReceived(VatCommand type, bool received);
         void ClearReceived(VatCommand type);
+
+        /// <summary>
+        /// 비전 프로세서의 실행 결과를 수신할 IResultSink를 등록합니다.
+        /// </summary>
+        /// <param name="sink">결과를 전달받을 싱크 객체 포인터</param>
+        void SetResultSink(IResultSink* sink);
 
         void StartProcessThread();
         void StopProcessThread();

@@ -47,10 +47,10 @@ namespace VMF
         m_lastError = error; 
     }
 
-    const std::string& Context::GetLastError() const
+std::string Context::GetLastError() const
     {
-        // m_lastError 반환 시 동기화 여부는 설계 정책에 따르나, 기본적으로 std::string 참조형이므로 외부에선 주의가 필요합니다.
-        return m_lastError; 
+        LockGuardType guard(m_mutex);
+        return m_lastError;
     }
 
     void Context::SetStopRequested(bool stop)
@@ -162,7 +162,7 @@ namespace VMF
         m_repo = repo;
     }
 
-    DataRepositoryPtr Context::getRepository() const
+DataRepositoryPtr Context::GetRepository() const
     {
         LockGuardType guard(m_mutex);
         return m_repo;

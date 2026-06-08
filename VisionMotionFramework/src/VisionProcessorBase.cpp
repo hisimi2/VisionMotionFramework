@@ -18,10 +18,10 @@
 
 namespace VMF
 {
-    struct VisionProcessorBase::Impl
+struct VisionProcessorBase::Impl
     {
         Impl()
-            : m_processRunning(false), m_mainRunning(false)
+            : m_processRunning(false), m_mainRunning(false), m_resultSink(nullptr)
         {
         }
 
@@ -35,6 +35,8 @@ namespace VMF
         // boost::shared_ptr<boost::thread> 대신 std::unique_ptr<std::thread> 사용 (단일 소유 제어)
         std::unique_ptr<std::thread> m_processThread;
         std::unique_ptr<std::thread> m_thread;
+
+        IResultSink* m_resultSink; // 결과를 전달할 싱크 (raw pointer, 소유권 없음)
     };
 
     VisionProcessorBase::VisionProcessorBase()
@@ -222,10 +224,24 @@ namespace VMF
         }
     }
 
+void VisionProcessorBase::SetResultSink(IResultSink* sink)
+    {
+        std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
+        m_impl->m_resultSink = sink;
+    }
+
     void VisionProcessorBase::SendResultToSink(int requestId, const std::vector<std::string>& results)
     {
-        (void)requestId;
-        (void)results;
+        IResultSink* sink = nullptr;
+        {
+            std::lock_guard<std::mutex> lk(m_impl->m_dataMutex);
+            sink = m_impl->m_resultSink;
+        }
+
+        if (sink)
+        {
+            sink->NotifyVisionResult(requestId, results);
+        }
     }
 }
 

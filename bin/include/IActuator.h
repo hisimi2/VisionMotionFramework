@@ -68,8 +68,8 @@ namespace VMF
 		virtual ActError Move(std::vector<double> pos, PitchStatus action) = 0;
 		virtual ActError isMoveZ(double targetZ) = 0;
 		virtual ActError isMove(std::vector<double> pos, PitchStatus action) = 0;
-		virtual std::vector<double> getPosition() = 0;
-		virtual std::vector<double> getPulse() = 0;
+virtual std::vector<double> GetPosition() = 0;
+		virtual std::vector<double> GetPulse() = 0;
 		virtual int SetLightState(int camIndex, bool on) = 0;
 		virtual int GetLightState(int camIndex, bool& outOn) = 0;
 	};

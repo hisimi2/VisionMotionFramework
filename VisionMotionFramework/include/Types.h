@@ -31,5 +31,5 @@ namespace VMF
     using LockGuardType         = std::lock_guard<std::mutex>;
     using UniqueLockType        = std::unique_lock<std::mutex>;
     using ConditionVariableType = std::condition_variable;
-    using VatActuatorPtr        = IActuator*;
+using VatActuatorPtr        = IActuator*;  // raw pointer (소유권 없음, Orchestrator/RunController가 생명주기 관리)
 } // namespace VMF

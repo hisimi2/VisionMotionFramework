@@ -30,8 +30,13 @@ namespace VMF
         // 기본 로그
         void Log(LogLevel level, const std::string& message);
 
-        // 포맷 로그 (printf 스타일)
-        void LogF(LogLevel level, const char* format, ...);
+// 포맷 로그 (printf 스타일)
+    void LogF(LogLevel level, const char* format, ...);
+
+    /// <summary>
+    /// LogF에서 사용하는 내부 버퍼의 기본 크기 (바이트)
+    /// </summary>
+    static const int LOG_BUFFER_SIZE = 2048;
 
         Logger(const Logger&) = delete;
         Logger& operator=(const Logger&) = delete;

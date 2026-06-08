@@ -55,7 +55,7 @@ namespace VMF
         void StopSequence();
 
         // Repository accessor
-        DataRepositoryPtr getDataRepository();
+DataRepositoryPtr GetDataRepository();
 
     protected:
         SequenceStrategyPtr m_pCurrentStrategy;

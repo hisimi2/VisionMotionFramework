@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include "Types.h"
@@ -8,10 +8,6 @@
 
 namespace VMF 
 {
-    /**
-     * @enum StorageError
-     * @brief 저장소 작업 결과 코드.
-     */
     enum StorageError 
     {
         StorageSuccess = 0,
@@ -23,10 +19,6 @@ namespace VMF
         StorageGeneral
     };
 
-    /**
-     * @class IDataRepository
-     * @brief 데이터 저장소를 정의하는 추상 인터페이스.
-     */
     class VMF_API IDataRepository {
     public:
         virtual ~IDataRepository() = default;
@@ -44,8 +36,6 @@ namespace VMF
         // 초기화/종료
         virtual StorageError Initialize() = 0;
         virtual StorageError Shutdown() = 0;
-
-        /* 추가 구조화 API (Z-Focus 등 상세 테이블 사용을 위한 확장) */
 
         // sequence_runs 레코드 생성: paramsJson은 JSON을 문자열로 전달, outRunId는 생성된 run id 반환
         virtual StorageError CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId) = 0;

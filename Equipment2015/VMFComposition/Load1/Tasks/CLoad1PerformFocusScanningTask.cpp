@@ -158,7 +158,7 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleReturnHome(
 VMF::TaskResult CLoad1PerformFocusScanningTask::HandleSaveFocusResult(
 	VMF::Context& ctx)
 {
-	auto repo = ctx.getRepository();
+auto repo = ctx.GetRepository();
 	if (!repo)
 	{
 		return SetErrorAndReturn(ctx, "DB Access Fail");

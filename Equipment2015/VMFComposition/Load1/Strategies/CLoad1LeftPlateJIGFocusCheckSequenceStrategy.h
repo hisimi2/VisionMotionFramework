@@ -34,7 +34,7 @@ namespace VMF_Load1
 				SetParam(params, "bSaveImage", 0);
 				SetParam(params, "nFovDirection", 0);
 
-				auto repo = ctx->getRepository();
+auto repo = ctx->GetRepository();
 
 				int ncamIndex = 6;
 				int nlocateId = 3;

@@ -46,7 +46,7 @@ BEGIN
     "\r\n"
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
     "LANGUAGE 18, 1\r\n"    
-    "#include ""res\\DVH_VAT.rc2""  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.\r\n"
+"#include ""res\\VisionMotionFramework.rc2""  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.\r\n"
 #ifndef _AFXDLL
     "#include ""l.KOR\\afxres.rc""      // 표준 구성 요소\r\n"
 #endif

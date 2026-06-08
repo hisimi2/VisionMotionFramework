@@ -12,7 +12,7 @@ namespace VMF_Load1
 		class CLoad1ZFocusSequenceBuilder : public VMF::SequenceBuilderBase
 		{
 		protected:
-            VMF::SequencePtr BuildSequence(std::string sequenceName) override
+            VMF::SequencePtr BuildSequence(const std::string& sequenceName) override
 			{
                 VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 				seq->AddTask(VMF::TaskPtr(new CLoad1MoveToStartPositionTask()));

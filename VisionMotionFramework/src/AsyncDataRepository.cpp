@@ -211,7 +211,7 @@ StorageError AsyncDataRepository::LoadPickerCamDistance(int c, int p, double& nR
 StorageError AsyncDataRepository::LoadHandPitch(int h, int p, int r, int c, double& nX, double& nY, double& wX, double& wY) { return m_pImpl->m_inner->LoadHandPitch(h, p, r, c, nX, nY, wX, wY); }
 StorageError AsyncDataRepository::LoadTeachingResult(int h, int l, int p, int d, double& x, double& y, double& z) { return m_pImpl->m_inner->LoadTeachingResult(h, l, p, d, x, y, z); }
 StorageError AsyncDataRepository::LoadHandCamGroup(int h, std::vector<int>& c) { return m_pImpl->m_inner->LoadHandCamGroup(h, c); }
-StorageError AsyncDataRepository::LoadCamLocationGroup(int handId, std::vector<int>& locateIds){ return StorageSuccess; }
+StorageError AsyncDataRepository::LoadCamLocationGroup(int camIndex, std::vector<int>& locateIds){ return m_pImpl->m_inner->LoadCamLocationGroup(camIndex, locateIds); }
 StorageError AsyncDataRepository::LoadLocationIdByName(const std::string& n, int& id) { return m_pImpl->m_inner->LoadLocationIdByName(n, id); }
 
 } // namespace VMF

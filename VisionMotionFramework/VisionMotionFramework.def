@@ -1,4 +1,4 @@
-; DVH_VAT.def : DLL에 대한 모듈 매개 변수를 정의합니다.
+; VisionMotionFramework.def : DLL에 대한 모듈 매개 변수를 정의합니다.
 
 LIBRARY
 
