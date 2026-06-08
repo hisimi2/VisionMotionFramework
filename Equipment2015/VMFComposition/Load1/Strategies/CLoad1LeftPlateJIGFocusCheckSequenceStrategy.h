@@ -17,9 +17,9 @@ namespace VMF_Load1
 			return std::make_shared<CLoad1ZFocusSequenceBuilder>();
 		}
 
-		void ConfigureParams(VMF::VatContextPtr ctx)
+		void ConfigureParams(VMF::VisionContextPtr ctx)
 		{
-            VatParams params;
+            VisionParams params;
 
 			// 헬퍼 함수를 사용하여 파라미터 설정 간소화
 			SetParam(params, "CameraIndex", 6);
@@ -48,7 +48,7 @@ namespace VMF_Load1
 				AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ);
 			}
 
-			ctx->SetVatParams(params);
+			ctx->SetVisionParams(params);
 		}
 	};
 }

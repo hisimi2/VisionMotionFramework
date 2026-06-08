@@ -14,7 +14,7 @@
 namespace VMF
 {
     RunController::RunController(SequenceBuilderPtr builder,
-                                            VatContextPtr ctx, VatActuatorPtr actuator)
+                                            VisionContextPtr ctx, VisionActuatorPtr actuator)
         : m_actuator(actuator)
         , m_pBuilder(builder)
         , m_pCtx(ctx)
@@ -37,7 +37,7 @@ DataRepositoryPtr RunController::GetRepository() const
         return nullptr; 
     }
 
-    VatContextPtr RunController::GetContext() const
+    VisionContextPtr RunController::GetContext() const
     {
         return m_pCtx;
     }

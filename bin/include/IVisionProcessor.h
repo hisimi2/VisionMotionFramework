@@ -16,7 +16,7 @@ namespace VMF
 
     class IResultSink;
 
-    enum VatCommand : int
+    enum VisionCommand : int
     {
         SetCok      = 0,
         InspReady   = 1,
@@ -57,10 +57,10 @@ namespace VMF
         virtual bool RequestMeasureAsync(const StringMap& params)       = 0;
         virtual bool RequestDeviceCheckAsync(const StringMap& params)   = 0;
         virtual bool RequestLightAsync(const StringMap& params)         = 0;
-        virtual DataMap GetLatestData(VatCommand type) const            = 0;
-        virtual void ClearLatestData(VatCommand type)                   = 0;
-        virtual bool IsValid(VatCommand type) const                     = 0;
-        virtual bool HasReceived(VatCommand type) const                 = 0;
+        virtual DataMap GetLatestData(VisionCommand type) const            = 0;
+        virtual void ClearLatestData(VisionCommand type)                   = 0;
+        virtual bool IsValid(VisionCommand type) const                     = 0;
+        virtual bool HasReceived(VisionCommand type) const                 = 0;
     };
 
     class VMF_API IVisionEventHandler : public virtual IAsyncVisionProcessor

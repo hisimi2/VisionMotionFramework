@@ -101,7 +101,7 @@ namespace VMF
         return m_ctrl.IsConnected();
     }
 
-    VisionProcessorBase::DataMap VisionProcessorBase::GetLatestData(VatCommand type) const
+    VisionProcessorBase::DataMap VisionProcessorBase::GetLatestData(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
 
@@ -114,21 +114,21 @@ namespace VMF
         return DataMap();
     }
 
-    void VisionProcessorBase::SetLatestData(VatCommand type, const DataMap& data)
+    void VisionProcessorBase::SetLatestData(VisionCommand type, const DataMap& data)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_latestData[type] = data;
         m_received[type] = true;
     }
 
-    void VisionProcessorBase::ClearLatestData(VatCommand type)
+    void VisionProcessorBase::ClearLatestData(VisionCommand type)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_latestData.erase(type);
         m_received.erase(type);
     }
 
-    bool VisionProcessorBase::IsValid(VatCommand type) const
+    bool VisionProcessorBase::IsValid(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
 
@@ -142,7 +142,7 @@ namespace VMF
         return (dataIt != m_latestData.end() && !dataIt->second.empty());
     }
 
-    bool VisionProcessorBase::HasReceived(VatCommand type) const
+    bool VisionProcessorBase::HasReceived(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
 
@@ -150,13 +150,13 @@ namespace VMF
         return (it != m_received.end()) ? it->second : false;
     }
 
-    void VisionProcessorBase::SetReceived(VatCommand type, bool received)
+    void VisionProcessorBase::SetReceived(VisionCommand type, bool received)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_received[type] = received;
     }
 
-    void VisionProcessorBase::ClearReceived(VatCommand type)
+    void VisionProcessorBase::ClearReceived(VisionCommand type)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_received.erase(type);

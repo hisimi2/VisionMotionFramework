@@ -2,6 +2,7 @@
 
 #include "RunController.h"
 #include "ISequenceSetup.h"
+#include "IComponentSetup.h"
 #include "IResultSink.h"
 #include "IVisionProcessor.h"
 #include "IDataRepository.h"
@@ -55,10 +56,10 @@ namespace VMF
             std::lock_guard<std::mutex> guard(m_seqMutex);
 
             // 기존 엔진 중지
-            if (m_pVatEngine)
+            if (m_pVisionEngine)
             {
-                m_pVatEngine->StopSequence();
-                m_pVatEngine.reset();
+                m_pVisionEngine->StopSequence();
+                m_pVisionEngine.reset();
             }
             m_pCurrentStrategy.reset();
 
@@ -76,11 +77,11 @@ DataRepositoryPtr GetDataRepository();
         void SetDataRepository(DataRepositoryPtr repo);
 
         /// Context 획득 (직접 모드/상태머신 모드 모두 지원)
-        VatContextPtr GetOrCreateContext();
+        VisionContextPtr GetOrCreateContext();
 
 /// 직접 비전 명령 실행 (상태머신 미사용)
-        bool ExecuteDirectVisionCommand(VatCommand cmd);
-        bool ExecuteDirectVisionCommand(VatCommand cmd, const StringMap& params);
+        bool ExecuteDirectVisionCommand(VisionCommand cmd);
+        bool ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params);
 
         /// <summary>
         /// Strategy를 통해 컴포넌트(Repository, VisionProcessor, Context)를 생성하고
@@ -92,6 +93,48 @@ DataRepositoryPtr GetDataRepository();
         {
             std::lock_guard<std::mutex> guard(m_seqMutex);
             return InitializeComponents<StrategyType>(actuator, false);
+        }
+
+        /// <summary>
+        /// IComponentSetup을 사용하여 직접 모드를 초기화합니다.
+        /// CreateRepository, CreateVisionProcessor, ConfigureParams를 사용하여 VP/Repo/Context를 조립합니다.
+        /// </summary>
+        bool InitializeDirect(ComponentSetupPtr componentSetup)
+        {
+            std::lock_guard<std::mutex> guard(m_seqMutex);
+
+            DataRepositoryPtr repo;
+            VisionEventHandlerPtr vp;
+
+            try
+            {
+                repo = componentSetup->CreateRepository();
+                vp = componentSetup->CreateVisionProcessor();
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            if (!repo || !vp) return false;
+
+            auto ctx = CreateContext(vp, repo);
+            if (!ctx) return false;
+
+            try
+            {
+                componentSetup->ConfigureParams(ctx);
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            m_directVisionProcessor = vp;
+            m_directDataRepository = repo;
+            m_directContext = ctx;
+
+            return true;
         }
 
 protected:
@@ -152,11 +195,11 @@ protected:
                 // === 상태머신 모드 ===
                 m_pCurrentStrategy = strategy;
 
-                VatActuatorPtr act = strategy->GetActuator();
+                VisionActuatorPtr act = strategy->GetActuator();
 
                 try
                 {
-                    m_pVatEngine = std::make_shared<RunController>(builder, ctx, act);
+                    m_pVisionEngine = std::make_shared<RunController>(builder, ctx, act);
                 }
                 catch (...)
                 {
@@ -166,13 +209,13 @@ protected:
 
                 AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
                 runner->SetResultSink(this);
-                m_pVatEngine->SetRunner(runner);
+                m_pVisionEngine->SetRunner(runner);
 
                 std::string seqName = strategy->GetSequenceName();
-                if (!m_pVatEngine->RunSequence(seqName))
+                if (!m_pVisionEngine->RunSequence(seqName))
                 {
-                    m_pVatEngine->StopSequence();
-                    m_pVatEngine.reset();
+                    m_pVisionEngine->StopSequence();
+                    m_pVisionEngine.reset();
                     m_pCurrentStrategy.reset();
                     return false;
                 }
@@ -188,14 +231,14 @@ protected:
             return true;
         }
         SequenceSetupPtr m_pCurrentStrategy;
-        VatEnginePtr m_pVatEngine;
+        VisionEnginePtr m_pVisionEngine;
 
         // --- [직접 모드] Strategy 없이 VisionProcessor/Repository 직접 보관 ---
         VisionEventHandlerPtr m_directVisionProcessor;
         DataRepositoryPtr     m_directDataRepository;
-        VatContextPtr         m_directContext;
+        VisionContextPtr         m_directContext;
 
-        virtual VatContextPtr CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo);
+        virtual VisionContextPtr CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo);
 
         // 기본 구현: Observer 통지
         virtual void OnVisionResult(int requestId, const std::vector<std::string>& results);

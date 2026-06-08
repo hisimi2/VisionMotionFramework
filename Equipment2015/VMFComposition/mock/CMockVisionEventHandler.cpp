@@ -68,7 +68,7 @@ namespace VMF
         return m_requestResult;
     }
 
-    CMockVisionEventHandler::DataMap CMockVisionEventHandler::GetLatestData(VatCommand type) const
+    CMockVisionEventHandler::DataMap CMockVisionEventHandler::GetLatestData(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         int key = type;
@@ -77,19 +77,19 @@ namespace VMF
         return DataMap();
     }
 
-    void CMockVisionEventHandler::ClearLatestData(VatCommand type)
+    void CMockVisionEventHandler::ClearLatestData(VisionCommand type)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         m_latestData.erase(type);
         m_receivedFlags[type] = false;
     }
 
-    bool CMockVisionEventHandler::IsValid(VatCommand type) const
+    bool CMockVisionEventHandler::IsValid(VisionCommand type) const
     {
 		return true;
     }
 
-    bool CMockVisionEventHandler::HasReceived(VatCommand type) const
+    bool CMockVisionEventHandler::HasReceived(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         int key = type;

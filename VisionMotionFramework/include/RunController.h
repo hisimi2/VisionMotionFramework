@@ -15,9 +15,9 @@ namespace VMF
     {
     public:
         // 생성자 선언을 소멸자보다 위에 배치하여 가독성을 높입니다.
-        RunController(SequenceBuilderPtr  builder,
-                      VatContextPtr       ctx,
-                      VatActuatorPtr      actuator);
+    RunController(SequenceBuilderPtr  builder,
+                      VisionContextPtr       ctx,
+                      VisionActuatorPtr      actuator);
         
         ~RunController();
 
@@ -28,14 +28,14 @@ namespace VMF
         void StopSequence();
 
 DataRepositoryPtr GetRepository() const;
-        VatContextPtr GetContext() const;
+        VisionContextPtr GetContext() const;
 
     private:
         // 의존성 주입된 스마트 포인터들
-        VatActuatorPtr          m_actuator;
+        VisionActuatorPtr          m_actuator;
         SequenceBuilderPtr      m_pBuilder;
         AsyncExecutorPtr        m_pRunner;
-        VatContextPtr           m_pCtx;
+        VisionContextPtr           m_pCtx;
     };
 } // namespace VMF
 

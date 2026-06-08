@@ -35,14 +35,14 @@ namespace VMF
         void Disconnect() override;
         bool IsConnected() const override;
 
-        DataMap GetLatestData(VatCommand type) const override;
-        void SetLatestData(VatCommand type, const DataMap& data);
-        void ClearLatestData(VatCommand type) override;
-        bool IsValid(VatCommand type) const override;
-        bool HasReceived(VatCommand type) const override;
+        DataMap GetLatestData(VisionCommand type) const override;
+        void SetLatestData(VisionCommand type, const DataMap& data);
+        void ClearLatestData(VisionCommand type) override;
+        bool IsValid(VisionCommand type) const override;
+        bool HasReceived(VisionCommand type) const override;
 
-        void SetReceived(VatCommand type, bool received);
-        void ClearReceived(VatCommand type);
+        void SetReceived(VisionCommand type, bool received);
+        void ClearReceived(VisionCommand type);
 
         /// <summary>
         /// 비전 프로세서의 실행 결과를 수신할 IResultSink를 등록합니다.
@@ -57,8 +57,8 @@ namespace VMF
         std::mutex m_mutex;
 
     private:
-        std::map<VatCommand, bool> m_received;
-        std::map<VatCommand, DataMap> m_latestData;
+        std::map<VisionCommand, bool> m_received;
+        std::map<VisionCommand, DataMap> m_latestData;
 
 mutable std::mutex m_dataMutex;
         std::atomic<bool> m_processRunning;

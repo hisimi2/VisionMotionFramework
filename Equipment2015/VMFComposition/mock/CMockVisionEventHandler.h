@@ -26,10 +26,10 @@ namespace VMF
         virtual bool RequestDeviceCheckAsync(const StringMap& params);
         virtual bool RequestLightAsync(const StringMap& params);
 
-        virtual DataMap GetLatestData(VatCommand type) const;
-        virtual void ClearLatestData(VatCommand type);
-        virtual bool IsValid(VatCommand type) const;
-        virtual bool HasReceived(VatCommand type) const;
+        virtual DataMap GetLatestData(VisionCommand type) const;
+        virtual void ClearLatestData(VisionCommand type);
+        virtual bool IsValid(VisionCommand type) const;
+        virtual bool HasReceived(VisionCommand type) const;
 
         // IVisionEventHandler (?섏떊 肄쒕갚)
         virtual void InitializeRecvThread();
@@ -49,7 +49,7 @@ namespace VMF
         bool m_connected;
         bool m_requestResult; // RequestXXXAsync 諛섑솚媛믪쓣 ?쒖뼱
 
-        // 理쒖떊 ?곗씠??蹂닿? (VatCommand -> StringMap)
+        // 理쒖떊 ?곗씠??蹂닿? (VisionCommand -> StringMap)
         std::map<int, StringMap> m_latestData;
 
         // ?섏떊 ?뚮옒洹?(?몄뒪?댁뒪蹂?

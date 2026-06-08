@@ -65,7 +65,7 @@ std::string Context::GetLastError() const
         return m_isStopRequested; 
     }
 
-    bool Context::ExecuteVisionCommand(VatCommand cmd)
+    bool Context::ExecuteVisionCommand(VisionCommand cmd)
     {
         LockGuardType guard(m_mutex);
 
@@ -87,7 +87,7 @@ std::string Context::GetLastError() const
         return ret;
     }
 
-    void Context::SetVatParams(const VatParams& params)
+    void Context::SetVisionParams(const VisionParams& params)
     {
         LockGuardType guard(m_mutex);
         m_params = params;

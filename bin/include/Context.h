@@ -152,7 +152,7 @@ namespace VMF
             : pos(std::move(_pos)), locateId(_locateId), visionRequestId(_visionRequestId) {}
     };
 
-    struct VatParams
+    struct VisionParams
     {
         StringMap                       seqParams;
         StringMap                       visionParams;
@@ -165,7 +165,7 @@ namespace VMF
         /// <summary>
         /// VAT 실행에 필요한 전체 파라미터 집합을 설정합니다.
         /// </summary>
-        void SetVatParams(const VatParams& params);
+        void SetVisionParams(const VisionParams& params);
 
         /// <summary>
         /// 시퀀스 파라미터에 정수 값을 문자열 형태로 저장합니다.
@@ -235,7 +235,7 @@ namespace VMF
         /// <summary>
         /// 현재 저장된 비전 파라미터를 사용하여 지정한 비전 명령을 실행합니다.
         /// </summary>
-        bool ExecuteVisionCommand(VatCommand cmd);
+        bool ExecuteVisionCommand(VisionCommand cmd);
 
         /// <summary>
         /// 지정한 시퀀스 파라미터를 원하는 타입으로 변환하여 반환합니다.
@@ -324,6 +324,6 @@ namespace VMF
         mutable std::mutex      m_mutex;
         std::string             m_lastError;
         bool                    m_isStopRequested;
-        VatParams               m_params;
+        VisionParams               m_params;
     };
 } // namespace VMF

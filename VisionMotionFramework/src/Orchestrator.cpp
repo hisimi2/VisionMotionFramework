@@ -12,17 +12,17 @@
 namespace VMF
 {
     Orchestrator::Orchestrator()
-        : m_pVatEngine()
+        : m_pVisionEngine()
     {
     }
 
     Orchestrator::~Orchestrator()
     {
-        VatEnginePtr engineToStop;
+        VisionEnginePtr engineToStop;
         {
             std::lock_guard<std::mutex> guard(m_seqMutex);
-            engineToStop = m_pVatEngine;
-            m_pVatEngine.reset();
+            engineToStop = m_pVisionEngine;
+            m_pVisionEngine.reset();
             m_pCurrentStrategy.reset();
         }
 
@@ -38,9 +38,9 @@ namespace VMF
 DataRepositoryPtr Orchestrator::GetDataRepository()
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
-        if (m_pVatEngine)
+        if (m_pVisionEngine)
         {
-            return m_pVatEngine->GetRepository();
+            return m_pVisionEngine->GetRepository();
         }
         return m_directDataRepository; // 직접 모드 지원
     }
@@ -101,7 +101,7 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
         }
     }
 
-    VatContextPtr Orchestrator::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
+    VisionContextPtr Orchestrator::CreateContext(const VisionEventHandlerPtr& vm, DataRepositoryPtr& repo)
     {
         auto ctx = std::make_shared<Context>();
         ctx->SetVisionProcessor(vm);
@@ -119,11 +119,11 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
 
     void Orchestrator::StopSequence()
     {
-        VatEnginePtr engineToStop;
+        VisionEnginePtr engineToStop;
         {
             std::lock_guard<std::mutex> guard(m_seqMutex);
-            engineToStop = m_pVatEngine;
-            m_pVatEngine.reset();
+            engineToStop = m_pVisionEngine;
+            m_pVisionEngine.reset();
             m_pCurrentStrategy.reset();
         }
 
@@ -152,9 +152,9 @@ if (engineToStop)
         std::lock_guard<std::mutex> guard(m_seqMutex);
 
         // 상태머신 모드: RunController → Context → VisionProcessor
-        if (m_pVatEngine)
+        if (m_pVisionEngine)
         {
-            auto ctx = m_pVatEngine->GetContext();
+            auto ctx = m_pVisionEngine->GetContext();
             if (ctx) return ctx->GetVisionProcessorInterface();
         }
         return m_directVisionProcessor;
@@ -172,14 +172,14 @@ if (engineToStop)
         }
     }
 
-    VatContextPtr Orchestrator::GetOrCreateContext()
+    VisionContextPtr Orchestrator::GetOrCreateContext()
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
 
         // 상태머신 모드: RunController의 Context 반환
-        if (m_pVatEngine)
+        if (m_pVisionEngine)
         {
-            auto ctx = m_pVatEngine->GetContext();
+            auto ctx = m_pVisionEngine->GetContext();
             if (ctx) return ctx;
         }
 
@@ -195,14 +195,14 @@ if (engineToStop)
         return m_directContext;
     }
 
-    bool Orchestrator::ExecuteDirectVisionCommand(VatCommand cmd)
+    bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd)
     {
         auto ctx = GetOrCreateContext();
         if (!ctx) return false;
         return ctx->ExecuteVisionCommand(cmd);
     }
 
-    bool Orchestrator::ExecuteDirectVisionCommand(VatCommand cmd, const StringMap& params)
+    bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params)
     {
         auto ctx = GetOrCreateContext();
         if (!ctx) return false;

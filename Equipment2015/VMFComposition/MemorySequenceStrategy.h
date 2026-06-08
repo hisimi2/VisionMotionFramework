@@ -10,6 +10,8 @@
 
 /// <summary>
 /// 메모리 기반 시퀀스 전략을 위한 기본 클래스입니다.
+/// SequenceSetupBase를 상속받아 CreateRepository, CreateVisionProcessor를 구현합니다.
+/// SetParam/AddVisionPoint 헬퍼는 ComponentSetupBase에서 상속받아 사용합니다.
 /// </summary>
 class MemorySequenceStrategy : public VMF::SequenceSetupBase
 {
@@ -33,42 +35,12 @@ public:
         return vm;
     }
 
-protected:
-    /// <summary>
-    /// SequenceSetupBase.h의 ConfigureParams 구현에서 사용하여, 시퀀스 실행에 필요한 파라미터를 간편하게 설정할 수 있도록 확장합니다.
-    /// </summary>
-    // 문자열 파라미터 설정
-    void SetParam(VMF::VatParams& params, const std::string& key, const std::string& value)
-    {
-        params.seqParams[key] = value;
-    }
-    // 정수 파라미터 설정 (자동 문자열 변환)
-    void SetParam(VMF::VatParams& params, const std::string& key, double value)
-    {
-        std::ostringstream oss;
-        oss << value;
-        params.seqParams[key] = oss.str();
-    }
-    // 비전 검사 위치 추가
-    void AddVisionPoint(VMF::VatParams& params, int locateId, int requestId, double x, double y, double z)
-    {
-        std::vector<double> pos;
-        pos.push_back(x);
-        pos.push_back(y);
-        pos.push_back(z);
-        params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
-    }
-    // 비전 검사 위치 추가
-    void AddVisionPoint(VMF::VatParams& params, int locateId, int requestId, double x, double y, double z, double t1, double t2)
-    {
-        std::vector<double> pos;
-        pos.push_back(x);
-        pos.push_back(y);
-        pos.push_back(z);
-        pos.push_back(t1);
-        pos.push_back(t2);
-        params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
-    }
+    // ISequenceSetup 순수가상: 파생 클래스에서 구현
+    // std::string GetSequenceName() const override = 0;
+    // SequenceBuilderPtr CreateBuilder() override = 0;
+
+    // IComponentSetup 순수가상: ConfigreParams는 파생 클래스에서 구현
+    // void ConfigureParams(VMF::VisionContextPtr ctx) override = 0;
 };
 
 

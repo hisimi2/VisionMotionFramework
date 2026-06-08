@@ -4,18 +4,8 @@
 namespace VMF
 {
     SequenceSetupBase::SequenceSetupBase()
-        :  m_adapter(nullptr)
+        : ComponentSetupBase()
     {
-    }
-
-    void SequenceSetupBase::SetActuator(IActuator* adapter)
-    {
-        m_adapter = adapter;
-    }
-
-    IActuator* SequenceSetupBase::GetActuator()
-    {
-        return m_adapter;
     }
 }
 
