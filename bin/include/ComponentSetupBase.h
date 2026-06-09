@@ -2,6 +2,7 @@
 
 #include "VMF_API.h"
 #include "IComponentSetup.h"
+#include "ISequenceSetup.h"
 #include "Context.h"
 #include "IActuator.h"
 #include <sstream>
@@ -13,7 +14,7 @@ namespace VMF
     /// SetParam, AddVisionPoint 등의 헬퍼 메서드를 제공합니다.
     /// CreateRepository, CreateVisionProcessor, ConfigureParams는 파생 클래스에서 구현해야 합니다.
     /// </summary>
-    class VMF_API ComponentSetupBase : public IComponentSetup
+    class VMF_API ComponentSetupBase : public IComponentSetup, public ISequenceSetup
     {
     protected:
         IActuator* m_adapter;

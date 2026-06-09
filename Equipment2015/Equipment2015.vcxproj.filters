@@ -123,7 +123,7 @@
     <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.h">
       <Filter>VMFComposition\Vision</Filter>
     </ClInclude>
-    <ClInclude Include="VMFComposition\MemorySequenceStrategy.h">
+    <ClInclude Include="VMFComposition\DefaultSetupStrategy.h">
       <Filter>VMFComposition\Sequence</Filter>
     </ClInclude>
     <ClInclude Include="OperationThreads\Load1ActivityBuilder.h">

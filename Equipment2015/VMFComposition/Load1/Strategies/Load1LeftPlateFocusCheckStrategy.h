@@ -1,5 +1,5 @@
 #pragma once
-#include "VMFComposition/MemorySequenceStrategy.h"
+#include "VMFComposition/DefaultSetupStrategy.h"
 #include "VMFComposition/Load1/Sequences/CLoad1ZFocusSequenceBuilder.h"
 
 namespace VMF_Load1
@@ -7,7 +7,7 @@ namespace VMF_Load1
     using namespace VMF;
     using namespace Sequence;
 
-    class CLoad1LeftPlateJIGFocusCheckSequenceStrategy : public MemorySequenceStrategy
+    class Load1LeftPlateFocusCheckStrategy : public DefaultSetupStrategy
 	{
 	public:
 		std::string GetSequenceName() const { return "Load1ZFocus"; }

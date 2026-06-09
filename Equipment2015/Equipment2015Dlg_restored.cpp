@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -202,7 +202,7 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 
 //=============================================================================
 // [예제] Orchestrator + Strategy 패턴을 사용한 시퀀스 실행
-// - VMF::Orchestrator를 생성하고 Load1LeftPlateFocusCheckStrategy를
+// - VMF::Orchestrator를 생성하고 CLoad1LeftPlateJIGFocusCheckSequenceStrategy를
 //   실행하는 방법을 보여줍니다.
 // - 옵저버를 등록하여 실행 결과를 UI 로그에 출력합니다.
 // - 실제 하드웨어가 없는 경우 CMockActuator를 사용할 수 있습니다.
@@ -214,7 +214,7 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 // ============================================================
 #include "Orchestrator.h"
 #include "IActuator.h"
-#include "VMFComposition/Load1/Strategies/Load1LeftPlateFocusCheckStrategy.h"
+#include "VMFComposition/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
 
 // 실행에 필요한 Actuator 구현 (실제 하드웨어 또는 Mock)
 #include "VMFComposition/Load1/VatAdapterLoad1.h"
@@ -274,7 +274,7 @@ void CEquipment2015Dlg::RunOrchestratorSequenceExample()
 
     // 2-2. 템플릿 메서드를 통해 Strategy 타입을 전달하여 시퀀스 시작
     bool started = m_orchestrator->StartSequence<
-        VMF_Load1::Load1LeftPlateFocusCheckStrategy
+        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
     >(actuator);
 
     if (started)
@@ -361,7 +361,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 
     // --- 4. Strategy 템플릿으로 상태머신 시작 ---
     //    StartSequence<T>() 내부 동작:
-    //    ① Load1LeftPlateFocusCheckStrategy 생성
+    //    ① CLoad1LeftPlateJIGFocusCheckSequenceStrategy 생성
     //    ② CreateRepository() → SqliteDataRepository 생성 및 Initialize()
     //    ③ CreateVisionProcessor() → CMockVisionEventHandler 생성 및 Initialize(config)
     //    ④ CreateContext(vp, repo) → Context 생성, VP/Repo 연결
@@ -372,7 +372,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     //    ⑨ RunSequence("Load1ZFocus") → 별도 스레드에서 Sequence::Execute() 실행
     //    실행 완료 시 AsyncExecutor → IResultSink::NotifyVisionResult → Observer 콜백
     bool started = m_orchestrator->StartSequence<
-        VMF_Load1::Load1LeftPlateFocusCheckStrategy
+        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
     >(actuator);
 
     CString msg;
@@ -423,14 +423,14 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
 
     // --- 3. Strategy를 통해 컴포넌트 생성/조립 (직접 모드) ---
     //    InitializeDirectWithStrategy<T>() 내부 동작:
-    //    ① Load1LeftPlateFocusCheckStrategy 생성
+    //    ① CLoad1LeftPlateJIGFocusCheckSequenceStrategy 생성
     //    ② CreateRepository() → SqliteDataRepository 생성 및 Initialize()
     //    ③ CreateVisionProcessor() → CMockVisionEventHandler 생성 및 Initialize(config)
     //    ④ CreateContext(vp, repo) → Context 생성, VP/Repo 연결
     //    ⑤ ConfigureParams(ctx) → SetParam + LoadInspInitPos + AddVisionPoint
     //    ⑥ VP/Repo/Context를 m_directXXX에 저장 (RunController/AsyncExecutor 미사용)
     bool ok = m_orchestrator->InitializeDirectWithStrategy<
-        VMF_Load1::Load1LeftPlateFocusCheckStrategy
+        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
     >(nullptr);
 
     if (!ok)

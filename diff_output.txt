@@ -1,0 +1,408 @@
+diff --git a/Equipment2015/Equipment2015Dlg.cpp b/Equipment2015/Equipment2015Dlg.cpp
+index a0e5403..8c38e12 100644
+--- a/Equipment2015/Equipment2015Dlg.cpp
++++ b/Equipment2015/Equipment2015Dlg.cpp
+@@ -1,4 +1,4 @@
+-// Equipment2015Dlg.cpp : 구현 파일
++// Equipment2015Dlg.cpp : 援ы쁽 ?뚯씪
+ //
+ 
+ #include "stdafx.h"
+@@ -19,7 +19,7 @@ CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
+ 
+     m_StartSwitch.setGroup(&m_StopSwitch).setOption(IOPSwitch::PUSH, false);
+     m_StopSwitch.setGroup(&m_StartSwitch).setOption(IOPSwitch::PUSH, false);
+-    m_StopSwitch.setStatus(true); // 초기 상태는 Stop
++    m_StopSwitch.setStatus(true); // 珥덇린 ?곹깭??Stop
+ 
+ }
+ 
+@@ -43,17 +43,17 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
+     ON_BN_CLICKED(IDC_VMF_DIRECT, &CEquipment2015Dlg::OnBnClickedVmfDirect)
+ END_MESSAGE_MAP()
+ 
+-// CEquipment2015Dlg 메시지 처리기
++// CEquipment2015Dlg 硫붿떆吏 泥섎━湲?
+ BOOL CEquipment2015Dlg::OnInitDialog()
+ {
+ 	CDialogEx::OnInitDialog();
+ 
+-    // Windows 기본 비주얼 매니저로 복원
++    // Windows 湲곕낯 鍮꾩＜??留ㅻ땲?濡?蹂듭썝
+     CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManager));
+ 
+-	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
++	// ?쒖뒪??硫붾돱??"?뺣낫..." 硫붾돱 ??ぉ??異붽??⑸땲??
+ 
+-	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
++	// IDM_ABOUTBOX???쒖뒪??紐낅졊 踰붿쐞???덉뼱???⑸땲??
+ 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
+ 	ASSERT(IDM_ABOUTBOX < 0xF000);
+ 
+@@ -71,14 +71,14 @@ BOOL CEquipment2015Dlg::OnInitDialog()
+ 		}
+ 	}
+ 
+-	// 이 대화 상자의 아이콘을 설정합니다.
+-	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
+-	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
++	// ??????곸옄???꾩씠肄섏쓣 ?ㅼ젙?⑸땲??
++	SetIcon(m_hIcon, TRUE);			// ???꾩씠肄섏쓣 ?ㅼ젙?⑸땲??
++	SetIcon(m_hIcon, FALSE);		// ?묒? ?꾩씠肄섏쓣 ?ㅼ젙?⑸땲??
+ 
+-	// ThreadsManager 초기화 — Load1, Load2 등록
++	// ThreadsManager 珥덇린????Load1, Load2 ?깅줉
+ 	m_threadsMgr.Initialize();
+ 
+-    // Observer에서 UI로 결과 출력 — PostMessage로 UI 스레드에 전달
++    // Observer?먯꽌 UI濡?寃곌낵 異쒕젰 ??PostMessage濡?UI ?ㅻ젅?쒖뿉 ?꾨떖
+     m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
+     {
+         ActivityResultData* pData = new ActivityResultData();
+@@ -90,19 +90,19 @@ BOOL CEquipment2015Dlg::OnInitDialog()
+             pData->detail += CString(result.c_str()) + _T("\r\n");
+         }
+ 
+-        // UI 스레드로 메시지 전송 (비동기, 스레드 안전)
++        // UI ?ㅻ젅?쒕줈 硫붿떆吏 ?꾩넚 (鍮꾨룞湲? ?ㅻ젅???덉쟾)
+         ::PostMessage(this->m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, (LPARAM)0);
+     });
+ 
+-    SetTimer(1, 1000, NULL); // 1초마다 타이머 이벤트 발생
++    SetTimer(1, 1000, NULL); // 1珥덈쭏????대㉧ ?대깽??諛쒖깮
+ 
+-	return TRUE;	// 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
++	return TRUE;	// ?ъ빱?ㅻ? 而⑦듃濡ㅼ뿉 ?ㅼ젙?섏? ?딆쑝硫?TRUE瑜?諛섑솚?⑸땲??
+ }
+ 
+ 
+ void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
+ {
+-    // TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
++    // TODO: ?ш린??硫붿떆吏 泥섎━湲?肄붾뱶瑜?異붽? 諛??먮뒗 湲곕낯媛믪쓣 ?몄텧?⑸땲??
+     switch (nIDEvent)
+     {
+     case 1:
+@@ -144,11 +144,11 @@ void CEquipment2015Dlg::OnPaint()
+ {
+ 	if (IsIconic())
+ 	{
+-		CPaintDC dc(this);	// 그리기를 위한 디바이스 컨텍스트입니다.
++		CPaintDC dc(this);	// 洹몃━湲곕? ?꾪븳 ?붾컮?댁뒪 而⑦뀓?ㅽ듃?낅땲??
+ 
+ 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+ 
+-		// 클라이언트 사각형에서 아이콘을 가운데에 맞춥니다.
++		// ?대씪?댁뼵???ш컖?뺤뿉???꾩씠肄섏쓣 媛?대뜲??留욎땅?덈떎.
+ 		int cxIcon = GetSystemMetrics(SM_CXICON);
+ 		int cyIcon = GetSystemMetrics(SM_CYICON);
+ 		CRect rect;
+@@ -179,7 +179,7 @@ void CEquipment2015Dlg::OnBnClickedStop()
+     m_StopSwitch.setStatus(true);
+ }
+ 
+-// OnActivityResult — UI 스레드에서 실행됨 (PostMessage 수신)
++// OnActivityResult ??UI ?ㅻ젅?쒖뿉???ㅽ뻾??(PostMessage ?섏떊)
+ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
+ {
+     ActivityResultData* pData = reinterpret_cast<ActivityResultData*>(wParam);
+@@ -201,37 +201,37 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
+ 
+ 
+ //=============================================================================
+-// [예제] Orchestrator + Strategy 패턴을 사용한 시퀀스 실행
+-// - VMF::Orchestrator를 생성하고 CLoad1LeftPlateJIGFocusCheckSequenceStrategy를
+-//   실행하는 방법을 보여줍니다.
+-// - 옵저버를 등록하여 실행 결과를 UI 로그에 출력합니다.
+-// - 실제 하드웨어가 없는 경우 CMockActuator를 사용할 수 있습니다.
++// [?덉젣] Orchestrator + Strategy ?⑦꽩???ъ슜???쒗???ㅽ뻾
++// - VMF::Orchestrator瑜??앹꽦?섍퀬 Load1LeftPlateFocusCheckStrategy瑜?
++//   ?ㅽ뻾?섎뒗 諛⑸쾿??蹂댁뿬以띾땲??
++// - ?듭?踰꾨? ?깅줉?섏뿬 ?ㅽ뻾 寃곌낵瑜?UI 濡쒓렇??異쒕젰?⑸땲??
++// - ?ㅼ젣 ?섎뱶?⑥뼱媛 ?녿뒗 寃쎌슦 CMockActuator瑜??ъ슜?????덉뒿?덈떎.
+ //=============================================================================
+ 
+ 
+ // ============================================================
+-// [필요 헤더 includes]
++// [?꾩슂 ?ㅻ뜑 includes]
+ // ============================================================
+ #include "Orchestrator.h"
+ #include "IActuator.h"
+-#include "VMFComposition/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
++#include "VMFComposition/Load1/Strategies/Load1LeftPlateFocusCheckStrategy.h"
+ 
+-// 실행에 필요한 Actuator 구현 (실제 하드웨어 또는 Mock)
++// ?ㅽ뻾???꾩슂??Actuator 援ы쁽 (?ㅼ젣 ?섎뱶?⑥뼱 ?먮뒗 Mock)
+ #include "VMFComposition/Load1/VatAdapterLoad1.h"
+ 
+-// 직접 모드에서 필요한 헤더
++// 吏곸젒 紐⑤뱶?먯꽌 ?꾩슂???ㅻ뜑
+ #include "RepositoryFactory.h"
+ #include "VMFComposition/Mock/CMockVisionEventHandler.h"
+ 
+ // ============================================================
+-// 1. Orchestrator 생성 및 옵저버 등록 (OnInitDialog 등에서)
++// 1. Orchestrator ?앹꽦 諛??듭?踰??깅줉 (OnInitDialog ?깆뿉??
+ // ============================================================
+ void CEquipment2015Dlg::InitOrchestratorExample()
+ {
+-    // 1-1. Orchestrator 인스턴스 생성
++    // 1-1. Orchestrator ?몄뒪?댁뒪 ?앹꽦
+     m_orchestrator = std::make_shared<VMF::Orchestrator>();
+ 
+-    // 1-2. 옵저버 등록: 시퀀스 실행 결과를 UI 로그에 표시
++    // 1-2. ?듭?踰??깅줉: ?쒗???ㅽ뻾 寃곌낵瑜?UI 濡쒓렇???쒖떆
+     m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
+     {
+         CString msg;
+@@ -242,7 +242,7 @@ void CEquipment2015Dlg::InitOrchestratorExample()
+             msg += CString(result.c_str()) + _T("\r\n");
+         }
+ 
+-// UI 스레드로 전달 (PostMessage 사용)
++// UI ?ㅻ젅?쒕줈 ?꾨떖 (PostMessage ?ъ슜)
+         ActivityResultData* pData = new ActivityResultData();
+         pData->activityName = _T("Orchestrator");
+         pData->requestId = payload.requestId;
+@@ -252,29 +252,29 @@ void CEquipment2015Dlg::InitOrchestratorExample()
+ }
+ 
+ // ============================================================
+-// 2. Actuator 생성 및 시퀀스 실행
++// 2. Actuator ?앹꽦 諛??쒗???ㅽ뻾
+ // ============================================================
+ void CEquipment2015Dlg::RunOrchestratorSequenceExample()
+ {
+     if (!m_orchestrator)
+     {
+-        AfxMessageBox(_T("Orchestrator가 초기화되지 않았습니다."));
++        AfxMessageBox(_T("Orchestrator媛 珥덇린?붾릺吏 ?딆븯?듬땲??"));
+         return;
+     }
+ 
+-    // 2-1. Actuator 생성 (실제 하드웨어 어댑터)
+-// 실제 장비 연결 시:
+-    // auto* actuator = new VMF_Load1::VatAdapterLoad1(하드웨어 초기화 파라미터);
++    // 2-1. Actuator ?앹꽦 (?ㅼ젣 ?섎뱶?⑥뼱 ?대뙌??
++// ?ㅼ젣 ?λ퉬 ?곌껐 ??
++    // auto* actuator = new VMF_Load1::VatAdapterLoad1(?섎뱶?⑥뼱 珥덇린???뚮씪誘명꽣);
+ 
+-    // Mock 객체 사용 (개발/테스트용):
++    // Mock 媛앹껜 ?ъ슜 (媛쒕컻/?뚯뒪?몄슜):
+     // auto* actuator = new VMF::CMockActuator();
+ 
+-    // ※ 실제 Actuator 주입은 Equipment 프로젝트의 하드웨어 초기화 이후 수행
+-    VMF::IActuator* actuator = nullptr; // 실제 구현 시 하드웨어 어댑터로 교체
++    // ???ㅼ젣 Actuator 二쇱엯? Equipment ?꾨줈?앺듃???섎뱶?⑥뼱 珥덇린???댄썑 ?섑뻾
++    VMF::IActuator* actuator = nullptr; // ?ㅼ젣 援ы쁽 ???섎뱶?⑥뼱 ?대뙌?곕줈 援먯껜
+ 
+-    // 2-2. 템플릿 메서드를 통해 Strategy 타입을 전달하여 시퀀스 시작
++    // 2-2. ?쒗뵆由?硫붿꽌?쒕? ?듯빐 Strategy ??낆쓣 ?꾨떖?섏뿬 ?쒗???쒖옉
+     bool started = m_orchestrator->StartSequence<
+-        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
++        VMF_Load1::Load1LeftPlateFocusCheckStrategy
+     >(actuator);
+ 
+     if (started)
+@@ -290,7 +290,7 @@ void CEquipment2015Dlg::RunOrchestratorSequenceExample()
+ }
+ 
+ // ============================================================
+-// 3. 시퀀스 중단
++// 3. ?쒗??以묐떒
+ // ============================================================
+ void CEquipment2015Dlg::StopOrchestratorSequenceExample()
+ {
+@@ -303,13 +303,13 @@ void CEquipment2015Dlg::StopOrchestratorSequenceExample()
+ }
+ 
+ // ============================================================
+-// 4. 실행 결과 데이터 접근 (Orchestrator -> Context -> Repository)
++// 4. ?ㅽ뻾 寃곌낵 ?곗씠???묎렐 (Orchestrator -> Context -> Repository)
+ // ============================================================
+ void CEquipment2015Dlg::AccessSequenceDataExample()
+ {
+     if (!m_orchestrator) return;
+ 
+-    // Orchestrator를 통해 Repository 접근
++    // Orchestrator瑜??듯빐 Repository ?묎렐
+     VMF::DataRepositoryPtr repo = m_orchestrator->GetDataRepository();
+     if (repo)
+     {
+@@ -327,17 +327,17 @@ void CEquipment2015Dlg::AccessSequenceDataExample()
+ }
+ 
+ //=============================================================================
+-// [예제] VMF 상태머신 모드 (State Machine) - 클릭 핸들러
+-// - Orchestrator::StartSequence<T>() 사용
+-// - Strategy → VP/Repo/Builder → RunController → AsyncExecutor(별도 스레드) 실행
+-// - 결과는 Observer 콜백 → PostMessage → UI 로그 출력
++// [?덉젣] VMF ?곹깭癒몄떊 紐⑤뱶 (State Machine) - ?대┃ ?몃뱾??
++// - Orchestrator::StartSequence<T>() ?ъ슜
++// - Strategy ??VP/Repo/Builder ??RunController ??AsyncExecutor(蹂꾨룄 ?ㅻ젅?? ?ㅽ뻾
++// - 寃곌낵??Observer 肄쒕갚 ??PostMessage ??UI 濡쒓렇 異쒕젰
+ //=============================================================================
+ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
+ {
+-    // --- 1. Orchestrator 생성 ---
++    // --- 1. Orchestrator ?앹꽦 ---
+     m_orchestrator = std::make_shared<VMF::Orchestrator>();
+ 
+-    // --- 2. Observer 등록 (시퀀스 실행 결과를 UI 로그에 출력) ---
++    // --- 2. Observer ?깅줉 (?쒗???ㅽ뻾 寃곌낵瑜?UI 濡쒓렇??異쒕젰) ---
+     m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
+     {
+         CString msg;
+@@ -355,32 +355,32 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
+         ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+     });
+ 
+-    // --- 3. Actuator 생성 ---
+-    // ※ 실제 하드웨어 연결 시 VatAdapterLoad1(초기화파라미터) 로 교체
++    // --- 3. Actuator ?앹꽦 ---
++    // ???ㅼ젣 ?섎뱶?⑥뼱 ?곌껐 ??VatAdapterLoad1(珥덇린?뷀뙆?쇰??? 濡?援먯껜
+     VMF::IActuator* actuator = nullptr;
+ 
+-    // --- 4. Strategy 템플릿으로 상태머신 시작 ---
+-    //    StartSequence<T>() 내부 동작:
+-    //    ① CLoad1LeftPlateJIGFocusCheckSequenceStrategy 생성
+-    //    ② CreateRepository() → SqliteDataRepository 생성 및 Initialize()
+-    //    ③ CreateVisionProcessor() → CMockVisionEventHandler 생성 및 Initialize(config)
+-    //    ④ CreateContext(vp, repo) → Context 생성, VP/Repo 연결
+-    //    ⑤ ConfigureParams(ctx) → SetParam + LoadInspInitPos + AddVisionPoint
+-    //    ⑥ CreateBuilder() → CLoad1ZFocusSequenceBuilder 생성
+-    //    ⑦ RunController(builder, ctx, actuator) 생성
+-    //    ⑧ AsyncExecutor 생성 → SetResultSink(this) → SetRunner
+-    //    ⑨ RunSequence("Load1ZFocus") → 별도 스레드에서 Sequence::Execute() 실행
+-    //    실행 완료 시 AsyncExecutor → IResultSink::NotifyVisionResult → Observer 콜백
++    // --- 4. Strategy ?쒗뵆由우쑝濡??곹깭癒몄떊 ?쒖옉 ---
++    //    StartSequence<T>() ?대? ?숈옉:
++    //    ??Load1LeftPlateFocusCheckStrategy ?앹꽦
++    //    ??CreateRepository() ??SqliteDataRepository ?앹꽦 諛?Initialize()
++    //    ??CreateVisionProcessor() ??CMockVisionEventHandler ?앹꽦 諛?Initialize(config)
++    //    ??CreateContext(vp, repo) ??Context ?앹꽦, VP/Repo ?곌껐
++    //    ??ConfigureParams(ctx) ??SetParam + LoadInspInitPos + AddVisionPoint
++    //    ??CreateBuilder() ??CLoad1ZFocusSequenceBuilder ?앹꽦
++    //    ??RunController(builder, ctx, actuator) ?앹꽦
++    //    ??AsyncExecutor ?앹꽦 ??SetResultSink(this) ??SetRunner
++    //    ??RunSequence("Load1ZFocus") ??蹂꾨룄 ?ㅻ젅?쒖뿉??Sequence::Execute() ?ㅽ뻾
++    //    ?ㅽ뻾 ?꾨즺 ??AsyncExecutor ??IResultSink::NotifyVisionResult ??Observer 肄쒕갚
+     bool started = m_orchestrator->StartSequence<
+-        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
++        VMF_Load1::Load1LeftPlateFocusCheckStrategy
+     >(actuator);
+ 
+     CString msg;
+     if (started)
+     {
+-        msg = _T("[StateMachine Mode] Sequence 'Load1ZFocus' started successfully. (비동기 실행)\r\n");
+-        msg += _T("  - 별도 스레드에서 Sequence::Execute() 실행 중\r\n");
+-        msg += _T("  - 완료 시 Observer 콜백으로 결과 수신\r\n");
++        msg = _T("[StateMachine Mode] Sequence 'Load1ZFocus' started successfully. (鍮꾨룞湲??ㅽ뻾)\r\n");
++        msg += _T("  - 蹂꾨룄 ?ㅻ젅?쒖뿉??Sequence::Execute() ?ㅽ뻾 以?r\n");
++        msg += _T("  - ?꾨즺 ??Observer 肄쒕갚?쇰줈 寃곌낵 ?섏떊\r\n");
+     }
+     else
+     {
+@@ -392,18 +392,18 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
+ }
+ 
+ //=============================================================================
+-// [예제] VMF 직접 모드 (Direct Mode) - 클릭 핸들러
+-// - Orchestrator::InitializeDirectWithStrategy<T>() 사용
+-// - Strategy의 컴포넌트 조립 로직(CreateRepository, CreateVisionProcessor, ConfigureParams)만 재사용
+-// - 상태머신(RunController + AsyncExecutor)은 실행하지 않음
+-// - ExecuteDirectVisionCommand()로 동기식 비전 명령 실행
++// [?덉젣] VMF 吏곸젒 紐⑤뱶 (Direct Mode) - ?대┃ ?몃뱾??
++// - Orchestrator::InitializeDirectWithStrategy<T>() ?ъ슜
++// - Strategy??而댄룷?뚰듃 議곕┰ 濡쒖쭅(CreateRepository, CreateVisionProcessor, ConfigureParams)留??ъ궗??
++// - ?곹깭癒몄떊(RunController + AsyncExecutor)? ?ㅽ뻾?섏? ?딆쓬
++// - ExecuteDirectVisionCommand()濡??숆린??鍮꾩쟾 紐낅졊 ?ㅽ뻾
+ //=============================================================================
+ void CEquipment2015Dlg::OnBnClickedVmfDirect()
+ {
+-    // --- 1. Orchestrator 생성 ---
++    // --- 1. Orchestrator ?앹꽦 ---
+     m_orchestrator = std::make_shared<VMF::Orchestrator>();
+ 
+-    // --- 2. Observer 등록 (직접 모드에서도 Observer 가능) ---
++    // --- 2. Observer ?깅줉 (吏곸젒 紐⑤뱶?먯꽌??Observer 媛?? ---
+     m_orchestrator->AddObserver([this](const VMF::VisionResultPayload& payload)
+     {
+         CString msg;
+@@ -421,16 +421,16 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
+         ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+     });
+ 
+-    // --- 3. Strategy를 통해 컴포넌트 생성/조립 (직접 모드) ---
+-    //    InitializeDirectWithStrategy<T>() 내부 동작:
+-    //    ① CLoad1LeftPlateJIGFocusCheckSequenceStrategy 생성
+-    //    ② CreateRepository() → SqliteDataRepository 생성 및 Initialize()
+-    //    ③ CreateVisionProcessor() → CMockVisionEventHandler 생성 및 Initialize(config)
+-    //    ④ CreateContext(vp, repo) → Context 생성, VP/Repo 연결
+-    //    ⑤ ConfigureParams(ctx) → SetParam + LoadInspInitPos + AddVisionPoint
+-    //    ⑥ VP/Repo/Context를 m_directXXX에 저장 (RunController/AsyncExecutor 미사용)
++    // --- 3. Strategy瑜??듯빐 而댄룷?뚰듃 ?앹꽦/議곕┰ (吏곸젒 紐⑤뱶) ---
++    //    InitializeDirectWithStrategy<T>() ?대? ?숈옉:
++    //    ??Load1LeftPlateFocusCheckStrategy ?앹꽦
++    //    ??CreateRepository() ??SqliteDataRepository ?앹꽦 諛?Initialize()
++    //    ??CreateVisionProcessor() ??CMockVisionEventHandler ?앹꽦 諛?Initialize(config)
++    //    ??CreateContext(vp, repo) ??Context ?앹꽦, VP/Repo ?곌껐
++    //    ??ConfigureParams(ctx) ??SetParam + LoadInspInitPos + AddVisionPoint
++    //    ??VP/Repo/Context瑜?m_directXXX?????(RunController/AsyncExecutor 誘몄궗??
+     bool ok = m_orchestrator->InitializeDirectWithStrategy<
+-        VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy
++        VMF_Load1::Load1LeftPlateFocusCheckStrategy
+     >(nullptr);
+ 
+     if (!ok)
+@@ -440,26 +440,26 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
+         return;
+     }
+ 
+-    // --- 4. 직접 비전 명령 실행 (동기식) ---
++    // --- 4. 吏곸젒 鍮꾩쟾 紐낅졊 ?ㅽ뻾 (?숆린?? ---
+     CString logMsg;
+-    logMsg = _T("[Direct Mode] Strategy로 컴포넌트 조립 완료.\r\n");
++    logMsg = _T("[Direct Mode] Strategy濡?而댄룷?뚰듃 議곕┰ ?꾨즺.\r\n");
+     logMsg += _T("  - Repository: SqliteDataRepository\r\n");
+     logMsg += _T("  - VisionProcessor: CMockVisionEventHandler\r\n");
+-    logMsg += _T("  - ConfigureParams로 파라미터 설정 완료\r\n\r\n");
++    logMsg += _T("  - ConfigureParams濡??뚮씪誘명꽣 ?ㅼ젙 ?꾨즺\r\n\r\n");
+ 
+-    // 4-1. Measure 명령 실행
++    // 4-1. Measure 紐낅졊 ?ㅽ뻾
+     bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
+-    logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(Measure) → %s\r\n"),
++    logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(Measure) ??%s\r\n"),
+                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
+ 
+-    // 4-2. 파라미터를 추가로 설정하여 다른 명령 실행
++    // 4-2. ?뚮씪誘명꽣瑜?異붽?濡??ㅼ젙?섏뿬 ?ㅻⅨ 紐낅졊 ?ㅽ뻾
+     VMF::StringMap params;
+     params["ExtraParam"] = "DirectModeTest";
+     cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
+-    logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(SetCok, params) → %s\r\n"),
++    logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(SetCok, params) ??%s\r\n"),
+                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
+ 
+-    // 4-3. VisionProcessor에서 최신 데이터 조회
++    // 4-3. VisionProcessor?먯꽌 理쒖떊 ?곗씠??議고쉶
+     VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
+     if (vp)
+     {
+@@ -472,7 +472,7 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
+         logMsg += _T("\r\n");
+     }
+ 
+-    // --- 5. Context를 통해 저장된 파라미터 확인 ---
++    // --- 5. Context瑜??듯빐 ??λ맂 ?뚮씪誘명꽣 ?뺤씤 ---
+     VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
+     if (ctx)
+     {
+@@ -485,3 +485,4 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
+     m_LogEdit.SetSel(m_LogEdit.GetWindowTextLength(), m_LogEdit.GetWindowTextLength());
+     m_LogEdit.ReplaceSel(logMsg);
+ }
++

@@ -1,5 +1,6 @@
-﻿#pragma once
-#include "SequenceSetupBase.h"
+// MemorySequenceStrategy.h → DefaultSetupStrategy.h (리팩토링: 역할 기반 네이밍)
+#pragma once
+#include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"
 
 #include "VMFComposition/VisionProtocal/VisionMemoryProcessor.h"
@@ -9,11 +10,11 @@
 #include <memory>
 
 /// <summary>
-/// 메모리 기반 시퀀스 전략을 위한 기본 클래스입니다.
-/// SequenceSetupBase를 상속받아 CreateRepository, CreateVisionProcessor를 구현합니다.
+/// 기본 컴포넌트 설정 전략 클래스.
+/// ComponentSetupBase를 상속받아 CreateRepository, CreateVisionProcessor의 기본 구현을 제공합니다.
 /// SetParam/AddVisionPoint 헬퍼는 ComponentSetupBase에서 상속받아 사용합니다.
 /// </summary>
-class MemorySequenceStrategy : public VMF::SequenceSetupBase
+class DefaultSetupStrategy : public VMF::ComponentSetupBase
 {
 public:
     VMF::DataRepositoryPtr CreateRepository() override

@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
@@ -219,7 +219,7 @@
     <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
     <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
     <ClInclude Include="VMFComposition\Load1\VatAdapterLoad1.h" />
-    <ClInclude Include="VMFComposition\MemorySequenceStrategy.h" />
+    <ClInclude Include="VMFComposition\DefaultSetupStrategy.h" />
     <ClInclude Include="VMFComposition\mock\CMockDataRepository.h" />
     <ClInclude Include="VMFComposition\mock\CMockVisionEventHandler.h" />
     <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryKeys.h" />

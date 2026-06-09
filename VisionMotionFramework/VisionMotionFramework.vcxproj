@@ -22,7 +22,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -123,14 +123,13 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Orchestrator.cpp" />
+    <ClCompile Include="src\SqliteDataRepository.cpp" />
     <ClCompile Include="VisionMotionFramework.cpp" />
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\SequenceBuilderBase.cpp" />
-    <ClCompile Include="src\SequenceSetupBase.cpp" />
-    <ClCompile Include="src\SqliteDataRepository.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\Context.cpp" />
@@ -161,7 +160,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
-    <ClInclude Include="include\SequenceSetupBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
     <ClInclude Include="include\Sequence.h" />
     <ClInclude Include="include\Types.h" />
