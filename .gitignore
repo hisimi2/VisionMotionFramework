@@ -410,3 +410,4 @@ MigrationBackup/
 /EquipmentCore/Win32/EquipmentCore.exp
 /EquipmentCore/Win32/EquipmentCore.lib
 /EquipmentCore/Win32/vc140.idb
+/EquipmentCore/Win32/EquipmentCore.tlog
