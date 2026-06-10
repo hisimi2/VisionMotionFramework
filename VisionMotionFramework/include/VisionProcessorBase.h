@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <vector>
-#include <mutex> 
+#include <mutex>
 #include <map>
 #include <thread>
 #include <atomic>
