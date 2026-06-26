@@ -16,6 +16,14 @@ namespace VMF
 
         // IVisionProcessor
         VC::Status Initialize(const VisionConnectionConfig& config) override;
+
+        /// <summary>
+        /// 외부에서 공유되는 Controller를 사용하여 초기화합니다.
+        /// </summary>
+        VC::Status InitializeWithSharedController(
+            std::shared_ptr<VC::Controller> sharedCtrl,
+            const VisionConnectionConfig& config) override;
+
         void       Disconnect() override;
         bool       IsConnected() const override;
 
@@ -41,6 +49,11 @@ namespace VMF
         std::map<int, StringMap> m_latestData;
         std::map<int, bool>      m_receivedFlags;
         StringMap                m_lastRequestParams;
+
+        /// <summary>
+        /// 공유 Controller (ConnectionManager로부터 획득)
+        /// </summary>
+        std::shared_ptr<VC::Controller> m_sharedCtrl;
 
         static std::string BodyToString(const ByteArray& b);
     };

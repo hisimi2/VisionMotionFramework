@@ -36,10 +36,7 @@ namespace VC
         TcpClient& operator=(const TcpClient&) = delete;
 
     private:
-        size_t m_recvBufferSize = 8192; // 기본값 추가
-        std::vector<uint8_t> m_partialBuffer;
-        
-        // Pimpl: raw 포인터 대신 생명 주기를 관리할 스마트 포인터 사용
+        // Pimpl: 생명 주기를 관리할 스마트 포인터 사용
         struct Impl;
         std::unique_ptr<Impl> m_pImpl;
     };

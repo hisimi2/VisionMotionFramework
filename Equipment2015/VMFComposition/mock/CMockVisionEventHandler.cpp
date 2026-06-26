@@ -23,15 +23,45 @@ namespace VMF
         return VC::VisionOK;
     }
 
+    VC::Status CMockVisionEventHandler::InitializeWithSharedController(
+        std::shared_ptr<VC::Controller> sharedCtrl,
+        const VisionConnectionConfig& /*config*/)
+    {
+        std::lock_guard<std::mutex> lg(m_mutex);
+
+        if (!sharedCtrl)
+        {
+            return VC::VisionConnectionFailed;
+        }
+
+        m_sharedCtrl = sharedCtrl;
+        m_connected = true;
+
+        return VC::VisionOK;
+    }
+
     void CMockVisionEventHandler::Disconnect()
     {
         std::lock_guard<std::mutex> lg(m_mutex);
+
+        if (m_sharedCtrl)
+        {
+            // 공유 Controller는 ConnectionManager가 관리하므로 직접 disconnect하지 않음
+            m_sharedCtrl.reset();
+        }
+
         m_connected = false;
     }
 
     bool CMockVisionEventHandler::IsConnected() const
     {
         std::lock_guard<std::mutex> lg(m_mutex);
+
+        if (m_sharedCtrl)
+        {
+            return m_sharedCtrl->IsConnected();
+        }
+
         return m_connected;
     }
 

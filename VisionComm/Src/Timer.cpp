@@ -1,15 +1,12 @@
 ﻿#include "StdAfx.h"
 #include "Timer.h"
 
-#include <chrono> // std::chrono 사용을 위한 포함
-
 namespace VC{
 
 Timer::Timer()
 {
     Start();
 }
-
 
 Timer::~Timer() = default;
 
@@ -20,7 +17,6 @@ void Timer::Start()
 
 double Timer::ElapsedSeconds() const
 {
-    
     const auto now = std::chrono::steady_clock::now();
     std::chrono::duration<double> diff = now - m_start;
     return diff.count();
@@ -33,5 +29,5 @@ long Timer::ElapsedMillis() const
     return static_cast<long>(ms.count());
 }
 
-} // namespace VCm
+} // namespace VC
 

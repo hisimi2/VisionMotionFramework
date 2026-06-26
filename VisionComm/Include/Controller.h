@@ -5,13 +5,10 @@
 #include "IScheduler.h"
 #include "ILogger.h"
 #include "ITransport.h"
-#include "IFramer.h"
-#include "FixedLengthFramer.h"
 #include "SECSPacket.h"
 
-#include <vector>
 #include <string>
-#include <memory>         
+#include <memory>
 
 namespace VC
 {
@@ -39,6 +36,20 @@ namespace VC
 		void PacketThread();
 
         SecsMessageDispatcher& GetDispatcher(); 
+
+        // ---- 연결 키 관리 (ConnectionManager 연동) ----
+        void SetConnectionKey(const std::string& key);
+        std::string GetConnectionKey() const;
+
+        /// <summary>
+        /// 수신 스레드가 이미 실행 중인지 확인합니다.
+        /// </summary>
+        bool IsReceiving() const;
+
+        /// <summary>
+        /// 패킷 큐에 데이터가 있는지 확인합니다.
+        /// </summary>
+        bool HasPendingPackets() const;
 
     private:
         // [Pimpl 관용구]

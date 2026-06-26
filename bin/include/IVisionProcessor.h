@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "VMF_API.h"
 #include "Controller.h"
@@ -109,6 +109,23 @@ namespace VMF
 
         // 연결 관리
         virtual VC::Status Initialize(const VisionConnectionConfig& config) = 0;
+        
+        /// <summary>
+        /// 외부에서 공유되는 Controller를 사용하여 초기화합니다.
+        /// ConnectionManager를 통해 얻은 Controller를 전달하면,
+        /// 동일 서버에 대해 단일 소켓 연결을 공유할 수 있습니다.
+        /// 기본 구현은 실패(VisionNotInitialized)를 반환합니다.
+        /// </summary>
+        virtual VC::Status InitializeWithSharedController(
+            std::shared_ptr<VC::Controller> sharedCtrl,
+            const VisionConnectionConfig& config)
+        {
+            // 기본 구현: 지원하지 않음
+            (void)sharedCtrl;
+            (void)config;
+            return VC::VisionNotInitialized;
+        }
+        
         virtual void Disconnect() = 0;
         virtual bool IsConnected() const = 0;
 

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "FixedLengthFramer.h"
+#include "IFramer.h"
 
 #include <vector>
 #include <cstdint>

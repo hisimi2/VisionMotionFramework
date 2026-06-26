@@ -90,7 +90,7 @@ namespace VC
         }
     }
 
-    // 기존 코드 호환을 위한 SaveLog 구현(기존 호출을 Log로 위임)
+    // 기존 코드 호환을 위한 SaveLog 구현
     void Logger::SaveLog(const std::string& message)
     {
         Log(message);
@@ -101,60 +101,41 @@ namespace VC
         if (message) Log(std::string(message));
     }
 
-    // 3-인자 오버로드: tag + message + level -> 하나의 문자열로 결합하여 기록
+    // 3-인자 오버로드: tag + message + level
     void Logger::SaveLog(const std::string& tag, const std::string& message, int level)
     {
         try {
             std::ostringstream ss;
-            ss << "[" << tag << "] ";
-            ss << "(level=" << level << ") ";
-            ss << message;
+            ss << "[" << tag << "] (level=" << level << ") " << message;
             WriteLine(ss.str());
         } catch (...) {
-            // swallow
         }
     }
 
     void Logger::SaveLog(const char* tag, const char* message, int level)
     {
-        try {
-            std::ostringstream ss;
-            if (tag) ss << "[" << tag << "] ";
-            ss << "(level=" << level << ") ";
-            if (message) ss << message;
-            WriteLine(ss.str());
-        } catch (...) {
-            // swallow
-        }
+        SaveLog(tag ? std::string(tag) : "",
+                message ? std::string(message) : "", level);
     }
 
-    // 3-인자 오버로드: tag + message + opt(string) -> 하나의 문자열로 결합하여 기록
+    // 3-인자 오버로드: tag + message + opt(string)
     void Logger::SaveLog(const std::string& tag, const std::string& message, const std::string& opt)
     {
         try {
             std::ostringstream ss;
-            ss << "[" << tag << "] ";
-            if (!opt.empty()) {
-                ss << "(" << opt << ") ";
-            }
-            ss << message;
+            ss << "[" << tag << "]";
+            if (!opt.empty()) ss << " (" << opt << ")";
+            ss << " " << message;
             WriteLine(ss.str());
         } catch (...) {
-            // swallow
         }
     }
 
     void Logger::SaveLog(const char* tag, const char* message, const char* opt)
     {
-        try {
-            std::ostringstream ss;
-            if (tag) ss << "[" << tag << "] ";
-            if (opt && opt[0] != '\0') ss << "(" << opt << ") ";
-            if (message) ss << message;
-            WriteLine(ss.str());
-        } catch (...) {
-            // swallow
-        }
+        SaveLog(tag ? std::string(tag) : "",
+                message ? std::string(message) : "",
+                opt ? std::string(opt) : "");
     }
 
 } // namespace VCm

@@ -42,8 +42,8 @@ namespace VMF
         std::atomic<bool> m_abortRequested; 
         
         int m_pollIntervalMs;
-        std::string m_SequenceName;
-        std::string m_TaskName;
+        std::string m_sequenceName;
+        std::string m_taskName;
     };
 
 } // namespace VMF
