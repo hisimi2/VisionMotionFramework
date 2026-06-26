@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "CLoad1PerformFocusScanningTask.h"
 #include "VMFComposition/DefineVAT.h"
 
@@ -104,7 +104,7 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionRequest(
 
 	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(VMF::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::VisionCommands::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
@@ -121,7 +121,7 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
 	if (!visionProcessor)
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 
-	if (!visionProcessor->IsValid(VMF::Measure))
+	if (!visionProcessor->IsValid(VMF::VisionCommands::Measure))
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Vision Time Out");
@@ -129,7 +129,7 @@ VMF::TaskResult CLoad1PerformFocusScanningTask::HandleVisionWait(
 		return VMF::TR_KEEP;
 	}
 
-	std::map<std::string, std::string>& data = visionProcessor->GetLatestData(VMF::Measure);
+	std::map<std::string, std::string>& data = visionProcessor->GetLatestData(VMF::VisionCommands::Measure);
 	(void)data;
 
 	if (actuator)

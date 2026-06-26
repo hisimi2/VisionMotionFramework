@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Context.h"
 
 // boost 헤더 및 의존성 삭제
@@ -75,14 +75,7 @@ std::string Context::GetLastError() const
         StringMap params = m_params.visionParams;
         bool ret = false;
 
-        switch (cmd)
-        {
-        case Measure:       ret = m_processor->RequestMeasureAsync(params);     break;
-        case SetCok:        ret = m_processor->RequestSetCokAsync(params);      break;
-        case InspReady:     ret = m_processor->RequestInspReadyAsync(params);   break;
-        case DeviceCheck:   ret = m_processor->RequestDeviceCheckAsync(params); break;
-        case Light:         ret = m_processor->RequestLightAsync(params);       break;
-        }
+        return m_processor->RequestAsync(cmd, params);
 
         return ret;
     }

@@ -17,38 +17,50 @@ namespace VMF_Load1
 			return std::make_shared<CLoad1ZFocusSequenceBuilder>();
 		}
 
-		void ConfigureParams(VMF::VisionContextPtr ctx)
-		{
+        void ConfigureParams(VMF::VisionContextPtr ctx) override
+        {
             VisionParams params;
 
-			// 헬퍼 함수를 사용하여 파라미터 설정 간소화
-			SetParam(params, "CameraIndex", 6);
-			SetParam(params, "HandID", 1);
-			SetParam(params, "PkgID", 1);
-			SetParam(params, "PickerMaxRow", 4);
-			SetParam(params, "PickerMaxCol", 8);
-
-			SetParam(params, "CameraID", 3128);
-			SetParam(params, "InspectionType", 6);
-			SetParam(params, "nMovePart", 0); // 5 : tagret_jig_L
-			SetParam(params, "bSaveImage", 0);
-			SetParam(params, "nFovDirection", 0);
+            SetParam(params, "HandID", 1);
+            SetParam(params, "PkgID", 1);
 
             auto repo = ctx->GetRepository();
+            const int ncamIndex = 6;
+            const int nlocateId = 3;
+            const int npkgId = 1;
+            const int nVisionRequestId = 6;
+            double posX = 0.0, posY = 0.0, focusZ = 0.0;
 
-			int ncamIndex = 6;
-			int nlocateId = 3;
-			int npkgId = 1;
-			int nVisionRequestId = 6;
-			double posX, posY, focusZ;
+            if (repo &&
+                repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId,
+                    posX, posY, focusZ) == VMF::StorageSuccess)
+            {
+                AddVisionPoint(params, nlocateId, nVisionRequestId,
+                    posX, posY, focusZ);
+            }
 
-			// // 검사 좌표 추가 (locateId=3, requestId=6)
-			if (repo->LoadInspInitPos(ncamIndex, nlocateId, npkgId, posX, posY, focusZ) == VMF::StorageSuccess)
-			{
-				AddVisionPoint(params, nlocateId, nVisionRequestId, posX, posY, focusZ);
-			}
+            ctx->SetVisionParams(params);
+        }
 
-			ctx->SetVisionParams(params);
-		}
+        // 카메라/검사별 Preset 파라미터 반환 
+        StringMap GetVisionParams(const std::string& presetName) const override
+        {
+            if (presetName == "Cam6Focus")
+            {
+                StringMap p;
+                p["CameraIndex"] = "6";
+                p["InspectionType"] = "6";
+                p["CameraID"] = "3128";
+                return p;
+            }
+            if (presetName == "PLVI")
+            {
+                StringMap p;
+                p["CameraIndex"] = "3";
+                p["InspectionType"] = "2";
+                return p;
+            }
+            return StringMap();
+        }
 	};
 }

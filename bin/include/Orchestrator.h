@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "RunController.h"
 #include "ISequenceSetup.h"
@@ -82,6 +82,7 @@ DataRepositoryPtr GetDataRepository();
 /// 직접 비전 명령 실행 (상태머신 미사용)
         bool ExecuteDirectVisionCommand(VisionCommand cmd);
         bool ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params);
+        bool ExecuteDirectVisionCommand(VisionCommand cmd, const std::string& paramsName);
 
         /// <summary>
         /// Strategy를 통해 컴포넌트(Repository, VisionProcessor, Context)를 생성하고

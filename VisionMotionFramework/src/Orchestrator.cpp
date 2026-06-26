@@ -211,4 +211,16 @@ if (engineToStop)
         return ctx->ExecuteVisionCommand(cmd);
     }
 
+    bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const std::string& presetName)
+    {
+        if (!m_pCurrentStrategy) return false;
+
+        // Strategy에서 Preset 조회
+        StringMap params = m_pCurrentStrategy->GetVisionParams(presetName);
+        if (params.empty()) return false;
+
+        // 기존 (cmd, params) 오버로드로 위임
+        return ExecuteDirectVisionCommand(cmd, params);
+    }
+
 } // namespace VMF

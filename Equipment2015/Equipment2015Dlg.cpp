@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -448,14 +448,14 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     logMsg += _T("  - ConfigureParams로 파라미터 설정 완료\r\n\r\n");
 
     // 4-1. Measure 명령 실행
-    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
+    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::VisionCommands::Measure);
     logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(Measure) → %s\r\n"),
                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
 
     // 4-2. 파라미터를 추가로 설정하여 다른 명령 실행
     VMF::StringMap params;
     params["ExtraParam"] = "DirectModeTest";
-    cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
+    cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::VisionCommands::SetCok, params);
     logMsg.AppendFormat(_T("[Direct Mode] ExecuteDirectVisionCommand(SetCok, params) → %s\r\n"),
                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
 
@@ -463,7 +463,7 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
     if (vp)
     {
-        VMF::IVisionProcessor::DataMap latestData = vp->GetLatestData(VMF::Measure);
+        VMF::IVisionProcessor::DataMap latestData = vp->GetLatestData(VMF::VisionCommands::Measure);
         logMsg += _T("  - GetLatestData(Measure) keys: ");
         for (const auto& kv : latestData)
         {

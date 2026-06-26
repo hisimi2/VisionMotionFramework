@@ -1,5 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "CMockVisionEventHandler.h"
+
+using namespace VMF::VisionCommands;
 
 namespace VMF
 {
@@ -7,14 +9,14 @@ namespace VMF
         : m_connected(false)
         , m_requestResult(true)
     {
-        // m_latestData, m_receivedFlags 湲곕낯 ?앹꽦???ъ슜
     }
 
     CMockVisionEventHandler::~CMockVisionEventHandler()
     {
     }
 
-    VC::Status CMockVisionEventHandler::Initialize(const VisionConnectionConfig& /*config*/)
+    VC::Status CMockVisionEventHandler::Initialize(
+        const VisionConnectionConfig& /*config*/)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         m_connected = true;
@@ -33,48 +35,40 @@ namespace VMF
         return m_connected;
     }
 
-    bool CMockVisionEventHandler::RequestSetCokAsync(const StringMap& params)
+    // -----------------------------------------------------------------------
+    // [RequestAsync] — cmd로 분기
+    // -----------------------------------------------------------------------
+    bool CMockVisionEventHandler::RequestAsync(
+        VisionCommand cmd, const StringMap& params)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
         m_lastRequestParams = params;
         return m_requestResult;
     }
 
-    bool CMockVisionEventHandler::RequestInspReadyAsync(const StringMap& params)
+    // -----------------------------------------------------------------------
+    // [OnVisionResponse] — cmd로 분기
+    // -----------------------------------------------------------------------
+    void CMockVisionEventHandler::OnVisionResponse(
+        VisionCommand cmd, ByteArray body)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
-        m_lastRequestParams = params;
-        return m_requestResult;
+        StringMap m;
+        m["body"] = BodyToString(body);
+        m_latestData[cmd] = m;
+        m_receivedFlags[cmd] = true;
     }
 
-    bool CMockVisionEventHandler::RequestMeasureAsync(const StringMap& params)
+    // -----------------------------------------------------------------------
+    // [데이터 조회]
+    // -----------------------------------------------------------------------
+    CMockVisionEventHandler::DataMap CMockVisionEventHandler::GetLatestData(
+        VisionCommand type) const
     {
         std::lock_guard<std::mutex> lg(m_mutex);
-        m_lastRequestParams = params;
-        return m_requestResult;
-    }
-
-    bool CMockVisionEventHandler::RequestDeviceCheckAsync(const StringMap& params)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        m_lastRequestParams = params;
-        return m_requestResult;
-    }
-
-    bool CMockVisionEventHandler::RequestLightAsync(const StringMap& params)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        m_lastRequestParams = params;
-        return m_requestResult;
-    }
-
-    CMockVisionEventHandler::DataMap CMockVisionEventHandler::GetLatestData(VisionCommand type) const
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        int key = type;
-        std::map<int, StringMap>::const_iterator it = m_latestData.find(key);
-        if (it != m_latestData.end()) return it->second;
-        return DataMap();
+        std::map<int, StringMap>::const_iterator it =
+            m_latestData.find(type);
+        return (it != m_latestData.end()) ? it->second : DataMap();
     }
 
     void CMockVisionEventHandler::ClearLatestData(VisionCommand type)
@@ -86,67 +80,25 @@ namespace VMF
 
     bool CMockVisionEventHandler::IsValid(VisionCommand type) const
     {
-		return true;
+        return true;
     }
 
     bool CMockVisionEventHandler::HasReceived(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lg(m_mutex);
-        int key = type;
-        std::map<int, bool>::const_iterator it = m_receivedFlags.find(key);
+        std::map<int, bool>::const_iterator it =
+            m_receivedFlags.find(type);
         return (it != m_receivedFlags.end()) && it->second;
     }
 
     void CMockVisionEventHandler::InitializeRecvThread()
     {
-        // ?뚯뒪?몄슜 紐⑥쓽 援ы쁽: ?섏떊 ?ㅻ젅???놁쓬
+        // Mock — 실제 수신 스레드 없음
     }
 
-    void CMockVisionEventHandler::OnSetCok(ByteArray body)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        StringMap m;
-        m["body"] = BodyToString(body);
-        m_latestData[SetCok] = m;
-        m_receivedFlags[SetCok] = true;
-    }
-
-    void CMockVisionEventHandler::OnInspReady(ByteArray body)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        StringMap m;
-        m["body"] = BodyToString(body);
-        m_latestData[InspReady] = m;
-        m_receivedFlags[InspReady] = true;
-    }
-
-    void CMockVisionEventHandler::OnMeasure(ByteArray body)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        StringMap m;
-        m["body"] = BodyToString(body);
-        m_latestData[Measure] = m;
-        m_receivedFlags[Measure] = true;
-    }
-
-    void CMockVisionEventHandler::OnDeviceCheck(ByteArray body)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        StringMap m;
-        m["body"] = BodyToString(body);
-        m_latestData[DeviceCheck] = m;
-        m_receivedFlags[DeviceCheck] = true;
-    }
-
-    void CMockVisionEventHandler::OnLight(ByteArray body)
-    {
-        std::lock_guard<std::mutex> lg(m_mutex);
-        StringMap m;
-        m["body"] = BodyToString(body);
-        m_latestData[Light] = m;
-        m_receivedFlags[Light] = true;
-    }
-
+    // -----------------------------------------------------------------------
+    // [테스트 헬퍼]
+    // -----------------------------------------------------------------------
     void CMockVisionEventHandler::SetRequestResult(bool ok)
     {
         std::lock_guard<std::mutex> lg(m_mutex);
@@ -166,4 +118,3 @@ namespace VMF
     }
 
 } // namespace VMF
-

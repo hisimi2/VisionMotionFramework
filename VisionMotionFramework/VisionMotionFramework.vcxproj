@@ -143,6 +143,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
   <ItemGroup>
     <ClInclude Include="include\AsyncExecutor.h" />
     <ClInclude Include="include\CompatUtils.h" />
+    <ClInclude Include="include\CVisionOptional.h" />
     <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
