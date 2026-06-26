@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -53,12 +53,12 @@ namespace VMF
         void StopProcessThread();
 
     protected:
-        VC::Controller m_ctrl;
-        std::mutex m_mutex;
+        VC::Controller  m_ctrl;
+        std::mutex      m_mutex;
 
     private:
-        std::map<VisionCommand, bool> m_received;
-        std::map<VisionCommand, DataMap> m_latestData;
+        std::map<VisionCommand, bool>       m_received;
+        std::map<VisionCommand, DataMap>    m_latestData;
 
 mutable std::mutex m_dataMutex;
         std::atomic<bool> m_processRunning;

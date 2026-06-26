@@ -16,20 +16,19 @@ namespace VMF
 
         // IVisionProcessor
         VC::Status Initialize(const VisionConnectionConfig& config) override;
-        void       Disconnect()                                      override;
-        bool       IsConnected()                             const   override;
+        void       Disconnect() override;
+        bool       IsConnected() const override;
 
         bool       RequestAsync(VisionCommand cmd,
-            const StringMap& params)           override;
+        const StringMap& params) override;
 
-        DataMap    GetLatestData(VisionCommand type)       const   override;
-        void       ClearLatestData(VisionCommand type)               override;
-        bool       IsValid(VisionCommand type)       const   override;
-        bool       HasReceived(VisionCommand type)       const   override;
+        DataMap    GetLatestData(VisionCommand type) const override;
+        void       ClearLatestData(VisionCommand type) override;
+        bool       IsValid(VisionCommand type) const override;
+        bool       HasReceived(VisionCommand type) const override;
 
-        void       InitializeRecvThread()                            override;
-        void       OnVisionResponse(VisionCommand cmd,
-            ByteArray body)                  override;
+        void       InitializeRecvThread() override;
+        void       OnVisionResponse(VisionCommand cmd, ByteArray body) override;
 
         // 테스트 헬퍼
         void      SetRequestResult(bool ok);
