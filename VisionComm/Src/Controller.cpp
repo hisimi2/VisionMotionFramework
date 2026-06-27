@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "Controller.h"
 #include "SecsMessageDispatcher.h"
@@ -16,9 +16,9 @@ namespace VC
 	struct Controller::Impl
 	{
 		std::shared_ptr<ITransport> m_transport;
-		std::shared_ptr<IFramer> m_framer;
+		std::shared_ptr<IFramer>    m_framer;
 		std::shared_ptr<IScheduler> m_scheduler;
-		std::shared_ptr<ILogger> m_logger;
+		std::shared_ptr<ILogger>    m_logger;
 		
  		std::atomic<bool> m_running;
 		std::atomic<bool> m_bStatusConnect;
