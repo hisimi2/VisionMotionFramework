@@ -21,11 +21,8 @@ namespace VC
 		std::shared_ptr<ILogger> m_logger;
 		
  		std::atomic<bool> m_running;
-		std::atomic<bool> m_PacketReceived;
 		std::atomic<bool> m_bStatusConnect;
 		std::unique_ptr<SecsMessageDispatcher> m_dispatcher;
-
-		std::shared_ptr<std::thread> m_recvThread;
 
 		// 수신 큐
 		std::queue<ByteVector> m_packetQueue;
@@ -37,7 +34,6 @@ namespace VC
 		Impl()
 			: m_dispatcher(std::make_unique<SecsMessageDispatcher>())
 			, m_running(false)
-			, m_PacketReceived(false)
             , m_bStatusConnect(false)
 		{
 			m_transport = std::make_shared<TcpClient>();

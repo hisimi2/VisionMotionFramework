@@ -31,7 +31,7 @@ namespace VC
 		std::atomic<bool> m_running;
 		std::atomic<bool> m_connected;
 
-		RecvCallback m_recvCb;
+		TransportReceiveCallback m_recvCb;
 		std::mutex m_cbMutex;
 		std::mutex m_bufferMutex;
 
@@ -381,7 +381,7 @@ namespace VC
 		return -1;
 	}
 
-	int TcpClient::Send(const ByteArray& data)
+	int TcpClient::Send(const ByteVector& data)
 	{
 		if (!m_pImpl || !m_pImpl->m_connected)
 			return -1;
@@ -416,7 +416,7 @@ namespace VC
 #endif
 	}
 
-    void TcpClient::SetReceiveCallback(const RecvCallback& cb)
+    void TcpClient::SetReceiveCallback(const TransportReceiveCallback& cb)
     {
         if (m_pImpl)
         {

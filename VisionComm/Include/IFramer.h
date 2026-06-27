@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include <vector>
-#include <memory>  // std::shared_ptr, std::unique_ptr 사용을 위한 추가
-#include <cstdint> // uint8_t 사용을 위한 추가
+#include <memory>
+#include <cstdint>
 
 namespace VC
 {
