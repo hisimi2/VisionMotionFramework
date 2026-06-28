@@ -3,6 +3,7 @@
 #include "RunController.h"
 #include "ISequenceSetup.h"
 #include "IComponentSetup.h"
+#include "ComponentSetupBase.h"
 #include "IResultSink.h"
 #include "IVisionProcessor.h"
 #include "IDataRepository.h"
@@ -170,6 +171,25 @@ namespace VMF
 
             return true;
         }
+
+        /// <summary>
+        /// [DLL Plugin] 외부 DLL에서 생성된 ComponentSetupBase(Strategy)를 받아 시퀀스를 실행합니다.
+        /// Equipment 프로젝트가 VMFEquipmentPlugin.dll을 로드하여 CreateSetupStrategy()로
+        /// 생성한 Strategy 객체를 전달하면, 컴포넌트를 초기화하고 시퀀스를 실행합니다.
+        /// </summary>
+        /// <param name="strategy">DLL에서 생성한 Strategy 객체 (ComponentSetupBase*)</param>
+        /// <param name="actuator">액추에이터 (또는 nullptr)</param>
+        /// <param name="connectionConfig">Vision 서버 연결 설정 (선택, 비워두면 기본 모드)</param>
+        bool StartSequenceFromStrategy(
+            std::shared_ptr<VMF::ComponentSetupBase> strategy,
+            IActuator* actuator,
+            const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
+
+        /// <summary>
+        /// [Direct Mode] 외부 DLL에서 생성된 ComponentSetupBase(Strategy)를 받아
+        /// 직접 모드로 컴포넌트를 초기화합니다. (시퀀스 실행 없음)
+        /// </summary>
+        bool InitializeDirect(std::shared_ptr<VMF::ComponentSetupBase> strategy);
 
     protected:
         /// <summary>

@@ -1,4 +1,4 @@
-// MemorySequenceStrategy.h → DefaultSetupStrategy.h (리팩토링: 역할 기반 네이밍)
+﻿// MemorySequenceStrategy.h → DefaultSetupStrategy.h (리팩토링: 역할 기반 네이밍)
 #pragma once
 #include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"

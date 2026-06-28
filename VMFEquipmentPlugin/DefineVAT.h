@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // ============================================================================
 // [Sample] VAT Sequence Parameter Key 정의

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CMockVisionEventHandler.h"
 
 using namespace VMF::VisionCommands;

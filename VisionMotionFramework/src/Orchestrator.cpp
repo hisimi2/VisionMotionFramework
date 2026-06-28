@@ -223,4 +223,127 @@ if (engineToStop)
         return ExecuteDirectVisionCommand(cmd, params);
     }
 
+    // --- [DLL Plugin] StartSequenceFromStrategy 구현 ---
+
+    bool Orchestrator::StartSequenceFromStrategy(
+        std::shared_ptr<VMF::ComponentSetupBase> strategy,
+        IActuator* actuator,
+        const VisionConnectionConfig& connectionConfig)
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+
+        // 기존 엔진 중지
+        if (m_pVisionEngine)
+        {
+            m_pVisionEngine->StopSequence();
+            m_pVisionEngine.reset();
+        }
+        m_pCurrentStrategy.reset();
+
+        strategy->SetActuator(actuator);
+
+        if (!connectionConfig.address.empty() && connectionConfig.port > 0)
+        {
+            strategy->SetConnectionConfig(connectionConfig);
+        }
+
+        DataRepositoryPtr repo;
+        VisionProcessorPtr vp;
+        SequenceBuilderPtr builder;
+
+        try
+        {
+            repo = strategy->CreateRepository();
+            vp = strategy->CreateVisionProcessor();
+            builder = strategy->CreateBuilder();
+        }
+        catch (...)
+        {
+            return false;
+        }
+
+        if (!repo || !vp || !builder) return false;
+
+        auto ctx = CreateContext(vp, repo);
+        if (!ctx) return false;
+
+        try
+        {
+            strategy->ConfigureParams(ctx);
+        }
+        catch (...)
+        {
+            return false;
+        }
+
+        m_pCurrentStrategy = strategy;
+
+        VisionActuatorPtr act = strategy->GetActuator();
+
+        try
+        {
+            m_pVisionEngine = std::make_shared<RunController>(builder, ctx, act);
+        }
+        catch (...)
+        {
+            m_pCurrentStrategy.reset();
+            return false;
+        }
+
+        AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
+        runner->SetResultSink(this);
+        m_pVisionEngine->SetRunner(runner);
+
+        std::string seqName = strategy->GetSequenceName();
+        if (!m_pVisionEngine->RunSequence(seqName))
+        {
+            m_pVisionEngine->StopSequence();
+            m_pVisionEngine.reset();
+            m_pCurrentStrategy.reset();
+            return false;
+        }
+
+        return true;
+    }
+
+    // --- [Direct Mode] InitializeDirect 구현 ---
+
+    bool Orchestrator::InitializeDirect(std::shared_ptr<VMF::ComponentSetupBase> strategy)
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+
+        DataRepositoryPtr repo;
+        VisionProcessorPtr vp;
+
+        try
+        {
+            repo = strategy->CreateRepository();
+            vp = strategy->CreateVisionProcessor();
+        }
+        catch (...)
+        {
+            return false;
+        }
+
+        if (!repo || !vp) return false;
+
+        auto ctx = CreateContext(vp, repo);
+        if (!ctx) return false;
+
+        try
+        {
+            strategy->ConfigureParams(ctx);
+        }
+        catch (...)
+        {
+            return false;
+        }
+
+        m_directVisionProcessor = vp;
+        m_directDataRepository = repo;
+        m_directContext = ctx;
+
+        return true;
+    }
+
 } // namespace VMF
