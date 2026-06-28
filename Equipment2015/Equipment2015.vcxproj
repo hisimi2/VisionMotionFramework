@@ -213,15 +213,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="VMFComposition\DefineVAT.h" />
-    <ClInclude Include="VMFComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h" />
-    <ClInclude Include="VMFComposition\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h" />
-    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.h" />
-    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.h" />
-    <ClInclude Include="VMFComposition\Load1\VatAdapterLoad1.h" />
     <ClInclude Include="VMFComposition\DefaultSetupStrategy.h" />
-    <ClInclude Include="VMFComposition\mock\CMockDataRepository.h" />
-    <ClInclude Include="VMFComposition\mock\CMockVisionEventHandler.h" />
     <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryKeys.h" />
     <ClInclude Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.h" />
     <ClInclude Include="VMFComposition\VisionProtocal\VisionPacketMemory.h" />
@@ -248,11 +240,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp" />
-    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp" />
-    <ClCompile Include="VMFComposition\Load1\VatAdapterLoad1.cpp" />
-    <ClCompile Include="VMFComposition\mock\CMockDataRepository.cpp" />
-    <ClCompile Include="VMFComposition\mock\CMockVisionEventHandler.cpp" />
     <ClCompile Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>

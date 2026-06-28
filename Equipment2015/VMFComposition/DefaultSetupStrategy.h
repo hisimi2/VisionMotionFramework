@@ -1,12 +1,12 @@
-﻿// MemorySequenceStrategy.h → DefaultSetupStrategy.h (리팩토링: 역할 기반 네이밍)
+// MemorySequenceStrategy.h → DefaultSetupStrategy.h (리팩토링: 역할 기반 네이밍)
 #pragma once
 #include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"
 
 #include "Controller.h"
 #include "VMFComposition/VisionProtocal/VisionMemoryProcessor.h"
-#include "VMFComposition/Mock/CMockDataRepository.h"
-#include "VMFComposition/Mock/CMockVisionEventHandler.h"
+#include "CMockDataRepository.h"
+#include "CMockVisionEventHandler.h"
 
 #include <memory>
 

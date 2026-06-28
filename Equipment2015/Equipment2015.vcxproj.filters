@@ -18,9 +18,6 @@
     <Filter Include="VMFComposition">
       <UniqueIdentifier>{bae83fe6-680d-4913-b671-5a5220b1898f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="VMFComposition\Mock">
-      <UniqueIdentifier>{102c0990-e520-4319-9e81-a861fce1ab0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VMFComposition\Sequence">
       <UniqueIdentifier>{e829f9d8-fc0f-4419-918f-a76ec11b4b4f}</UniqueIdentifier>
     </Filter>
@@ -90,30 +87,6 @@
     <ClInclude Include="Actuators\Load2Parts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="VMFComposition\DefineVAT.h">
-      <Filter>VMFComposition</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\Load1\VatAdapterLoad1.h">
-      <Filter>VMFComposition</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\mock\CMockDataRepository.h">
-      <Filter>VMFComposition\Mock</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\mock\CMockVisionEventHandler.h">
-      <Filter>VMFComposition\Mock</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\Load1\Strategies\CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h">
-      <Filter>VMFComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.h">
-      <Filter>VMFComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.h">
-      <Filter>VMFComposition\Sequence</Filter>
-    </ClInclude>
-    <ClInclude Include="VMFComposition\Load1\Sequences\CLoad1ZFocusSequenceBuilder.h">
-      <Filter>VMFComposition\Sequence</Filter>
-    </ClInclude>
     <ClInclude Include="VMFComposition\VisionProtocal\VisionPacketMemory.h">
       <Filter>VMFComposition\Vision</Filter>
     </ClInclude>
@@ -178,21 +151,6 @@
     </ClCompile>
     <ClCompile Include="Actuators\Load2Parts.cpp">
       <Filter>Actuators</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFComposition\Load1\VatAdapterLoad1.cpp">
-      <Filter>VMFComposition</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFComposition\mock\CMockDataRepository.cpp">
-      <Filter>VMFComposition\Mock</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFComposition\mock\CMockVisionEventHandler.cpp">
-      <Filter>VMFComposition\Mock</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1MoveToStartPositionTask.cpp">
-      <Filter>VMFComposition\Sequence</Filter>
-    </ClCompile>
-    <ClCompile Include="VMFComposition\Load1\Tasks\CLoad1PerformFocusScanningTask.cpp">
-      <Filter>VMFComposition\Sequence</Filter>
     </ClCompile>
     <ClCompile Include="VMFComposition\VisionProtocal\VisionMemoryProcessor.cpp">
       <Filter>VMFComposition\Vision</Filter>

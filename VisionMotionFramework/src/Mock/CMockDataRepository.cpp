@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "Mock/CMockDataRepository.h"
+#include "CMockDataRepository.h"
 
 #include <sstream>
 

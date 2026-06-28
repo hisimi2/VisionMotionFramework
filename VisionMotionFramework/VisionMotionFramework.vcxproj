@@ -123,6 +123,8 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Mock\CMockDataRepository.cpp" />
+    <ClCompile Include="src\Mock\CMockVisionEventHandler.cpp" />
     <ClCompile Include="src\Orchestrator.cpp" />
     <ClCompile Include="src\SqliteDataRepository.cpp" />
     <ClCompile Include="VisionMotionFramework.cpp" />
@@ -137,8 +139,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\ComponentSetupBase.cpp" />
     <ClCompile Include="src\ConnectionManager.cpp" />
     <ClCompile Include="src\VisionProcessorBase.cpp" />
-    <ClCompile Include="src\Mock\CMockDataRepository.cpp" />
-    <ClCompile Include="src\Mock\CMockVisionEventHandler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -146,6 +146,8 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AsyncExecutor.h" />
+    <ClInclude Include="include\CMockDataRepository.h" />
+    <ClInclude Include="include\CMockVisionEventHandler.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVisionOptional.h" />
     <ClInclude Include="include\Orchestrator.h" />
@@ -162,8 +164,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\IVisionProcessor.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\DefaultSetupStrategy.h" />
-    <ClInclude Include="include\Mock\CMockDataRepository.h" />
-    <ClInclude Include="include\Mock\CMockVisionEventHandler.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />

@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "Mock/CMockVisionEventHandler.h"
+﻿#include "stdafx.h"
+#include "CMockVisionEventHandler.h"
 
 using namespace VMF::VisionCommands;
 
@@ -57,8 +57,11 @@ namespace VMF
     {
         std::lock_guard<std::mutex> lg(m_mutex);
 
-        // Mock: 공유 Controller 여부와 관계없이 자체 연결 상태 반환
-        // (실제 Controller 메서드에 의존하지 않음)
+        if (m_sharedCtrl)
+        {
+            return m_sharedCtrl->IsConnected();
+        }
+
         return m_connected;
     }
 
