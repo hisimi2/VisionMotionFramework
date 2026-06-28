@@ -168,6 +168,9 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginFactory.h" />
+    <ClInclude Include="Protocol\VisionMemoryKeys.h" />
+    <ClInclude Include="Protocol\VisionMemoryProcessor.h" />
+    <ClInclude Include="Protocol\VisionPacketMemory.h" />
     <ClInclude Include="Sequences\SampleZFocusSequenceBuilder.h" />
     <ClInclude Include="Strategies\SampleSequenceStrategy.h" />
     <ClInclude Include="Tasks\SampleMoveToStartPositionTask.h" />
@@ -182,6 +185,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Protocol\VisionMemoryProcessor.cpp" />
     <ClCompile Include="Tasks\SampleMoveToStartPositionTask.cpp" />
     <ClCompile Include="Tasks\SamplePerformFocusScanningTask.cpp" />
     <ClCompile Include="..\VisionMotionFramework\src\Mock\CMockDataRepository.cpp">

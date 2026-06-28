@@ -29,8 +29,8 @@ namespace VMF
 
     struct CPacketBody_S107F9
     {
-        int  nDataID = 0; // 카메라 id
-        int  nStatus = 0; // 검사 유형 (Picker, Plate Jig Upper / C-Tray검사 등)
+        int  nDataID = 0;
+        int  nStatus = 0;
         char cData[DATA_SIZE][STR_LEN];
 
         void Clear()

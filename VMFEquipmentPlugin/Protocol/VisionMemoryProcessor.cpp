@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+﻿#include "pch.h"
 #include "VisionMemoryProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "VMFComposition/VisionProtocal/VisionMemoryKeys.h"
+#include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 #include <vector>
@@ -23,7 +23,6 @@ namespace VMF
         disp.RegisterHandler(VisionMemoryProtocol::ControlAck,
             [this](int, int, std::vector<uint8_t>&& body, int)
             {
-                // ControlAck는 SetCok / InspReady 두 명령에 대응
                 auto copy = body;
                 this->OnVisionResponse(VMF::VisionCommands::SetCok, std::move(body));
                 this->OnVisionResponse(VMF::VisionCommands::InspReady, std::move(copy));
@@ -33,7 +32,7 @@ namespace VMF
     VisionMemoryProcessor::~VisionMemoryProcessor() = default;
 
     // -----------------------------------------------------------------------
-    // [RequestAsync] — cmd로 분기, 신규 기능은 여기에만 추가
+    // [RequestAsync] — cmd로 분기
     // -----------------------------------------------------------------------
     bool VisionMemoryProcessor::RequestAsync(
         VisionCommand cmd, const StringMap& params)
@@ -51,7 +50,7 @@ namespace VMF
     }
 
     // -----------------------------------------------------------------------
-    // [OnVisionResponse] — cmd로 분기, 신규 기능은 여기에만 추가
+    // [OnVisionResponse] — cmd로 분기
     // -----------------------------------------------------------------------
     void VisionMemoryProcessor::OnVisionResponse(
         VisionCommand cmd, ByteArray body)

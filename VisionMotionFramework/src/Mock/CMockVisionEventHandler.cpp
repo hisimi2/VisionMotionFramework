@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "CMockVisionEventHandler.h"
+#include "Mock/CMockVisionEventHandler.h"
 
 using namespace VMF::VisionCommands;
 

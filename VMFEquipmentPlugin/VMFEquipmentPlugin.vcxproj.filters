@@ -25,6 +25,9 @@
     <Filter Include="Actuator">
       <UniqueIdentifier>{24c29f5e-214e-4a9b-8794-a8fafaceb535}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,6 +57,15 @@
     <ClInclude Include="Sequences\SampleZFocusSequenceBuilder.h">
       <Filter>Sequences</Filter>
     </ClInclude>
+    <ClInclude Include="Protocol\VisionPacketMemory.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol\VisionMemoryKeys.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol\VisionMemoryProcessor.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -70,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="Actuator\SampleActuatorAdapter.cpp">
       <Filter>Actuator</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol\VisionMemoryProcessor.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

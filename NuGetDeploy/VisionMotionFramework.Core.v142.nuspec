@@ -54,6 +54,8 @@
     <!-- ================================================================ -->
     <file src="..\bin\Win32\Debug\VisionMotionFramework.lib"
           target="lib\native\v142\win32\VMF.Core.lib" />
+    <file src="lib\native\v142\win32\VisionComm.lib"
+          target="lib\native\v142\win32\VisionComm.lib" />
 
     <!-- ================================================================ -->
     <!-- 헤더 파일 (include) -->
@@ -61,8 +63,8 @@
     <file src="..\VisionMotionFramework\include\*.h"
           target="build\native\include\" />
 
-    <!-- Mock 헤더 -->
-    <file src="..\VisionMotionFramework\include\Mock\*.h"
+    <!-- Mock 헤더 (이미 build\native\include\Mock\ 에 위치함) -->
+    <file src="build\native\include\Mock\*.h"
           target="build\native\include\Mock\" />
 
     <!-- ================================================================ -->

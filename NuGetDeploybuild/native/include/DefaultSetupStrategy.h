@@ -1,12 +1,8 @@
-// MemorySequenceStrategy.h → DefaultSetupStrategy.h (리팩토링: 역할 기반 네이밍)
-#pragma once
+﻿#pragma once
+
 #include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"
-
-#include "Controller.h"
-#include "VMFComposition/VisionProtocal/VisionMemoryProcessor.h"
-#include "CMockDataRepository.h"
-#include "CMockVisionEventHandler.h"
+#include "Mock/CMockVisionEventHandler.h"
 
 #include <memory>
 
@@ -18,16 +14,27 @@
 /// 다중 서버 대응:
 /// SetConnectionConfig()를 통해 Vision 서버 연결 설정이 주입된 경우,
 /// ConnectionManager를 통해 단일 소켓 연결을 공유합니다.
+/// 
+/// !!! 파생 클래스에서 구현해야 하는 순수 가상 함수 !!!
+/// - GetSequenceName()  — ISequenceSetup
+/// - CreateBuilder()    — ISequenceSetup
+/// - ConfigureParams()  — IComponentSetup
+/// 
+/// 사용 예 (파생 클래스):
+///   class MyStrategy : public DefaultSetupStrategy
+///   {
+///       std::string GetSequenceName() const override { return "MySequence"; }
+///       SequenceBuilderPtr CreateBuilder() override { return std::make_shared<MyBuilder>(); }
+///       void ConfigureParams(VMF::VisionContextPtr ctx) override { ... }
+///   };
 /// </summary>
 class DefaultSetupStrategy : public VMF::ComponentSetupBase
 {
 public:
     VMF::DataRepositoryPtr CreateRepository() override
     {
-        // auto repo = std::make_shared<VMF::CMockDataRepository>();
         auto repo = std::make_shared<VMF::SqliteDataRepository>("Data\\VAT_DATABASE.db", "Data\\Images");
         repo->Initialize();
-
         return repo;
     }
 
@@ -38,15 +45,13 @@ public:
         // 공유 Controller를 사용하여 단일 소켓 연결을 유지합니다.
         if (IsUsingConnectionManager())
         {
-            // 1. ConnectionManager로부터 공유 Controller 획득
             auto sharedCtrl = GetOrCreateSharedController();
             if (sharedCtrl)
             {
-                // 2. VisionProcessor 생성 및 공유 Controller로 초기화
                 auto vm = std::make_shared<VMF::CMockVisionEventHandler>();
                 VC::Status status = vm->InitializeWithSharedController(
                     sharedCtrl, GetConnectionConfig());
-                
+
                 if (status == VC::VisionOK)
                 {
                     return vm;
@@ -58,21 +63,8 @@ public:
         // [기본 모드] - 기존 방식: 직접 연결 생성
         VMF::VisionConnectionConfig config("127.0.0.1", 8080, 3000);
         auto vm = std::make_shared<VMF::CMockVisionEventHandler>();
-        // auto vm = std::make_shared<VMF::VisionMemoryProcessor>();
         vm->Initialize(config);
 
         return vm;
     }
-
-    // ISequenceSetup 순수가상: 파생 클래스에서 구현
-    // std::string GetSequenceName() const override = 0;
-    // SequenceBuilderPtr CreateBuilder() override = 0;
-
-    // IComponentSetup 순수가상: ConfigreParams는 파생 클래스에서 구현
-    // void ConfigureParams(VMF::VisionContextPtr ctx) override = 0;
 };
-
-
-
-
-
