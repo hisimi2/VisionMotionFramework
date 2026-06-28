@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DefaultSetupStrategy.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
 
@@ -6,6 +6,7 @@ namespace VMF_Sample
 {
 	using namespace VMF;
 	using namespace Sequence;
+
 
 	/// <summary>
 	/// [Sample] Focus Check Sequence 전략 클래스
