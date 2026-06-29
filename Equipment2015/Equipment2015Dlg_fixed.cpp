@@ -1,4 +1,4 @@
-// Equipment2015Dlg.cpp : 구현 ?�일
+﻿// Equipment2015Dlg.cpp : 구현 ?�일
 //
 
 #include "stdafx.h"

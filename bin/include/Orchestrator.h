@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "RunController.h"
 #include "ISequenceSetup.h"
 #include "IComponentSetup.h"
+#include "ComponentSetupBase.h"
 #include "IResultSink.h"
 #include "IVisionProcessor.h"
 #include "IDataRepository.h"
@@ -66,10 +67,33 @@ namespace VMF
             return InitializeComponents<StrategyType>(adapter, true);
         }
 
+        /// <summary>
+        /// Vision 서버 연결 설정을 Strategy에 주입하여 시퀀스를 실행합니다.
+        /// 동일 서버(IP:Port)에 대해서는 ConnectionManager가 단일 소켓을 공유합니다.
+        /// </summary>
+        /// <typeparam name="StrategyType">Strategy 타입</typeparam>
+        /// <param name="adapter">액추에이터</param>
+        /// <param name="connectionConfig">Vision 서버 연결 설정</param>
+        template <typename StrategyType>
+        bool StartSequence(IActuator* adapter, const VisionConnectionConfig& connectionConfig)
+        {
+            std::lock_guard<std::mutex> guard(m_seqMutex);
+
+            // 기존 엔진 중지
+            if (m_pVisionEngine)
+            {
+                m_pVisionEngine->StopSequence();
+                m_pVisionEngine.reset();
+            }
+            m_pCurrentStrategy.reset();
+
+            return InitializeComponentsWithConfig<StrategyType>(adapter, true, connectionConfig);
+        }
+
         void StopSequence();
 
-// Repository accessor
-DataRepositoryPtr GetDataRepository();
+        // Repository accessor
+        DataRepositoryPtr GetDataRepository();
 
         // --- [직접 모드] Strategy 없이 VisionProcessor/Repository/Context 사용 ---
         void SetVisionProcessor(VisionProcessorPtr vp);
@@ -79,7 +103,7 @@ DataRepositoryPtr GetDataRepository();
         /// Context 획득 (직접 모드/상태머신 모드 모두 지원)
         VisionContextPtr GetOrCreateContext();
 
-/// 직접 비전 명령 실행 (상태머신 미사용)
+        /// 직접 비전 명령 실행 (상태머신 미사용)
         bool ExecuteDirectVisionCommand(VisionCommand cmd);
         bool ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params);
         bool ExecuteDirectVisionCommand(VisionCommand cmd, const std::string& paramsName);
@@ -94,6 +118,16 @@ DataRepositoryPtr GetDataRepository();
         {
             std::lock_guard<std::mutex> guard(m_seqMutex);
             return InitializeComponents<StrategyType>(actuator, false);
+        }
+
+        /// <summary>
+        /// Vision 서버 연결 설정을 주입하여 직접 모드를 초기화합니다.
+        /// </summary>
+        template <typename StrategyType>
+        bool InitializeDirectWithStrategy(IActuator* actuator, const VisionConnectionConfig& connectionConfig)
+        {
+            std::lock_guard<std::mutex> guard(m_seqMutex);
+            return InitializeComponentsWithConfig<StrategyType>(actuator, false, connectionConfig);
         }
 
         /// <summary>
@@ -138,23 +172,42 @@ DataRepositoryPtr GetDataRepository();
             return true;
         }
 
-protected:
+        /// <summary>
+        /// [DLL Plugin] 외부 DLL에서 생성된 ComponentSetupBase(Strategy)를 받아 시퀀스를 실행합니다.
+        /// Equipment 프로젝트가 VMFEquipmentPlugin.dll을 로드하여 CreateSetupStrategy()로
+        /// 생성한 Strategy 객체를 전달하면, 컴포넌트를 초기화하고 시퀀스를 실행합니다.
+        /// </summary>
+        /// <param name="strategy">DLL에서 생성한 Strategy 객체 (ComponentSetupBase*)</param>
+        /// <param name="actuator">액추에이터 (또는 nullptr)</param>
+        /// <param name="connectionConfig">Vision 서버 연결 설정 (선택, 비워두면 기본 모드)</param>
+        bool StartSequenceFromStrategy(
+            std::shared_ptr<VMF::ComponentSetupBase> strategy,
+            IActuator* actuator,
+            const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
+
+        /// <summary>
+        /// [Direct Mode] 외부 DLL에서 생성된 ComponentSetupBase(Strategy)를 받아
+        /// 직접 모드로 컴포넌트를 초기화합니다. (시퀀스 실행 없음)
+        /// </summary>
+        bool InitializeDirect(std::shared_ptr<VMF::ComponentSetupBase> strategy);
+
+    protected:
         /// <summary>
         /// Strategy 기반 컴포넌트 조립을 통합 수행하는 공통 초기화 로직.
-        /// - Strategy → VP, Repo, Builder 생성
-        /// - CreateContext(vm, repo) → Context 연결
-        /// - ConfigureParams(ctx) → 파라미터 주입
-        /// - runSequence=true: 상태머신 모드 (RunController + AsyncExecutor)
-        /// - runSequence=false: 직접 모드 (m_directXXX에 저장)
+        /// connectionConfig가 nullptr이면 기본 모드, 값이 있으면 ConnectionManager 모드로 동작합니다.
         /// </summary>
         template <typename StrategyType>
-        bool InitializeComponents(IActuator* actuator, bool runSequence)
+        bool InitializeComponents(IActuator* actuator, bool runSequence,
+            const VisionConnectionConfig* connectionConfig = nullptr)
         {
-            // -- Strategy 생성 --
             auto strategy = std::make_shared<StrategyType>();
             strategy->SetActuator(actuator);
 
-            // -- Strategy가 VP, Repo, Builder 생성 --
+            if (connectionConfig)
+            {
+                strategy->SetConnectionConfig(*connectionConfig);
+            }
+
             DataRepositoryPtr repo;
             VisionProcessorPtr vp;
             SequenceBuilderPtr builder;
@@ -176,11 +229,9 @@ protected:
             if (!repo || !vp) return false;
             if (runSequence && !builder) return false;
 
-            // -- Context 생성 및 VP/Repo 연결 --
             auto ctx = CreateContext(vp, repo);
             if (!ctx) return false;
 
-            // -- Strategy가 파라미터 설정 --
             try
             {
                 strategy->ConfigureParams(ctx);
@@ -190,10 +241,8 @@ protected:
                 return false;
             }
 
-            // -- 모드별 분기 --
             if (runSequence)
             {
-                // === 상태머신 모드 ===
                 m_pCurrentStrategy = strategy;
 
                 VisionActuatorPtr act = strategy->GetActuator();
@@ -223,7 +272,6 @@ protected:
             }
             else
             {
-                // === 직접 모드 ===
                 m_directVisionProcessor = vp;
                 m_directDataRepository = repo;
                 m_directContext = ctx;
@@ -231,6 +279,17 @@ protected:
 
             return true;
         }
+
+        /// <summary>
+        /// ConnectionConfig가 있는 버전의 InitializeComponents를 호출합니다.
+        /// </summary>
+        template <typename StrategyType>
+        bool InitializeComponentsWithConfig(IActuator* actuator, bool runSequence,
+            const VisionConnectionConfig& connectionConfig)
+        {
+            return InitializeComponents<StrategyType>(actuator, runSequence, &connectionConfig);
+        }
+
         SequenceSetupPtr m_pCurrentStrategy;
         VisionEnginePtr m_pVisionEngine;
 

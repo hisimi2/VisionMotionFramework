@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    VisionMotionFramework.Core.v142 MSBuild targets file.
+    NuGet에서 자동으로 import되며, include 경로와 라이브러리 링크를 설정합니다.
+  -->
+
+  <PropertyGroup>
+    <VMF_IncludePath>$(MSBuildThisFileDirectory)..\..\build\native\include\</VMF_IncludePath>
+  </PropertyGroup>
+
+  <!-- Include 경로 추가 (VMF 헤더 + VC 헤더) -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VMF_IncludePath);$(VMF_IncludePath)VC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- VMF.Core와 VisionComm은 정적 라이브러리이므로 dllexport/dllimport 불필요 -->
+      <PreprocessorDefinitions>VMF_STATIC_LIB;VC_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- 플랫폼/플랫폼도구모음에 맞는 라이브러리 추가 -->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\lib\native\v142\win32\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>VMF.Core.lib;VisionComm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\lib\native\v142\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>VMF.Core.lib;VisionComm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+</Project>

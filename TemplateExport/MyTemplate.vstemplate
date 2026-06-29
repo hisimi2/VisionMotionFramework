@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project"
+            xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>VMF Equipment Plugin (v142)</Name>
+    <Description>
+      VisionMotionFramework 기반 Equipment별 Sequence/Task/Strategy DLL 프로젝트 템플릿.
+      NuGet 패키지 VisionMotionFramework.Core.v142를 참조합니다.
+    </Description>
+    <Icon>VMF.ico</Icon>
+    <ProjectType>VC</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>VMFEquipmentPlugin</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <PromptForSaveOnCreation>true</PromptForSaveOnCreation>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+    <SupportsCodeSeparation>false</SupportsCodeSeparation>
+    <SupportsLanguageDropDown>false</SupportsLanguageDropDown>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="VMFEquipmentPlugin.vcxproj" File="VMFEquipmentPlugin.vcxproj" ReplaceParameters="false">
+      <ProjectItem ReplaceParameters="false" TargetFileName="framework.h">framework.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="pch.h">pch.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="pch.cpp">pch.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="dllmain.cpp">dllmain.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="PluginFactory.h">PluginFactory.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="DefineVAT.h">DefineVAT.h</ProjectItem>
+
+      <!-- Tasks -->
+      <ProjectItem ReplaceParameters="false" TargetFileName="Tasks\SampleMoveToStartPositionTask.h">Tasks\SampleMoveToStartPositionTask.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="Tasks\SampleMoveToStartPositionTask.cpp">Tasks\SampleMoveToStartPositionTask.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="Tasks\SamplePerformFocusScanningTask.h">Tasks\SamplePerformFocusScanningTask.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="Tasks\SamplePerformFocusScanningTask.cpp">Tasks\SamplePerformFocusScanningTask.cpp</ProjectItem>
+
+      <!-- Sequences -->
+      <ProjectItem ReplaceParameters="false" TargetFileName="Sequences\SampleZFocusSequenceBuilder.h">Sequences\SampleZFocusSequenceBuilder.h</ProjectItem>
+
+      <!-- Strategies -->
+      <ProjectItem ReplaceParameters="false" TargetFileName="Strategies\SampleSequenceStrategy.h">Strategies\SampleSequenceStrategy.h</ProjectItem>
+
+      <!-- Actuator -->
+      <ProjectItem ReplaceParameters="false" TargetFileName="Actuator\SampleActuatorAdapter.h">Actuator\SampleActuatorAdapter.h</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="Actuator\SampleActuatorAdapter.cpp">Actuator\SampleActuatorAdapter.cpp</ProjectItem>
+
+    </Project>
+  </TemplateContent>
+</VSTemplate>
