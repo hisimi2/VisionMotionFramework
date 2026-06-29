@@ -6,8 +6,7 @@
 #include "OperationThreads/ThreadsManager.h"
 #include "Actuators/COPSwitch.h"
 
-#include <memory>
-#include <vector>
+#include <memory> // std::shared_ptr
 
 namespace VMF { class Orchestrator; }
 
@@ -27,6 +26,11 @@ class CEquipment2015Dlg : public CDialogEx
 {
     COPSwitch m_StartSwitch;
     COPSwitch m_StopSwitch;
+
+    void InitOrchestratorExample();
+    void RunOrchestratorSequenceExample();
+    void StopOrchestratorSequenceExample();
+    void AccessSequenceDataExample();
 
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
@@ -50,8 +54,6 @@ protected:
 private:
     OperationThread::ThreadsManager m_threadsMgr;
     std::shared_ptr<VMF::Orchestrator> m_orchestrator;
-    std::vector<std::shared_ptr<VMF::Orchestrator>> m_multiServerOrchestrators;
-
 public:
 	afx_msg void OnBnClickedStart();
 	afx_msg void OnBnClickedStop();
@@ -59,12 +61,6 @@ public:
 	CMFCButton m_BtnStop;
     afx_msg void OnTimer(UINT_PTR nIDEvent);
     CEdit m_LogEdit;
-    afx_msg void OnBnClickedVmfStateMachine();
-    afx_msg void OnBnClickedVmfStateMachineWithConnectionManager();
-    afx_msg void OnBnClickedVmfMultiServerExample();
+	afx_msg void OnBnClickedVmfStateMachine();
     afx_msg void OnBnClickedVmfDirect();
-
-    // 헬퍼: UI 로그 에디트에 메시지 추가
-    void AppendLog(LPCTSTR msg);
-    void AppendLogFormat(LPCTSTR fmt, ...);
 };

@@ -1,39 +1,46 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "Controller.h"
 #include "SecsMessageDispatcher.h"
+
 #include "TcpClient.h"
-#include "FixedLengthFramer.h"
+
+
 
 #include <queue>
+
 #include <thread>
 #include <atomic>
 #include <mutex>
-#include <functional>
+#include <functional> 
+
+#include "IFramer.h"
+#include "FixedLengthFramer.h"
 
 namespace VC
 {
 	struct Controller::Impl
 	{
 		std::shared_ptr<ITransport> m_transport;
-		std::shared_ptr<IFramer>    m_framer;
+		std::shared_ptr<IFramer> m_framer;
 		std::shared_ptr<IScheduler> m_scheduler;
-		std::shared_ptr<ILogger>    m_logger;
+		std::shared_ptr<ILogger> m_logger;
 		
  		std::atomic<bool> m_running;
+		std::atomic<bool> m_PacketReceived;
 		std::atomic<bool> m_bStatusConnect;
 		std::unique_ptr<SecsMessageDispatcher> m_dispatcher;
+
+		std::shared_ptr<std::thread> m_recvThread;
 
 		// 수신 큐
 		std::queue<ByteVector> m_packetQueue;
 		std::mutex m_queueMutex;
 
-		// 연결 키 (ConnectionManager 연동)
-		std::string m_connectionKey;
-
 		Impl()
 			: m_dispatcher(std::make_unique<SecsMessageDispatcher>())
 			, m_running(false)
+			, m_PacketReceived(false)
             , m_bStatusConnect(false)
 		{
 			m_transport = std::make_shared<TcpClient>();
@@ -245,42 +252,5 @@ namespace VC
 
 		m_pImpl->ProcessPackets(); // 내부 Impl 호출
 	}
-
-    // ---- 연결 키 관리 ----
-    void Controller::SetConnectionKey(const std::string& key)
-    {
-        if (m_pImpl)
-        {
-            m_pImpl->m_connectionKey = key;
-        }
-    }
-
-    std::string Controller::GetConnectionKey() const
-    {
-        if (m_pImpl)
-        {
-            return m_pImpl->m_connectionKey;
-        }
-        return "";
-    }
-
-    bool Controller::IsReceiving() const
-    {
-        if (m_pImpl)
-        {
-            return m_pImpl->m_running.load();
-        }
-        return false;
-    }
-
-    bool Controller::HasPendingPackets() const
-    {
-        if (m_pImpl)
-        {
-            std::lock_guard<std::mutex> lock(m_pImpl->m_queueMutex);
-            return !m_pImpl->m_packetQueue.empty();
-        }
-        return false;
-    }
 }
 

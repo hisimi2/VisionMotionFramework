@@ -21,6 +21,28 @@ namespace VC
 		eSocketTypeServer
 	};
 
+    static void WinsockCleanup()
+    {
+        ::WSACleanup();
+    }
+
+    static bool InitWinsock()
+    {
+        WSADATA wsa;
+        const int rc = ::WSAStartup(MAKEWORD(2, 2), &wsa);
+        if (rc != 0)
+            return false;
+
+        std::atexit(&WinsockCleanup);
+        return true;
+    }
+
+    static bool EnsureWinsockInitialized()
+    {
+        static bool s_inited = InitWinsock();
+        return s_inited;
+    }
+
 	struct TcpClient::Impl
 	{
 		TcpClient* m_parent;
@@ -31,19 +53,17 @@ namespace VC
 		std::atomic<bool> m_running;
 		std::atomic<bool> m_connected;
 
-		TransportReceiveCallback m_recvCb;
-		std::mutex m_cbMutex;
-		std::mutex m_bufferMutex;
+		RecvCallback m_recvCb;
+		std::mutex m_cbMutex;      // 콜백 함수 보호
+		std::mutex m_bufferMutex;  // m_partialBuffer 및 Framer 데이터 보호
 
 		std::atomic<bool> m_callbackEnabled;
 
 		std::thread m_recvThread;
 		size_t m_recvBufferSize;
-		std::vector<uint8_t> m_recvInternalBuffer;
+		std::vector<uint8_t> m_recvInternalBuffer; // RecvOnce 전용 재사용 버퍼
 
-		// 프레이머 없을 때 fallback 버퍼 (Pimpl 내부로 이동)
-		std::vector<uint8_t> m_partialBuffer;
-
+		// 패킷을 자르는 인터페이스
 		IFramerPtr m_framer;
 
 		int m_sendTimeoutMs;
@@ -333,15 +353,15 @@ namespace VC
 			}
 			else
 			{
-				// 프레이머가 없을 경우 fallback 로직 (Pimpl 내부 partialBuffer 사용)
-				m_pImpl->m_partialBuffer.insert(m_pImpl->m_partialBuffer.end(),
+				// 프레이머가 없을 경우 기존 664 하드코딩 로직 유지 (Fallback)
+				m_partialBuffer.insert(m_partialBuffer.end(),
 					m_pImpl->m_recvInternalBuffer.begin(),
 					m_pImpl->m_recvInternalBuffer.begin() + n);
 
-				while (m_pImpl->m_partialBuffer.size() >= 664)
+				while (m_partialBuffer.size() >= 664)
 				{
-					std::vector<uint8_t> packet(m_pImpl->m_partialBuffer.begin(), m_pImpl->m_partialBuffer.begin() + 664);
-					m_pImpl->m_partialBuffer.erase(m_pImpl->m_partialBuffer.begin(), m_pImpl->m_partialBuffer.begin() + 664);
+					std::vector<uint8_t> packet(m_partialBuffer.begin(), m_partialBuffer.begin() + 664);
+					m_partialBuffer.erase(m_partialBuffer.begin(), m_partialBuffer.begin() + 664);
 
 					bool calledCb = false;
 					{
@@ -381,7 +401,7 @@ namespace VC
 		return -1;
 	}
 
-	int TcpClient::Send(const ByteVector& data)
+	int TcpClient::Send(const ByteArray& data)
 	{
 		if (!m_pImpl || !m_pImpl->m_connected)
 			return -1;
@@ -416,7 +436,7 @@ namespace VC
 #endif
 	}
 
-    void TcpClient::SetReceiveCallback(const TransportReceiveCallback& cb)
+    void TcpClient::SetReceiveCallback(const RecvCallback& cb)
     {
         if (m_pImpl)
         {

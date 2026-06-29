@@ -22,7 +22,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -134,7 +134,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\ComponentSetupBase.cpp" />
-    <ClCompile Include="src\ConnectionManager.cpp" />
     <ClCompile Include="src\VisionProcessorBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -168,7 +167,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\RunController.h" />
     <ClInclude Include="include\Context.h" />
     <ClInclude Include="include\ComponentSetupBase.h" />
-    <ClInclude Include="include\ConnectionManager.h" />
     <ClInclude Include="include\VisionProcessorBase.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

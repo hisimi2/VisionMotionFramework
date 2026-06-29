@@ -61,13 +61,6 @@ namespace VMF
 
     void VisionProcessorBase::InitializeRecvThread()
     {
-        // 공유 Controller를 사용하는 경우, 수신 스레드는 ConnectionManager가 관리하므로
-        // 여기서는 시작하지 않음 (이미 시작되어 있음)
-        if (m_sharedCtrl)
-        {
-            // sharedCtrl은 이미 ConnectionManager에서 StartReceiving() 호출 완료
-            return;
-        }
         m_ctrl.StartReceiving();
     }
 
@@ -98,49 +91,13 @@ namespace VMF
         return VC::VisionOK;
     }
 
-    VC::Status VisionProcessorBase::InitializeWithSharedController(
-        std::shared_ptr<VC::Controller> sharedCtrl,
-        const VisionConnectionConfig& config)
-    {
-        if (!sharedCtrl || !sharedCtrl->IsConnected())
-        {
-            return VC::VisionConnectionFailed;
-        }
-
-        // 공유 Controller 저장
-        m_sharedCtrl = sharedCtrl;
-
-        // m_ctrl을 sharedCtrl의 복사본으로 설정 (같은 Impl 공유)
-        // Controller의 m_pImpl이 shared_ptr이므로, 복사 시 같은 Impl 인스턴스를 가리킴
-        m_ctrl = *sharedCtrl;
-
-        // sharedCtrl은 이미 ConnectionManager에서 StartReceiving()이 호출된 상태
-        // InitializeRecvThread()는 m_sharedCtrl이 있으면 중복 호출하지 않음
-
-        // PacketLoop 스레드 시작 (공유 큐에서 패킷을 가져와 처리)
-        StartProcessThread();
-
-        return VC::VisionOK;
-    }
-
     void VisionProcessorBase::Disconnect()
     {
-        if (m_sharedCtrl)
-        {
-            // 공유 Controller는 ConnectionManager가 관리하므로 disconnect하지 않음
-            // 대신 PacketLoop만 중단
-            StopProcessThread();
-            return;
-        }
         m_ctrl.Disconnect();
     }
 
     bool VisionProcessorBase::IsConnected() const
     {
-        if (m_sharedCtrl)
-        {
-            return m_sharedCtrl->IsConnected();
-        }
         return m_ctrl.IsConnected();
     }
 
@@ -236,8 +193,6 @@ namespace VMF
 
     void VisionProcessorBase::PacketLoop()
     {
-        // 공유 Controller 사용 시, 해당 Controller의 PacketThread()를 호출
-        // (m_ctrl은 sharedCtrl의 복사본이므로 같은 Impl을 공유)
         while (m_processRunning)
         {
             m_ctrl.PacketThread();
