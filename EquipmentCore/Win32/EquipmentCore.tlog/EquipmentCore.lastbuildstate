@@ -1,2 +1,2 @@
-PlatformToolSet=v145:VCToolArchitecture=Native32Bit:VCToolsVersion=14.51.36231:VCServicingVersionMFC=14.51.36244:VCServicingVersionATL=14.51.36244:VCServicingVersionCrtHeaders=14.51.36244:VCServicingVersionCompilers=14.51.36248:TargetPlatformVersion=10.0.14393.0:
-Debug|Win32|D:\project\VisionMotionFramework\|
+#TargetFrameworkVersion=:PlatformToolSet=v140:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0.14393.0
+Debug|Win32|D:\01GitHub_PROJECT\VisionMotionFramework\|
