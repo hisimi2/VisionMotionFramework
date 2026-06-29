@@ -102,9 +102,9 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionRequest(
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 	}
 
-	visionProcessor->InitializeRecvThread();
+visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(VMF::VisionCommands::Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
@@ -121,7 +121,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
 	if (!visionProcessor)
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 
-	if (!visionProcessor->IsValid(VMF::VisionCommands::Measure))
+	if (!visionProcessor->IsValid(VMF::Measure))
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Vision Time Out");
@@ -129,7 +129,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
 		return VMF::TR_KEEP;
 	}
 
-	auto data = visionProcessor->GetLatestData(VMF::VisionCommands::Measure);
+	auto data = visionProcessor->GetLatestData(VMF::Measure);
 	(void)data;
 
 	if (actuator)

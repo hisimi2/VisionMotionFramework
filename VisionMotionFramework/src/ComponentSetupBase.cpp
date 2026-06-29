@@ -1,11 +1,11 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ComponentSetupBase.h"
+#include "ConnectionManager.h"
 
 namespace VMF
 {
     ComponentSetupBase::ComponentSetupBase()
         : m_adapter(nullptr)
-        , m_useConnectionManager(false)
     {
     }
 
@@ -22,7 +22,6 @@ namespace VMF
     void ComponentSetupBase::SetConnectionConfig(const VisionConnectionConfig& config)
     {
         m_connectionConfig = config;
-        m_useConnectionManager = true;
     }
 
     const VisionConnectionConfig& ComponentSetupBase::GetConnectionConfig() const
@@ -32,17 +31,14 @@ namespace VMF
 
     bool ComponentSetupBase::IsUsingConnectionManager() const
     {
-        return m_useConnectionManager;
+        return !m_connectionConfig.address.empty() && m_connectionConfig.port > 0;
     }
 
     std::shared_ptr<VC::Controller> ComponentSetupBase::GetOrCreateSharedController()
     {
-        if (!m_useConnectionManager)
-        {
+        if (!IsUsingConnectionManager())
             return nullptr;
-        }
 
-        // ConnectionManager를 통해 공유 Controller 획득 또는 생성
         return ConnectionManager::GetInstance().GetOrCreateConnection(
             m_connectionConfig.address,
             m_connectionConfig.port,

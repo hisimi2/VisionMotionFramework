@@ -41,28 +41,24 @@ namespace VMF
         VisionMemoryProcessor();
         ~VisionMemoryProcessor() override;
 
-        // 요청 — cmd로 분기
-        bool RequestAsync(VisionCommand cmd,
-            const StringMap& params) override;
+		bool RequestSetCokAsync(const StringMap& params) override;
+		bool RequestInspReadyAsync(const StringMap& params) override;
+		bool RequestMeasureAsync(const StringMap& params) override;
+		bool RequestDeviceCheckAsync(const StringMap& params) override;
+		bool RequestLightAsync(const StringMap& params) override;
 
-        // 수신 — cmd + body로 통합
-        void OnVisionResponse(VisionCommand cmd,
-            ByteArray body) override;
+		// 변경: 바디를 by-value로 받아 호출자가 std::move로 소유권을 전달할 수 있도록 함
+		void OnSetCok(ByteArray body) override;
+		void OnInspReady(ByteArray body) override;
+		void OnMeasure(ByteArray body) override;
+		void OnDeviceCheck(ByteArray body) override;
+		void OnLight(ByteArray body) override;
 
         void Process() override;
 
     private:
         VisionMemoryProcessor(const VisionMemoryProcessor&) = delete;
         VisionMemoryProcessor& operator=(const VisionMemoryProcessor&) = delete;
-
-        bool RequestControlAsync(const StringMap& params);
-        bool RequestMeasureAsyncInternal(const StringMap& params);
-        bool RequestDeviceCheckAsyncInternal(const StringMap& params);
-
-        void HandleSetCok(ByteArray body);
-        void HandleInspReady(ByteArray body);
-        void HandleMeasure(ByteArray body);
-        void HandleDeviceCheck(ByteArray body);
 
         std::vector<std::string> ParseMeasureBody(const ByteArray& body);
     };

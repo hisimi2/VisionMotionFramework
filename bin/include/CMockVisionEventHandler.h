@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "IVisionProcessor.h"
 #include "Types.h"
+
 #include <map>
 #include <mutex>
 #include <string>
@@ -8,54 +9,53 @@
 
 namespace VMF
 {
-    class CMockVisionEventHandler : public IVisionProcessor
-    {
-    public:
-        CMockVisionEventHandler();
-        virtual ~CMockVisionEventHandler();
+	class CMockVisionEventHandler : public IVisionProcessor
+	{
+	public:
+		CMockVisionEventHandler();
+		virtual ~CMockVisionEventHandler();
 
-        // IVisionProcessor
-        VC::Status Initialize(const VisionConnectionConfig& config) override;
+		// IAsyncVisionProcessor
+		virtual VC::Status Initialize(const VisionConnectionConfig& config);
+		virtual void Disconnect();
+		virtual bool IsConnected() const;
 
-        /// <summary>
-        /// 외부에서 공유되는 Controller를 사용하여 초기화합니다.
-        /// </summary>
-        VC::Status InitializeWithSharedController(
-            std::shared_ptr<VC::Controller> sharedCtrl,
-            const VisionConnectionConfig& config) override;
+		virtual bool RequestSetCokAsync(const StringMap& params);
+		virtual bool RequestInspReadyAsync(const StringMap& params);
+		virtual bool RequestMeasureAsync(const StringMap& params);
+		virtual bool RequestDeviceCheckAsync(const StringMap& params);
+		virtual bool RequestLightAsync(const StringMap& params);
 
-        void       Disconnect() override;
-        bool       IsConnected() const override;
+		virtual DataMap GetLatestData(VisionCommand type) const;
+		virtual void ClearLatestData(VisionCommand type);
+		virtual bool IsValid(VisionCommand type) const;
+		virtual bool HasReceived(VisionCommand type) const;
 
-        bool       RequestAsync(VisionCommand cmd,
-        const StringMap& params) override;
+		// IVisionEventHandler (?섏떊 肄쒕갚)
+		virtual void InitializeRecvThread();
 
-        DataMap    GetLatestData(VisionCommand type) const override;
-        void       ClearLatestData(VisionCommand type) override;
-        bool       IsValid(VisionCommand type) const override;
-        bool       HasReceived(VisionCommand type) const override;
+		virtual void OnSetCok(ByteArray body);
+		virtual void OnInspReady(ByteArray body);
+		virtual void OnMeasure(ByteArray body);
+		virtual void OnDeviceCheck(ByteArray body);
+		virtual void OnLight(ByteArray body);
 
-        void       InitializeRecvThread() override;
-        void       OnVisionResponse(VisionCommand cmd, ByteArray body) override;
+		// ?뚯뒪???ы띁
+		void SetRequestResult(bool ok);
+		StringMap GetLastRequestParams() const;
 
-        // 테스트 헬퍼
-        void      SetRequestResult(bool ok);
-        StringMap GetLastRequestParams()        const;
+	private:
+		mutable std::mutex m_mutex;
+		bool m_connected;
+		bool m_requestResult; 
+						
+		std::map<int, StringMap> m_latestData;
 
-    private:
-        mutable std::mutex       m_mutex;
-        bool                     m_connected;
-        bool                     m_requestResult;
-        std::map<int, StringMap> m_latestData;
-        std::map<int, bool>      m_receivedFlags;
-        StringMap                m_lastRequestParams;
+		std::map<int, bool> m_receivedFlags;
 
-        /// <summary>
-        /// 공유 Controller (ConnectionManager로부터 획득)
-        /// </summary>
-        std::shared_ptr<VC::Controller> m_sharedCtrl;
+		StringMap m_lastRequestParams;
 
-        static std::string BodyToString(const ByteArray& b);
-    };
-
+		static std::string BodyToString(const ByteArray& b);
+	};
 } // namespace VMF
+

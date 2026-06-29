@@ -55,13 +55,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;VMF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(SolutionDir)bin\Thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+<AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>.\VisionMotionFramework.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(ProjectDir)..\bin\thirdparty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>VisionComm.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
@@ -90,14 +90,14 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(SolutionDir)bin\Thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+<AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(SolutionDir)bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ModuleDefinitionFile>.\DVH_VAT.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\VisionMotionFramework.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -135,9 +135,9 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\SequenceBuilderBase.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
+    <ClCompile Include="src\ConnectionManager.cpp" />
     <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\ComponentSetupBase.cpp" />
-    <ClCompile Include="src\ConnectionManager.cpp" />
     <ClCompile Include="src\VisionProcessorBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -172,9 +172,9 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\Sequence.h" />
     <ClInclude Include="include\Types.h" />
     <ClInclude Include="include\RunController.h" />
+    <ClInclude Include="include\ConnectionManager.h" />
     <ClInclude Include="include\Context.h" />
     <ClInclude Include="include\ComponentSetupBase.h" />
-    <ClInclude Include="include\ConnectionManager.h" />
     <ClInclude Include="include\VisionProcessorBase.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
