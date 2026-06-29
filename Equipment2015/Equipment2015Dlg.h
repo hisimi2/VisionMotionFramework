@@ -7,6 +7,7 @@
 #include "Actuators/COPSwitch.h"
 
 #include <memory> // std::shared_ptr
+#include <vector> // std::vector
 
 namespace VMF { class Orchestrator; }
 
@@ -62,5 +63,12 @@ public:
     afx_msg void OnTimer(UINT_PTR nIDEvent);
     CEdit m_LogEdit;
 	afx_msg void OnBnClickedVmfStateMachine();
-    afx_msg void OnBnClickedVmfDirect();
+	afx_msg void OnBnClickedVmfDirect();
+    afx_msg void OnBnClickedVmfStateMachineWithConnectionManager();
+    afx_msg void OnBnClickedVmfMultiServerExample();
+
+    void AppendLog(LPCTSTR msg);
+    void AppendLogFormat(LPCTSTR fmt, ...);
+
+    std::vector<std::shared_ptr<VMF::Orchestrator>> m_multiServerOrchestrators;
 };

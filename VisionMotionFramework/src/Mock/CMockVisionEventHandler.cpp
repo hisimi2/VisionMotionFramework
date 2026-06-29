@@ -20,6 +20,16 @@ namespace VMF
 		return VC::VisionOK;
 	}
 
+	VC::Status CMockVisionEventHandler::InitializeWithSharedController(
+		std::shared_ptr<VC::Controller> sharedCtrl,
+		const VisionConnectionConfig& config)
+	{
+		std::lock_guard<std::mutex> lg(m_mutex);
+		m_sharedCtrl = sharedCtrl;
+		m_connected = true;
+		return VC::VisionOK;
+	}
+
 	void CMockVisionEventHandler::Disconnect()
 	{
 		std::lock_guard<std::mutex> lg(m_mutex);

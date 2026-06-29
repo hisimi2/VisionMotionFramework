@@ -51,8 +51,22 @@ namespace VMF
         using DataMap = StringMap;
         virtual ~IVisionProcessor() = default;
 
-        // 연결 관리
+// 연결 관리
         virtual VC::Status Initialize(const VisionConnectionConfig& config) = 0;
+
+        /// <summary>
+        /// 외부에서 공유되는 Controller를 사용하여 초기화합니다.
+        /// ConnectionManager를 통해 공유 소켓 연결을 사용할 때 호출됩니다.
+        /// 기본 구현은 Initialize(config)를 호출합니다.
+        /// </summary>
+        virtual VC::Status InitializeWithSharedController(
+            std::shared_ptr<VC::Controller> sharedCtrl,
+            const VisionConnectionConfig& config)
+        {
+            // 기본 구현: sharedCtrl 무시하고 config로 직접 초기화
+            return Initialize(config);
+        }
+
         virtual void Disconnect() = 0;
         virtual bool IsConnected() const = 0;
 

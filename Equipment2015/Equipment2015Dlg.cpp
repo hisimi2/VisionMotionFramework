@@ -493,15 +493,15 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     CString logMsg;
     logMsg = _T("[Direct Mode] DLL Plugin Strategy로 컴포넌트 조립 완료.\r\n\r\n");
 
-    // Measure 명령 실행
-    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::VisionCommands::Measure);
+// Measure 명령 실행
+    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
     logMsg.AppendFormat(_T("[Direct Mode] Execute(Measure) → %s\r\n"),
                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
 
     // 파라미터와 함께 명령 실행
     VMF::StringMap params;
     params["ExtraParam"] = "DirectModeTest";
-    cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::VisionCommands::SetCok, params);
+    cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
     logMsg.AppendFormat(_T("[Direct Mode] Execute(SetCok, params) → %s\r\n"),
                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
 
@@ -509,7 +509,7 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
     if (vp)
     {
-        auto latestData = vp->GetLatestData(VMF::VisionCommands::Measure);
+        auto latestData = vp->GetLatestData(VMF::Measure);
         logMsg += _T("  - GetLatestData(Measure) keys: ");
         for (const auto& kv : latestData)
         {

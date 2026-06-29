@@ -17,56 +17,27 @@ namespace VMF
         disp.RegisterHandler(VisionMemoryProtocol::Measure,
             [this](int, int, std::vector<uint8_t>&& body, int)
             {
-                this->OnVisionResponse(VMF::VisionCommands::Measure, std::move(body));
+                this->OnMeasure(std::move(body));
             });
 
         disp.RegisterHandler(VisionMemoryProtocol::ControlAck,
             [this](int, int, std::vector<uint8_t>&& body, int)
             {
                 auto copy = body;
-                this->OnVisionResponse(VMF::VisionCommands::SetCok, std::move(body));
-                this->OnVisionResponse(VMF::VisionCommands::InspReady, std::move(copy));
+                this->OnSetCok(std::move(body));
+                this->OnInspReady(std::move(copy));
             });
     }
 
     VisionMemoryProcessor::~VisionMemoryProcessor() = default;
 
     // -----------------------------------------------------------------------
-    // [RequestAsync] — cmd로 분기
+    // [RequestSetCokAsync] — SetCok 요청
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestAsync(
-        VisionCommand cmd, const StringMap& params)
+    bool VisionMemoryProcessor::RequestSetCokAsync(const StringMap& params)
     {
-        ClearLatestData(cmd);
+        ClearLatestData(SetCok);
 
-        if (cmd == VMF::VisionCommands::SetCok || cmd == VMF::VisionCommands::InspReady)
-            return RequestControlAsync(params);
-        if (cmd == VMF::VisionCommands::Measure)
-            return RequestMeasureAsyncInternal(params);
-        if (cmd == VMF::VisionCommands::DeviceCheck)
-            return RequestDeviceCheckAsyncInternal(params);
-
-        return false;
-    }
-
-    // -----------------------------------------------------------------------
-    // [OnVisionResponse] — cmd로 분기
-    // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnVisionResponse(
-        VisionCommand cmd, ByteArray body)
-    {
-        if (cmd == VMF::VisionCommands::SetCok)     HandleSetCok(std::move(body));
-        else if (cmd == VMF::VisionCommands::InspReady)  HandleInspReady(std::move(body));
-        else if (cmd == VMF::VisionCommands::Measure)    HandleMeasure(std::move(body));
-        else if (cmd == VMF::VisionCommands::DeviceCheck)HandleDeviceCheck(std::move(body));
-        else                        ClearLatestData(cmd);
-    }
-
-    // -----------------------------------------------------------------------
-    // [내부 요청 함수]
-    // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestControlAsync(const StringMap& params)
-    {
         CPacketBody_S2F41 body;
         body.nCmd = 1000;
         body.nParamCount = 7;
@@ -98,9 +69,22 @@ namespace VMF
         return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
     }
 
-    bool VisionMemoryProcessor::RequestMeasureAsyncInternal(
-        const StringMap& params)
+    // -----------------------------------------------------------------------
+    // [RequestInspReadyAsync] — InspReady 요청
+    // -----------------------------------------------------------------------
+    bool VisionMemoryProcessor::RequestInspReadyAsync(const StringMap& params)
     {
+        // InspReady는 SetCok와 동일한 ControlRequest 패킷 사용
+        return RequestSetCokAsync(params);
+    }
+
+    // -----------------------------------------------------------------------
+    // [RequestMeasureAsync] — Measure 요청
+    // -----------------------------------------------------------------------
+    bool VisionMemoryProcessor::RequestMeasureAsync(const StringMap& params)
+    {
+        ClearLatestData(Measure);
+
         CPacketBody_S107F9 body;
 
         auto it = params.find(CAMERA_ID);
@@ -126,21 +110,32 @@ namespace VMF
         return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
     }
 
-    bool VisionMemoryProcessor::RequestDeviceCheckAsyncInternal(
-        const StringMap& params)
+    // -----------------------------------------------------------------------
+    // [RequestDeviceCheckAsync] — DeviceCheck 요청
+    // -----------------------------------------------------------------------
+    bool VisionMemoryProcessor::RequestDeviceCheckAsync(const StringMap& params)
     {
         (void)params;
         return false;
     }
 
     // -----------------------------------------------------------------------
-    // [내부 수신 핸들러]
+    // [RequestLightAsync] — Light 요청
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::HandleSetCok(ByteArray body)
+    bool VisionMemoryProcessor::RequestLightAsync(const StringMap& params)
+    {
+        (void)params;
+        return false;
+    }
+
+    // -----------------------------------------------------------------------
+    // [OnSetCok] — SetCok 응답 처리
+    // -----------------------------------------------------------------------
+    void VisionMemoryProcessor::OnSetCok(ByteArray body)
     {
         if (body.size() < sizeof(CPacketBody_S2F41))
         {
-            ClearLatestData(VMF::VisionCommands::SetCok); return;
+            ClearLatestData(SetCok); return;
         }
 
         CPacketBody_S2F41 pkt;
@@ -151,14 +146,17 @@ namespace VMF
         data[SERVER_INDEX] = std::string(pkt.szParam[1]);
         data[CAM_STATUS] = std::string(pkt.szParam[2]);
         data[CAM_TYPE] = std::string(pkt.szParam[3]);
-        SetLatestData(VMF::VisionCommands::SetCok, data);
+        SetLatestData(SetCok, data);
     }
 
-    void VisionMemoryProcessor::HandleInspReady(ByteArray body)
+    // -----------------------------------------------------------------------
+    // [OnInspReady] — InspReady 응답 처리
+    // -----------------------------------------------------------------------
+    void VisionMemoryProcessor::OnInspReady(ByteArray body)
     {
         if (body.size() < sizeof(CPacketBody_S2F41))
         {
-            ClearLatestData(VMF::VisionCommands::InspReady); return;
+            ClearLatestData(InspReady); return;
         }
 
         CPacketBody_S2F41 pkt;
@@ -169,14 +167,17 @@ namespace VMF
         data[SERVER_INDEX] = std::string(pkt.szParam[1]);
         data[CAM_STATUS] = std::string(pkt.szParam[2]);
         data[CAM_TYPE] = std::string(pkt.szParam[3]);
-        SetLatestData(VMF::VisionCommands::InspReady, data);
+        SetLatestData(InspReady, data);
     }
 
-    void VisionMemoryProcessor::HandleMeasure(ByteArray body)
+    // -----------------------------------------------------------------------
+    // [OnMeasure] — Measure 응답 처리
+    // -----------------------------------------------------------------------
+    void VisionMemoryProcessor::OnMeasure(ByteArray body)
     {
         if (body.size() < sizeof(CPacketBody_S107F9))
         {
-            ClearLatestData(VMF::VisionCommands::Measure); return;
+            ClearLatestData(Measure); return;
         }
 
         CPacketBody_S107F9 pkt;
@@ -184,7 +185,7 @@ namespace VMF
 
         if (pkt.nStatus != 1)
         {
-            ClearLatestData(VMF::VisionCommands::Measure); return;
+            ClearLatestData(Measure); return;
         }
 
         DataMap data;
@@ -193,15 +194,30 @@ namespace VMF
         data[Y_OFFSET] = pkt.cData[2];
         data[ANGLE] = pkt.cData[3];
         data[AUTO_VISION_SETTING] = pkt.cData[4];
-        SetLatestData(VMF::VisionCommands::Measure, data);
+        SetLatestData(Measure, data);
     }
 
-    void VisionMemoryProcessor::HandleDeviceCheck(ByteArray body)
+    // -----------------------------------------------------------------------
+    // [OnDeviceCheck] — DeviceCheck 응답 처리
+    // -----------------------------------------------------------------------
+    void VisionMemoryProcessor::OnDeviceCheck(ByteArray body)
     {
         (void)body;
-        ClearLatestData(VMF::VisionCommands::DeviceCheck);
+        ClearLatestData(DeviceCheck);
     }
 
+    // -----------------------------------------------------------------------
+    // [OnLight] — Light 응답 처리
+    // -----------------------------------------------------------------------
+    void VisionMemoryProcessor::OnLight(ByteArray body)
+    {
+        (void)body;
+        ClearLatestData(Light);
+    }
+
+    // -----------------------------------------------------------------------
+    // [Process] — 기본 Process 호출
+    // -----------------------------------------------------------------------
     void VisionMemoryProcessor::Process()
     {
         VisionProcessorBase::Process();

@@ -27,6 +27,8 @@
 #define IDC_START_LOAD1                 1011
 #define IDC_START_LOAD2                 1012
 #define IDC_VMF_DIRECT                  1013
+#define IDC_VMF_CONNECTION_MANAGER      1014
+#define IDC_VMF_MULTI_SERVER            1015
 
 // Next default values for new objects
 // 
