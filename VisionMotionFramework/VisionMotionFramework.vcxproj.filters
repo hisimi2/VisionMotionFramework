@@ -71,6 +71,7 @@
     <None Include="VisionMotionFramework.def" />
     <None Include="ReadMe.txt" />
     <None Include="res\VisionMotionFramework.rc2" />
+    <None Include="..\docs\VMF_DeploymentStrategy.md" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Mocks">

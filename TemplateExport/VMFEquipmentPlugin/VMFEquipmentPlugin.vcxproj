@@ -175,7 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Floating version: NuGet restore 시 최신 1.x 버전을 자동으로 가져옵니다 -->
-    <PackageReference Include="VisionMotionFramework.Core.v142" Version="1.*" />
+<PackageReference Include="VisionMotionFramework.Core.v140" Version="1.*" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

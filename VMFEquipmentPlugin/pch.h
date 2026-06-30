@@ -11,7 +11,7 @@
 #include "framework.h"
 
 // ============================================================================
-// VMF Core Headers (NuGet Package: VisionMotionFramework.Core.v142)
+// VMF Core Headers (NuGet Package: VisionMotionFramework.Core.v140)
 // NuGet 패키지를 참조하면 이 헤더들을 include 경로에서 찾을 수 있습니다.
 // NuGet 복원이 완료되면 자동으로 include 경로가 설정됩니다.
 // ============================================================================

@@ -40,6 +40,86 @@
 
 ---
 
+## NuGet 패키지 배포 전략
+
+### 배포 모델 및 Toolset 지원
+
+VisionMotionFramework는 **2개의 독립적인 NuGet 패키지**로 배포됩니다:
+
+#### 패키지 1: VisionMotionFramework.v100 (레거시 지원)
+- **대상**: Visual Studio 2010 (v100 Toolset)
+- **CRT**: msvcr100.dll
+- **소스**: VisionMotionFramework/src-v100/ 에서 v100 호환 코드
+- **구성**: 
+  - lib/net45/v100/ → VisionMotionFramework.dll (v100)
+  - include/ → 공개 헤더
+
+#### 패키지 2: VisionMotionFramework (최신 지원)
+- **대상**: Visual Studio 2015 이상 (v140 Toolset)
+  - v140 (VS2015)
+  - v141 (VS2017)
+  - v142 (VS2019)
+  - v143 (VS2022)
+  - 모두 동일 CRT (msvcr140.dll) 사용
+- **CRT**: msvcr140.dll (v140, v141, v142, v143 공통)
+- **소스**: VisionMotionFramework/src-v140/ 에서 v140+ 코드
+- **구성**:
+  - lib/net45/v140/ → VisionMotionFramework.dll (v140+)
+  - include/ → 공개 헤더
+
+### Toolset 호환성 정책
+- **v140, v141, v142, v143은 동일 CRT 사용**: 1개 바이너리로 모두 지원
+- **Props 파일에서 자동 매핑**:
+  ```xml
+  v140 → v140
+  v141 → v140
+  v142 → v140
+  v143 → v140
+  ```
+- **결과**: 배포 패키지 단순화, 빌드 횟수 최소화
+
+### 개발자 워크플로우
+
+#### v100 환경 (VS2010)
+```
+1. NuGet 설치: Install-Package VisionMotionFramework.v100
+2. 자동으로 v100용 DLL + 헤더 다운로드
+3. 프로젝트의 Toolset이 v100이면 자동 인식
+4. Equipment App (v100) ↔ Plugin (v100) 일치
+```
+
+#### v140+ 환경 (VS2015 이상)
+```
+1. NuGet 설치: Install-Package VisionMotionFramework
+2. 자동으로 v140용 DLL + 헤더 다운로드
+3. Props에서 현재 Toolset 감지
+   - v140: 그대로 사용
+   - v141/v142/v143: v140으로 매핑
+4. 모든 VS 버전에서 동일 DLL 사용
+```
+
+### 패키지 구조
+
+```
+VisionMotionFramework.v100.1.0.0.nupkg
+├── lib/net45/v100/
+│   ├── VisionMotionFramework.dll (v100, msvcr100.dll 링크)
+│   ├── VisionMotionFramework.lib
+│   └── VisionMotionFramework.pdb
+├── include/ (공개 헤더)
+└── native/ (v100용 Props)
+
+VisionMotionFramework.1.0.0.nupkg
+├── lib/net45/v140/
+│   ├── VisionMotionFramework.dll (v140+, msvcr140.dll 링크)
+│   ├── VisionMotionFramework.lib
+│   └── VisionMotionFramework.pdb
+├── include/ (공개 헤더)
+└── native/ (v140+ Props 자동 매핑)
+```
+
+---
+
 ## GetName 변경 절차 (검색-치환 및 검증)
 GetName 또는 런타임 식별자 문자열(예: `"Load1.ZFocus.MoveToStartPosition"`)을 변경해야 하는 경우 아래 절차를 준수하십시오.
 
