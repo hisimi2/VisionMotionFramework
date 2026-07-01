@@ -17,9 +17,9 @@
 
 // ============================================================================
 // SetupStrategy Factory Interface
-// VMFEquipmentPlugin.lib를 링크한 후,
+// VMFEquipmentPlugin.dll의 import library(.lib)를 암시적 링크한 후,
 // CreateSetupStrategy() / DestroySetupStrategy()를 직접 호출하여 사용합니다.
-// 정적 라이브러리이므로 함수 포인터/간접 호출 불필요.
+// DLL은 import library를 통해 자동으로 로드되므로 LoadLibrary 불필요.
 // ============================================================================
 #include "PluginFactory.h"
 

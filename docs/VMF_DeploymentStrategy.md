@@ -7,16 +7,55 @@ VisionMotionFramework는 Vision 검사 시퀀스를 위한 C++ 프레임워크�
 
 **배포 구조:**
 
-```
-VisionMotionFramework.dll + VisionComm.dll + 헤더
-        │
-        ├──▶ Equipment App (직접 프로젝트 참조)
-        │        솔루션 내 VisionMotionFramework, VisionComm 참조
-        │        VMFEquipmentPlugin.lib 직접 링크 → SetupStrategy 사용
-        │
-        └──▶ NuGet 패키지: VisionMotionFramework.Core.v140
-                 └──▶ VMFEquipmentPlugin (VS Template, .lib)
-                          PackageReference 자동 복원 → .lib 빌드
+```mermaid
+---
+config:
+  layout: elk
+  theme: base
+---
+flowchart BT
+ subgraph CICD["🌐 CI/CD & Deployment Pipeline"]
+        BITBUCKET["📦 Bitbucket Server"]
+        JENKINS["🤖 Jenkins CI Server"]
+        NUGET_SERVER["🗄️ NuGet Server<br>(avantipoint.packages)"]
+  end
+ subgraph PLUGIN_ECO["🔌 VMFEquipmentPlugin 개발 생태계 (VS Template)"]
+        TEMPLATE["📄 VMFEquipmentPlugin<br>(Visual Studio Template)"]
+        S4["④ 새 장비용 프로젝트 생성<br>(Template 기반)"]
+        S5["⑤ NuGet 자동 복원<br>(PackageReference)"]
+        S6["⑥ 장비 특화 시퀀스 &amp; 인터록 코드 수정<br>(MyEquipPlugin)"]
+        S7["⭐ ⑦ MyEquipPlugin.dll 빌드"]
+  end
+ subgraph MAIN_APP["💻 Main Application (NuGet 불필요, 직접 프로젝트 참조)"]
+        APP_EXE["🖥️ Equipment2015.exe<br>(v140 / v145)"]
+        IMPORT_LIB["⚙️ import library (.lib) 암시적 링크"]
+  end
+ subgraph PLUGIN_LAYER["🔧 Plugin Layer (VMFEQUIPMENTPLUGIN_API, 클래스 직접 export)"]
+        P_V140["VMFEquipmentPlugin.dll<br>(import library 통해 자동 연결)"]
+        P_V100["VMFEquipmentPlugin-Legacy.dll<br>(별도 레포지토리, v100 전용)"]
+  end
+ subgraph RUNTIME_ARCH["🛡️ Runtime Architecture (import library 암시적 링크)"]
+        R_APP["🖥️ Equipment2015.exe<br>(v140 / v145)"]
+        R_PLUGIN_DLL["🔌 VMFEquipmentPlugin.dll<br>(import library 통해 자동 로드)"]
+        PLUGIN_LAYER
+        CORE_ENGINE["⚙️ VisionMotionFramework.dll<br>(v140 / C++14 Core 엔진)<br>Orchestrator, SequenceBase"]
+  end
+    BITBUCKET -- ① Master Branch Push Webhook --> JENKINS
+    JENKINS -- ② Project Source Clone &amp; VMF Build<br>③ Clean &amp; Test<br>④ Package NuGet --> JENKINS
+    JENKINS -- "⑤ Push .nupkg" --> NUGET_SERVER
+    TEMPLATE --> S4
+    S4 --> S5
+    S5 --> S6
+    S6 --> S7
+    NUGET_SERVER -- 패키지 배포 및 피드 공급 --> TEMPLATE
+    APP_EXE --> IMPORT_LIB
+    NUGET_SERVER == ✅ Core DLL 빌드 (NuGet 배포) ==> MAIN_APP
+    S7 -. STEP 8: import library 링크 (암시적) .-> IMPORT_LIB
+    R_APP -- CreateSetupStrategy() 직접 호출<br>(import library 통해 자동 연결) --> R_PLUGIN_DLL
+    R_PLUGIN_DLL -- ★ Plugin DLL을 통해 Strategy 생성 --> P_V140
+    P_V140 -.-> P_V100
+    P_V140 --> CORE_ENGINE
+    P_V100 -..->|별도 레포지토리, v100 전용| CORE_ENGINE
 ```
 
 > **Equipment App (Equipment2015):** 직접 프로젝트 참조 방식 사용 (NuGet 대상 아님)
@@ -28,9 +67,9 @@ VisionMotionFramework.dll + VisionComm.dll + 헤더
 
 | 항목 | 배포 방식 | 대상 |
 |------|----------|------|
-| Core 엔진 (DLL + import lib + 헤더) | NuGet 패키지 | **VMFEquipmentPlugin** (VS Template, 정적 라이브러리) |
+| Core 엔진 (DLL + import lib + 헤더) | NuGet 패키지 | **VMFEquipmentPlugin** (VS Template, DLL, 암시적 링크) |
 | Mock 객체 | NuGet 패키지 (contentFiles) | **VMFEquipmentPlugin** (테스트 환경, 단위 테스트) |
-| 장비별 샘플 코드 (정적 라이브러리 .lib) | VS Project Template (.zip) | 신규 Equipment 개발자 |
+| 장비별 샘플 코드 (DLL + import library) | VS Project Template (.zip) | 신규 Equipment 개발자 |
 | Equipment App | 직접 프로젝트 참조 | **Equipment2015** (솔루션 내 프로젝트 참조) |
 
 ---
@@ -39,7 +78,7 @@ VisionMotionFramework.dll + VisionComm.dll + 헤더
 
 > **대상:** 이 섹션은 **VMFEquipmentPlugin** 프로젝트 (VS Template) 기준입니다.
 > **Equipment2015 (Equipment App):** 솔루션 내 직접 프로젝트 참조 방식이므로 NuGet 패키지 설치 불필요.
-> **VMFEquipmentPlugin은 정적 라이브러리(.lib)로 빌드되며**, Equipment App이 직접 링크하여 사용합니다.
+> **VMFEquipmentPlugin은 DLL로 빌드되며** (암시적 링크, import library .lib), Equipment App이 import library를 통해 직접 함수 및 클래스를 호출합니다.
 
 ### 지원 VS 버전
 
@@ -172,17 +211,19 @@ VMFEquipmentPlugin/
 ├── PluginFactory.h                          ← Factory 함수 선언 (수정 금지)
 ├── pch.h / pch.cpp                          ← 미리 컴파일된 헤더
 ├── framework.h                              ← 프레임워크 헤더
-└── VMFEquipmentPlugin.vcxproj              ← 프로젝트 설정 (StaticLibrary)
+└── VMFEquipmentPlugin.vcxproj              ← 프로젝트 설정 (DynamicLibrary)
 ```
 
-### .lib 빌드 출력
+### DLL 빌드 출력
 
 ```
-$(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.lib
-예) bin\Win32\Release\VMFEquipmentPlugin.lib
+$(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.dll
+$(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.lib  (import library)
+예) bin\Win32\Release\VMFEquipmentPlugin.dll
+    bin\Win32\Release\VMFEquipmentPlugin.lib
 ```
 
-> Equipment App이 이 .lib 파일을 직접 링크하여 사용합니다. 별도의 LoadLibrary 과정이 필요하지 않습니다.
+> Equipment App이 이 DLL의 import library(.lib)를 링크하여 암시적 방식으로 Plugin DLL을 사용합니다. `LoadLibrary`/`GetProcAddress` 과정이 필요하지 않습니다.
 
 ---
 
@@ -195,7 +236,7 @@ $(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.lib
 3. 샘플 파일 복사/리네이밍
 4. 장비에 맞게 코드 수정 (아래 가이드 참고)
 5. .lib 빌드 (`Release` 권장)
-6. Equipment App에서 VMFEquipmentPlugin.lib 링크 → SetupStrategy 직접 호출
+6. Equipment App에서 VMFEquipmentPlugin.lib (import library) 링크 후 SetupStrategy 직접 호출
     
 ### 수정 가이드
 
@@ -279,9 +320,25 @@ private:
 #### PluginFactory 직접 호출
 
 ```cpp
-// dllmain.cpp — 정적 라이브러리로 전환 (DLL 진입점 제거)
+// dllmain.cpp — VMFEquipmentPlugin DLL 진입점
 #include "pch.h"
+#include "PluginFactory.h"
 #include "Strategies/MySequenceStrategy.h"
+
+BOOL APIENTRY DllMain(HMODULE hModule,
+                      DWORD  ul_reason_for_call,
+                      LPVOID lpReserved)
+{
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+    case DLL_PROCESS_DETACH:
+        break;
+    }
+    return TRUE;
+}
 
 VMF::ComponentSetupBase* CreateSetupStrategy()
 {
@@ -294,17 +351,17 @@ void DestroySetupStrategy(VMF::ComponentSetupBase* ptr)
 }
 ```
 
-> VMFEquipmentPlugin이 정적 라이브러리(.lib)로 빌드되므로, Equipment App에서 직접 `#include "PluginFactory.h"` 후 `CreateSetupStrategy()` / `DestroySetupStrategy()` 함수를 호출하여 사용합니다. 별도의 LoadLibrary/GetProcAddress 과정이 필요하지 않습니다.
+> VMFEquipmentPlugin은 **DLL**로 빌드되며, Equipment App이 import library(.lib)를 통해 **암시적 링크** 방식으로 연결됩니다. Equipment App에서 `#include "PluginFactory.h"` 후 `CreateSetupStrategy()` / `DestroySetupStrategy()` 함수를 **직접 호출**할 수 있습니다. `LoadLibrary`/`GetProcAddress` 과정이 필요하지 않습니다.
 
 ---
 
 ## 4. 메인 APP에서 라이브러리 링크 및 사용
 
 ```cpp
-#include "PluginFactory.h"          // VMFEquipmentPlugin.lib와 함께 제공
+#include "PluginFactory.h"          // VMFEquipmentPlugin.dll의 import library와 함께 제공
 #include "ComponentSetupBase.h"     // NuGet 패키지의 헤더
 
-// 1. SetupStrategy 생성 (VMFEquipmentPlugin.lib에 정의됨)
+// 1. SetupStrategy 생성 (VMFEquipmentPlugin.dll에 export됨, import library로 링크)
 VMF::ComponentSetupBase* strategy = CreateSetupStrategy();
 if (!strategy) {
     printf("Strategy 생성 실패\n");
@@ -331,7 +388,7 @@ while (sequence->Poll(ctx, actuator.get()) == VMF::TaskResult::Running)
 DestroySetupStrategy(strategy);
 ```
 
-> **참고:** VMFEquipmentPlugin.lib는 Equipment App이 직접 링크하므로, Plugin DLL 교체 없이 장비별 SetupStrategy를 정적으로 사용합니다.
+> **참고:** VMFEquipmentPlugin.dll의 import library(.lib)를 Equipment App이 링크하여 암시적 방식으로 사용합니다. Plugin DLL만 교체하면 Equipment App 재빌드 없이 장비별 SetupStrategy를 업데이트할 수 있습니다.
 
 ---
 
@@ -342,10 +399,10 @@ DestroySetupStrategy(strategy);
 | Core 엔진 버그 수정 | NuGet 버전 업데이트 (패치) | 모든 VMFEquipmentPlugin (**Equipment App 재링크 불필요** — Core DLL만 교체) | v1.0.**1** |
 | 새로운 Interface 추가 | NuGet 버전 업데이트 (마이너) | 모든 VMFEquipmentPlugin (선택적 적용, Plugin 재빌드 + Equipment App 재링크 필요) | v1.**1**.0 |
 | 인터페이스 시그니처 변경 | NuGet + 모든 Plugin + Equipment App 재빌드 (메이저) | 전면 영향 (드물게 발생) | v**2**.0.0 |
-| 장비별 Task/Sequence 로직 변경 | Plugin .lib 소스 수정 후 재빌드 → Equipment App 재링크 | 해당 장비만 | - |
+| 장비별 Task/Sequence 로직 변경 | Plugin DLL 소스 수정 후 재빌드 → **DLL만 교체 (App 재링크 불필요)** | 해당 장비만 | - |
 | 신규 장비 추가 | 템플릿으로 Plugin 프로젝트 생성 | 신규 장비만 | - |
 
-> **Core는 DLL이므로** Core DLL만 교체하면 모든 Equipment App에서 즉시 적용됩니다. VMFEquipmentPlugin(.lib)은 Equipment App에 정적으로 링크되므로, Plugin 코드 변경 시 Equipment App 재링크가 필요합니다.
+> **Core는 DLL이므로** Core DLL만 교체하면 모든 Equipment App에서 즉시 적용됩니다. VMFEquipmentPlugin.dll은 암시적 링크(import library)로 연결되므로, Plugin DLL만 교체하면 Equipment App 재링크 없이 장비별 로직을 업데이트할 수 있습니다.
 
 ---
 
@@ -562,7 +619,7 @@ jobs:
 3. Core DLL(`VisionMotionFramework.dll`, `VisionComm.dll`)이 Equipment App 실행 파일과 같은 디렉터리에 있는지 확인
 4. NuGet `.targets` 파일이 빌드 후 DLL을 출력 디렉터리로 자동 복사하는지 확인
 
-> **참고:** VMFEquipmentPlugin은 정적 라이브러리(.lib)이므로 별도의 LoadLibrary 과정이 필요하지 않습니다.
+> **참고:** VMFEquipmentPlugin은 DLL로 빌드되며 import library(.lib)를 통해 암시적 링크되므로, 별도의 `LoadLibrary` 과정이 필요하지 않습니다.
 
 ---
 ## 라이선스
