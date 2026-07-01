@@ -11,34 +11,33 @@ VisionMotionFramework는 Vision 검사 시퀀스를 위한 C++ 프레임워크�
 ---
 config:
   layout: elk
-  theme: base
 ---
-flowchart BT
- subgraph CICD["🌐 CI/CD & Deployment Pipeline"]
-        BITBUCKET["📦 Bitbucket Server"]
-        JENKINS["🤖 Jenkins CI Server"]
-        NUGET_SERVER["🗄️ NuGet Server<br>(avantipoint.packages)"]
+flowchart TB
+ subgraph CICD["CI/CD & Deployment Pipeline"]
+        BITBUCKET["Bitbucket Server"]
+        JENKINS["Jenkins CI Server"]
+        NUGET_SERVER["NuGet Server<br>(avantipoint.packages)"]
   end
- subgraph PLUGIN_ECO["🔌 VMFEquipmentPlugin 개발 생태계 (VS Template)"]
-        TEMPLATE["📄 VMFEquipmentPlugin<br>(Visual Studio Template)"]
+ subgraph PLUGIN_ECO["VMFEquipmentPlugin 개발 생태계 (VS Template)"]
+        TEMPLATE["VMFEquipmentPlugin<br>(Visual Studio Template)"]
         S4["④ 새 장비용 프로젝트 생성<br>(Template 기반)"]
         S5["⑤ NuGet 자동 복원<br>(PackageReference)"]
         S6["⑥ 장비 특화 시퀀스 &amp; 인터록 코드 수정<br>(MyEquipPlugin)"]
-        S7["⭐ ⑦ MyEquipPlugin.dll 빌드"]
+        S7["⑦ MyEquipPlugin.dll 빌드"]
   end
- subgraph MAIN_APP["💻 Main Application (NuGet 불필요, 직접 프로젝트 참조)"]
-        APP_EXE["🖥️ Equipment2015.exe<br>(v140 / v145)"]
-        IMPORT_LIB["⚙️ import library (.lib) 암시적 링크"]
+ subgraph MAIN_APP["Main Application (NuGet 불필요, 직접 프로젝트 참조)"]
+        APP_EXE["Equipment2015.exe<br>(v140 / v145)"]
+        IMPORT_LIB["import library (.lib) 암시적 링크"]
   end
- subgraph PLUGIN_LAYER["🔧 Plugin Layer (VMFEQUIPMENTPLUGIN_API, 클래스 직접 export)"]
+ subgraph PLUGIN_LAYER["Plugin Layer (VMFEQUIPMENTPLUGIN_API, 클래스 직접 export)"]
         P_V140["VMFEquipmentPlugin.dll<br>(import library 통해 자동 연결)"]
         P_V100["VMFEquipmentPlugin-Legacy.dll<br>(별도 레포지토리, v100 전용)"]
   end
- subgraph RUNTIME_ARCH["🛡️ Runtime Architecture (import library 암시적 링크)"]
-        R_APP["🖥️ Equipment2015.exe<br>(v140 / v145)"]
-        R_PLUGIN_DLL["🔌 VMFEquipmentPlugin.dll<br>(import library 통해 자동 로드)"]
+ subgraph RUNTIME_ARCH["Runtime Architecture (import library 암시적 링크)"]
+        R_APP["Equipment2015.exe<br>(v140 / v145)"]
+        R_PLUGIN_DLL["VMFEquipmentPlugin.dll<br>(import library 통해 자동 로드)"]
+        CORE_ENGINE["VisionMotionFramework.dll<br>(v140 / C++14 Core 엔진)<br>Orchestrator, SequenceBase"]
         PLUGIN_LAYER
-        CORE_ENGINE["⚙️ VisionMotionFramework.dll<br>(v140 / C++14 Core 엔진)<br>Orchestrator, SequenceBase"]
   end
     BITBUCKET -- ① Master Branch Push Webhook --> JENKINS
     JENKINS -- ② Project Source Clone &amp; VMF Build<br>③ Clean &amp; Test<br>④ Package NuGet --> JENKINS
@@ -49,14 +48,23 @@ flowchart BT
     S6 --> S7
     NUGET_SERVER -- 패키지 배포 및 피드 공급 --> TEMPLATE
     APP_EXE --> IMPORT_LIB
-    NUGET_SERVER == ✅ Core DLL 빌드 (NuGet 배포) ==> MAIN_APP
+    NUGET_SERVER == Core DLL 빌드 (NuGet 배포) ==> MAIN_APP
     S7 -. STEP 8: import library 링크 (암시적) .-> IMPORT_LIB
     R_APP -- CreateSetupStrategy() 직접 호출<br>(import library 통해 자동 연결) --> R_PLUGIN_DLL
     R_PLUGIN_DLL -- ★ Plugin DLL을 통해 Strategy 생성 --> P_V140
-    P_V140 -.-> P_V100
-    P_V140 --> CORE_ENGINE
-    P_V100 -..->|별도 레포지토리, v100 전용| CORE_ENGINE
-```
+    P_V140 -. 레거시 마이그레이션 대응 .-> P_V100
+    P_V140 -- 연동 --> CORE_ENGINE
+    P_V100 -. 별도 레포지토리, v100 전용 .-> CORE_ENGINE
+
+     S7:::orange
+     APP_EXE:::highlight
+     R_APP:::highlight
+     MAIN_APP:::darkBlue
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
+    classDef highlight fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    classDef orange fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef darkBlue fill:#0d47a1,stroke:#0d47a1,stroke-width:1px,color:#fff
+    classDef green fill:#e8f5e9,stroke:#388e3c,stroke-width:2px```
 
 > **Equipment App (Equipment2015):** 직접 프로젝트 참조 방식 사용 (NuGet 대상 아님)
 > **VMFEquipmentPlugin:** NuGet PackageReference (`VisionMotionFramework.Core.v140`)로 Core 참조
