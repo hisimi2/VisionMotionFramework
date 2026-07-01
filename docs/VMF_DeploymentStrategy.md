@@ -331,7 +331,8 @@ strategy->SetConnectionConfig(connConfig);
 auto builder = strategy->CreateBuilder();
 auto sequence = builder->BuildSequence(ctx, actuator.get());
 
-while (sequence->Poll(ctx, actuator.get()) == VMF::TaskResult::Running) {
+while (sequence->Poll(ctx, actuator.get()) == VMF::TaskResult::Running)
+{
     // 비동기 Task 진행 중...
     Sleep(10);  // 또는 적절한 대기 시간
 }
