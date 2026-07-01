@@ -92,13 +92,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(SolutionDir)EquipmentCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+<AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)VMFEquipmentPlugin\;$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(SolutionDir)EquipmentCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Bin\ThirdParty\sqlite3\lib\;$(SolutionDir)EquipmentCore\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;sqlite3.lib;EquipmentCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+<AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;VMFEquipmentPlugin.lib;sqlite3.lib;EquipmentCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -236,6 +236,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VMFEquipmentPlugin\VMFEquipmentPlugin.vcxproj">
+      <Project>{47e9888b-8124-4387-a71e-5326579e6acf}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Equipment2015.rc" />

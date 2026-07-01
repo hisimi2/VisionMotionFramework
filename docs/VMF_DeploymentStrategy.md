@@ -12,11 +12,11 @@ VisionMotionFramework.dll + VisionComm.dll + 헤더
         │
         ├──▶ Equipment App (직접 프로젝트 참조)
         │        솔루션 내 VisionMotionFramework, VisionComm 참조
-        │        LoadLibrary("VMFEquipmentPlugin.dll")
+        │        VMFEquipmentPlugin.lib 직접 링크 → SetupStrategy 사용
         │
         └──▶ NuGet 패키지: VisionMotionFramework.Core.v140
-                 └──▶ VMFEquipmentPlugin (VS Template)
-                          PackageReference 자동 복원 → DLL 빌드
+                 └──▶ VMFEquipmentPlugin (VS Template, .lib)
+                          PackageReference 자동 복원 → .lib 빌드
 ```
 
 > **Equipment App (Equipment2015):** 직접 프로젝트 참조 방식 사용 (NuGet 대상 아님)
@@ -28,9 +28,9 @@ VisionMotionFramework.dll + VisionComm.dll + 헤더
 
 | 항목 | 배포 방식 | 대상 |
 |------|----------|------|
-| Core 엔진 (DLL + import lib + 헤더) | NuGet 패키지 | **VMFEquipmentPlugin** (VS Template) |
+| Core 엔진 (DLL + import lib + 헤더) | NuGet 패키지 | **VMFEquipmentPlugin** (VS Template, 정적 라이브러리) |
 | Mock 객체 | NuGet 패키지 (contentFiles) | **VMFEquipmentPlugin** (테스트 환경, 단위 테스트) |
-| 장비별 샘플 코드 | VS Project Template (.zip) | 신규 Equipment 개발자 |
+| 장비별 샘플 코드 (정적 라이브러리 .lib) | VS Project Template (.zip) | 신규 Equipment 개발자 |
 | Equipment App | 직접 프로젝트 참조 | **Equipment2015** (솔루션 내 프로젝트 참조) |
 
 ---
@@ -39,6 +39,7 @@ VisionMotionFramework.dll + VisionComm.dll + 헤더
 
 > **대상:** 이 섹션은 **VMFEquipmentPlugin** 프로젝트 (VS Template) 기준입니다.
 > **Equipment2015 (Equipment App):** 솔루션 내 직접 프로젝트 참조 방식이므로 NuGet 패키지 설치 불필요.
+> **VMFEquipmentPlugin은 정적 라이브러리(.lib)로 빌드되며**, Equipment App이 직접 링크하여 사용합니다.
 
 ### 지원 VS 버전
 
@@ -168,19 +169,20 @@ VMFEquipmentPlugin/
 │   ├── SampleActuatorAdapter.h              ← 수정 대상
 │   └── SampleActuatorAdapter.cpp            ← 수정 대상
 ├── DefineVAT.h                              ← 수정 대상 (장비 파라미터)
-├── PluginFactory.h                          ← DLL 인터페이스 (고정, 수정 금지)
-├── dllmain.cpp                              ← DLL 진입점 (고정, 수정 금지)
+├── PluginFactory.h                          ← Factory 함수 선언 (수정 금지)
 ├── pch.h / pch.cpp                          ← 미리 컴파일된 헤더
 ├── framework.h                              ← 프레임워크 헤더
-└── VMFEquipmentPlugin.vcxproj              ← 프로젝트 설정
+└── VMFEquipmentPlugin.vcxproj              ← 프로젝트 설정 (StaticLibrary)
 ```
 
-### DLL 빌드 출력
+### .lib 빌드 출력
 
 ```
-$(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.dll
-예) bin\Win32\Release\VMFEquipmentPlugin.dll
+$(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.lib
+예) bin\Win32\Release\VMFEquipmentPlugin.lib
 ```
+
+> Equipment App이 이 .lib 파일을 직접 링크하여 사용합니다. 별도의 LoadLibrary 과정이 필요하지 않습니다.
 
 ---
 
@@ -192,8 +194,8 @@ $(SolutionDir)bin\$(Platform)\$(Configuration)\VMFEquipmentPlugin.dll
 2. NuGet 패키지 자동 복원 (PackageReference에 의해 자동 처리)
 3. 샘플 파일 복사/리네이밍
 4. 장비에 맞게 코드 수정 (아래 가이드 참고)
-5. DLL 빌드 (`Release` 권장)
-6. 메인 APP에서 DLL 로드
+5. .lib 빌드 (`Release` 권장)
+6. Equipment App에서 VMFEquipmentPlugin.lib 링크 → SetupStrategy 직접 호출
     
 ### 수정 가이드
 
@@ -274,60 +276,48 @@ private:
 };
 ```
 
-#### PluginFactory 연결 (중요!)
+#### PluginFactory 직접 호출
 
 ```cpp
-// dllmain.cpp — Strategy 클래스만 교체
+// dllmain.cpp — 정적 라이브러리로 전환 (DLL 진입점 제거)
+#include "pch.h"
 #include "Strategies/MySequenceStrategy.h"
 
-extern "C" __declspec(dllexport)
 VMF::ComponentSetupBase* CreateSetupStrategy()
 {
     return new MySequenceStrategy();  // ← 커스텀 Strategy 반환
 }
 
-// PluginFactory.h 는 절대 수정하지 마세요!
+void DestroySetupStrategy(VMF::ComponentSetupBase* ptr)
+{
+    if (ptr) { delete ptr; ptr = nullptr; }
+}
 ```
+
+> VMFEquipmentPlugin이 정적 라이브러리(.lib)로 빌드되므로, Equipment App에서 직접 `#include "PluginFactory.h"` 후 `CreateSetupStrategy()` / `DestroySetupStrategy()` 함수를 호출하여 사용합니다. 별도의 LoadLibrary/GetProcAddress 과정이 필요하지 않습니다.
 
 ---
 
-## 4. 메인 APP에서 DLL 로드
+## 4. 메인 APP에서 라이브러리 링크 및 사용
 
 ```cpp
-#include <windows.h>
-#include "ComponentSetupBase.h"
+#include "PluginFactory.h"          // VMFEquipmentPlugin.lib와 함께 제공
+#include "ComponentSetupBase.h"     // NuGet 패키지의 헤더
 
-// 1. DLL 로드
-HMODULE hDll = LoadLibrary(L"bin/Win32/Release/VMFEquipmentPlugin.dll");
-if (!hDll) {
-    printf("DLL 로드 실패\n");
-    return;
-}
-
-// 2. 팩토리 함수 획득
-typedef VMF::ComponentSetupBase* (*CreateFn)();
-CreateFn createFn = (CreateFn)GetProcAddress(hDll, "CreateSetupStrategy");
-if (!createFn) {
-    printf("팩토리 함수 획득 실패\n");
-    FreeLibrary(hDll);
-    return;
-}
-
-// 3. Strategy 생성
-VMF::ComponentSetupBase* strategy = createFn();
+// 1. SetupStrategy 생성 (VMFEquipmentPlugin.lib에 정의됨)
+VMF::ComponentSetupBase* strategy = CreateSetupStrategy();
 if (!strategy) {
     printf("Strategy 생성 실패\n");
-    FreeLibrary(hDll);
     return;
 }
 
-// 4. Vision Context 및 Data Repository 설정
+// 2. Vision Context 및 Data Repository 설정
 VMF::Context ctx;
 auto dataRepo = std::make_unique<MyDataRepository>();  // 또는 CMockDataRepository
 strategy->ConfigureParams(ctx, dataRepo.get());
 strategy->SetConnectionConfig(connConfig);
 
-// 5. Sequence 빌드 및 실행
+// 3. Sequence 빌드 및 실행
 auto builder = strategy->CreateBuilder();
 auto sequence = builder->BuildSequence(ctx, actuator.get());
 
@@ -337,10 +327,11 @@ while (sequence->Poll(ctx, actuator.get()) == VMF::TaskResult::Running)
     Sleep(10);  // 또는 적절한 대기 시간
 }
 
-// 6. 정리
-strategy->DestroySetupStrategy();
-FreeLibrary(hDll);
+// 4. 정리
+DestroySetupStrategy(strategy);
 ```
+
+> **참고:** VMFEquipmentPlugin.lib는 Equipment App이 직접 링크하므로, Plugin DLL 교체 없이 장비별 SetupStrategy를 정적으로 사용합니다.
 
 ---
 
@@ -348,13 +339,13 @@ FreeLibrary(hDll);
 
 | 변경 내용 | 작업 | 영향 범위 | 버전 관리 |
 |-----------|------|----------|----------|
-| Core 엔진 버그 수정 | NuGet 버전 업데이트 (패치) | 모든 VMFEquipmentPlugin (**DLL 재빌드 불필요** — Core DLL만 교체) | v1.0.**1** |
-| 새로운 Interface 추가 | NuGet 버전 업데이트 (마이너) | 모든 VMFEquipmentPlugin (선택적 적용, Plugin 재빌드 필요) | v1.**1**.0 |
-| 인터페이스 시그니처 변경 | NuGet + 모든 Plugin DLL 재빌드 (메이저) | 전면 영향 (드물게 발생) | v**2**.0.0 |
-| 장비별 Task/Sequence 로직 변경 | Plugin DLL 소스 수정 후 재빌드 | 해당 장비만 | - |
+| Core 엔진 버그 수정 | NuGet 버전 업데이트 (패치) | 모든 VMFEquipmentPlugin (**Equipment App 재링크 불필요** — Core DLL만 교체) | v1.0.**1** |
+| 새로운 Interface 추가 | NuGet 버전 업데이트 (마이너) | 모든 VMFEquipmentPlugin (선택적 적용, Plugin 재빌드 + Equipment App 재링크 필요) | v1.**1**.0 |
+| 인터페이스 시그니처 변경 | NuGet + 모든 Plugin + Equipment App 재빌드 (메이저) | 전면 영향 (드물게 발생) | v**2**.0.0 |
+| 장비별 Task/Sequence 로직 변경 | Plugin .lib 소스 수정 후 재빌드 → Equipment App 재링크 | 해당 장비만 | - |
 | 신규 장비 추가 | 템플릿으로 Plugin 프로젝트 생성 | 신규 장비만 | - |
 
-> **Core가 DLL이므로** Core DLL만 교체하면 모든 Equipment App에서 즉시 적용됩니다. Plugin DLL 재빌드는 불필요합니다.
+> **Core는 DLL이므로** Core DLL만 교체하면 모든 Equipment App에서 즉시 적용됩니다. VMFEquipmentPlugin(.lib)은 Equipment App에 정적으로 링크되므로, Plugin 코드 변경 시 Equipment App 재링크가 필요합니다.
 
 ---
 
@@ -559,17 +550,82 @@ jobs:
 2. contentFiles 포함 여부 확인 (`.nuspec` 파일에 `<contentFiles>` 섹션 있는지)
 3. Visual Studio 재시작 후 IntelliSense 갱신
 
-### DLL 로드 실패 (LoadLibrary)
+### Core DLL을 찾을 수 없음 (런타임 오류)
 
 ```
-오류: LoadLibrary failed. Error code: 126 (모듈을 찾을 수 없습니다)
+프로그램 시작 오류: VisionMotionFramework.dll / VisionComm.dll을 찾을 수 없습니다.
 ```
 
 **해결:**
 1. `vcruntime140.dll`, `mfc140u.dll`, `msvcp140.dll`이 시스템에 설치되어 있는지 확인
 2. Visual C++ 재배포 가능 패키지 설치: https://aka.ms/vs/17/release/vc_redist.x86.exe
-3. Core DLL(`VisionMotionFramework.dll`, `VisionComm.dll`)이 Plugin DLL과 같은 디렉터리에 있는지 확인
+3. Core DLL(`VisionMotionFramework.dll`, `VisionComm.dll`)이 Equipment App 실행 파일과 같은 디렉터리에 있는지 확인
+4. NuGet `.targets` 파일이 빌드 후 DLL을 출력 디렉터리로 자동 복사하는지 확인
+
+> **참고:** VMFEquipmentPlugin은 정적 라이브러리(.lib)이므로 별도의 LoadLibrary 과정이 필요하지 않습니다.
 
 ---
 ## 라이선스
 Copyright (c) 2026 VisionMotionFramework Team. All rights reserved.
+
+---
+
+## 별첨: v100 (VS2010) 레거시 플랫폼 대응 전략
+
+### 개요
+
+v100(VS2010) 플랫폼은 현재 **지원 대상이 아닙니다.**  
+향후 레거시 장비에서 v100 대응 패키지의 요구가 있을 경우 아래 절차에 따라 진행합니다.
+
+### 기본 원칙
+
+> **v140 패키지와 별도 레포지토리로 관리** — 단일 패키지에서 v140 + v100 동시 지원하지 않음
+
+### 진행 절차
+
+| 단계 | 작업 | 상세 |
+|:----:|------|------|
+| 1 | **레포지토리 복사** | v140 패키지의 전체 레포지토리(`VisionMotionFramework`)를 **별도 레포지토리**로 복사 (예: `VisionMotionFramework-Legacy`) |
+| 2 | **새 레포지토리 등록** | GitHub에 별도 레포지토리 생성 (예: `hisimi2/VisionMotionFramework-Legacy`) |
+| 3 | **코드 v100 호환화** | C++11/14 → C++98/TR1, MFC Dynamic → MFC Static 또는 v100 호환 CRT, PlatformToolset v140 → v100 |
+| 4 | **패키지명 변경** | `VisionMotionFramework.Core.v140` → **`VisionMotionFramework.Core.v100`** |
+| 5 | **배포** | 별도 NuGet 패키지 등록 및 배포 |
+
+### 패키지 변경 사항
+
+| 항목 | v140 패키지 | v100 패키지 (변경 예정) |
+|------|-------------|------------------------|
+| **패키지 ID** | `VisionMotionFramework.Core.v140` | `VisionMotionFramework.Core.v100` |
+| **대상 VS** | VS2015 / VS2019 / VS2026 | **VS2010** |
+| **Toolset** | v140, v142 | **v100** |
+| **CRT** | `vcruntime140.dll` | **`msvcr100.dll`** |
+| **C++ 표준** | C++14 | **C++98/TR1** |
+| **MFC** | MFC Dynamic (`/MD`) | **MFC Static 또는 v100 Dynamic** |
+| **NuGet 디렉토리** | `build\native\` (v140) | `build\native\` (v100) |
+| **레포지토리** | `VisionMotionFramework` | **`VisionMotionFramework-Legacy` (별도)** |
+
+### 유지보수 원칙
+
+- **v100 패키지 버그 수정**: 별도 레포지토리에서만 관리
+- **기능 업데이트**: v140에 신규 기능 추가 시 v100에는 **선별적 Backport** (필요 시에만)
+- **수명 종료**: v100 패키지는 **한시적 운영** → 장비 마이그레이션 완료 후 폐기
+
+### Phase 2 (v100) 프로젝트 구성 (참고)
+
+```
+VisionMotionFramework-Legacy/           ← 별도 레포지토리
+├── VisionMotionFramework/              ← v100 호환 Core DLL
+├── VisionComm/                         ← v100 호환 통신 DLL
+├── Equipment2015/                      ← (VS2010 마이그레이션 시 Equipment2010)
+├── VMFEquipmentPlugin/                 ← 템플릿 프로젝트 (v100)
+├── NuGetDeploy/
+│   ├── VisionMotionFramework.Core.v100.nuspec
+│   └── build/native/
+│       ├── include/
+│       ├── VisionMotionFramework.Core.v100.props
+│       └── VisionMotionFramework.Core.v100.targets
+└── docs/
+    └── VMF_DeploymentStrategy.md
+```
+
+> **참고:** v100 대응 패키지는 **요청 기반**으로 진행하며, 사전 준비는 불필요합니다. v140 패키지가 안정화된 이후 필요 시점에 별도 분기하여 진행합니다.

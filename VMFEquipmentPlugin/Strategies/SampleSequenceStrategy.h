@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "DefaultSetupStrategy.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
+#include "VMFEquipmentPluginExport.h"
 
 namespace VMF_Sample
 {
@@ -21,7 +22,7 @@ namespace VMF_Sample
 	///    - VisionPoint 좌표: DB에서 읽거나 고정값을 장비 좌표로 변경
 	///    - Magic Number (위치 보정값): 장비의 캘리브레이션 값으로 변경
 	/// </summary>
-	class SampleSequenceStrategy : public DefaultSetupStrategy
+	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
 	{
 	public:
 		std::string GetSequenceName() const override { return "SampleZFocus"; }

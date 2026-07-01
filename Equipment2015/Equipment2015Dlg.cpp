@@ -16,49 +16,12 @@
 #endif
 
 // ============================================================================
-// DLL Plugin Factory Interface
-// VMFEquipmentPlugin.dll (또는 장비별 DLL)에서 CreateSetupStrategy/DestroySetupStrategy를
-// LoadLibrary/GetProcAddress로 동적 로딩하여 사용합니다.
+// SetupStrategy Factory Interface
+// VMFEquipmentPlugin.lib를 링크한 후,
+// CreateSetupStrategy() / DestroySetupStrategy()를 직접 호출하여 사용합니다.
+// 정적 라이브러리이므로 함수 포인터/간접 호출 불필요.
 // ============================================================================
-typedef VMF::ComponentSetupBase* (*PFN_CREATE_SETUP_STRATEGY)();
-typedef void (*PFN_DESTROY_SETUP_STRATEGY)(VMF::ComponentSetupBase*);
-
-/// <summary>
-/// VMFEquipmentPlugin.dll을 로드하고 CreateSetupStrategy/DestroySetupStrategy 함수 포인터를 얻습니다.
-/// </summary>
-/// <param name="moduleHandle">출력: LoadLibrary로 로드된 DLL 모듈 핸들</param>
-/// <param name="pfnCreate">출력: CreateSetupStrategy 함수 포인터</param>
-/// <param name="pfnDestroy">출력: DestroySetupStrategy 함수 포인터</param>
-/// <param name="dllPath">로드할 DLL 경로 (기본값: VMFEquipmentPlugin.dll)</param>
-/// <returns>성공 시 true</returns>
-static bool LoadPluginDLL(
-    HMODULE& moduleHandle,
-    PFN_CREATE_SETUP_STRATEGY& pfnCreate,
-    PFN_DESTROY_SETUP_STRATEGY& pfnDestroy,
-    LPCTSTR dllPath = _T("VMFEquipmentPlugin.dll"))
-{
-    moduleHandle = ::LoadLibrary(dllPath);
-    if (!moduleHandle)
-    {
-        AfxMessageBox(_T("Failed to load equipment plugin DLL.\r\n")
-                      _T("DLL: ") + CString(dllPath));
-        return false;
-    }
-
-    pfnCreate = (PFN_CREATE_SETUP_STRATEGY)::GetProcAddress(moduleHandle, "CreateSetupStrategy");
-    pfnDestroy = (PFN_DESTROY_SETUP_STRATEGY)::GetProcAddress(moduleHandle, "DestroySetupStrategy");
-
-    if (!pfnCreate || !pfnDestroy)
-    {
-        ::FreeLibrary(moduleHandle);
-        moduleHandle = nullptr;
-        AfxMessageBox(_T("Failed to find CreateSetupStrategy/DestroySetupStrategy in DLL.\r\n")
-                      _T("Check the DLL exports."));
-        return false;
-    }
-
-    return true;
-}
+#include "PluginFactory.h"
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
     : CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
@@ -266,30 +229,18 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     m_orchestrator = std::make_shared<VMF::Orchestrator>();
     AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_StateMachine"));
 
-    // DLL Plugin 로드 (기본 경로: VMFEquipmentPlugin.dll)
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        AppendLog(_T("[StateMachine Mode] Failed to load equipment plugin DLL.\r\n"));
-        return;
-    }
-
-    // Strategy 객체 생성
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
+    // 정적 라이브러리 함수 직접 호출
+    VMF::ComponentSetupBase* pStrategy = CreateSetupStrategy();
     if (!pStrategy)
     {
-        AppendLog(_T("[StateMachine Mode] Failed to create strategy from DLL.\r\n"));
-        ::FreeLibrary(hPlugin);
+        AppendLog(_T("[StateMachine Mode] Failed to create strategy.\r\n"));
         return;
     }
 
     // Strategy를 shared_ptr로 관리 (자동 소멸)
     auto strategyPtr = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
+        [](VMF::ComponentSetupBase* ptr) {
+            DestroySetupStrategy(ptr);
         });
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
@@ -298,7 +249,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 
     if (started)
     {
-        AppendLog(_T("[StateMachine Mode] Sequence started via DLL Plugin.\r\n"));
+        AppendLog(_T("[StateMachine Mode] Sequence started via static library.\r\n"));
     }
     else
     {
@@ -307,36 +258,24 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 }
 
 //=============================================================================
-// [예제] VMF 상태머신 모드 - ConnectionManager 사용 (DLL Plugin 방식)
+// [예제] VMF 상태머신 모드 - ConnectionManager 사용
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 {
     m_orchestrator = std::make_shared<VMF::Orchestrator>();
     AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_CM_StateMachine"));
 
-    // DLL Plugin 로드
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        AppendLog(_T("[CM StateMachine] Failed to load equipment plugin DLL.\r\n"));
-        return;
-    }
-
-    // Strategy 객체 생성
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
+    // 정적 라이브러리 함수 직접 호출
+    VMF::ComponentSetupBase* pStrategy = CreateSetupStrategy();
     if (!pStrategy)
     {
-        AppendLog(_T("[CM StateMachine] Failed to create strategy from DLL.\r\n"));
-        ::FreeLibrary(hPlugin);
+        AppendLog(_T("[CM StateMachine] Failed to create strategy.\r\n"));
         return;
     }
 
     auto strategyPtr = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
+        [](VMF::ComponentSetupBase* ptr) {
+            DestroySetupStrategy(ptr);
         });
 
     VMF::VisionConnectionConfig connConfig("192.168.1.100", 5000, 5000);
@@ -356,7 +295,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 }
 
 //=============================================================================
-// [예제] DLL Plugin Helper - Orchestrator 생성 및 Strategy 로드
+// [예제] 정적 라이브러리 Helper - Orchestrator 생성 및 Strategy 로드
 //=============================================================================
 static std::shared_ptr<VMF::Orchestrator> CreatePluginOrchestrator(
     HWND hWnd,
@@ -367,26 +306,17 @@ static std::shared_ptr<VMF::Orchestrator> CreatePluginOrchestrator(
     auto orchestrator = std::make_shared<VMF::Orchestrator>();
     AttachObserverToOrchestrator(orchestrator, hWnd, name);
 
-    // DLL Plugin 로드
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        return nullptr;
-    }
-
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
+    // 정적 라이브러리 함수 직접 호출
+    // 정적 라이브러리 함수 직접 호출
+    VMF::ComponentSetupBase* pStrategy = CreateSetupStrategy();
     if (!pStrategy)
     {
-        ::FreeLibrary(hPlugin);
         return nullptr;
     }
 
     outStrategy = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
+        [](VMF::ComponentSetupBase* ptr) {
+            DestroySetupStrategy(ptr);
         });
 
     return orchestrator;
@@ -449,33 +379,21 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 }
 
 //=============================================================================
-// [예제] VMF 직접 모드 (Direct Mode) - 클릭 핸들러 (DLL Plugin 방식)
+// [예제] VMF 직접 모드 (Direct Mode) - 클릭 핸들러
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
-    // DLL Plugin 로드
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        AppendLog(_T("[Direct Mode] Failed to load equipment plugin DLL.\r\n"));
-        return;
-    }
-
-    // Strategy 객체 생성
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
+    // 정적 라이브러리 함수 직접 호출
+    VMF::ComponentSetupBase* pStrategy = CreateSetupStrategy();
     if (!pStrategy)
     {
-        AppendLog(_T("[Direct Mode] Failed to create strategy from DLL.\r\n"));
-        ::FreeLibrary(hPlugin);
+        AppendLog(_T("[Direct Mode] Failed to create strategy.\r\n"));
         return;
     }
 
     auto strategyPtr = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
+        [](VMF::ComponentSetupBase* ptr) {
+            DestroySetupStrategy(ptr);
         });
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>();
