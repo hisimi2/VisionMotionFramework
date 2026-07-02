@@ -1,10 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Context.h"
 
 // boost 헤더 및 의존성 삭제
 #include <string>
 #include <algorithm>
-#include <cctype> // std::tolower 목적 명시
+#include <cctype>
 #include <memory>
 #include <thread>
 #include <mutex>
@@ -14,7 +14,7 @@ namespace VMF
     static std::string ToLowerCopy(const std::string& s)
     {
         std::string out = s;
-        std::transform(out.begin(), out.end(), out.begin(), 
+        std::transform(out.begin(), out.end(), out.begin(),
             [](unsigned char c) { return std::tolower(c); });
         return out;
     }
@@ -47,7 +47,7 @@ namespace VMF
         m_lastError = error; 
     }
 
-std::string Context::GetLastError() const
+    std::string Context::GetLastError() const
     {
         LockGuardType guard(m_mutex);
         return m_lastError;
@@ -65,7 +65,7 @@ std::string Context::GetLastError() const
         return m_isStopRequested; 
     }
 
-bool Context::ExecuteVisionCommand(VisionCommand cmd)
+    bool Context::ExecuteVisionCommand(VisionCommand cmd)
     {
         LockGuardType guard(m_mutex);
 
@@ -86,7 +86,7 @@ bool Context::ExecuteVisionCommand(VisionCommand cmd)
         return ret;
     }
 
-void Context::SetVisionParams(const VisionParams& params)
+    void Context::SetVisionParams(const VisionParams& params)
     {
         LockGuardType guard(m_mutex);
         m_globalVisionParams = params;

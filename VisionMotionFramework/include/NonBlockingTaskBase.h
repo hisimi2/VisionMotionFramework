@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ITask.h"
 #include "Context.h"
@@ -171,7 +171,7 @@ namespace VMF
             m_taskParams_ = params;
         }
 
-/// <summary>
+        /// <summary>
         /// Task별 시퀀스 파라미터를 읽습니다.
         /// Task 전용 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
         /// </summary>

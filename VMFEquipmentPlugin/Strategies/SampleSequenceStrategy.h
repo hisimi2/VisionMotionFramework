@@ -151,7 +151,7 @@ namespace VMF_Sample
 				// 전역 MOTION_TIMEOUT_MS(7000ms)와 별도로 10000ms 설정
 				moveParams.visionParams[VAT_SEQ_PARAM_TIMEOUT_MS] = "10000000";
 				// GetName() = "Task_MoveToStartPosition"과 일치해야 함
-				ctx->SetTaskParams("Task_MoveToStartPosition", moveParams);
+				ctx->SetTaskParams("SampleMoveToStartPositionTask", moveParams);
 			}
 
 			// --- Task "Task_PerformFocusScanning" 전용 params ---
@@ -160,8 +160,7 @@ namespace VMF_Sample
 				// Focus task의 vision timeout만 전역(60000ms)과 다르게 30000ms로 설정
 				focusParams.visionParams[VAT_SEQ_PARAM_VISION_TIMEOUT_MS] = "30000";
 				// GetName() = "Task_PerformFocusScanning"과 일치해야 함
-				ctx->SetTaskParams("Task_PerformFocusScanning", focusParams);
-				ctx->SetTaskParams("SamplePerformFocusScanning", focusParams);
+				ctx->SetTaskParams("SamplePerformFocusScanningTask", focusParams);
 			}
 		}
 	};
