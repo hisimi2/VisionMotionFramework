@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ComponentSetupBase.h"
 #include "ConnectionManager.h"
 

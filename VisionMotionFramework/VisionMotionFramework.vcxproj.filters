@@ -28,7 +28,6 @@
     <ClInclude Include="include\AsyncExecutor.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVisionOptional.h" />
-    <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
     <ClInclude Include="include\FileUtils.h" />
@@ -63,6 +62,7 @@
     <ClInclude Include="include\CMockVisionEventHandler.h">
       <Filter>Mocks</Filter>
     </ClInclude>
+    <ClInclude Include="include\Orchestrator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VisionMotionFramework.rc" />

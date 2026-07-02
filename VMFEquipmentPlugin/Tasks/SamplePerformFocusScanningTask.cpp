@@ -18,8 +18,16 @@ SamplePerformFocusScanningTask::~SamplePerformFocusScanningTask()
 
 void SamplePerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
 {
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	// [Task-specific VisionParams]
+	// 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
+	// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
+	// 3순위: Context의 전역 파라미터 (ctx.GetSeqParamAs / GetVisionParamAs)
+	m_cameraId  = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
+
+	// 타임아웃도 task-specific params에서 읽기 (override 가능)
+	m_moveTimeoutMs   = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
+	m_visionTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_TIMEOUT_MS, m_visionTimeoutMs);
 
 	m_locationIds.clear();
 

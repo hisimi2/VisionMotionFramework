@@ -190,10 +190,6 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <!-- NuGet 패키지 자동 복원 : VisionMotionFramework.Core.v140 -->
-    <PackageReference Include="VisionMotionFramework.Core.v140" Version="1.*" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

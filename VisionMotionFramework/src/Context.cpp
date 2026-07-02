@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Context.h"
 
 // boost 헤더 및 의존성 삭제
@@ -165,5 +165,20 @@ DataRepositoryPtr Context::GetRepository() const
     {
         LockGuardType guard(m_mutex);
         return m_repo;
+    }
+
+    void Context::SetTaskParams(const std::string& taskName, const VisionParams& params)
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        m_taskParams[taskName] = params;
+    }
+
+    VisionParams Context::GetTaskParams(const std::string& taskName) const
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        auto it = m_taskParams.find(taskName);
+        if (it != m_taskParams.end())
+            return it->second;
+        return VisionParams();
     }
 }

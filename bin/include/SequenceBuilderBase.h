@@ -5,7 +5,6 @@
 #include "IDataRepository.h"
 #include "IActuator.h"
 
-
 namespace VMF
 {
     /// <summary>
@@ -36,7 +35,7 @@ namespace VMF
         /// </summary>
         /// <param name="sequenceName">생성할 시퀀스의 이름</param>
         /// <returns>생성된 ISequence 객체의 소유권</returns>
-SequencePtr CreateSequence(const std::string& sequenceName);
+        SequencePtr CreateSequence(const std::string& sequenceName);
 
     protected:
         /// <summary>
@@ -44,6 +43,6 @@ SequencePtr CreateSequence(const std::string& sequenceName);
         /// </summary>
         /// <param name="sequenceName">시퀀스 이름</param>
         /// <returns>조립된 ISequence 객체의 소유권</returns>
-virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
+        virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
     };
 }

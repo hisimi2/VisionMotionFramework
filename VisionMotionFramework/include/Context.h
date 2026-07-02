@@ -9,6 +9,7 @@
 #include <sstream>
 #include <memory> // std::enable_shared_from_this 사용 목적
 #include <mutex>  // std::mutex 사용 목적
+#include <unordered_map> // unordered_map for task-specific params
 
 namespace VMF 
 {
@@ -312,18 +313,87 @@ namespace VMF
         /// </summary>
         void AddVisionPosition(const VisionPosition& pos);
 
-        /// <summary>
+/// <summary>
         /// 비전 위치 목록이 비어 있는지 확인합니다.
         /// </summary>
         bool IsVisionPositionEmpty() const;
 
+        /// <summary>
+        /// Task별 파라미터 설정
+        /// </summary>
+        void SetTaskParams(const std::string& taskName, const VisionParams& params);
+
+        /// <summary>
+        /// Task별 파라미터 조회
+        /// </summary>
+        VisionParams GetTaskParams(const std::string& taskName) const;
+
+        /// <summary>
+        /// Task별 시퀀스 파라미터 조회 (형식 변환 포함)
+        /// Task별 파라미터에 키가 없으면 전역 파라미터로 fallback
+        /// </summary>
+        template <typename T>
+        T GetTaskSeqParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
+        {
+            // 1. Task-specific 파라미터 확인
+            {
+                std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+                auto taskIt = m_taskParams.find(taskName);
+                if (taskIt != m_taskParams.end())
+                {
+                    const auto& seqMap = taskIt->second.seqParams;
+                    auto paramIt = seqMap.find(key);
+                    if (paramIt != seqMap.end())
+                    {
+                        T converted;
+                        if (detail::ParamConverter<T>::Convert(paramIt->second, converted))
+                            return converted;
+                    }
+                }
+            }
+
+            // 2. Fallback: 전역 파라미터
+            return GetSeqParamAs<T>(key, defaultValue);
+        }
+
+        /// <summary>
+        /// Task별 비전 파라미터 조회 (형식 변환 포함)
+        /// Task별 파라미터에 키가 없으면 전역 파라미터로 fallback
+        /// </summary>
+        template <typename T>
+        T GetTaskVisionParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
+        {
+            // 1. Task-specific 파라미터 확인
+            {
+                std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+                auto taskIt = m_taskParams.find(taskName);
+                if (taskIt != m_taskParams.end())
+                {
+                    const auto& visionMap = taskIt->second.visionParams;
+                    auto paramIt = visionMap.find(key);
+                    if (paramIt != visionMap.end())
+                    {
+                        T converted;
+                        if (detail::ParamConverter<T>::Convert(paramIt->second, converted))
+                            return converted;
+                    }
+                }
+            }
+
+            // 2. Fallback: 전역 파라미터
+            return GetVisionParamAs<T>(key, defaultValue);
+        }
     private:
-        VisionProcessorPtr   m_processor;
-        DataRepositoryPtr       m_repo;
+VisionProcessorPtr   m_processor;
+    DataRepositoryPtr       m_repo;
         
-        mutable std::mutex      m_mutex;
-        std::string             m_lastError;
-        bool                    m_isStopRequested;
-        VisionParams               m_params;
+    mutable std::mutex      m_mutex;
+    std::string             m_lastError;
+    bool                    m_isStopRequested;
+    VisionParams               m_params;
+
+    // Task-specific VisionParams
+    mutable std::mutex      m_taskParamsMutex;
+    std::unordered_map<std::string, VisionParams> m_taskParams;
     };
 } // namespace VMF

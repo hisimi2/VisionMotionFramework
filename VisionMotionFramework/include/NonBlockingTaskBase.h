@@ -15,6 +15,18 @@ namespace VMF
     /// 비동기(비차단) 작업 스텝의 공통 기초 클래스입니다.
     /// 각 스텝은 상태를 가지며 OnInitialize / OnPoll 패턴으로 실행됩니다.
     /// 스레드 안전을 위해 내부적으로 std::mutex를 사용하며, 타임아웃(데드라인) 기능을 제공합니다.
+    /// 
+    /// [Task-specific VisionParams]
+    /// Task별로 독립적인 VisionParams(seqParams, visionParams)를 설정할 수 있습니다.
+    /// SetTaskParams()로 설정하면, GetTaskSeqParamAs / GetTaskVisionParamAs 로 조회하며
+    /// Task별 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
+    /// 
+    /// 사용 예:
+    ///   auto moveTask = std::make_shared<SampleMoveToStartPositionTask>();
+    ///   VisionParams moveParams;
+    ///   moveParams.seqParams["TargetX"] = "125.3";
+    ///   moveTask->SetTaskParams(moveParams);
+    ///   seq->AddTask(moveTask);
     /// </summary>
     class NonBlockingTaskBase : public ITask
     {
@@ -145,6 +157,88 @@ namespace VMF
             return TR_ERROR;
         }
 
+        // =====================================================
+        // [Task-specific VisionParams 지원]
+        // =====================================================
+        /// <summary>
+        /// Task별 독립적인 파라미터를 설정합니다.
+        /// Builder에서 Task 생성 후 호출하여 Task마다 다른 파라미터를 주입할 수 있습니다.
+        /// </summary>
+        /// <param name="params">Task 전용 VisionParams</param>
+        void SetTaskParams(const VisionParams& params)
+        {
+            std::lock_guard<std::mutex> lg(m_mutex_);
+            m_taskParams_ = params;
+        }
+
+        /// <summary>
+        /// Task별 시퀀스 파라미터를 읽습니다.
+        /// Task 전용 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
+        /// </summary>
+        template <typename T>
+        T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
+        {
+            // 1. Task 자체 파라미터 확인
+            {
+                auto it = m_taskParams_.seqParams.find(key);
+                if (it != m_taskParams_.seqParams.end())
+                {
+                    T converted;
+                    if (detail::ParamConverter<T>::Convert(it->second, converted))
+                        return converted;
+                }
+            }
+
+            // 2. Context의 Task별 파라미터 확인
+            {
+                VisionParams ctxTaskParams = ctx.GetTaskParams(GetName());
+                auto it = ctxTaskParams.seqParams.find(key);
+                if (it != ctxTaskParams.seqParams.end())
+                {
+                    T converted;
+                    if (detail::ParamConverter<T>::Convert(it->second, converted))
+                        return converted;
+                }
+            }
+
+            // 3. Fallback: Context 전역 파라미터
+            return ctx.GetSeqParamAs<T>(key, defaultValue);
+        }
+
+        /// <summary>
+        /// Task별 비전 파라미터를 읽습니다.
+        /// Task 전용 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
+        /// </summary>
+        template <typename T>
+        T GetTaskVisionParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
+        {
+            // 1. Task 자체 파라미터 확인
+            {
+                auto it = m_taskParams_.visionParams.find(key);
+                if (it != m_taskParams_.visionParams.end())
+                {
+                    T converted;
+                    if (detail::ParamConverter<T>::Convert(it->second, converted))
+                        return converted;
+                }
+            }
+
+            // 2. Context의 Task별 파라미터 확인
+            {
+                VisionParams ctxTaskParams = ctx.GetTaskParams(GetName());
+                auto it = ctxTaskParams.visionParams.find(key);
+                if (it != ctxTaskParams.visionParams.end())
+                {
+                    T converted;
+                    if (detail::ParamConverter<T>::Convert(it->second, converted))
+                        return converted;
+                }
+            }
+
+            // 3. Fallback: Context 전역 파라미터
+            return ctx.GetVisionParamAs<T>(key, defaultValue);
+        }
+
     protected:
         /// <summary>
         /// 스텝 초기화 시 호출되는 콜백입니다. 파생 클래스에서 초기화 로직을 구현합니다.
@@ -222,5 +316,8 @@ namespace VMF
         // 동기화 및 시간 관리 멤버를 C++ 표준 라이브러리로 대체
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
+
+        // Task-specific VisionParams (Builder에서 직접 주입)
+        VisionParams                          m_taskParams_;
     };
 }

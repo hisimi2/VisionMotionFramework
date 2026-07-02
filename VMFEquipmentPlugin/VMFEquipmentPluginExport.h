@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // ============================================================================
 // VMFEquipmentPlugin DLL Export/Import Macro

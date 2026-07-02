@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DefaultSetupStrategy.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
 #include "VMFEquipmentPluginExport.h"
@@ -11,7 +11,42 @@ namespace VMF_Sample
 
 	/// <summary>
 	/// [Sample] Focus Check Sequence 전략 클래스
-	/// DefaultSetupStrategy를 상속받아 시퀀스 빌더 생성과 파라미터 설정을 담당
+	/// DefaultSetupStrategy를 상속받아 Context 전역 params 설정을 담당
+	/// 
+	/// [책임 범위]
+	/// - CreateRepository(): DB 초기화 (SqliteDataRepository)
+	/// - CreateVisionProcessor(): Vision 서버 연결 및 프로세서 초기화
+	/// - CreateBuilder(): SampleZFocusSequenceBuilder 반환
+	/// - ConfigureParams(): Context 전역 VisionParams 설정
+	///     - CameraIndex, PackageId, 타임아웃 등 모든 Task 공통 파라미터
+	///     - 검사 위치(VisionPosition) 목록 등록
+	/// 
+	/// [Builder와의 책임 분리]
+	/// ╔══════════════════════════════════════════════╗
+	/// ║  SampleSequenceStrategy (Strategy)           ║
+	/// ║  └─ ConfigureParams(): Context 전역 params   ║
+	/// ║      ├─ VAT_SEQ_PARAM_CAMERA_INDEX  = 6     ║
+	/// ║      ├─ VAT_SEQ_PARAM_PACKAGE_ID    = 1     ║
+	/// ║      ├─ VAT_SEQ_PARAM_MOTION_TIMEOUT = 7000 ║
+	/// ║      ├─ VAT_SEQ_PARAM_VISION_TIMEOUT = 60000║
+	/// ║      └─ AddVisionPoint(...) 위치 N개        ║
+	/// ╚══════════════════════════════════════════════╝
+	///           │  Context 전역 params (3순위 fallback)
+	///           ▼
+	/// ╔══════════════════════════════════════════════╗
+	/// ║  SampleZFocusSequenceBuilder (Builder)       ║
+	/// ║  └─ BuildSequence(): Task 조립              ║
+	/// ║      ├─ MoveToStartPosition Task            ║
+	/// ║      │   └─ [필요시] SetTaskParams override  ║
+	/// ║      └─ PerformFocusScanning Task           ║
+	/// ║          └─ [필요시] SetTaskParams override  ║
+	/// ╚══════════════════════════════════════════════╝
+	/// 
+	/// [데이터 우선순위]
+	///   Task.GetTaskSeqParamAs(key, default)
+	///     → 1순위: Task 자체 params (Builder가 SetTaskParams로 주입)
+	///     → 2순위: Context의 Task별 params (ctx.SetTaskParams)
+	///     → 3순위: Context 전역 params (Strategy.ConfigureParams가 설정)
 	/// 
 	/// !!! 수정 가이드 !!!
 	/// 1. GetSequenceName(): SampleZFocusSequenceBuilder::GetSequenceName()과 일치해야 함
