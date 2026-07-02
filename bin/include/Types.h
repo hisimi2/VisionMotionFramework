@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string> 
 #include <map> 
@@ -22,13 +22,13 @@ namespace VMF
     class Context;
     class AsyncExecutor;
     
-    using ComponentSetupPtr    = std::shared_ptr<IComponentSetup>;
+    using ComponentSetupPtr     = std::shared_ptr<IComponentSetup>;
     using SequenceSetupPtr      = std::shared_ptr<ISequenceSetup>;
-    using VisionEnginePtr          = std::shared_ptr<RunController>;
+    using VisionEnginePtr       = std::shared_ptr<RunController>;
     using DataRepositoryPtr     = std::shared_ptr<IDataRepository>;
-    using VisionProcessorPtr = std::shared_ptr<IVisionProcessor>;
+    using VisionProcessorPtr    = std::shared_ptr<IVisionProcessor>;
     using SequenceBuilderPtr    = std::shared_ptr<SequenceBuilderBase>;
-    using VisionContextPtr         = std::shared_ptr<Context>;
+    using VisionContextPtr      = std::shared_ptr<Context>;
     using AsyncExecutorPtr      = std::shared_ptr<AsyncExecutor>;
     using SequencePtr           = std::unique_ptr<ISequence>;
     using StringMap             = std::map<std::string, std::string>; 

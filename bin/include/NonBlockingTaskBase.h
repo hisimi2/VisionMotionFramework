@@ -171,37 +171,16 @@ namespace VMF
             m_taskParams_ = params;
         }
 
-        /// <summary>
+/// <summary>
         /// Task별 시퀀스 파라미터를 읽습니다.
         /// Task 전용 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
         /// </summary>
         template <typename T>
         T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
         {
-            // 1. Task 자체 파라미터 확인
-            {
-                auto it = m_taskParams_.seqParams.find(key);
-                if (it != m_taskParams_.seqParams.end())
-                {
-                    T converted;
-                    if (detail::ParamConverter<T>::Convert(it->second, converted))
-                        return converted;
-                }
-            }
-
-            // 2. Context의 Task별 파라미터 확인
-            {
-                VisionParams ctxTaskParams = ctx.GetTaskParams(GetName());
-                auto it = ctxTaskParams.seqParams.find(key);
-                if (it != ctxTaskParams.seqParams.end())
-                {
-                    T converted;
-                    if (detail::ParamConverter<T>::Convert(it->second, converted))
-                        return converted;
-                }
-            }
-
-            // 3. Fallback: Context 전역 파라미터
+            // seqParams는 Context 전역에서만 관리 (VisionParams에서 제거됨)
+            // Task별 seqParams가 없으므로 바로 전역 파라미터로 fallback
+            (void)m_taskParams_;
             return ctx.GetSeqParamAs<T>(key, defaultValue);
         }
 

@@ -65,14 +65,14 @@ std::string Context::GetLastError() const
         return m_isStopRequested; 
     }
 
-    bool Context::ExecuteVisionCommand(VisionCommand cmd)
+bool Context::ExecuteVisionCommand(VisionCommand cmd)
     {
         LockGuardType guard(m_mutex);
 
         if (!m_processor)
             return false;
 
-        StringMap params = m_params.visionParams;
+        StringMap params = m_globalVisionParams.visionParams;
         bool ret = false;
 
 		switch (cmd)
@@ -86,17 +86,17 @@ std::string Context::GetLastError() const
         return ret;
     }
 
-    void Context::SetVisionParams(const VisionParams& params)
+void Context::SetVisionParams(const VisionParams& params)
     {
         LockGuardType guard(m_mutex);
-        m_params = params;
+        m_globalVisionParams = params;
     }
 
     std::string Context::GetSeqParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
-        auto it = m_params.seqParams.find(key);
-        if (it != m_params.seqParams.end())
+        auto it = m_seqParams.find(key);
+        if (it != m_seqParams.end())
             return it->second;
         return std::string();
     }
@@ -104,8 +104,8 @@ std::string Context::GetLastError() const
     std::string Context::GetVisionParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
-        auto it = m_params.visionParams.find(key);
-        if (it != m_params.visionParams.end())
+        auto it = m_globalVisionParams.visionParams.find(key);
+        if (it != m_globalVisionParams.visionParams.end())
             return it->second;
         return std::string();
     }
@@ -118,17 +118,17 @@ std::string Context::GetLastError() const
     std::vector<VisionPosition> Context::GetVisionPositions() const
     {
         LockGuardType guard(m_mutex);
-        return m_params.visionPositions;
+        return m_globalVisionParams.visionPositions;
     }
 
     bool Context::PopVisionPosition(VisionPosition& outPos)
     {
         LockGuardType guard(m_mutex);
-        if (m_params.visionPositions.empty())
+        if (m_globalVisionParams.visionPositions.empty())
             return false;
 
-        outPos = m_params.visionPositions.front();
-        m_params.visionPositions.erase(m_params.visionPositions.begin());
+        outPos = m_globalVisionParams.visionPositions.front();
+        m_globalVisionParams.visionPositions.erase(m_globalVisionParams.visionPositions.begin());
         return true;
     }
 
@@ -136,23 +136,23 @@ std::string Context::GetLastError() const
     {
         LockGuardType guard(m_mutex);
 
-        if (m_params.visionPositions.empty())
+        if (m_globalVisionParams.visionPositions.empty())
             return false;
 
-        outPos = m_params.visionPositions.back();
+        outPos = m_globalVisionParams.visionPositions.back();
         return true;
     }
 
     void Context::AddVisionPosition(const VisionPosition& pos)
     {
         LockGuardType guard(m_mutex);
-        m_params.visionPositions.push_back(pos);
+        m_globalVisionParams.visionPositions.push_back(pos);
     }
 
     bool Context::IsVisionPositionEmpty() const
     {
         LockGuardType guard(m_mutex);
-        return m_params.visionPositions.empty();
+        return m_globalVisionParams.visionPositions.empty();
     }
 
     void Context::SetDataRepository(DataRepositoryPtr repo)

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -155,7 +155,6 @@ namespace VMF
 
     struct VisionParams
     {
-        StringMap                       seqParams;
         StringMap                       visionParams;
         std::vector<VisionPosition>     visionPositions;
     };
@@ -280,17 +279,17 @@ namespace VMF
         {
             // Types.h에서 수정된 LockGuardType (std::lock_guard) 매칭 사용
             LockGuardType guard(m_mutex);
-            m_params.seqParams[key] = detail::ParamFormatter<T>::Format(value);
+            m_seqParams[key] = detail::ParamFormatter<T>::Format(value);
         }
 
         /// <summary>
         /// 비전 파라미터에 지정한 타입의 값을 문자열로 변환하여 저장합니다.
         /// </summary>
-        template <typename T>
+template <typename T>
         void SetVisionParamAs(const std::string& key, const T& value)
         {
             LockGuardType guard(m_mutex);
-            m_params.visionParams[key] = detail::ParamFormatter<T>::Format(value);
+            m_globalVisionParams.visionParams[key] = detail::ParamFormatter<T>::Format(value);
         }
 
         /// <summary>
@@ -313,7 +312,7 @@ namespace VMF
         /// </summary>
         void AddVisionPosition(const VisionPosition& pos);
 
-/// <summary>
+        /// <summary>
         /// 비전 위치 목록이 비어 있는지 확인합니다.
         /// </summary>
         bool IsVisionPositionEmpty() const;
@@ -330,29 +329,14 @@ namespace VMF
 
         /// <summary>
         /// Task별 시퀀스 파라미터 조회 (형식 변환 포함)
-        /// Task별 파라미터에 키가 없으면 전역 파라미터로 fallback
+        /// seqParams는 Context 전역에서만 관리되므로, 직접 전역 파라미터를 조회합니다.
         /// </summary>
         template <typename T>
         T GetTaskSeqParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
         {
-            // 1. Task-specific 파라미터 확인
-            {
-                std::lock_guard<std::mutex> guard(m_taskParamsMutex);
-                auto taskIt = m_taskParams.find(taskName);
-                if (taskIt != m_taskParams.end())
-                {
-                    const auto& seqMap = taskIt->second.seqParams;
-                    auto paramIt = seqMap.find(key);
-                    if (paramIt != seqMap.end())
-                    {
-                        T converted;
-                        if (detail::ParamConverter<T>::Convert(paramIt->second, converted))
-                            return converted;
-                    }
-                }
-            }
-
-            // 2. Fallback: 전역 파라미터
+            // seqParams는 Context 전역에서만 관리 (VisionParams에서 제거됨)
+            // Task별 seqParams가 없으므로 바로 전역 파라미터로 fallback
+            (void)taskName;
             return GetSeqParamAs<T>(key, defaultValue);
         }
 
@@ -384,16 +368,21 @@ namespace VMF
             return GetVisionParamAs<T>(key, defaultValue);
         }
     private:
-VisionProcessorPtr   m_processor;
-    DataRepositoryPtr       m_repo;
+        VisionProcessorPtr      m_processor;
+        DataRepositoryPtr       m_repo;
         
-    mutable std::mutex      m_mutex;
-    std::string             m_lastError;
-    bool                    m_isStopRequested;
-    VisionParams               m_params;
+        mutable std::mutex      m_mutex;
+        std::string             m_lastError;
+        bool                    m_isStopRequested;
 
-    // Task-specific VisionParams
-    mutable std::mutex      m_taskParamsMutex;
-    std::unordered_map<std::string, VisionParams> m_taskParams;
+        // 전역 seqParams (모든 Task 공통 시퀀스 파라미터)
+        StringMap               m_seqParams;
+
+        // 전역 visionParams + visionPositions (fallback 용도, 단일 struct)
+        VisionParams            m_globalVisionParams;
+
+        // Task-specific VisionParams (visionParams + visionPositions 전용)
+        mutable std::mutex      m_taskParamsMutex;
+        std::unordered_map<std::string, VisionParams> m_taskParams;
     };
 } // namespace VMF
