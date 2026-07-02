@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DefaultSetupStrategy.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
 #include "VMFEquipmentPluginExport.h"
@@ -67,9 +67,13 @@ namespace VMF_Sample
 			return std::make_shared<SampleZFocusSequenceBuilder>();
 		}
 
-		void ConfigureParams(VMF::VisionContextPtr ctx) override
+        void ConfigureParams(VMF::VisionContextPtr ctx) override
 		{
-			VisionParams params;
+			// =========================================================
+			// [1] Context 전역 파라미터 (3순위 fallback)
+			//     모든 Task가 공통으로 사용하는 기본값
+			// =========================================================
+			VisionParams globalParams;
 
 			// [SAMPLE] Camera/Picker 파라미터 설정
 			// !!! 수정 필요: 장비의 실제 값으로 변경 !!!
@@ -94,22 +98,22 @@ namespace VMF_Sample
 				// posX=125.3, posY=48.7, posZ=-2.5
 
 				// !!! 수정 필요: cameraIndex, locateId, packageId는 장비 설정에 맞게 변경 !!!
-				SetParam(params, VAT_SEQ_PARAM_CAMERA_INDEX, cameraIndex);
-				SetParam(params, VAT_SEQ_PARAM_PACKAGE_ID, packageId);
+				SetParam(globalParams, VAT_SEQ_PARAM_CAMERA_INDEX, cameraIndex);
+				SetParam(globalParams, VAT_SEQ_PARAM_PACKAGE_ID, packageId);
 
 				// !!! 수정 필요: VisionPoint 좌표는 장비의 검사 위치로 변경 !!!
-				AddVisionPoint(params, 1, 1, 125.3, 48.7, -2.5);   // LocateId=1, RequestId=1
-				AddVisionPoint(params, 2, 2, 130.1, 52.3, -1.8);   // LocateId=2, RequestId=2
-				AddVisionPoint(params, 3, 3, 118.9, 45.6, -3.2);   // LocateId=3, RequestId=3
+				AddVisionPoint(globalParams, 1, 1, 125.3, 48.7, -2.5);   // LocateId=1, RequestId=1
+				AddVisionPoint(globalParams, 2, 2, 130.1, 52.3, -1.8);   // LocateId=2, RequestId=2
+				AddVisionPoint(globalParams, 3, 3, 118.9, 45.6, -3.2);   // LocateId=3, RequestId=3
 			}
 
 			// !!! 수정 필요: CameraIndex가 5보다 큰 조건은 장비 Camera 구성에 따라 변경 !!!
 			if (cameraIndex > 5)
 			{
 				// [SAMPLE] 상부/하부 Target 보정값 (장비별 캘리브레이션 값)
-				AddVisionPoint(params, 3, 3, 118.9, 45.6, -3.2);    // UpperTarget
-				AddVisionPoint(params, 4, 4, 122.4, 50.1, -2.1);    // TargetA
-				AddVisionPoint(params, 5, 5, 128.7, 47.9, -2.9);    // TargetB
+				AddVisionPoint(globalParams, 3, 3, 118.9, 45.6, -3.2);    // UpperTarget
+				AddVisionPoint(globalParams, 4, 4, 122.4, 50.1, -2.1);    // TargetA
+				AddVisionPoint(globalParams, 5, 5, 128.7, 47.9, -2.9);    // TargetB
 			}
 
 			// Picker 위치 (장비별 행/열 크기 확인 후 수정)
@@ -124,15 +128,41 @@ namespace VMF_Sample
 
 					// !!! 수정 필요: LocateId 계산식은 장비의 Picker 매핑에 맞게 변경 !!!
 					int locateId = 20 + row * 10 + col;
-					AddVisionPoint(params, locateId, locateId, pickerX, pickerY, pickerZ);
+					AddVisionPoint(globalParams, locateId, locateId, pickerX, pickerY, pickerZ);
 				}
 			}
 
-			// [SAMPLE] 기본 Sequence 파라미터
-			SetParam(params, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, 7000);
-			SetParam(params, VAT_SEQ_PARAM_VISION_TIMEOUT_MS, 60000);
+			// [SAMPLE] 기본 Sequence 파라미터 (전역)
+			SetParam(globalParams, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, 7000);
+			SetParam(globalParams, VAT_SEQ_PARAM_VISION_TIMEOUT_MS, 60000);
 
-			ctx->SetVisionParams(params);
+			ctx->SetVisionParams(globalParams);
+
+			// =========================================================
+			// [2] Task별 파라미터 (2순위 - Context의 Task params)
+			//     Builder가 아닌 Strategy가 Task별 params를 결정
+			//     Builder는 Task 조립만 담당 (params 몰라도 됨)
+			// =========================================================
+
+			// --- Task "Task_MoveToStartPosition" 전용 params ---
+			{
+				VisionParams moveParams;
+				// MoveToStartPosition Task는 VAT_SEQ_PARAM_TIMEOUT_MS 키를 읽음
+				// 전역 MOTION_TIMEOUT_MS(7000ms)와 별도로 10000ms 설정
+				moveParams.seqParams[VAT_SEQ_PARAM_TIMEOUT_MS] = "10000";
+				// GetName() = "Task_MoveToStartPosition"과 일치해야 함
+				ctx->SetTaskParams("Task_MoveToStartPosition", moveParams);
+			}
+
+			// --- Task "Task_PerformFocusScanning" 전용 params ---
+			{
+				VisionParams focusParams;
+				// Focus task의 vision timeout만 전역(60000ms)과 다르게 30000ms로 설정
+				focusParams.seqParams[VAT_SEQ_PARAM_VISION_TIMEOUT_MS] = "30000";
+				// GetName() = "Task_PerformFocusScanning"과 일치해야 함
+				ctx->SetTaskParams("Task_PerformFocusScanning", focusParams);
+				ctx->SetTaskParams("SamplePerformFocusScanning", focusParams);
+			}
 		}
 	};
 } // namespace VMF_Sample
