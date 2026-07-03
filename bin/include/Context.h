@@ -155,7 +155,6 @@ namespace VMF
 
     struct VisionParams
     {
-        StringMap                       sequenceParams;
         StringMap                       visionParams;
         std::vector<VisionPosition>     visionPositions;
     };
