@@ -8,49 +8,34 @@ namespace VMF_Sample
 	using namespace VMF;
 	using namespace Sequence;
 
-/// <summary>
+    /// <summary>
 	/// [Sample] Focus Check Sequence 전략 클래스
-	/// DefaultSetupStrategy를 상속받아 Task별 params 설정을 담당
+	/// DefaultSetupStrategy를 상속받아 컴포넌트 생성 책임을 담당
 	/// 
 	/// [책임 범위]
 	/// - CreateRepository(): DB 초기화 (SqliteDataRepository)
 	/// - CreateVisionProcessor(): Vision 서버 연결 및 프로세서 초기화
 	/// - CreateBuilder(): SampleZFocusSequenceBuilder 반환
-	/// - ConfigureParams(): 각 Task별 VisionParams 설정
-	///     - CameraIndex, PackageId, 타임아웃 등 Task별 파라미터
-	///     - 검사 위치(VisionPosition) 목록 등록
 	/// 
 	/// [Builder와의 책임 분리]
 	/// ╔══════════════════════════════════════════════════╗
 	/// ║  SampleSequenceStrategy (Strategy)               ║
-	/// ║  └─ ConfigureParams(): Task별 params 설정        ║
-	/// ║      ├─ SetTaskParamForTask("Task_MoveToStartPosition", ...)  ║
-	/// ║      └─ SetTaskParamForTask("Task_PerformFocusScanning", ...) ║
+	/// ║  ├─ CreateRepository(): DB 초기화                 ║
+	/// ║  ├─ CreateVisionProcessor(): Vision 연결         ║
+	/// ║  └─ CreateBuilder(): Builder 반환                ║
 	/// ╚══════════════════════════════════════════════════╝
-	///           │  m_strategyTaskParams 맵
-	///           ▼
-	/// ╔══════════════════════════════════════════════════╗
-	/// ║  Orchestrator::InitializeComponents()            ║
-	/// ║  └─ builder->SetTaskParamsMap(strategy params)   ║
-	/// ╚══════════════════════════════════════════════════╝
-	///           │  m_taskParamsMap
-	///           ▼
 	/// ╔══════════════════════════════════════════════════╗
 	/// ║  SampleZFocusSequenceBuilder (Builder)           ║
-	/// ║  └─ BuildSequence(): Task 조립 + params 주입     ║
+	/// ║  └─ BuildSequence(): Task 조립 + params 생성       ║
 	/// ║      ├─ Task 생성                                 ║
-	/// ║      ├─ m_taskParamsMap에서 params 조회           ║
+	/// ║      ├─ VisionParams 생성 및 설정                  ║
 	/// ║      └─ task->SetTaskParams(params) 로 주입       ║
 	/// ╚══════════════════════════════════════════════════╝
 	/// 
 	/// !!! 수정 가이드 !!!
 	/// 1. GetSequenceName(): SampleZFocusSequenceBuilder::GetSequenceName()과 일치해야 함
 	/// 2. CreateBuilder(): 장비별 시퀀스 빌더로 교체
-	/// 3. ConfigureParams():
-	///    - CameraIndex: 장비의 실제 Camera 번호로 변경
-	///    - PickerMaxRow/Col: 장비의 Picker 최대 행/열로 변경
-	///    - VisionPoint 좌표: DB에서 읽거나 고정값을 장비 좌표로 변경
-	///    - Magic Number (위치 보정값): 장비의 캘리브레이션 값으로 변경
+	/// 3. ConfigureParams(): 불필요 (Builder가 직접 VisionParams 생성)
 	/// </summary>
 	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
 	{
@@ -62,76 +47,11 @@ namespace VMF_Sample
 			return std::make_shared<SampleZFocusSequenceBuilder>();
 		}
 
-        void ConfigureParams(VMF::VisionContextPtr ctx) override
+		void ConfigureParams(VMF::VisionContextPtr ctx) override
 		{
-			(void)ctx; // Context는 params 저장에 사용하지 않음 (SetTaskParamForTask 사용)
-
-			// =========================================================
-			// [1] Task "Task_MoveToStartPosition" 전용 파라미터
-			//     SampleMoveToStartPositionTask::GetName() = "Task_MoveToStartPosition"
-			// =========================================================
-			{
-				VisionParams moveParams;
-
-				// 타임아웃 설정 (10초)
-				moveParams.visionParams[VAT_SEQ_PARAM_TIMEOUT_MS] = "10000";
-
-				// !!! 수정 필요: VisionPoint 좌표는 장비의 검사 위치로 변경 !!!
-				AddVisionPoint(moveParams, 1, 1, 125.3, 48.7, -2.5);
-				AddVisionPoint(moveParams, 2, 2, 130.1, 52.3, -1.8);
-				AddVisionPoint(moveParams, 3, 3, 118.9, 45.6, -3.2);
-
-				SetTaskParamForTask("Task_MoveToStartPosition", moveParams);
-			}
-
-			// =========================================================
-			// [2] Task "Task_PerformFocusScanning" 전용 파라미터
-			//     SamplePerformFocusScanningTask::GetName() = "Task_PerformFocusScanning"
-			// =========================================================
-			{
-				VisionParams focusParams;
-
-				const int cameraIndex   = 6;
-				const int packageId     = 1;
-				const int pickerMaxRow  = 4;
-				const int pickerMaxCol  = 9;
-
-				// 비전/시퀀스 파라미터
-				focusParams.visionParams[VAT_SEQ_PARAM_CAMERA_INDEX] = std::to_string(cameraIndex);
-				focusParams.visionParams[VAT_SEQ_PARAM_PACKAGE_ID] = std::to_string(packageId);
-				focusParams.visionParams[VAT_SEQ_PARAM_MOTION_TIMEOUT_MS] = "7000";
-				focusParams.visionParams[VAT_SEQ_PARAM_VISION_TIMEOUT_MS] = "30000";
-
-				// !!! 수정 필요: VisionPoint 좌표는 장비의 검사 위치로 변경 !!!
-				AddVisionPoint(focusParams, 1, 1, 125.3, 48.7, -2.5);
-				AddVisionPoint(focusParams, 2, 2, 130.1, 52.3, -1.8);
-				AddVisionPoint(focusParams, 3, 3, 118.9, 45.6, -3.2);
-
-				// !!! 수정 필요: CameraIndex가 5보다 큰 조건은 장비 Camera 구성에 따라 변경 !!!
-				if (cameraIndex > 5)
-				{
-					AddVisionPoint(focusParams, 3, 3, 118.9, 45.6, -3.2);    // UpperTarget
-					AddVisionPoint(focusParams, 4, 4, 122.4, 50.1, -2.1);    // TargetA
-					AddVisionPoint(focusParams, 5, 5, 128.7, 47.9, -2.9);    // TargetB
-				}
-
-				// Picker 위치 (장비별 행/열 크기 확인 후 수정)
-				// !!! 수정 필요: Picker 주소 및 행/열 개수는 장비에 맞게 변경 !!!
-				for (int row = 0; row < pickerMaxRow; ++row)
-				{
-					for (int col = 0; col < pickerMaxCol; ++col)
-					{
-						double pickerX = 200.0 + col * 25.0;
-						double pickerY = 100.0 + row * 30.0;
-						double pickerZ = -5.0;
-
-						int locateId = 20 + row * 10 + col;
-						AddVisionPoint(focusParams, locateId, locateId, pickerX, pickerY, pickerZ);
-					}
-				}
-
-				SetTaskParamForTask("Task_PerformFocusScanning", focusParams);
-			}
+			// Builder가 직접 VisionParams를 생성하여 Task에 주입하므로
+			// Strategy에서 별도 params 설정이 필요 없습니다.
+			(void)ctx;
 		}
 	};
 } // namespace VMF_Sample

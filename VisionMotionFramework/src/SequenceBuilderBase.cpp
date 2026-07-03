@@ -24,9 +24,4 @@ std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(const std::string
     {
         return BuildSequence(sequenceName);
     }
-
-    void SequenceBuilderBase::SetTaskParamsMap(const std::unordered_map<std::string, VisionParams>& taskParamsMap)
-    {
-        m_taskParamsMap = taskParamsMap;
-    }
 } // namespace VMF

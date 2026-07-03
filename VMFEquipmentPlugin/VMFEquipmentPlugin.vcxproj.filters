@@ -28,9 +28,6 @@
     <Filter Include="Protocol">
       <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mocks">
-      <UniqueIdentifier>{2bb728c5-e0e6-4115-ad4d-41d4d3ef56ea}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -88,12 +85,6 @@
     </ClCompile>
     <ClCompile Include="Protocol\VisionMemoryProcessor.cpp">
       <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\VisionMotionFramework\src\Mock\CMockDataRepository.cpp">
-      <Filter>Mocks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\VisionMotionFramework\src\Mock\CMockVisionEventHandler.cpp">
-      <Filter>Mocks</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
