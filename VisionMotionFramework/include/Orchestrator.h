@@ -242,6 +242,9 @@ namespace VMF
 				return false;
 			}
 
+			// Strategy가 ConfigureParams에서 설정한 Task별 params를 Builder로 전달
+			builder->SetTaskParamsMap(strategy->GetTaskParamsMap());
+
 			if (runSequence)
 			{
 				m_pCurrentStrategy = strategy;

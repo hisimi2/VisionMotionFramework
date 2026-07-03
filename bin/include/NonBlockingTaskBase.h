@@ -170,76 +170,71 @@ namespace VMF
             m_taskParams_ = params;
         }
 
-        /// <summary>
+/// <summary>
         /// Task별 시퀀스 파라미터를 읽습니다.
-        /// 1순위: Task 자체 파라미터 (Builder가 SetTaskParams로 주입)
-        /// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
-        /// 없으면 defaultValue 반환
+        /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
         T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
         {
-            // 1. Task 자체 파라미터 확인
+            (void)ctx;
+            auto it = m_taskParams_.visionParams.find(key);
+            if (it != m_taskParams_.visionParams.end())
             {
-                auto it = m_taskParams_.visionParams.find(key);
-                if (it != m_taskParams_.visionParams.end())
-                {
-                    T converted;
-                    if (detail::ParamConverter<T>::Convert(it->second, converted))
-                        return converted;
-                }
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
             }
-
-            // 2. Context의 Task별 파라미터 확인
-            {
-                VisionParams ctxTaskParams = ctx.GetTaskParams(GetName());
-                auto it = ctxTaskParams.visionParams.find(key);
-                if (it != ctxTaskParams.visionParams.end())
-                {
-                    T converted;
-                    if (detail::ParamConverter<T>::Convert(it->second, converted))
-                        return converted;
-                }
-            }
-
-            // 3. 없으면 defaultValue 반환
             return defaultValue;
         }
 
         /// <summary>
         /// Task별 비전 파라미터를 읽습니다.
-        /// 1순위: Task 자체 파라미터 (Builder가 SetTaskParams로 주입)
-        /// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
-        /// 없으면 defaultValue 반환
+        /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
         T GetTaskVisionParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
         {
-            // 1. Task 자체 파라미터 확인
+            (void)ctx;
+            auto it = m_taskParams_.visionParams.find(key);
+            if (it != m_taskParams_.visionParams.end())
             {
-                auto it = m_taskParams_.visionParams.find(key);
-                if (it != m_taskParams_.visionParams.end())
-                {
-                    T converted;
-                    if (detail::ParamConverter<T>::Convert(it->second, converted))
-                        return converted;
-                }
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
             }
-
-            // 2. Context의 Task별 파라미터 확인
-            {
-                VisionParams ctxTaskParams = ctx.GetTaskParams(GetName());
-                auto it = ctxTaskParams.visionParams.find(key);
-                if (it != ctxTaskParams.visionParams.end())
-                {
-                    T converted;
-                    if (detail::ParamConverter<T>::Convert(it->second, converted))
-                        return converted;
-                }
-            }
-
-            // 3. 없으면 defaultValue 반환
             return defaultValue;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions의 첫 번째 위치를 제거하지 않고 조회합니다.
+        /// </summary>
+        bool PeekTaskVisionPosition(VisionPosition& outPos) const
+        {
+            if (m_taskParams_.visionPositions.empty())
+                return false;
+            outPos = m_taskParams_.visionPositions.back();
+            return true;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions의 첫 번째 위치를 꺼내고 제거합니다.
+        /// </summary>
+        bool PopTaskVisionPosition(VisionPosition& outPos)
+        {
+            if (m_taskParams_.visionPositions.empty())
+                return false;
+            outPos = m_taskParams_.visionPositions.front();
+            m_taskParams_.visionPositions.erase(m_taskParams_.visionPositions.begin());
+            return true;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions가 비어있는지 확인합니다.
+        /// </summary>
+        bool IsTaskVisionPositionEmpty() const
+        {
+            return m_taskParams_.visionPositions.empty();
         }
 
     protected:

@@ -20,8 +20,13 @@ namespace VMF
         _mkdir(path.c_str());
     }
 
-    std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(const std::string& sequenceName)
+std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(const std::string& sequenceName)
     {
         return BuildSequence(sequenceName);
+    }
+
+    void SequenceBuilderBase::SetTaskParamsMap(const std::unordered_map<std::string, VisionParams>& taskParamsMap)
+    {
+        m_taskParamsMap = taskParamsMap;
     }
 } // namespace VMF

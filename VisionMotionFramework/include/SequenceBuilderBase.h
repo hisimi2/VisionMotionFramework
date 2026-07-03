@@ -5,6 +5,8 @@
 #include "IDataRepository.h"
 #include "IActuator.h"
 
+#include <unordered_map>
+
 namespace VMF
 {
     /// <summary>
@@ -37,6 +39,13 @@ namespace VMF
         /// <returns>생성된 ISequence 객체의 소유권</returns>
         SequencePtr CreateSequence(const std::string& sequenceName);
 
+        /// <summary>
+        /// Strategy에서 설정한 Task별 파라미터 맵을 설정합니다.
+        /// ConfigureParams 이후 Builder가 Task 생성 시 params를 주입하는 데 사용됩니다.
+        /// </summary>
+        /// <param name="taskParamsMap">Task 이름 → VisionParams 맵</param>
+        void SetTaskParamsMap(const std::unordered_map<std::string, VisionParams>& taskParamsMap);
+
     protected:
         /// <summary>
         /// 실제 시퀀스 생성 및 태스크 조립을 수행하는 가상 함수입니다. 하위 클래스에서 구현해야 합니다.
@@ -44,5 +53,11 @@ namespace VMF
         /// <param name="sequenceName">시퀀스 이름</param>
         /// <returns>조립된 ISequence 객체의 소유권</returns>
         virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
+
+        /// <summary>
+        /// Strategy에서 전달한 Task별 파라미터 맵
+        /// BuildSequence에서 Task 생성 후 SetTaskParams()로 주입할 때 사용합니다.
+        /// </summary>
+        std::unordered_map<std::string, VisionParams> m_taskParamsMap;
     };
 }

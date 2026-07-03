@@ -44,8 +44,8 @@ TaskResult SampleMoveToStartPositionTask::HandleMoveSafeZ(
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
-	VisionPosition visionPosition;
-	if (!ctx.PeekTaskVisionPosition(GetName(), visionPosition))
+VisionPosition visionPosition;
+	if (!PeekTaskVisionPosition(visionPosition))
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: Get Position Failed.");
 
 	m_targetPosition = visionPosition.pos;

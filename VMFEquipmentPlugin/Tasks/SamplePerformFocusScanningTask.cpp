@@ -57,7 +57,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveDown(
 		return SetErrorAndReturn(ctx, "Z down failed");
 
 VMF::VisionPosition position;
-	if (!ctx.PeekTaskVisionPosition(GetName(), position))
+	if (!PeekTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
@@ -77,7 +77,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveWait(
 		return SetErrorAndReturn(ctx, "Z Down Fail");
 
 VMF::VisionPosition position;
-	if (!ctx.PeekTaskVisionPosition(GetName(), position))
+	if (!PeekTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
@@ -172,7 +172,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
 	}
 
 	VMF::VisionPosition position;
-	if (!ctx.PopTaskVisionPosition(GetName(), position))
+	if (!PopTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Pop Position Failed");
 	}
@@ -244,7 +244,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
 		}
 	}
 
-if (ctx.IsTaskVisionPositionEmpty(GetName()))
+if (IsTaskVisionPositionEmpty())
 	{
 		return VMF::TR_NEXT;
 	}

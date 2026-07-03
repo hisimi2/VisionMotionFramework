@@ -213,83 +213,11 @@ class VMF_API Context : public std::enable_shared_from_this<Context>
         /// </summary>
         bool GetStopRequested() const;
 
-        /// <summary>
+/// <summary>
         /// 현재 저장된 비전 파라미터를 사용하여 지정한 비전 명령을 실행합니다.
         /// </summary>
         bool ExecuteVisionCommand(VisionCommand cmd);
 
-        /// <summary>
-        /// Task별 파라미터 설정
-        /// </summary>
-        void SetTaskParams(const std::string& taskName, const VisionParams& params);
-
-        /// <summary>
-        /// Task별 파라미터 조회
-        /// </summary>
-        VisionParams GetTaskParams(const std::string& taskName) const;
-
-        /// <summary>
-        /// Task별 시퀀스 파라미터 조회 (형식 변환 포함)
-        /// taskParams.visionParams에서 키를 찾고, 없으면 defaultValue 반환
-        /// </summary>
-        template <typename T>
-        T GetTaskSeqParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
-        {
-            // taskParams.visionParams에서 키 검색
-            VisionParams tp = GetTaskParams(taskName);
-            auto it = tp.visionParams.find(key);
-            if (it != tp.visionParams.end())
-            {
-                T converted;
-                if (detail::ParamConverter<T>::Convert(it->second, converted))
-                    return converted;
-            }
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Task별 비전 파라미터 조회 (형식 변환 포함)
-        /// taskParams.visionParams에서 키를 찾고, 없으면 defaultValue 반환
-        /// </summary>
-        template <typename T>
-        T GetTaskVisionParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
-        {
-            // taskParams.visionParams에서 키 검색
-            VisionParams tp = GetTaskParams(taskName);
-            auto it = tp.visionParams.find(key);
-            if (it != tp.visionParams.end())
-            {
-                T converted;
-                if (detail::ParamConverter<T>::Convert(it->second, converted))
-                    return converted;
-            }
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Task별 비전 위치 목록 전체를 복사하여 반환합니다.
-        /// </summary>
-        std::vector<VisionPosition> GetTaskVisionPositions(const std::string& taskName) const;
-
-        /// <summary>
-        /// Task별 비전 위치 목록에 새 위치 정보를 추가합니다.
-        /// </summary>
-        void AddTaskVisionPosition(const std::string& taskName, const VisionPosition& pos);
-
-        /// <summary>
-        /// Task별 비전 위치 목록의 첫 번째 항목을 꺼내어 반환하고 목록에서 제거합니다.
-        /// </summary>
-        bool PopTaskVisionPosition(const std::string& taskName, VisionPosition& outPos);
-
-        /// <summary>
-        /// Task별 비전 위치 목록의 마지막 항목을 제거하지 않고 조회합니다.
-        /// </summary>
-        bool PeekTaskVisionPosition(const std::string& taskName, VisionPosition& outPos);
-
-        /// <summary>
-        /// Task별 비전 위치 목록이 비어 있는지 확인합니다.
-        /// </summary>
-        bool IsTaskVisionPositionEmpty(const std::string& taskName) const;
 private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
@@ -297,9 +225,5 @@ private:
         mutable std::mutex      m_mutex;
         std::string             m_lastError;
         bool                    m_isStopRequested;
-
-        // Task-specific VisionParams (visionParams + visionPositions 전용)
-        mutable std::mutex      m_taskParamsMutex;
-        std::unordered_map<std::string, VisionParams> m_taskParams;
     };
 } // namespace VMF

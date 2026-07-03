@@ -76,4 +76,14 @@ void ComponentSetupBase::SetParam(VisionParams& params, const std::string& key, 
         pos.push_back(t2);
         params.visionPositions.push_back(VisionPosition(pos, locateId, requestId));
     }
+
+    void ComponentSetupBase::SetTaskParamForTask(const std::string& taskName, const VisionParams& params)
+    {
+        m_strategyTaskParams[taskName] = params;
+    }
+
+    const std::unordered_map<std::string, VisionParams>& ComponentSetupBase::GetTaskParamsMap() const
+    {
+        return m_strategyTaskParams;
+    }
 }
