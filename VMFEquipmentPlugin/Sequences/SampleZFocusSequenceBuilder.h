@@ -11,7 +11,35 @@ namespace VMF_Sample
 	{
 		using namespace VMF_Sample::Task;
 
-class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
+		/// <summary>
+		/// VisionParams에 VisionPosition을 추가하는 헬퍼 함수 (3축)
+		/// </summary>
+		inline void AddVisionPoint(VMF::VisionParams& params, int locateId, int requestId,
+			double x, double y, double z)
+		{
+			std::vector<double> pos;
+			pos.push_back(x);
+			pos.push_back(y);
+			pos.push_back(z);
+			params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
+		}
+
+		/// <summary>
+		/// VisionParams에 VisionPosition을 추가하는 헬퍼 함수 (5축)
+		/// </summary>
+		inline void AddVisionPoint(VMF::VisionParams& params, int locateId, int requestId,
+			double x, double y, double z, double t1, double t2)
+		{
+			std::vector<double> pos;
+			pos.push_back(x);
+			pos.push_back(y);
+			pos.push_back(z);
+			pos.push_back(t1);
+			pos.push_back(t2);
+			params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
+		}
+
+		class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
 		{
 		protected:
 			VMF::SequencePtr BuildSequence(const std::string& sequenceName) override

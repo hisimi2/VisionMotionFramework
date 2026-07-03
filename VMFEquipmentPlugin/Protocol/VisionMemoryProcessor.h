@@ -41,18 +41,11 @@ namespace VMF
         VisionMemoryProcessor();
         ~VisionMemoryProcessor() override;
 
-		bool RequestSetCokAsync(const StringMap& params) override;
-		bool RequestInspReadyAsync(const StringMap& params) override;
-		bool RequestMeasureAsync(const StringMap& params) override;
-		bool RequestDeviceCheckAsync(const StringMap& params) override;
-		bool RequestLightAsync(const StringMap& params) override;
+        // NuGet 버전 API: 단일 RequestAsync 메서드로 통합
+        bool RequestAsync(VisionCommand cmd, const StringMap& params) override;
 
-		// 변경: 바디를 by-value로 받아 호출자가 std::move로 소유권을 전달할 수 있도록 함
-		void OnSetCok(ByteArray body) override;
-		void OnInspReady(ByteArray body) override;
-		void OnMeasure(ByteArray body) override;
-		void OnDeviceCheck(ByteArray body) override;
-		void OnLight(ByteArray body) override;
+        // NuGet 버전 API: 단일 OnVisionResponse 메서드로 통합
+        void OnVisionResponse(VisionCommand cmd, ByteArray body) override;
 
         void Process() override;
 

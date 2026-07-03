@@ -1,5 +1,10 @@
 #pragma once
-#include "ComponentSetupBase.h"
+
+// DefaultSetupStrategy is not DLL-exported, so suppress C4275 for derived class.
+#pragma warning(push)
+#pragma warning(disable : 4275)
+
+#include "DefaultSetupStrategy.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
 #include "VMFEquipmentPluginExport.h"
 
@@ -9,34 +14,33 @@ namespace VMF_Sample
 	using namespace Sequence;
 
 	/// <summary>
-	/// [Sample] Focus Check Sequence 전략 클래스
-	/// ComponentSetupBase를 상속받아 컴포넌트 생성 책임을 담당
+	/// [Sample] Focus Check Sequence strategy class.
+	/// Inherits DefaultSetupStrategy for basic CreateRepository/CreateVisionProcessor implementations.
 	/// 
-	/// [책임 범위]
-	/// - CreateRepository(): DB 초기화 (SqliteDataRepository) — ComponentSetupBase 기본 구현 사용
-	/// - CreateVisionProcessor(): Vision 서버 연결 및 프로세서 초기화 — ComponentSetupBase 기본 구현 사용
-	/// - CreateBuilder(): SampleZFocusSequenceBuilder 반환
+	/// [Responsibility Scope]
+	/// - CreateRepository(): DB initialization (SqliteDataRepository) - uses DefaultSetupStrategy
+	/// - CreateVisionProcessor(): Vision server connection and processor init - uses DefaultSetupStrategy
+	/// - CreateBuilder(): Returns SampleZFocusSequenceBuilder
 	/// 
-	/// [Builder와의 책임 분리]
-	/// ╔══════════════════════════════════════════════════╗
-	/// ║  SampleSequenceStrategy (Strategy)               ║
-	/// ║  ├─ CreateRepository(): DB 초기화                 ║
-	/// ║  ├─ CreateVisionProcessor(): Vision 연결         ║
-	/// ║  └─ CreateBuilder(): Builder 반환                ║
-	/// ╚══════════════════════════════════════════════════╝
-	/// ╔══════════════════════════════════════════════════╗
-	/// ║  SampleZFocusSequenceBuilder (Builder)           ║
-	/// ║  └─ BuildSequence(): Task 조립 + params 생성       ║
-	/// ║      ├─ Task 생성                                 ║
-	/// ║      ├─ VisionParams 생성 및 설정                  ║
-	/// ║      └─ task->SetTaskParams(params) 로 주입       ║
-	/// ╚══════════════════════════════════════════════════╝
+	/// [Builder Responsibility Separation]
+	/// +------------------------------------------+
+	/// | SampleSequenceStrategy (Strategy)          |
+	/// | + CreateRepository(): DB init              |
+	/// | + CreateVisionProcessor(): Vision connect  |
+	/// | + ConfigureParams(): Set context params    |
+	/// | + CreateBuilder(): Return builder          |
+	/// +------------------------------------------+
+	/// +------------------------------------------+
+	/// | SampleZFocusSequenceBuilder (Builder)     |
+	/// | + BuildSequence(): Assemble tasks+params  |
+	/// +------------------------------------------+
 	/// 
-	/// !!! 수정 가이드 !!!
-	/// 1. GetSequenceName(): 실행할 시퀀스 이름 반환
-	/// 2. CreateBuilder(): 장비별 시퀀스 빌더로 교체
+	/// !!! Modification Guide !!!
+	/// 1. GetSequenceName(): Return the sequence name to execute
+	/// 2. CreateBuilder(): Replace with equipment-specific sequence builder
+	/// 3. ConfigureParams(): Set equipment-specific preset parameters in Context
 	/// </summary>
-	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public VMF::ComponentSetupBase
+	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
 	{
 	public:
 		std::string GetSequenceName() const override { return "SampleZFocus"; }
@@ -45,5 +49,24 @@ namespace VMF_Sample
 		{
 			return std::make_shared<SampleZFocusSequenceBuilder>();
 		}
+
+		/// <summary>
+		/// Sets equipment-specific preset parameters in the Context.
+		/// !!! Modification Required: Set parameters as needed for your equipment !!!
+		/// </summary>
+		void ConfigureParams(VMF::VisionContextPtr context) override
+		{
+			if (!context)
+				return;
+
+			// Example: Set default camera index, package ID, etc.
+			// context->SetSeqParam("CameraIndex", "6");
+			// context->SetSeqParam("PkgID", "1");
+			// context->SetSeqParam("TimeOutMs", "10000");
+
+			// !!! Modification Required: Add equipment-specific preset parameters here !!!
+		}
 	};
 } // namespace VMF_Sample
+
+#pragma warning(pop)

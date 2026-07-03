@@ -20,7 +20,7 @@ void SamplePerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
 {
 	// [Task-specific VisionParams]
 	// 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
-	// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
+	// 2순위: Context의 파라미터 (ctx.GetSeqParamAs)
 	m_cameraId  = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
 	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
@@ -56,7 +56,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveDown(
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z down failed");
 
-VMF::VisionPosition position;
+	VMF::VisionPosition position;
 	if (!PeekTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
@@ -76,7 +76,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveWait(
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Down Fail");
 
-VMF::VisionPosition position;
+	VMF::VisionPosition position;
 	if (!PeekTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
@@ -109,9 +109,10 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionRequest(
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 	}
 
-visionProcessor->InitializeRecvThread();
+	visionProcessor->InitializeRecvThread();
 
-	if (!ctx.ExecuteVisionCommand(VMF::Measure))
+	// VisionCommands::Measure 사용 (NuGet 버전 API)
+	if (!ctx.ExecuteVisionCommand(VMF::VisionCommands::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 	}
@@ -128,7 +129,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
 	if (!visionProcessor)
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 
-	if (!visionProcessor->IsValid(VMF::Measure))
+	if (!visionProcessor->IsValid(VMF::VisionCommands::Measure))
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "Vision Time Out");
@@ -136,7 +137,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
 		return VMF::TR_KEEP;
 	}
 
-	auto data = visionProcessor->GetLatestData(VMF::Measure);
+	auto data = visionProcessor->GetLatestData(VMF::VisionCommands::Measure);
 	(void)data;
 
 	if (actuator)
@@ -244,7 +245,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
 		}
 	}
 
-if (IsTaskVisionPositionEmpty())
+	if (IsTaskVisionPositionEmpty())
 	{
 		return VMF::TR_NEXT;
 	}
