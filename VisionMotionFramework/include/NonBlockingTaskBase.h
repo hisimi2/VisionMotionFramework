@@ -11,20 +11,19 @@
 
 namespace VMF
 {
-    /// <summary>
+/// <summary>
     /// 비동기(비차단) 작업 스텝의 공통 기초 클래스입니다.
     /// 각 스텝은 상태를 가지며 OnInitialize / OnPoll 패턴으로 실행됩니다.
     /// 스레드 안전을 위해 내부적으로 std::mutex를 사용하며, 타임아웃(데드라인) 기능을 제공합니다.
     /// 
     /// [Task-specific VisionParams]
-    /// Task별로 독립적인 VisionParams(seqParams, visionParams)를 설정할 수 있습니다.
-    /// SetTaskParams()로 설정하면, GetTaskSeqParamAs / GetTaskVisionParamAs 로 조회하며
-    /// Task별 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
+    /// Task별로 독립적인 VisionParams를 설정할 수 있습니다.
+    /// SetTaskParams()로 설정하면, GetTaskSeqParamAs / GetTaskVisionParamAs 로 조회합니다.
     /// 
     /// 사용 예:
     ///   auto moveTask = std::make_shared<SampleMoveToStartPositionTask>();
     ///   VisionParams moveParams;
-    ///   moveParams.seqParams["TargetX"] = "125.3";
+    ///   moveParams.visionParams["TargetX"] = "125.3";
     ///   moveTask->SetTaskParams(moveParams);
     ///   seq->AddTask(moveTask);
     /// </summary>
@@ -157,7 +156,7 @@ namespace VMF
             return TR_ERROR;
         }
 
-        // =====================================================
+// =====================================================
         // [Task-specific VisionParams 지원]
         // =====================================================
         /// <summary>
@@ -173,20 +172,45 @@ namespace VMF
 
         /// <summary>
         /// Task별 시퀀스 파라미터를 읽습니다.
-        /// Task 전용 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
+        /// 1순위: Task 자체 파라미터 (Builder가 SetTaskParams로 주입)
+        /// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
+        /// 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
         T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
         {
-            // seqParams는 Context 전역에서만 관리 (VisionParams에서 제거됨)
-            // Task별 seqParams가 없으므로 바로 전역 파라미터로 fallback
-            (void)m_taskParams_;
-            return ctx.GetSeqParamAs<T>(key, defaultValue);
+            // 1. Task 자체 파라미터 확인
+            {
+                auto it = m_taskParams_.visionParams.find(key);
+                if (it != m_taskParams_.visionParams.end())
+                {
+                    T converted;
+                    if (detail::ParamConverter<T>::Convert(it->second, converted))
+                        return converted;
+                }
+            }
+
+            // 2. Context의 Task별 파라미터 확인
+            {
+                VisionParams ctxTaskParams = ctx.GetTaskParams(GetName());
+                auto it = ctxTaskParams.visionParams.find(key);
+                if (it != ctxTaskParams.visionParams.end())
+                {
+                    T converted;
+                    if (detail::ParamConverter<T>::Convert(it->second, converted))
+                        return converted;
+                }
+            }
+
+            // 3. 없으면 defaultValue 반환
+            return defaultValue;
         }
 
         /// <summary>
         /// Task별 비전 파라미터를 읽습니다.
-        /// Task 전용 파라미터에 키가 없으면 Context의 전역 파라미터로 fallback합니다.
+        /// 1순위: Task 자체 파라미터 (Builder가 SetTaskParams로 주입)
+        /// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
+        /// 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
         T GetTaskVisionParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
@@ -214,8 +238,8 @@ namespace VMF
                 }
             }
 
-            // 3. Fallback: Context 전역 파라미터
-            return ctx.GetVisionParamAs<T>(key, defaultValue);
+            // 3. 없으면 defaultValue 반환
+            return defaultValue;
         }
 
     protected:

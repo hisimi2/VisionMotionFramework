@@ -155,33 +155,14 @@ namespace VMF
 
     struct VisionParams
     {
+        StringMap                       sequenceParams;
         StringMap                       visionParams;
         std::vector<VisionPosition>     visionPositions;
     };
 
-    class VMF_API Context : public std::enable_shared_from_this<Context>
+class VMF_API Context : public std::enable_shared_from_this<Context>
     {
     public:
-        /// <summary>
-        /// VAT 실행에 필요한 전체 파라미터 집합을 설정합니다.
-        /// </summary>
-        void SetVisionParams(const VisionParams& params);
-
-        /// <summary>
-        /// 시퀀스 파라미터에 정수 값을 문자열 형태로 저장합니다.
-        /// </summary>
-        void SetSeqParam(const std::string& key, int value);
-
-        /// <summary>
-        /// 지정한 키의 시퀀스 파라미터 문자열 값을 반환합니다.
-        /// </summary>
-        std::string GetSeqParam(const std::string& key) const;
-
-        /// <summary>
-        /// 지정한 키의 비전 파라미터 문자열 값을 반환합니다.
-        /// </summary>
-        std::string GetVisionParam(const std::string& key) const;
-
         /// <summary>
         /// VAT 실행 컨텍스트를 초기화합니다.
         /// </summary>
@@ -238,86 +219,6 @@ namespace VMF
         bool ExecuteVisionCommand(VisionCommand cmd);
 
         /// <summary>
-        /// 지정한 시퀀스 파라미터를 원하는 타입으로 변환하여 반환합니다.
-        /// </summary>
-        template <typename T>
-        T GetSeqParamAs(const std::string& key, const T& defaultValue) const
-        {
-            const std::string value = GetSeqParam(key);
-            if (value.empty())
-                return defaultValue;
-
-            T converted;
-            if (!detail::ParamConverter<T>::Convert(value, converted))
-                return defaultValue;
-
-            return converted;
-        }
-
-        /// <summary>
-        /// 지정한 비전 파라미터를 원하는 타입으로 변환하여 반환합니다.
-        /// </summary>
-        template <typename T>
-        T GetVisionParamAs(const std::string& key, const T& defaultValue) const
-        {
-            const std::string value = GetVisionParam(key);
-            if (value.empty())
-                return defaultValue;
-
-            T converted;
-            if (!detail::ParamConverter<T>::Convert(value, converted))
-                return defaultValue;
-
-            return converted;
-        }
-
-        /// <summary>
-        /// 시퀀스 파라미터에 지정한 타입의 값을 문자열로 변환하여 저장합니다.
-        /// </summary>
-        template <typename T>
-        void SetSeqParamAs(const std::string& key, const T& value)
-        {
-            // Types.h에서 수정된 LockGuardType (std::lock_guard) 매칭 사용
-            LockGuardType guard(m_mutex);
-            m_seqParams[key] = detail::ParamFormatter<T>::Format(value);
-        }
-
-        /// <summary>
-        /// 비전 파라미터에 지정한 타입의 값을 문자열로 변환하여 저장합니다.
-        /// </summary>
-template <typename T>
-        void SetVisionParamAs(const std::string& key, const T& value)
-        {
-            LockGuardType guard(m_mutex);
-            m_globalVisionParams.visionParams[key] = detail::ParamFormatter<T>::Format(value);
-        }
-
-        /// <summary>
-        /// 현재 저장된 비전 위치 목록 전체를 복사하여 반환합니다.
-        /// </summary>
-        std::vector<VisionPosition> GetVisionPositions() const;
-
-        /// <summary>
-        /// 비전 위치 목록의 첫 번째 항목을 꺼내어 반환하고 목록에서 제거합니다.
-        /// </summary>
-        bool PopVisionPosition(VisionPosition& outPos);
-
-        /// <summary>
-        /// 비전 위치 목록의 마지막 항목을 제거하지 않고 조회합니다.
-        /// </summary>
-        bool PeekVisionPosition(VisionPosition& outPos);
-
-        /// <summary>
-        /// 비전 위치 목록에 새 위치 정보를 추가합니다.
-        /// </summary>
-        void AddVisionPosition(const VisionPosition& pos);
-
-        /// <summary>
-        /// 비전 위치 목록이 비어 있는지 확인합니다.
-        /// </summary>
-        bool IsVisionPositionEmpty() const;
-
-        /// <summary>
         /// Task별 파라미터 설정
         /// </summary>
         void SetTaskParams(const std::string& taskName, const VisionParams& params);
@@ -329,57 +230,73 @@ template <typename T>
 
         /// <summary>
         /// Task별 시퀀스 파라미터 조회 (형식 변환 포함)
-        /// seqParams는 Context 전역에서만 관리되므로, 직접 전역 파라미터를 조회합니다.
+        /// taskParams.visionParams에서 키를 찾고, 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
         T GetTaskSeqParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
         {
-            // seqParams는 Context 전역에서만 관리 (VisionParams에서 제거됨)
-            // Task별 seqParams가 없으므로 바로 전역 파라미터로 fallback
-            (void)taskName;
-            return GetSeqParamAs<T>(key, defaultValue);
+            // taskParams.visionParams에서 키 검색
+            VisionParams tp = GetTaskParams(taskName);
+            auto it = tp.visionParams.find(key);
+            if (it != tp.visionParams.end())
+            {
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
+            }
+            return defaultValue;
         }
 
         /// <summary>
         /// Task별 비전 파라미터 조회 (형식 변환 포함)
-        /// Task별 파라미터에 키가 없으면 전역 파라미터로 fallback
+        /// taskParams.visionParams에서 키를 찾고, 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
         T GetTaskVisionParamAs(const std::string& taskName, const std::string& key, const T& defaultValue) const
         {
-            // 1. Task-specific 파라미터 확인
+            // taskParams.visionParams에서 키 검색
+            VisionParams tp = GetTaskParams(taskName);
+            auto it = tp.visionParams.find(key);
+            if (it != tp.visionParams.end())
             {
-                std::lock_guard<std::mutex> guard(m_taskParamsMutex);
-                auto taskIt = m_taskParams.find(taskName);
-                if (taskIt != m_taskParams.end())
-                {
-                    const auto& visionMap = taskIt->second.visionParams;
-                    auto paramIt = visionMap.find(key);
-                    if (paramIt != visionMap.end())
-                    {
-                        T converted;
-                        if (detail::ParamConverter<T>::Convert(paramIt->second, converted))
-                            return converted;
-                    }
-                }
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
             }
-
-            // 2. Fallback: 전역 파라미터
-            return GetVisionParamAs<T>(key, defaultValue);
+            return defaultValue;
         }
-    private:
+
+        /// <summary>
+        /// Task별 비전 위치 목록 전체를 복사하여 반환합니다.
+        /// </summary>
+        std::vector<VisionPosition> GetTaskVisionPositions(const std::string& taskName) const;
+
+        /// <summary>
+        /// Task별 비전 위치 목록에 새 위치 정보를 추가합니다.
+        /// </summary>
+        void AddTaskVisionPosition(const std::string& taskName, const VisionPosition& pos);
+
+        /// <summary>
+        /// Task별 비전 위치 목록의 첫 번째 항목을 꺼내어 반환하고 목록에서 제거합니다.
+        /// </summary>
+        bool PopTaskVisionPosition(const std::string& taskName, VisionPosition& outPos);
+
+        /// <summary>
+        /// Task별 비전 위치 목록의 마지막 항목을 제거하지 않고 조회합니다.
+        /// </summary>
+        bool PeekTaskVisionPosition(const std::string& taskName, VisionPosition& outPos);
+
+        /// <summary>
+        /// Task별 비전 위치 목록이 비어 있는지 확인합니다.
+        /// </summary>
+        bool IsTaskVisionPositionEmpty(const std::string& taskName) const;
+private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
         
         mutable std::mutex      m_mutex;
         std::string             m_lastError;
         bool                    m_isStopRequested;
-
-        // 전역 seqParams (모든 Task 공통 시퀀스 파라미터)
-        StringMap               m_seqParams;
-
-        // 전역 visionParams + visionPositions (fallback 용도, 단일 struct)
-        VisionParams            m_globalVisionParams;
 
         // Task-specific VisionParams (visionParams + visionPositions 전용)
         mutable std::mutex      m_taskParamsMutex;

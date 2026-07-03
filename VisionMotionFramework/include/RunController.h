@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Context.h"
 #include <string>
@@ -15,9 +15,9 @@ namespace VMF
     {
     public:
         // 생성자 선언을 소멸자보다 위에 배치하여 가독성을 높입니다.
-    RunController(SequenceBuilderPtr  builder,
-                      VisionContextPtr       ctx,
-                      VisionActuatorPtr      actuator);
+    RunController(SequenceBuilderPtr        builder,
+                      VisionContextPtr      ctx,
+                      VisionActuatorPtr     actuator);
         
         ~RunController();
 
@@ -27,15 +27,15 @@ namespace VMF
         bool RunSequence(const std::string& sequenceName);
         void StopSequence();
 
-DataRepositoryPtr GetRepository() const;
+        DataRepositoryPtr GetRepository() const;
         VisionContextPtr GetContext() const;
 
     private:
         // 의존성 주입된 스마트 포인터들
-        VisionActuatorPtr          m_actuator;
+        VisionActuatorPtr       m_actuator;
         SequenceBuilderPtr      m_pBuilder;
         AsyncExecutorPtr        m_pRunner;
-        VisionContextPtr           m_pCtx;
+        VisionContextPtr        m_pCtx;
     };
 } // namespace VMF
 

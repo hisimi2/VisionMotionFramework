@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -436,14 +436,14 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
         logMsg += _T("\r\n");
     }
 
-    // Context 통해 저장된 파라미터 확인
+    // Context 통해 Task별 파라미터 확인
     VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
     if (ctx)
     {
-        std::string recipe = ctx->GetSeqParam("Recipe");
-        int camIdx = ctx->GetSeqParamAs<int>("CameraIndex", -1);
-        logMsg.AppendFormat(_T("  - Context: Recipe=%s, CameraIndex=%d\r\n"),
-                            CString(recipe.c_str()), camIdx);
+        VMF::VisionParams moveParams = ctx->GetTaskParams("SampleMoveToStartPositionTask");
+        VMF::VisionParams focusParams = ctx->GetTaskParams("SamplePerformFocusScanningTask");
+        logMsg.AppendFormat(_T("  - Context: MoveTaskParams.size=%zu, FocusTaskParams.size=%zu\r\n"),
+                            moveParams.visionParams.size(), focusParams.visionParams.size());
     }
 
     AppendLog(logMsg);

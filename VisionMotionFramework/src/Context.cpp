@@ -72,87 +72,20 @@ namespace VMF
         if (!m_processor)
             return false;
 
-        StringMap params = m_globalVisionParams.visionParams;
+        // visionParams는 더 이상 전역으로 관리하지 않음.
+        // ExecuteVisionCommand는 프로세서를 통해 명령만 실행하고,
+        // 파라미터는 각 Task가 미리 설정한 VisionProcessor를 통해 전달됩니다.
         bool ret = false;
 
 		switch (cmd)
 		{
-		case Measure:       ret = m_processor->RequestMeasureAsync(params);     break;
-		case SetCok:        ret = m_processor->RequestSetCokAsync(params);      break;
-		case InspReady:     ret = m_processor->RequestInspReadyAsync(params);   break;
-		case DeviceCheck:   ret = m_processor->RequestDeviceCheckAsync(params); break;
-		case Light:         ret = m_processor->RequestLightAsync(params);       break;
+		case Measure:       ret = m_processor->RequestMeasureAsync(StringMap());     break;
+		case SetCok:        ret = m_processor->RequestSetCokAsync(StringMap());      break;
+		case InspReady:     ret = m_processor->RequestInspReadyAsync(StringMap());   break;
+		case DeviceCheck:   ret = m_processor->RequestDeviceCheckAsync(StringMap()); break;
+		case Light:         ret = m_processor->RequestLightAsync(StringMap());       break;
 		}
         return ret;
-    }
-
-    void Context::SetVisionParams(const VisionParams& params)
-    {
-        LockGuardType guard(m_mutex);
-        m_globalVisionParams = params;
-    }
-
-    std::string Context::GetSeqParam(const std::string& key) const
-    {
-        LockGuardType guard(m_mutex);
-        auto it = m_seqParams.find(key);
-        if (it != m_seqParams.end())
-            return it->second;
-        return std::string();
-    }
-
-    std::string Context::GetVisionParam(const std::string& key) const
-    {
-        LockGuardType guard(m_mutex);
-        auto it = m_globalVisionParams.visionParams.find(key);
-        if (it != m_globalVisionParams.visionParams.end())
-            return it->second;
-        return std::string();
-    }
-
-    void Context::SetSeqParam(const std::string& key, int value)
-    {
-        SetSeqParamAs<int>(key, value);
-    }
-
-    std::vector<VisionPosition> Context::GetVisionPositions() const
-    {
-        LockGuardType guard(m_mutex);
-        return m_globalVisionParams.visionPositions;
-    }
-
-    bool Context::PopVisionPosition(VisionPosition& outPos)
-    {
-        LockGuardType guard(m_mutex);
-        if (m_globalVisionParams.visionPositions.empty())
-            return false;
-
-        outPos = m_globalVisionParams.visionPositions.front();
-        m_globalVisionParams.visionPositions.erase(m_globalVisionParams.visionPositions.begin());
-        return true;
-    }
-
-    bool Context::PeekVisionPosition(VisionPosition& outPos)
-    {
-        LockGuardType guard(m_mutex);
-
-        if (m_globalVisionParams.visionPositions.empty())
-            return false;
-
-        outPos = m_globalVisionParams.visionPositions.back();
-        return true;
-    }
-
-    void Context::AddVisionPosition(const VisionPosition& pos)
-    {
-        LockGuardType guard(m_mutex);
-        m_globalVisionParams.visionPositions.push_back(pos);
-    }
-
-    bool Context::IsVisionPositionEmpty() const
-    {
-        LockGuardType guard(m_mutex);
-        return m_globalVisionParams.visionPositions.empty();
     }
 
     void Context::SetDataRepository(DataRepositoryPtr repo)
@@ -180,5 +113,54 @@ DataRepositoryPtr Context::GetRepository() const
         if (it != m_taskParams.end())
             return it->second;
         return VisionParams();
+    }
+
+    std::vector<VisionPosition> Context::GetTaskVisionPositions(const std::string& taskName) const
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        auto it = m_taskParams.find(taskName);
+        if (it != m_taskParams.end())
+            return it->second.visionPositions;
+        return std::vector<VisionPosition>();
+    }
+
+    void Context::AddTaskVisionPosition(const std::string& taskName, const VisionPosition& pos)
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        m_taskParams[taskName].visionPositions.push_back(pos);
+    }
+
+    bool Context::PopTaskVisionPosition(const std::string& taskName, VisionPosition& outPos)
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        auto it = m_taskParams.find(taskName);
+        if (it == m_taskParams.end())
+            return false;
+        if (it->second.visionPositions.empty())
+            return false;
+        outPos = it->second.visionPositions.front();
+        it->second.visionPositions.erase(it->second.visionPositions.begin());
+        return true;
+    }
+
+    bool Context::PeekTaskVisionPosition(const std::string& taskName, VisionPosition& outPos)
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        auto it = m_taskParams.find(taskName);
+        if (it == m_taskParams.end())
+            return false;
+        if (it->second.visionPositions.empty())
+            return false;
+        outPos = it->second.visionPositions.back();
+        return true;
+    }
+
+    bool Context::IsTaskVisionPositionEmpty(const std::string& taskName) const
+    {
+        std::lock_guard<std::mutex> guard(m_taskParamsMutex);
+        auto it = m_taskParams.find(taskName);
+        if (it == m_taskParams.end())
+            return true;
+        return it->second.visionPositions.empty();
     }
 }

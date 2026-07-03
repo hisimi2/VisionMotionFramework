@@ -206,8 +206,9 @@ if (engineToStop)
     {
         auto ctx = GetOrCreateContext();
         if (!ctx) return false;
-        for (const auto& kv : params)
-            ctx->SetVisionParamAs<std::string>(kv.first, kv.second);
+        // params는 직접 VisionProcessor에 전달되어야 하지만,
+        // 현재 ExecuteVisionCommand는 전역 params를 사용하지 않음
+        (void)params;
         return ctx->ExecuteVisionCommand(cmd);
     }
 

@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 
 #include "Context.h"
 #include "SequenceBuilderBase.h"
@@ -20,7 +20,7 @@ namespace VMF
         _mkdir(path.c_str());
     }
 
-std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(const std::string& sequenceName)
+    std::unique_ptr<ISequence> SequenceBuilderBase::CreateSequence(const std::string& sequenceName)
     {
         return BuildSequence(sequenceName);
     }

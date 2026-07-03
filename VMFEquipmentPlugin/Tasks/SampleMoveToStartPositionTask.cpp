@@ -14,10 +14,9 @@ SampleMoveToStartPositionTask::~SampleMoveToStartPositionTask()
 
 void SampleMoveToStartPositionTask::OnInitialize(Context& ctx)
 {
-	// [Task-specific VisionParams] 
+	// [Task-specific VisionParams]
 	// 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
 	// 2순위: Context의 Task별 파라미터 (ctx.SetTaskParams)
-	// 3순위: Context의 전역 파라미터 (ctx.GetSeqParamAs)
 	const int timeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_TIMEOUT_MS, m_moveTimeoutMs);
 	if (timeoutMs > 0)
 		m_moveTimeoutMs = timeoutMs;
@@ -46,7 +45,7 @@ TaskResult SampleMoveToStartPositionTask::HandleMoveSafeZ(
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
 	VisionPosition visionPosition;
-	if (!ctx.PeekVisionPosition(visionPosition))
+	if (!ctx.PeekTaskVisionPosition(GetName(), visionPosition))
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: Get Position Failed.");
 
 	m_targetPosition = visionPosition.pos;
