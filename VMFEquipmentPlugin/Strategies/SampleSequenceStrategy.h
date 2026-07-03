@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "DefaultSetupStrategy.h"
+#pragma once
+#include "ComponentSetupBase.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
 #include "VMFEquipmentPluginExport.h"
 
@@ -8,13 +8,13 @@ namespace VMF_Sample
 	using namespace VMF;
 	using namespace Sequence;
 
-    /// <summary>
+	/// <summary>
 	/// [Sample] Focus Check Sequence 전략 클래스
-	/// DefaultSetupStrategy를 상속받아 컴포넌트 생성 책임을 담당
+	/// ComponentSetupBase를 상속받아 컴포넌트 생성 책임을 담당
 	/// 
 	/// [책임 범위]
-	/// - CreateRepository(): DB 초기화 (SqliteDataRepository)
-	/// - CreateVisionProcessor(): Vision 서버 연결 및 프로세서 초기화
+	/// - CreateRepository(): DB 초기화 (SqliteDataRepository) — ComponentSetupBase 기본 구현 사용
+	/// - CreateVisionProcessor(): Vision 서버 연결 및 프로세서 초기화 — ComponentSetupBase 기본 구현 사용
 	/// - CreateBuilder(): SampleZFocusSequenceBuilder 반환
 	/// 
 	/// [Builder와의 책임 분리]
@@ -33,11 +33,10 @@ namespace VMF_Sample
 	/// ╚══════════════════════════════════════════════════╝
 	/// 
 	/// !!! 수정 가이드 !!!
-	/// 1. GetSequenceName(): SampleZFocusSequenceBuilder::GetSequenceName()과 일치해야 함
+	/// 1. GetSequenceName(): 실행할 시퀀스 이름 반환
 	/// 2. CreateBuilder(): 장비별 시퀀스 빌더로 교체
-	/// 3. ConfigureParams(): 불필요 (Builder가 직접 VisionParams 생성)
 	/// </summary>
-	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
+	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public VMF::ComponentSetupBase
 	{
 	public:
 		std::string GetSequenceName() const override { return "SampleZFocus"; }
@@ -45,13 +44,6 @@ namespace VMF_Sample
 		SequenceBuilderPtr CreateBuilder() override
 		{
 			return std::make_shared<SampleZFocusSequenceBuilder>();
-		}
-
-		void ConfigureParams(VMF::VisionContextPtr ctx) override
-		{
-			// Builder가 직접 VisionParams를 생성하여 Task에 주입하므로
-			// Strategy에서 별도 params 설정이 필요 없습니다.
-			(void)ctx;
 		}
 	};
 } // namespace VMF_Sample

@@ -3,6 +3,7 @@
 #include "RunController.h"
 #include "SequenceBuilderBase.h"
 #include "AsyncExecutor.h"
+#include "ISequence.h"
 #include "IActuator.h"
 #include "IDataRepository.h"
 #include "Types.h" 

@@ -21,7 +21,6 @@
 #include "NonBlockingTaskBase.h"
 #include "SequenceBuilderBase.h"
 #include "ComponentSetupBase.h"
-#include "DefaultSetupStrategy.h"
 #include "IDataRepository.h"
 #include "IVisionProcessor.h"
 #include "IActuator.h"

@@ -9,7 +9,6 @@
 #include <sstream>
 #include <memory> // std::enable_shared_from_this 사용 목적
 #include <mutex>  // std::mutex 사용 목적
-#include <unordered_map> // unordered_map for task-specific params
 
 namespace VMF 
 {
@@ -137,29 +136,10 @@ namespace VMF
             {
                 return value ? "true" : "false";
             }
-        };
-    }
+};
+    } // namespace detail
 
-    struct VisionPosition
-    {
-        std::vector<double> pos;
-        int locateId;
-        int visionRequestId;
-
-        VisionPosition() : locateId(0), visionRequestId(0) {}
-        
-        // std::move 를 이용하여 파라미터 복사 오버헤드 축소
-        VisionPosition(std::vector<double> _pos, int _locateId, int _visionRequestId)
-            : pos(std::move(_pos)), locateId(_locateId), visionRequestId(_visionRequestId) {}
-    };
-
-    struct VisionParams
-    {
-        StringMap                       visionParams;
-        std::vector<VisionPosition>     visionPositions;
-    };
-
-class VMF_API Context : public std::enable_shared_from_this<Context>
+    class VMF_API Context : public std::enable_shared_from_this<Context>
     {
     public:
         /// <summary>

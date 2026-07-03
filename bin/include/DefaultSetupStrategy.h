@@ -30,13 +30,8 @@
 class VMF_API DefaultSetupStrategy : public VMF::ComponentSetupBase
 {
 public:
-    DefaultSetupStrategy();
+DefaultSetupStrategy();
     ~DefaultSetupStrategy() override;
-
-    DefaultSetupStrategy(const DefaultSetupStrategy&) = default;
-    DefaultSetupStrategy& operator=(const DefaultSetupStrategy&) = default;
-    DefaultSetupStrategy(DefaultSetupStrategy&&) = default;
-    DefaultSetupStrategy& operator=(DefaultSetupStrategy&&) = default;
 
     VMF::DataRepositoryPtr CreateRepository() override;
     VMF::VisionProcessorPtr CreateVisionProcessor() override;

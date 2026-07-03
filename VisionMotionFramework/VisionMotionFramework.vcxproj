@@ -143,7 +143,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\ConnectionManager.cpp" />
     <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\ComponentSetupBase.cpp" />
-    <ClCompile Include="src\DefaultSetupStrategy.cpp" />
     <ClCompile Include="src\VisionProcessorBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -169,7 +168,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\IComponentSetup.h" />
     <ClInclude Include="include\IVisionProcessor.h" />
     <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\DefaultSetupStrategy.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
