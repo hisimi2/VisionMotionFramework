@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SequenceBuilderBase.h"
 #include "..\DefineVAT.h"
 
@@ -75,16 +75,6 @@ class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
 				}
 
 				return VMF::SequencePtr(seq.release());
-			}
-
-		private:
-			void AddVisionPoint(VMF::VisionParams& params, int locateId, int requestId, double x, double y, double z)
-			{
-				std::vector<double> pos;
-				pos.push_back(x);
-				pos.push_back(y);
-				pos.push_back(z);
-				params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
 			}
 		};
 	} // namespace Sequence

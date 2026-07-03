@@ -43,6 +43,31 @@ namespace VMF
         /// </summary>
         /// <param name="sequenceName">시퀀스 이름</param>
         /// <returns>조립된 ISequence 객체의 소유권</returns>
-virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
+        virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
+
+        // ============================================================================
+        // VisionParams 헬퍼 메서드
+        // Builder 파생 클래스에서 VisionParams 조립 시 사용
+        // ============================================================================
+
+        /// <summary>
+        /// VisionParams에 문자열 파라미터를 설정합니다.
+        /// </summary>
+        void SetParam(VisionParams& params, const std::string& key, const std::string& value);
+
+        /// <summary>
+        /// VisionParams에 숫자(double) 파라미터를 문자열로 변환하여 설정합니다.
+        /// </summary>
+        void SetParam(VisionParams& params, const std::string& key, double value);
+
+        /// <summary>
+        /// VisionParams에 3축 비전 검사 위치를 추가합니다.
+        /// </summary>
+        void AddVisionPoint(VisionParams& params, int locateId, int requestId, double x, double y, double z);
+
+        /// <summary>
+        /// VisionParams에 5축 비전 검사 위치를 추가합니다.
+        /// </summary>
+        void AddVisionPoint(VisionParams& params, int locateId, int requestId, double x, double y, double z, double t1, double t2);
     };
 }

@@ -44,36 +44,4 @@ namespace VMF
             m_connectionConfig.port,
             m_connectionConfig.timeoutMs);
     }
-
-void ComponentSetupBase::SetParam(VisionParams& params, const std::string& key, const std::string& value)
-    {
-        params.visionParams[key] = value;
-    }
-
-    void ComponentSetupBase::SetParam(VisionParams& params, const std::string& key, double value)
-    {
-        std::ostringstream oss;
-        oss << value;
-        params.visionParams[key] = oss.str();
-    }
-
-    void ComponentSetupBase::AddVisionPoint(VisionParams& params, int locateId, int requestId, double x, double y, double z)
-    {
-        std::vector<double> pos;
-        pos.push_back(x);
-        pos.push_back(y);
-        pos.push_back(z);
-        params.visionPositions.push_back(VisionPosition(pos, locateId, requestId));
-    }
-
-void ComponentSetupBase::AddVisionPoint(VisionParams& params, int locateId, int requestId, double x, double y, double z, double t1, double t2)
-    {
-        std::vector<double> pos;
-        pos.push_back(x);
-        pos.push_back(y);
-        pos.push_back(z);
-        pos.push_back(t1);
-        pos.push_back(t2);
-        params.visionPositions.push_back(VisionPosition(pos, locateId, requestId));
-    }
 }

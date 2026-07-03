@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Context.h"
 
 // boost 헤더 및 의존성 삭제

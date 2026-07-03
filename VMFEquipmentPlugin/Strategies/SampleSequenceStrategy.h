@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DefaultSetupStrategy.h"
 #include "Sequences/SampleZFocusSequenceBuilder.h"
 #include "VMFEquipmentPluginExport.h"

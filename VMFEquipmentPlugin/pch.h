@@ -7,6 +7,9 @@
 #ifndef PCH_H
 #define PCH_H
 
+
+#pragma warning(disable: 4251)
+
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 
