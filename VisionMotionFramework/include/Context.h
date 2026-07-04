@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -12,6 +12,7 @@
 
 namespace VMF 
 {
+
     namespace detail
     {
         template <typename T>
