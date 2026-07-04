@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <memory>
-#include "ComponentSetupBase.h"
+#include "DefaultSetupStrategy.h"
 #include "VMFEquipmentPluginExport.h"
 
 // ============================================================================
@@ -23,12 +23,13 @@
 // ============================================================================
 
 /// <summary>
-/// VMF::ComponentSetupBase* 객체를 생성하여 반환합니다.
+/// VMF::DefaultSetupStrategy* 객체를 생성하여 반환합니다.
 /// 메인 APP은 이 포인터로 시퀀스를 초기화/실행합니다.
+/// DefaultSetupStrategy는 IComponentSetup + ISequenceSetup을 통합합니다.
 /// </summary>
-VMFEQUIPMENTPLUGIN_API VMF::ComponentSetupBase* CreateSetupStrategy();
+VMFEQUIPMENTPLUGIN_API VMF::DefaultSetupStrategy* CreateSetupStrategy();
 
 /// <summary>
 /// CreateSetupStrategy로 생성된 객체를 소멸합니다.
 /// </summary>
-VMFEQUIPMENTPLUGIN_API void DestroySetupStrategy(VMF::ComponentSetupBase* ptr);
+VMFEQUIPMENTPLUGIN_API void DestroySetupStrategy(VMF::DefaultSetupStrategy* ptr);

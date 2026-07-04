@@ -39,13 +39,13 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     return TRUE;
 }
 
-VMF::ComponentSetupBase* CreateSetupStrategy()
+VMF::DefaultSetupStrategy* CreateSetupStrategy()
 {
 	// !!! 수정 필요: 장비의 실제 Strategy 클래스로 변경 !!!
 	return new VMF_Sample::SampleSequenceStrategy();
 }
 
-void DestroySetupStrategy(VMF::ComponentSetupBase* ptr)
+void DestroySetupStrategy(VMF::DefaultSetupStrategy* ptr)
 {
 	if (ptr)
 	{

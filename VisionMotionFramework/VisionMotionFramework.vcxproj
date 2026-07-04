@@ -136,8 +136,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
-    <ClCompile Include="src\RepositoryFactory.cpp" />
-    <ClCompile Include="src\SequenceBuilderBase.cpp" />
+<ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\ConnectionManager.cpp" />
@@ -171,6 +170,8 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\NonBlockingTaskBase.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
+    <ClInclude Include="include\DefaultSetupStrategy.h" />
+    <ClInclude Include="include\SequenceFactoryBase.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
     <ClInclude Include="include\Sequence.h" />

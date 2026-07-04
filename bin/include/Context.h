@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -12,6 +12,7 @@
 
 namespace VMF 
 {
+
     namespace detail
     {
         template <typename T>
@@ -100,43 +101,6 @@ namespace VMF
             }
         };
 
-        template <typename T>
-        struct ParamFormatter
-        {
-            static std::string Format(const T& value)
-            {
-                std::ostringstream oss;
-                oss << value;
-                return oss.str();
-            }
-        };
-
-        template <>
-        struct ParamFormatter<std::string>
-        {
-            static std::string Format(const std::string& value)
-            {
-                return value;
-            }
-        };
-
-        template <>
-        struct ParamFormatter<const char*>
-        {
-            static std::string Format(const char* value)
-            {
-                return value != nullptr ? std::string(value) : std::string();
-            }
-        };
-
-        template <>
-        struct ParamFormatter<bool>
-        {
-            static std::string Format(const bool& value)
-            {
-                return value ? "true" : "false";
-            }
-};
     } // namespace detail
 
     class VMF_API Context : public std::enable_shared_from_this<Context>

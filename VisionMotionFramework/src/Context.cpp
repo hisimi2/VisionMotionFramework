@@ -1,24 +1,12 @@
 ﻿#include "stdafx.h"
 #include "Context.h"
 
-// boost 헤더 및 의존성 삭제
 #include <string>
-#include <algorithm>
-#include <cctype>
 #include <memory>
-#include <thread>
 #include <mutex>
 
 namespace VMF
 {
-    static std::string ToLowerCopy(const std::string& s)
-    {
-        std::string out = s;
-        std::transform(out.begin(), out.end(), out.begin(),
-            [](unsigned char c) { return std::tolower(c); });
-        return out;
-    }
-
     Context::Context()
         : m_processor()
         , m_repo()

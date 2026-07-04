@@ -17,186 +17,183 @@ namespace VMF
         disp.RegisterHandler(VisionMemoryProtocol::Measure,
             [this](int, int, std::vector<uint8_t>&& body, int)
             {
-                this->OnVisionResponse(VisionCommands::Measure, std::move(body));
+                OnMeasure(std::move(body));
             });
 
         disp.RegisterHandler(VisionMemoryProtocol::ControlAck,
             [this](int, int, std::vector<uint8_t>&& body, int)
             {
                 auto copy = body;
-                this->OnVisionResponse(VisionCommands::SetCok, std::move(body));
-                this->OnVisionResponse(VisionCommands::InspReady, std::move(copy));
+                OnSetCok(std::move(body));
+                OnInspReady(std::move(copy));
             });
     }
 
     VisionMemoryProcessor::~VisionMemoryProcessor() = default;
 
     // -----------------------------------------------------------------------
-    // [RequestAsync] — 모든 비전 명령 요청을 처리하는 통합 메서드
+    // 개별 RequestAsync 메서드들
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestAsync(VisionCommand cmd, const StringMap& params)
+
+    bool VisionMemoryProcessor::RequestSetCokAsync(const StringMap& params)
     {
-        switch (cmd)
-        {
-        case VisionCommands::SetCok:
-        case VisionCommands::InspReady:
-        {
-            ClearLatestData(cmd);
+        ClearLatestData(SetCok);
+        return SendControlRequest(params, SetCok);
+    }
 
-            CPacketBody_S2F41 body;
-            body.nCmd = 1000;
-            body.nParamCount = 7;
+    bool VisionMemoryProcessor::RequestInspReadyAsync(const StringMap& params)
+    {
+        ClearLatestData(InspReady);
+        return SendControlRequest(params, InspReady);
+    }
 
-            auto it = params.find(RECIPE_NAME);
-            if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
-            it = params.find(PCD_MODE);
-            if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
-            it = params.find(DEVICE_SIZE_X);
-            if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
-            it = params.find(DEVICE_SIZE_Y);
-            if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
-            it = params.find(COK_TYPE);
-            if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
-            it = params.find(PICKER_PITCH_X);
-            if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
-            it = params.find(PICKER_PITCH_Y);
-            if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
+    bool VisionMemoryProcessor::RequestMeasureAsync(const StringMap& params)
+    {
+        ClearLatestData(Measure);
 
-            std::vector<uint8_t> bodyBytes;
-            const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
-            bodyBytes.assign(p, p + sizeof(body));
+        CPacketBody_S107F9 body;
 
-            VC::SECSPacket secsPkt;
-            secsPkt.SetCorrelationId(body.nCmd);
-            secsPkt.SetProtocol(VisionMemoryProtocol::ControlRequest);
-            secsPkt.SetBody(bodyBytes);
+        auto it = params.find(CAMERA_ID);
+        if (it != params.end()) body.nDataID = std::stoi(it->second);
+        it = params.find(INSPECTION_TYPE);
+        if (it != params.end()) body.nStatus = std::stoi(it->second);
+        it = params.find(MOVE_PART);
+        if (it != params.end()) body.SetData(0, it->second.c_str());
+        it = params.find(SAVE_IMAGE);
+        if (it != params.end()) body.SetData(1, it->second.c_str());
+        it = params.find(FOV_DIRECTION);
+        if (it != params.end()) body.SetData(3, it->second.c_str());
 
-            return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
-        }
+        std::vector<uint8_t> bodyBytes;
+        const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
+        bodyBytes.assign(p, p + sizeof(body));
 
-        case VisionCommands::Measure:
-        {
-            ClearLatestData(cmd);
+        VC::SECSPacket secsPkt;
+        secsPkt.SetCorrelationId(body.nDataID);
+        secsPkt.SetProtocol(VisionMemoryProtocol::Measure);
+        secsPkt.SetBody(bodyBytes);
 
-            CPacketBody_S107F9 body;
+        return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
+    }
 
-            auto it = params.find(CAMERA_ID);
-            if (it != params.end()) body.nDataID = std::stoi(it->second);
-            it = params.find(INSPECTION_TYPE);
-            if (it != params.end()) body.nStatus = std::stoi(it->second);
-            it = params.find(MOVE_PART);
-            if (it != params.end()) body.SetData(0, it->second.c_str());
-            it = params.find(SAVE_IMAGE);
-            if (it != params.end()) body.SetData(1, it->second.c_str());
-            it = params.find(FOV_DIRECTION);
-            if (it != params.end()) body.SetData(3, it->second.c_str());
+    bool VisionMemoryProcessor::RequestDeviceCheckAsync(const StringMap& /*params*/)
+    {
+        return false;
+    }
 
-            std::vector<uint8_t> bodyBytes;
-            const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
-            bodyBytes.assign(p, p + sizeof(body));
-
-            VC::SECSPacket secsPkt;
-            secsPkt.SetCorrelationId(body.nDataID);
-            secsPkt.SetProtocol(VisionMemoryProtocol::Measure);
-            secsPkt.SetBody(bodyBytes);
-
-            return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
-        }
-
-        case VisionCommands::DeviceCheck:
-        case VisionCommands::Light:
-        default:
-            return false;
-        }
+    bool VisionMemoryProcessor::RequestLightAsync(const StringMap& /*params*/)
+    {
+        return false;
     }
 
     // -----------------------------------------------------------------------
-    // [OnVisionResponse] — 모든 비전 응답을 처리하는 통합 메서드
+    // 공통 Control 요청 전송 헬퍼
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnVisionResponse(VisionCommand cmd, ByteArray body)
+    bool VisionMemoryProcessor::SendControlRequest(const StringMap& params, VisionCommand /*cmd*/)
     {
-        switch (cmd)
-        {
-        case VisionCommands::SetCok:
-        {
-            if (body.size() < sizeof(CPacketBody_S2F41))
-            {
-                ClearLatestData(cmd); return;
-            }
+        CPacketBody_S2F41 body;
+        body.nCmd = 1000;
+        body.nParamCount = 7;
 
-            CPacketBody_S2F41 pkt;
-            std::memcpy(&pkt, body.data(), sizeof(pkt));
+        auto it = params.find(RECIPE_NAME);
+        if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
+        it = params.find(PCD_MODE);
+        if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
+        it = params.find(DEVICE_SIZE_X);
+        if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
+        it = params.find(DEVICE_SIZE_Y);
+        if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
+        it = params.find(COK_TYPE);
+        if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
+        it = params.find(PICKER_PITCH_X);
+        if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
+        it = params.find(PICKER_PITCH_Y);
+        if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
 
-            DataMap data;
-            data[RESULT] = std::string(pkt.szParam[0]);
-            data[SERVER_INDEX] = std::string(pkt.szParam[1]);
-            data[CAM_STATUS] = std::string(pkt.szParam[2]);
-            data[CAM_TYPE] = std::string(pkt.szParam[3]);
-            SetLatestData(cmd, data);
-            break;
+        std::vector<uint8_t> bodyBytes;
+        const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
+        bodyBytes.assign(p, p + sizeof(body));
+
+        VC::SECSPacket secsPkt;
+        secsPkt.SetCorrelationId(body.nCmd);
+        secsPkt.SetProtocol(VisionMemoryProtocol::ControlRequest);
+        secsPkt.SetBody(bodyBytes);
+
+        return (m_ctrl.SendPacketAsync(secsPkt) == VC::VisionOK);
+    }
+
+    // -----------------------------------------------------------------------
+    // 개별 OnVisionResponse 메서드들
+    // -----------------------------------------------------------------------
+
+    void VisionMemoryProcessor::OnSetCok(ByteArray body)
+    {
+        if (body.size() < sizeof(CPacketBody_S2F41))
+        {
+            ClearLatestData(SetCok); return;
         }
 
-        case VisionCommands::InspReady:
+        CPacketBody_S2F41 pkt;
+        std::memcpy(&pkt, body.data(), sizeof(pkt));
+
+        DataMap data;
+        data[RESULT] = std::string(pkt.szParam[0]);
+        data[SERVER_INDEX] = std::string(pkt.szParam[1]);
+        data[CAM_STATUS] = std::string(pkt.szParam[2]);
+        data[CAM_TYPE] = std::string(pkt.szParam[3]);
+        SetLatestData(SetCok, data);
+    }
+
+    void VisionMemoryProcessor::OnInspReady(ByteArray body)
+    {
+        if (body.size() < sizeof(CPacketBody_S2F41))
         {
-            if (body.size() < sizeof(CPacketBody_S2F41))
-            {
-                ClearLatestData(cmd); return;
-            }
-
-            CPacketBody_S2F41 pkt;
-            std::memcpy(&pkt, body.data(), sizeof(pkt));
-
-            DataMap data;
-            data[RESULT] = std::string(pkt.szParam[0]);
-            data[SERVER_INDEX] = std::string(pkt.szParam[1]);
-            data[CAM_STATUS] = std::string(pkt.szParam[2]);
-            data[CAM_TYPE] = std::string(pkt.szParam[3]);
-            SetLatestData(cmd, data);
-            break;
+            ClearLatestData(InspReady); return;
         }
 
-        case VisionCommands::Measure:
+        CPacketBody_S2F41 pkt;
+        std::memcpy(&pkt, body.data(), sizeof(pkt));
+
+        DataMap data;
+        data[RESULT] = std::string(pkt.szParam[0]);
+        data[SERVER_INDEX] = std::string(pkt.szParam[1]);
+        data[CAM_STATUS] = std::string(pkt.szParam[2]);
+        data[CAM_TYPE] = std::string(pkt.szParam[3]);
+        SetLatestData(InspReady, data);
+    }
+
+    void VisionMemoryProcessor::OnMeasure(ByteArray body)
+    {
+        if (body.size() < sizeof(CPacketBody_S107F9))
         {
-            if (body.size() < sizeof(CPacketBody_S107F9))
-            {
-                ClearLatestData(cmd); return;
-            }
-
-            CPacketBody_S107F9 pkt;
-            std::memcpy(&pkt, body.data(), sizeof(pkt));
-
-            if (pkt.nStatus != 1)
-            {
-                ClearLatestData(cmd); return;
-            }
-
-            DataMap data;
-            data[Z_FOCUS_VALUE] = pkt.cData[0];
-            data[X_OFFSET] = pkt.cData[1];
-            data[Y_OFFSET] = pkt.cData[2];
-            data[ANGLE] = pkt.cData[3];
-            data[AUTO_VISION_SETTING] = pkt.cData[4];
-            SetLatestData(cmd, data);
-            break;
+            ClearLatestData(Measure); return;
         }
 
-        case VisionCommands::DeviceCheck:
+        CPacketBody_S107F9 pkt;
+        std::memcpy(&pkt, body.data(), sizeof(pkt));
+
+        if (pkt.nStatus != 1)
         {
-            (void)body;
-            ClearLatestData(cmd);
-            break;
+            ClearLatestData(Measure); return;
         }
 
-        case VisionCommands::Light:
-        {
-            (void)body;
-            ClearLatestData(cmd);
-            break;
-        }
+        DataMap data;
+        data[Z_FOCUS_VALUE] = pkt.cData[0];
+        data[X_OFFSET] = pkt.cData[1];
+        data[Y_OFFSET] = pkt.cData[2];
+        data[ANGLE] = pkt.cData[3];
+        data[AUTO_VISION_SETTING] = pkt.cData[4];
+        SetLatestData(Measure, data);
+    }
 
-        default:
-            break;
-        }
+    void VisionMemoryProcessor::OnDeviceCheck(ByteArray /*body*/)
+    {
+        ClearLatestData(DeviceCheck);
+    }
+
+    void VisionMemoryProcessor::OnLight(ByteArray /*body*/)
+    {
+        ClearLatestData(Light);
     }
 
     // -----------------------------------------------------------------------

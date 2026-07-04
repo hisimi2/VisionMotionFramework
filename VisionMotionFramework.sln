@@ -7,9 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Equipment2015", "Equipment2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisionComm", "VisionComm\VisionComm.vcxproj", "{3DB1BFD5-4592-42E4-BD33-1B2CD89F574E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VMFEquipmentPlugin", "VMFEquipmentPlugin\VMFEquipmentPlugin.vcxproj", "{47E9888B-8124-4387-A71E-5326579E6ACF}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisionMotionFramework", "VisionMotionFramework\VisionMotionFramework.vcxproj", "{06EDCD26-A1B9-455A-9657-B815178366DD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VMFEquipmentPlugin", "VMFEquipmentPlugin\VMFEquipmentPlugin.vcxproj", "{47E9888B-8124-4387-A71E-5326579E6ACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
