@@ -1,18 +1,11 @@
 ﻿#pragma once
 #include "VMF_API.h"
-#include "Context.h"
-#include "Sequence.h"
-#include "IDataRepository.h"
-#include "IActuator.h"
-
+#include "Types.h"
 
 namespace VMF
 {
     /// <summary>
     /// 특정 작업(Strategy)에 필요한 시퀀스를 구성(Build)하는 역할 클래스입니다.
-    /// <para>
-    /// 시퀀스 빌더는 시퀀스 이름을 기반으로 시퀀스 객체를 생성하는 팩토리 역할을 수행합니다.
-    /// </para>
     /// </summary>
     /// <remarks>
     /// 주요 기능:
@@ -28,15 +21,18 @@ namespace VMF
     class VMF_API SequenceBuilderBase
     {
     public:
-        SequenceBuilderBase();
-        virtual ~SequenceBuilderBase();
+        SequenceBuilderBase() = default;
+        virtual ~SequenceBuilderBase() = default;
 
         /// <summary>
         /// 주어진 이름으로 시퀀스를 생성합니다.
         /// </summary>
         /// <param name="sequenceName">생성할 시퀀스의 이름</param>
         /// <returns>생성된 ISequence 객체의 소유권</returns>
-SequencePtr CreateSequence(const std::string& sequenceName);
+        SequencePtr CreateSequence(const std::string& sequenceName)
+        {
+            return BuildSequence(sequenceName);
+        }
 
     protected:
         /// <summary>
@@ -44,6 +40,6 @@ SequencePtr CreateSequence(const std::string& sequenceName);
         /// </summary>
         /// <param name="sequenceName">시퀀스 이름</param>
         /// <returns>조립된 ISequence 객체의 소유권</returns>
-virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
+        virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
     };
 }

@@ -30,6 +30,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -48,6 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,7 +57,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;VMF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-<AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,7 +92,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-<AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(SolutionDir)bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -98,6 +100,8 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>.\VisionMotionFramework.def</ModuleDefinitionFile>
+      <AdditionalDependencies>VisionComm.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(ProjectDir)..\bin\thirdparty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -110,6 +114,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\docs\VMF_DeploymentStrategy.md" />
     <None Include="VisionMotionFramework.def" />
     <None Include="ReadMe.txt" />
     <None Include="res\VisionMotionFramework.rc2" />
@@ -131,8 +136,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
-    <ClCompile Include="src\RepositoryFactory.cpp" />
-    <ClCompile Include="src\SequenceBuilderBase.cpp" />
+<ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\ConnectionManager.cpp" />
@@ -163,10 +167,11 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\IComponentSetup.h" />
     <ClInclude Include="include\IVisionProcessor.h" />
     <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\DefaultSetupStrategy.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
+    <ClInclude Include="include\DefaultSetupStrategy.h" />
+    <ClInclude Include="include\SequenceFactoryBase.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
     <ClInclude Include="include\Sequence.h" />

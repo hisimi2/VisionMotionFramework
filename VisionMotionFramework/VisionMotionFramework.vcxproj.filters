@@ -8,8 +8,7 @@
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
-    <ClCompile Include="src\RepositoryFactory.cpp" />
-    <ClCompile Include="src\SequenceBuilderBase.cpp" />
+<ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\Context.cpp" />
@@ -28,7 +27,6 @@
     <ClInclude Include="include\AsyncExecutor.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVisionOptional.h" />
-    <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
     <ClInclude Include="include\FileUtils.h" />
@@ -41,10 +39,11 @@
     <ClInclude Include="include\IComponentSetup.h" />
     <ClInclude Include="include\IVisionProcessor.h" />
     <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\DefaultSetupStrategy.h" />
     <ClInclude Include="include\NonBlockingTaskBase.h" />
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
+    <ClInclude Include="include\DefaultSetupStrategy.h" />
+    <ClInclude Include="include\SequenceFactoryBase.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
     <ClInclude Include="include\Sequence.h" />
@@ -63,6 +62,7 @@
     <ClInclude Include="include\CMockVisionEventHandler.h">
       <Filter>Mocks</Filter>
     </ClInclude>
+    <ClInclude Include="include\Orchestrator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VisionMotionFramework.rc" />
@@ -71,6 +71,7 @@
     <None Include="VisionMotionFramework.def" />
     <None Include="ReadMe.txt" />
     <None Include="res\VisionMotionFramework.rc2" />
+    <None Include="..\docs\VMF_DeploymentStrategy.md" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Mocks">

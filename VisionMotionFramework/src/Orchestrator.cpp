@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Orchestrator.h"
 #include "RunController.h"
 #include "Context.h"
@@ -7,12 +7,20 @@
 
 #include <memory>
 #include <mutex>
-#include <exception>
 
 namespace VMF
 {
     Orchestrator::Orchestrator()
         : m_pVisionEngine()
+        , m_componentFactory()
+        , m_sequenceFactory()
+    {
+    }
+
+    Orchestrator::Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory)
+        : m_pVisionEngine()
+        , m_componentFactory(componentFactory)
+        , m_sequenceFactory(sequenceFactory)
     {
     }
 
@@ -26,16 +34,16 @@ namespace VMF
             m_pCurrentStrategy.reset();
         }
 
-         if (engineToStop)
-         {
-             engineToStop->StopSequence();
-             engineToStop.reset();
-         }
+        if (engineToStop)
+        {
+            engineToStop->StopSequence();
+            engineToStop.reset();
+        }
 
-         ClearObservers();
+        ClearObservers();
     }
 
-DataRepositoryPtr Orchestrator::GetDataRepository()
+    DataRepositoryPtr Orchestrator::GetDataRepository()
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
         if (m_pVisionEngine)
@@ -61,7 +69,7 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
     bool Orchestrator::RemoveObserver(ObserverId id)
     {
         std::lock_guard<std::mutex> lk(m_observerMutex);
-        return m_observers.erase(id) >0;
+        return m_observers.erase(id) > 0;
     }
 
     void Orchestrator::ClearObservers()
@@ -84,7 +92,7 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
             for (auto& kv : m_observers)
             {
                 if (kv.second)
-                snapshot.push_back(kv.second);
+                    snapshot.push_back(kv.second);
             }
         }
 
@@ -92,11 +100,11 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
         {
             try
             {
-            cb(payload);
+                cb(payload);
             }
             catch (...)
             {
-            // ignore observer exceptions
+                // ignore observer exceptions
             }
         }
     }
@@ -127,13 +135,147 @@ DataRepositoryPtr Orchestrator::GetDataRepository()
             m_pCurrentStrategy.reset();
         }
 
-if (engineToStop)
+        if (engineToStop)
         {
-         engineToStop->StopSequence();
+            engineToStop->StopSequence();
         }
     }
 
-    // --- [직접 모드] 구현 ---
+    // ============================================================================
+    // 공통 컴포넌트 조립 로직
+    // ============================================================================
+
+    bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* actuator,
+                                             bool runSequence,
+                                             const VisionConnectionConfig* connectionConfig)
+    {
+        if (!factory)
+            return false;
+
+        // Actuator 설정
+        factory->SetActuator(actuator);
+
+        if (connectionConfig)
+        {
+            factory->SetConnectionConfig(*connectionConfig);
+        }
+
+        DataRepositoryPtr repo;
+        VisionProcessorPtr vp;
+        SequenceBuilderPtr builder;
+
+        try
+        {
+            repo = factory->CreateRepository();
+            vp = factory->CreateVisionProcessor();
+        }
+        catch (...)
+        {
+            return false;
+        }
+
+        if (!repo || !vp) return false;
+
+        auto ctx = CreateContext(vp, repo);
+        if (!ctx) return false;
+
+        try
+        {
+            factory->ConfigureParams(ctx);
+        }
+        catch (...)
+        {
+            return false;
+        }
+
+        if (runSequence)
+        {
+            // 시퀀스 모드: Builder 필요
+            if (!m_sequenceFactory)
+                return false;
+
+            try
+            {
+                builder = m_sequenceFactory->CreateBuilder();
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            if (!builder) return false;
+
+            // m_pCurrentStrategy는 직접 모드에서 preset 조회용으로만 사용
+            // (ISequenceSetup 포인터로 저장)
+            m_pCurrentStrategy = m_sequenceFactory;
+
+            VisionActuatorPtr act = factory->GetActuator();
+
+            try
+            {
+                m_pVisionEngine = std::make_shared<RunController>(builder, ctx, act);
+            }
+            catch (...)
+            {
+                m_pCurrentStrategy.reset();
+                return false;
+            }
+
+            AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
+            runner->SetResultSink(this);
+            m_pVisionEngine->SetRunner(runner);
+
+            std::string seqName = m_sequenceFactory->GetSequenceName();
+            if (!m_pVisionEngine->RunSequence(seqName))
+            {
+                m_pVisionEngine->StopSequence();
+                m_pVisionEngine.reset();
+                m_pCurrentStrategy.reset();
+                return false;
+            }
+        }
+        else
+        {
+            // 직접 모드: VP/Repo/Context만 저장
+            m_directVisionProcessor = vp;
+            m_directDataRepository = repo;
+            m_directContext = ctx;
+        }
+
+        return true;
+    }
+
+    // ============================================================================
+    // RunSequence (팩토리 기반)
+    // ============================================================================
+
+    bool Orchestrator::RunSequence(IActuator* actuator,
+                                    const VisionConnectionConfig& connectionConfig)
+    {
+        std::lock_guard<std::mutex> guard(m_seqMutex);
+
+        // 기존 엔진 중지
+        if (m_pVisionEngine)
+        {
+            m_pVisionEngine->StopSequence();
+            m_pVisionEngine.reset();
+        }
+        m_pCurrentStrategy.reset();
+
+        if (!m_componentFactory || !m_sequenceFactory)
+            return false;
+
+        bool hasConfig = (!connectionConfig.address.empty() && connectionConfig.port > 0);
+        return InitializeComponents(
+            m_componentFactory.get(),
+            actuator,
+            true,
+            hasConfig ? &connectionConfig : nullptr);
+    }
+
+    // ============================================================================
+    // [직접 모드] 구현
+    // ============================================================================
 
     void Orchestrator::SetVisionProcessor(VisionProcessorPtr vp)
     {
@@ -183,7 +325,7 @@ if (engineToStop)
             if (ctx) return ctx;
         }
 
-        // 직접 모드: 없으면 생성 (MemorySequenceStrategy와 동일 패턴)
+        // 직접 모드: 없으면 생성
         if (!m_directContext)
         {
             m_directContext = std::make_shared<Context>();
@@ -206,8 +348,6 @@ if (engineToStop)
     {
         auto ctx = GetOrCreateContext();
         if (!ctx) return false;
-        for (const auto& kv : params)
-            ctx->SetVisionParamAs<std::string>(kv.first, kv.second);
         return ctx->ExecuteVisionCommand(cmd);
     }
 
@@ -223,10 +363,16 @@ if (engineToStop)
         return ExecuteDirectVisionCommand(cmd, params);
     }
 
-    // --- [DLL Plugin] StartSequenceFromStrategy 구현 ---
+// ============================================================================
+    // [직접 모드] IComponentSetup 기반 초기화
+    // ============================================================================
+
+    // ============================================================================
+    // [DLL Plugin] StartSequenceFromStrategy (DefaultSetupStrategy 기반)
+    // ============================================================================
 
     bool Orchestrator::StartSequenceFromStrategy(
-        std::shared_ptr<VMF::ComponentSetupBase> strategy,
+        std::shared_ptr<DefaultSetupStrategy> strategy,
         IActuator* actuator,
         const VisionConnectionConfig& connectionConfig)
     {
@@ -239,6 +385,9 @@ if (engineToStop)
             m_pVisionEngine.reset();
         }
         m_pCurrentStrategy.reset();
+
+        if (!strategy)
+            return false;
 
         strategy->SetActuator(actuator);
 
@@ -306,11 +455,16 @@ if (engineToStop)
         return true;
     }
 
-    // --- [Direct Mode] InitializeDirect 구현 ---
+    // ============================================================================
+    // [Direct Mode] InitializeDirect (DefaultSetupStrategy 기반)
+    // ============================================================================
 
-    bool Orchestrator::InitializeDirect(std::shared_ptr<VMF::ComponentSetupBase> strategy)
+    bool Orchestrator::InitializeDirect(std::shared_ptr<DefaultSetupStrategy> strategy)
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
+
+        if (!strategy)
+            return false;
 
         DataRepositoryPtr repo;
         VisionProcessorPtr vp;
@@ -343,7 +497,7 @@ if (engineToStop)
         m_directDataRepository = repo;
         m_directContext = ctx;
 
-        return true;
+return true;
     }
 
 } // namespace VMF

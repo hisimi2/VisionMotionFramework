@@ -7,18 +7,20 @@
 #ifndef PCH_H
 #define PCH_H
 
+
+#pragma warning(disable: 4251)
+
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 
 // ============================================================================
-// VMF Core Headers (NuGet Package: VisionMotionFramework.Core.v142)
+// VMF Core Headers (NuGet Package: VisionMotionFramework.Core.v140)
 // NuGet 패키지를 참조하면 이 헤더들을 include 경로에서 찾을 수 있습니다.
 // NuGet 복원이 완료되면 자동으로 include 경로가 설정됩니다.
 // ============================================================================
 #include "NonBlockingTaskBase.h"
 #include "SequenceBuilderBase.h"
 #include "ComponentSetupBase.h"
-#include "DefaultSetupStrategy.h"
 #include "IDataRepository.h"
 #include "IVisionProcessor.h"
 #include "IActuator.h"

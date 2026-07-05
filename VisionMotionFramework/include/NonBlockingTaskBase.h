@@ -11,10 +11,21 @@
 
 namespace VMF
 {
-    /// <summary>
+/// <summary>
     /// 비동기(비차단) 작업 스텝의 공통 기초 클래스입니다.
     /// 각 스텝은 상태를 가지며 OnInitialize / OnPoll 패턴으로 실행됩니다.
     /// 스레드 안전을 위해 내부적으로 std::mutex를 사용하며, 타임아웃(데드라인) 기능을 제공합니다.
+    /// 
+    /// [Task-specific VisionParams]
+    /// Task별로 독립적인 VisionParams를 설정할 수 있습니다.
+    /// SetTaskParams()로 설정하면, GetTaskSeqParamAs / GetTaskVisionParamAs 로 조회합니다.
+    /// 
+    /// 사용 예:
+    ///   auto moveTask = std::make_shared<SampleMoveToStartPositionTask>();
+    ///   VisionParams moveParams;
+    ///   moveParams.visionParams["TargetX"] = "125.3";
+    ///   moveTask->SetTaskParams(moveParams);
+    ///   seq->AddTask(moveTask);
     /// </summary>
     class NonBlockingTaskBase : public ITask
     {
@@ -145,6 +156,87 @@ namespace VMF
             return TR_ERROR;
         }
 
+// =====================================================
+        // [Task-specific VisionParams 지원]
+        // =====================================================
+        /// <summary>
+        /// Task별 독립적인 파라미터를 설정합니다.
+        /// Builder에서 Task 생성 후 호출하여 Task마다 다른 파라미터를 주입할 수 있습니다.
+        /// </summary>
+        /// <param name="params">Task 전용 VisionParams</param>
+        void SetTaskParams(const VisionParams& params)
+        {
+            std::lock_guard<std::mutex> lg(m_mutex_);
+            m_taskParams_ = params;
+        }
+
+/// <summary>
+        /// Task별 시퀀스 파라미터를 읽습니다.
+        /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
+        /// </summary>
+        template <typename T>
+        T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
+        {
+            (void)ctx;
+            auto it = m_taskParams_.visionParams.find(key);
+            if (it != m_taskParams_.visionParams.end())
+            {
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Task별 비전 파라미터를 읽습니다.
+        /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
+        /// </summary>
+        template <typename T>
+        T GetTaskVisionParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
+        {
+            (void)ctx;
+            auto it = m_taskParams_.visionParams.find(key);
+            if (it != m_taskParams_.visionParams.end())
+            {
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions의 첫 번째 위치를 제거하지 않고 조회합니다.
+        /// </summary>
+        bool PeekTaskVisionPosition(VisionPosition& outPos) const
+        {
+            if (m_taskParams_.visionPositions.empty())
+                return false;
+            outPos = m_taskParams_.visionPositions.back();
+            return true;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions의 첫 번째 위치를 꺼내고 제거합니다.
+        /// </summary>
+        bool PopTaskVisionPosition(VisionPosition& outPos)
+        {
+            if (m_taskParams_.visionPositions.empty())
+                return false;
+            outPos = m_taskParams_.visionPositions.front();
+            m_taskParams_.visionPositions.erase(m_taskParams_.visionPositions.begin());
+            return true;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions가 비어있는지 확인합니다.
+        /// </summary>
+        bool IsTaskVisionPositionEmpty() const
+        {
+            return m_taskParams_.visionPositions.empty();
+        }
+
     protected:
         /// <summary>
         /// 스텝 초기화 시 호출되는 콜백입니다. 파생 클래스에서 초기화 로직을 구현합니다.
@@ -222,5 +314,8 @@ namespace VMF
         // 동기화 및 시간 관리 멤버를 C++ 표준 라이브러리로 대체
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
+
+        // Task-specific VisionParams (Builder에서 직접 주입)
+        VisionParams                          m_taskParams_;
     };
 }

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "VMF_API.h"
 #include "IVisionProcessor.h"
 #include "Types.h"
 #include <map>
@@ -8,7 +9,7 @@
 
 namespace VMF
 {
-    class CMockVisionEventHandler : public IVisionProcessor
+    class VMF_API CMockVisionEventHandler : public IVisionProcessor
     {
     public:
         CMockVisionEventHandler();

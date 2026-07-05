@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    VisionMotionFramework.Core.v140 MSBuild props file.
+    NuGet에서 자동으로 import되며, include 경로와 라이브러리 링크를 설정합니다.
+  -->
+
+  <PropertyGroup>
+    <VMF_Root>$(MSBuildThisFileDirectory)</VMF_Root>
+    <VMF_Include>$(VMF_Root)include\</VMF_Include>
+    <VMF_LibDir>$(VMF_Root)bin\$(Platform)\$(Configuration)\</VMF_LibDir>
+  </PropertyGroup>
+
+  <!-- Include 경로 자동 설정 (VMF 헤더 + VC 헤더) -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>
+        $(VMF_Include);
+        $(VMF_Include)VC\;
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <!-- DLL이므로 VMF_STATIC_LIB 전처리기 정의 불필요 -->
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <!-- 라이브러리 링크 자동 설정 -->
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(VMF_LibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+</Project>
