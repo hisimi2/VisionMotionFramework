@@ -11,17 +11,6 @@
 
 // ============================================================================
 // Plugin Factory Implementation
-//
-// !!! 수정 가이드 !!!
-// VMF_Sample::SampleSequenceStrategy 부분을 장비의 실제 Strategy 클래스로 변경하세요.
-//
-// 예시 1 - Load1:
-//   #include "VMFComposition/Load1/Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
-//   return new VMF_Load1::CLoad1LeftPlateJIGFocusCheckSequenceStrategy();
-//
-// 예시 2 - Load2:
-//   #include "VMFComposition/Load2/Strategies/CLoad2RightPlateFocusCheckSequenceStrategy.h"
-//   return new VMF_Load2::CLoad2RightPlateFocusCheckSequenceStrategy();
 // ============================================================================
 
 BOOL APIENTRY DllMain(HMODULE hModule,
@@ -39,6 +28,33 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     return TRUE;
 }
 
+
+/// <summary>
+/// Plugin의 Strategy를 주입한 Orchestrator를 생성합니다.
+/// Equipment는 반환된 Orchestrator를 직접 RunSequence / ExecuteDirectVisionCommand 등으로 사용합니다.
+/// </summary>
+VMFEQUIPMENTPLUGIN_API std::shared_ptr<VMF::Orchestrator> CreateOrchestrator()
+{
+    auto strategy = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
+    return std::make_shared<VMF::Orchestrator>(strategy, strategy);
+}
+
+
+/// <summary>
+/// Orchestrator를 직접 모드(Direct Mode)로 초기화합니다.
+/// Plugin 내부의 Strategy를 사용하여 Repository, VisionProcessor, Context를 생성합니다.
+/// </summary>
+VMFEQUIPMENTPLUGIN_API bool InitializeOrchestratorDirect(std::shared_ptr<VMF::Orchestrator> orch)
+{
+    if (!orch)
+        return false;
+
+    // Plugin의 Strategy를 새로 생성하여 InitializeDirect에 전달
+    auto strategy = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
+    return orch->InitializeDirect(strategy);
+}
+
+
 VMF::DefaultSetupStrategy* CreateSetupStrategy()
 {
 	// !!! 수정 필요: 장비의 실제 Strategy 클래스로 변경 !!!
@@ -53,5 +69,8 @@ void DestroySetupStrategy(VMF::DefaultSetupStrategy* ptr)
 		ptr = nullptr;
 	}
 }
+
+
+
 
 

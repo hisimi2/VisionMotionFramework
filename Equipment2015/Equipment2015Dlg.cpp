@@ -7,13 +7,7 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
-#include "IActuator.h"
-#include "ComponentSetupBase.h"
-#include "SequenceFactoryBase.h"
-#include "DefaultSetupStrategy.h"
-#include "SequenceBuilderBase.h"
-#include "Sequence.h"
-#include "ISequence.h"
+#include "PluginFactory.h"
 
 #include <thread>
 
@@ -207,59 +201,18 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 }
 
 //=============================================================================
-// 샘플 Strategy 구현 (Plugin DLL 제거 후 인라인 대체)
-//=============================================================================
-
-/// <summary>
-/// 샘플 전략 — DefaultSetupStrategy를 상속하여
-/// IComponentSetup + ISequenceSetup 통합 인터페이스 제공
-/// </summary>
-class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
-{
-protected:
-    VMF::SequencePtr BuildSequence(const std::string& sequenceName) override
-    {
-        // 빈 시퀀스 생성 (실제 Equipment에서는 Task로 구성)
-        auto seq = std::unique_ptr<VMF::ISequence>(new VMF::Sequence(sequenceName));
-        return seq;
-    }
-};
-
-class SampleComponentSetup : public VMF::DefaultSetupStrategy
-{
-public:
-    VMF::DataRepositoryPtr CreateRepository() override
-    {
-        // 부모 기본 구현 사용 (SqliteDataRepository)
-        return VMF::DefaultSetupStrategy::CreateRepository();
-    }
-
-    VMF::VisionProcessorPtr CreateVisionProcessor() override
-    {
-        // 부모 기본 구현 사용 (CMockVisionEventHandler)
-        return VMF::DefaultSetupStrategy::CreateVisionProcessor();
-    }
-
-    std::string GetSequenceName() const override
-    {
-        return "SampleZFocusSequence";
-    }
-
-    VMF::SequenceBuilderPtr CreateBuilder() override
-    {
-        // 샘플 시퀀스 빌더 생성
-        return std::make_shared<SampleZFocusSequenceBuilder>();
-    }
-};
-
-//=============================================================================
-// [예제] VMF 상태머신 모드 (State Machine) - 팩토리 주입 방식
+// [예제] VMF 상태머신 모드 (State Machine) - Plugin DLL 기반
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    auto strategy = std::make_shared<SampleComponentSetup>();
+    // Plugin DLL에서 Orchestrator 생성 (Strategy가 내부에서 주입됨)
+    m_orchestrator = CreateOrchestrator();
+    if (!m_orchestrator)
+    {
+        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
 
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
@@ -267,7 +220,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 
     if (started)
     {
-        AppendLog(_T("[StateMachine Mode] Sequence started via factory injection.\r\n"));
+        AppendLog(_T("[StateMachine Mode] Sequence started via Plugin DLL.\r\n"));
     }
     else
     {
@@ -280,9 +233,13 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 {
-    auto strategy = std::make_shared<SampleComponentSetup>();
+    m_orchestrator = CreateOrchestrator();
+    if (!m_orchestrator)
+    {
+        AppendLog(_T("[CM StateMachine] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
 
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_CM_StateMachine"));
 
     VMF::VisionConnectionConfig connConfig("192.168.1.100", 5000, 5000);
@@ -312,9 +269,9 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 
     auto makeOrchestrator = [this](LPCTSTR name) -> std::shared_ptr<VMF::Orchestrator>
     {
-        auto strategy = std::make_shared<SampleComponentSetup>();
-        auto orch = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-        RegisterOrchestratorObserver(orch, name);
+        auto orch = CreateOrchestrator();
+        if (orch)
+            RegisterOrchestratorObserver(orch, name);
         return orch;
     };
 
@@ -322,14 +279,14 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
     logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) ---\r\n");
     VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
     auto orch1 = makeOrchestrator(_T("ServerA"));
-    bool started1 = orch1->RunSequence(nullptr, configA);
+    bool started1 = orch1 ? orch1->RunSequence(nullptr, configA) : false;
     logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
     m_multiServerOrchestrators.push_back(orch1);
 
     // ---- Orchestrator #2: Server A (같은 서버 - 소켓 공유!) ----
     logMsg += _T("--- Orchestrator #2 → Server A (192.168.1.100:5000) [Socket Shared!] ---\r\n");
     auto orch2 = makeOrchestrator(_T("ServerA-2"));
-    bool started2 = orch2->RunSequence(nullptr, configA);
+    bool started2 = orch2 ? orch2->RunSequence(nullptr, configA) : false;
     logMsg.AppendFormat(_T("  StartSequence: %s (Same socket reused!)\r\n\r\n"), started2 ? _T("SUCCESS") : _T("FAILED"));
     m_multiServerOrchestrators.push_back(orch2);
 
@@ -337,7 +294,7 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
     logMsg += _T("--- Orchestrator #3 → Server B (10.0.0.50:6000) [Separate Socket] ---\r\n");
     VMF::VisionConnectionConfig configB("10.0.0.50", 6000, 5000);
     auto orch3 = makeOrchestrator(_T("ServerB"));
-    bool started3 = orch3->RunSequence(nullptr, configB);
+    bool started3 = orch3 ? orch3->RunSequence(nullptr, configB) : false;
     logMsg.AppendFormat(_T("  StartSequence: %s (New socket for Server B)\r\n"), started3 ? _T("SUCCESS") : _T("FAILED"));
     m_multiServerOrchestrators.push_back(orch3);
 
@@ -350,16 +307,22 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 }
 
 //=============================================================================
-// [예제] VMF 직접 모드 (Direct Mode)
+// [예제] VMF 직접 모드 (Direct Mode) - Plugin DLL 기반
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
-    auto strategy = std::make_shared<SampleComponentSetup>();
+    // Plugin DLL에서 Orchestrator 생성
+    m_orchestrator = CreateOrchestrator();
+    if (!m_orchestrator)
+    {
+        AfxMessageBox(_T("[Direct Mode] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
 
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, nullptr /* sequenceFactory 불필요 */);
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_Direct"));
 
-    bool ok = m_orchestrator->InitializeDirect(strategy);
+    // Plugin DLL의 InitializeOrchestratorDirect를 통해 직접 모드 초기화
+    bool ok = InitializeOrchestratorDirect(m_orchestrator);
 
     if (!ok)
     {
@@ -368,7 +331,7 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     }
 
     CString logMsg;
-    logMsg = _T("[Direct Mode] Factory 초기화 완료.\r\n\r\n");
+    logMsg = _T("[Direct Mode] Plugin 기반 초기화 완료.\r\n\r\n");
 
     // Measure 명령 실행
     bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
@@ -399,10 +362,10 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
     if (ctx)
     {
-        VMF::VisionProcessorPtr vp = ctx->GetVisionProcessorInterface();
+        VMF::VisionProcessorPtr vp2 = ctx->GetVisionProcessorInterface();
         logMsg.AppendFormat(_T("  - Context: available=%s, VP=%s\r\n"),
                             ctx ? _T("true") : _T("false"),
-                            vp ? _T("valid") : _T("null"));
+                            vp2 ? _T("valid") : _T("null"));
     }
 
     AppendLog(logMsg);

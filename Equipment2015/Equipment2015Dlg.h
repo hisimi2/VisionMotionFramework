@@ -20,11 +20,6 @@ class CEquipment2015Dlg : public CDialogEx
     COPSwitch m_StartSwitch;
     COPSwitch m_StopSwitch;
 
-    void InitOrchestratorExample();
-    void RunOrchestratorSequenceExample();
-    void StopOrchestratorSequenceExample();
-    void AccessSequenceDataExample();
-
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
