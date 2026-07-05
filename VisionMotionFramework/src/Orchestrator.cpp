@@ -17,6 +17,13 @@ namespace VMF
     {
     }
 
+    Orchestrator::Orchestrator(std::shared_ptr<IStrategySetup> strategy)
+        : m_pVisionEngine()
+        , m_componentFactory(std::static_pointer_cast<IComponentSetup>(strategy))
+        , m_sequenceFactory(std::static_pointer_cast<ISequenceSetup>(strategy))
+    {
+    }
+
     Orchestrator::Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory)
         : m_pVisionEngine()
         , m_componentFactory(componentFactory)

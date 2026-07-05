@@ -34,15 +34,14 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 /// Equipment는 반환된 Orchestrator를 직접 RunSequence / ExecuteDirectVisionCommand 등으로 사용합니다.
 /// 
 /// 상태머신(Sequence) 모드와 직접(Direct) 모드 모두 사용 가능:
-/// - 상태머신 모드: sequenceFactory에 Strategy를 전달하여 Builder/시퀀스 실행 지원
-/// - 직접 모드: sequenceFactory는 nullptr (또는 생략) — Builder/시퀀스 미사용
+/// - 상태머신 모드: IStrategySetup (IComponentSetup + ISequenceSetup 통합) 주입
+/// - 직접 모드: 동일한 인터페이스로 처리되며, Builder/시퀀스는 미사용
 /// </summary>
 VMFEQUIPMENTPLUGIN_API std::shared_ptr<VMF::Orchestrator> CreateOrchestrator()
 {
     auto strategy = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
-    // 상태머신 모드: sequenceFactory = strategy (Builder/시퀀스 지원)
-    // 직접 모드 전용: sequenceFactory = nullptr (불필요한 멤버 제거)
-    return std::make_shared<VMF::Orchestrator>(strategy, strategy);
+    // IStrategySetup 전용 생성자 사용 — 동일 객체 1회만 전달
+    return std::make_shared<VMF::Orchestrator>(strategy);
 }
 
 

@@ -2,6 +2,7 @@
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
+#include "IStrategySetup.h"
 #include "ISequenceSetup.h"
 #include "IComponentSetup.h"
 #include "IResultSink.h"
@@ -47,11 +48,19 @@ namespace VMF
 		Orchestrator();
 
 		/// <summary>
-		/// 생성자: ComponentFactory와 SequenceFactory를 주입하여 객체 조립
+		/// 생성자: IStrategySetup (IComponentSetup + ISequenceSetup 통합)을 주입하여 객체 조립
+		/// DefaultSetupStrategy 및 그 파생 클래스(SampleSequenceStrategy 등)를 하나의 인자로 전달합니다.
+		/// </summary>
+		/// <param name="strategy">IStrategySetup 구현체 — 컴포넌트 생성 + 시퀀스 설정 통합 객체</param>
+		explicit Orchestrator(std::shared_ptr<IStrategySetup> strategy);
+
+		/// <summary>
+		/// 생성자: ComponentFactory와 SequenceFactory를 각각 주입하여 객체 조립
+		/// (하위 호환성 유지 — ComponentSetup/SequenceSetup이 분리된 경우 사용)
 		/// </summary>
 		/// <param name="componentFactory">IComponentSetup — Repository, VisionProcessor 생성</param>
 		/// <param name="sequenceFactory">ISequenceSetup — 시퀀스 이름, Builder 생성 (직접 모드에서는 nullptr 가능)</param>
-		Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory = nullptr);
+		Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory);
 
 		~Orchestrator() override;
 
