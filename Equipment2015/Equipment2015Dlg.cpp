@@ -70,16 +70,15 @@ BOOL CEquipment2015Dlg::OnInitDialog()
     // Observer 등록 — PostMessage로 UI 스레드에 결과 전달
     m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
     {
-        ActivityResultData* pData = new ActivityResultData();
-        pData->activityName = name.c_str();
-        pData->requestId = requestId;
+        CString msg;
+        msg.Format(_T("[%hs] RequestId=%d\r\n"), name.c_str(), requestId);
 
         for (const auto& result : results)
         {
-            pData->detail += CString(result.c_str()) + _T("\r\n");
+            msg += CString(result.c_str()) + _T("\r\n");
         }
 
-        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new CString(msg), 0);
     });
 
     SetTimer(1, 1000, NULL);
@@ -175,47 +174,35 @@ void CEquipment2015Dlg::OnBnClickedStop()
 // OnActivityResult — UI 스레드에서 실행됨 (PostMessage 수신)
 LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 {
-    ActivityResultData* pData = reinterpret_cast<ActivityResultData*>(wParam);
-    if (pData)
+    CString* pMsg = reinterpret_cast<CString*>(wParam);
+    if (pMsg)
     {
-        CString msg;
-        msg.Format(_T("[%s] completed (requestId=%d)\r\n%s"),
-            pData->activityName.GetString(),
-            pData->requestId,
-            pData->detail.GetString());
-
-        AppendLog(msg);
-        delete pData;
+        AppendLog(*pMsg);
+        delete pMsg;
     }
     return 0;
 }
 
 
 //=============================================================================
-// 공통 Observer 헬퍼 — Orchestrator에 Observer를 등록하고
-// PostMessage로 UI 스레드에 결과 전달
+// Observer 헬퍼 — Orchestrator에 Observer를 등록하고
+// PostMessage로 UI 스레드에 간단한 CString 로그 전달
 //=============================================================================
-static void AttachObserverToOrchestrator(
+void CEquipment2015Dlg::RegisterOrchestratorObserver(
     std::shared_ptr<VMF::Orchestrator> orchestrator,
-    HWND hWnd,
     LPCTSTR activityName)
 {
-    std::wstring activityNameW(activityName);
-    orchestrator->AddObserver([hWnd, activityNameW](const VMF::VisionResultPayload& payload)
+    orchestrator->AddObserver([this, activityName](const VMF::VisionResultPayload& payload)
     {
         CString msg;
-        msg.Format(_T("[%s] RequestId=%d\r\n"), activityNameW.c_str(), payload.requestId);
+        msg.Format(_T("[%s] RequestId=%d\r\n"), activityName, payload.requestId);
 
         for (const auto& result : payload.results)
         {
             msg += CString(result.c_str()) + _T("\r\n");
         }
 
-        ActivityResultData* pData = new ActivityResultData();
-        pData->activityName = activityNameW.c_str();
-        pData->requestId = payload.requestId;
-        pData->detail = msg;
-        ::PostMessage(hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new CString(msg), 0);
     });
 }
 
@@ -273,7 +260,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     auto strategy = std::make_shared<SampleComponentSetup>();
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-    AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_StateMachine"));
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
     bool started = m_orchestrator->RunSequence(nullptr /* actuator */);
@@ -296,7 +283,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
     auto strategy = std::make_shared<SampleComponentSetup>();
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-    AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_CM_StateMachine"));
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_CM_StateMachine"));
 
     VMF::VisionConnectionConfig connConfig("192.168.1.100", 5000, 5000);
 
@@ -327,7 +314,7 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
     {
         auto strategy = std::make_shared<SampleComponentSetup>();
         auto orch = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-        AttachObserverToOrchestrator(orch, m_hWnd, name);
+        RegisterOrchestratorObserver(orch, name);
         return orch;
     };
 
@@ -370,7 +357,7 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     auto strategy = std::make_shared<SampleComponentSetup>();
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, nullptr /* sequenceFactory 불필요 */);
-    AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_Direct"));
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_Direct"));
 
     bool ok = m_orchestrator->InitializeDirect(strategy);
 
