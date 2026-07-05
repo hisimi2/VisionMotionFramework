@@ -51,7 +51,7 @@ namespace VMF
 		/// </summary>
 		/// <param name="componentFactory">IComponentSetup — Repository, VisionProcessor 생성</param>
 		/// <param name="sequenceFactory">ISequenceSetup — 시퀀스 이름, Builder 생성 (직접 모드에서는 nullptr 가능)</param>
-		Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory);
+		Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory = nullptr);
 
 		~Orchestrator() override;
 
@@ -114,6 +114,23 @@ namespace VMF
 		bool InitializeComponents(IComponentSetup* factory, IActuator* actuator,
 		                          bool runSequence,
 		                          const VisionConnectionConfig* connectionConfig = nullptr);
+
+		/// <summary>
+		/// [Refactored] 공통 컴포넌트 생성 + 선택적 시퀀스 실행
+		/// InitializeComponents()와 StartSequenceFromStrategy()의 중복 로직을 통합합니다.
+		/// </summary>
+		/// <param name="factory">컴포넌트 생성 팩토리</param>
+		/// <param name="actuator">액추에이터 (또는 nullptr)</param>
+		/// <param name="connectionConfig">Vision 서버 연결 설정 (선택)</param>
+		/// <param name="presetStrategy">preset 조회용 전략 (m_pCurrentStrategy에 저장)</param>
+		/// <param name="runSequence">true=시퀀스 실행 모드, false=직접 모드</param>
+		/// <param name="builderFactory">Builder 생성 콜백 (runSequence=true 일 때 필요)</param>
+		bool CreateComponentsAndRun(IComponentSetup* factory,
+		                            IActuator* actuator,
+		                            const VisionConnectionConfig* connectionConfig,
+		                            SequenceSetupPtr presetStrategy,
+		                            bool runSequence,
+		                            std::function<SequenceBuilderPtr()> builderFactory = nullptr);
 
 		SequenceSetupPtr m_pCurrentStrategy;  // 현재 전략 (직접 모드에서 preset 조회용)
 		VisionEnginePtr m_pVisionEngine;
