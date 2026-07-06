@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -8,10 +8,8 @@
 
 #include "Orchestrator.h"
 
-
 #include "PluginFactory.h"
 #include "SampleSequenceStrategy.h"
-
 
 #include <thread>
 
@@ -208,16 +206,10 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
+    auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
 
- //   auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
 
-
- //   m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
-
-
-
-    /*
-    m_orchestrator = CreateOrchestrator();
     if (!m_orchestrator)
     {
         AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator from Plugin.\r\n"));
@@ -227,7 +219,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->RunSequence(nullptr );
+    bool started = m_orchestrator->RunSequence(nullptr);
 
     if (started)
     {
@@ -237,7 +229,6 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     {
         AppendLog(_T("[StateMachine Mode] Failed to start sequence.\r\n"));
     }
-    */
 }
 
 //=============================================================================
@@ -245,6 +236,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 {
+    /*
     m_orchestrator = CreateOrchestrator();
     if (!m_orchestrator)
     {
@@ -256,7 +248,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 
     VMF::VisionConnectionConfig connConfig("192.168.1.100", 5000, 5000);
 
-    bool started = m_orchestrator->RunSequence(nullptr /* actuator */, connConfig);
+    bool started = m_orchestrator->RunSequence(nullptr , connConfig);
 
     if (started)
     {
@@ -267,55 +259,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
     {
         AppendLog(_T("[CM StateMachine] Failed to start sequence.\r\n"));
     }
-}
-
-//=============================================================================
-// [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속
-//=============================================================================
-void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
-{
-    CString logMsg;
-    logMsg = _T("[Multi-Server Example] Starting...\r\n\r\n");
-
-    m_multiServerOrchestrators.clear();
-
-    auto makeOrchestrator = [this](LPCTSTR name) -> std::shared_ptr<VMF::Orchestrator>
-    {
-        auto orch = CreateOrchestrator();
-        if (orch)
-            RegisterOrchestratorObserver(orch, name);
-        return orch;
-    };
-
-    // ---- Orchestrator #1: Server A ----
-    logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) ---\r\n");
-    VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
-    auto orch1 = makeOrchestrator(_T("ServerA"));
-    bool started1 = orch1 ? orch1->RunSequence(nullptr, configA) : false;
-    logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
-    m_multiServerOrchestrators.push_back(orch1);
-
-    // ---- Orchestrator #2: Server A (같은 서버 - 소켓 공유!) ----
-    logMsg += _T("--- Orchestrator #2 → Server A (192.168.1.100:5000) [Socket Shared!] ---\r\n");
-    auto orch2 = makeOrchestrator(_T("ServerA-2"));
-    bool started2 = orch2 ? orch2->RunSequence(nullptr, configA) : false;
-    logMsg.AppendFormat(_T("  StartSequence: %s (Same socket reused!)\r\n\r\n"), started2 ? _T("SUCCESS") : _T("FAILED"));
-    m_multiServerOrchestrators.push_back(orch2);
-
-    // ---- Orchestrator #3: Server B (별도 소켓) ----
-    logMsg += _T("--- Orchestrator #3 → Server B (10.0.0.50:6000) [Separate Socket] ---\r\n");
-    VMF::VisionConnectionConfig configB("10.0.0.50", 6000, 5000);
-    auto orch3 = makeOrchestrator(_T("ServerB"));
-    bool started3 = orch3 ? orch3->RunSequence(nullptr, configB) : false;
-    logMsg.AppendFormat(_T("  StartSequence: %s (New socket for Server B)\r\n"), started3 ? _T("SUCCESS") : _T("FAILED"));
-    m_multiServerOrchestrators.push_back(orch3);
-
-    logMsg += _T("\r\n[Multi-Server] Summary:\r\n");
-    logMsg += _T("  Server A: 1 socket (shared by 2 Orchestrators)\r\n");
-    logMsg += _T("  Server B: 1 socket (dedicated)\r\n");
-    logMsg += _T("  Total: 2 sockets (not 3)\r\n");
-
-    AppendLog(logMsg);
+    */
 }
 
 //=============================================================================
@@ -323,6 +267,8 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
+
+    /*
     // Plugin DLL에서 Orchestrator 생성
     m_orchestrator = CreateOrchestrator();
     if (!m_orchestrator)
@@ -381,4 +327,59 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     }
 
     AppendLog(logMsg);
+    */
+}
+
+
+
+//=============================================================================
+// [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속
+//=============================================================================
+void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
+{
+
+    /*
+    CString logMsg;
+    logMsg = _T("[Multi-Server Example] Starting...\r\n\r\n");
+
+    m_multiServerOrchestrators.clear();
+
+    auto makeOrchestrator = [this](LPCTSTR name) -> std::shared_ptr<VMF::Orchestrator>
+        {
+            auto orch = CreateOrchestrator();
+            if (orch)
+                RegisterOrchestratorObserver(orch, name);
+            return orch;
+        };
+
+    // ---- Orchestrator #1: Server A ----
+    logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) ---\r\n");
+    VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
+    auto orch1 = makeOrchestrator(_T("ServerA"));
+    bool started1 = orch1 ? orch1->RunSequence(nullptr, configA) : false;
+    logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch1);
+
+    // ---- Orchestrator #2: Server A (같은 서버 - 소켓 공유!) ----
+    logMsg += _T("--- Orchestrator #2 → Server A (192.168.1.100:5000) [Socket Shared!] ---\r\n");
+    auto orch2 = makeOrchestrator(_T("ServerA-2"));
+    bool started2 = orch2 ? orch2->RunSequence(nullptr, configA) : false;
+    logMsg.AppendFormat(_T("  StartSequence: %s (Same socket reused!)\r\n\r\n"), started2 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch2);
+
+    // ---- Orchestrator #3: Server B (별도 소켓) ----
+    logMsg += _T("--- Orchestrator #3 → Server B (10.0.0.50:6000) [Separate Socket] ---\r\n");
+    VMF::VisionConnectionConfig configB("10.0.0.50", 6000, 5000);
+    auto orch3 = makeOrchestrator(_T("ServerB"));
+    bool started3 = orch3 ? orch3->RunSequence(nullptr, configB) : false;
+    logMsg.AppendFormat(_T("  StartSequence: %s (New socket for Server B)\r\n"), started3 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch3);
+
+    logMsg += _T("\r\n[Multi-Server] Summary:\r\n");
+    logMsg += _T("  Server A: 1 socket (shared by 2 Orchestrators)\r\n");
+    logMsg += _T("  Server B: 1 socket (dedicated)\r\n");
+    logMsg += _T("  Total: 2 sockets (not 3)\r\n");
+
+    AppendLog(logMsg);
+    */
 }
