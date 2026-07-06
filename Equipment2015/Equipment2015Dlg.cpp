@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -8,57 +8,18 @@
 
 #include "Orchestrator.h"
 #include "IActuator.h"
-#include "ComponentSetupBase.h"   // DLL Plugin에서 반환되는 Strategy 객체 타입
-#include "RepositoryFactory.h"
+#include "ComponentSetupBase.h"
+#include "SequenceFactoryBase.h"
+#include "DefaultSetupStrategy.h"
+#include "SequenceBuilderBase.h"
+#include "Sequence.h"
+#include "ISequence.h"
+
+#include <thread>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-// ============================================================================
-// DLL Plugin Factory Interface
-// VMFEquipmentPlugin.dll (또는 장비별 DLL)에서 CreateSetupStrategy/DestroySetupStrategy를
-// LoadLibrary/GetProcAddress로 동적 로딩하여 사용합니다.
-// ============================================================================
-typedef VMF::ComponentSetupBase* (*PFN_CREATE_SETUP_STRATEGY)();
-typedef void (*PFN_DESTROY_SETUP_STRATEGY)(VMF::ComponentSetupBase*);
-
-/// <summary>
-/// VMFEquipmentPlugin.dll을 로드하고 CreateSetupStrategy/DestroySetupStrategy 함수 포인터를 얻습니다.
-/// </summary>
-/// <param name="moduleHandle">출력: LoadLibrary로 로드된 DLL 모듈 핸들</param>
-/// <param name="pfnCreate">출력: CreateSetupStrategy 함수 포인터</param>
-/// <param name="pfnDestroy">출력: DestroySetupStrategy 함수 포인터</param>
-/// <param name="dllPath">로드할 DLL 경로 (기본값: VMFEquipmentPlugin.dll)</param>
-/// <returns>성공 시 true</returns>
-static bool LoadPluginDLL(
-    HMODULE& moduleHandle,
-    PFN_CREATE_SETUP_STRATEGY& pfnCreate,
-    PFN_DESTROY_SETUP_STRATEGY& pfnDestroy,
-    LPCTSTR dllPath = _T("VMFEquipmentPlugin.dll"))
-{
-    moduleHandle = ::LoadLibrary(dllPath);
-    if (!moduleHandle)
-    {
-        AfxMessageBox(_T("Failed to load equipment plugin DLL.\r\n")
-                      _T("DLL: ") + CString(dllPath));
-        return false;
-    }
-
-    pfnCreate = (PFN_CREATE_SETUP_STRATEGY)::GetProcAddress(moduleHandle, "CreateSetupStrategy");
-    pfnDestroy = (PFN_DESTROY_SETUP_STRATEGY)::GetProcAddress(moduleHandle, "DestroySetupStrategy");
-
-    if (!pfnCreate || !pfnDestroy)
-    {
-        ::FreeLibrary(moduleHandle);
-        moduleHandle = nullptr;
-        AfxMessageBox(_T("Failed to find CreateSetupStrategy/DestroySetupStrategy in DLL.\r\n")
-                      _T("Check the DLL exports."));
-        return false;
-    }
-
-    return true;
-}
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
     : CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
@@ -259,46 +220,67 @@ static void AttachObserverToOrchestrator(
 }
 
 //=============================================================================
-// [예제] VMF 상태머신 모드 (State Machine) - DLL Plugin 방식
+// 샘플 Strategy 구현 (Plugin DLL 제거 후 인라인 대체)
+//=============================================================================
+
+/// <summary>
+/// 샘플 전략 — DefaultSetupStrategy를 상속하여
+/// IComponentSetup + ISequenceSetup 통합 인터페이스 제공
+/// </summary>
+class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
+{
+protected:
+    VMF::SequencePtr BuildSequence(const std::string& sequenceName) override
+    {
+        // 빈 시퀀스 생성 (실제 Equipment에서는 Task로 구성)
+        auto seq = std::unique_ptr<VMF::ISequence>(new VMF::Sequence(sequenceName));
+        return seq;
+    }
+};
+
+class SampleComponentSetup : public VMF::DefaultSetupStrategy
+{
+public:
+    VMF::DataRepositoryPtr CreateRepository() override
+    {
+        // 부모 기본 구현 사용 (SqliteDataRepository)
+        return VMF::DefaultSetupStrategy::CreateRepository();
+    }
+
+    VMF::VisionProcessorPtr CreateVisionProcessor() override
+    {
+        // 부모 기본 구현 사용 (CMockVisionEventHandler)
+        return VMF::DefaultSetupStrategy::CreateVisionProcessor();
+    }
+
+    std::string GetSequenceName() const override
+    {
+        return "SampleZFocusSequence";
+    }
+
+    VMF::SequenceBuilderPtr CreateBuilder() override
+    {
+        // 샘플 시퀀스 빌더 생성
+        return std::make_shared<SampleZFocusSequenceBuilder>();
+    }
+};
+
+//=============================================================================
+// [예제] VMF 상태머신 모드 (State Machine) - 팩토리 주입 방식
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+    auto strategy = std::make_shared<SampleComponentSetup>();
+
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
     AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_StateMachine"));
 
-    // DLL Plugin 로드 (기본 경로: VMFEquipmentPlugin.dll)
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        AppendLog(_T("[StateMachine Mode] Failed to load equipment plugin DLL.\r\n"));
-        return;
-    }
-
-    // Strategy 객체 생성
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
-    if (!pStrategy)
-    {
-        AppendLog(_T("[StateMachine Mode] Failed to create strategy from DLL.\r\n"));
-        ::FreeLibrary(hPlugin);
-        return;
-    }
-
-    // Strategy를 shared_ptr로 관리 (자동 소멸)
-    auto strategyPtr = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
-        });
-
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->StartSequenceFromStrategy(
-        strategyPtr, nullptr /* actuator */);
+    bool started = m_orchestrator->RunSequence(nullptr /* actuator */);
 
     if (started)
     {
-        AppendLog(_T("[StateMachine Mode] Sequence started via DLL Plugin.\r\n"));
+        AppendLog(_T("[StateMachine Mode] Sequence started via factory injection.\r\n"));
     }
     else
     {
@@ -307,42 +289,18 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 }
 
 //=============================================================================
-// [예제] VMF 상태머신 모드 - ConnectionManager 사용 (DLL Plugin 방식)
+// [예제] VMF 상태머신 모드 - ConnectionManager 사용
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 {
-    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+    auto strategy = std::make_shared<SampleComponentSetup>();
+
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
     AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_CM_StateMachine"));
-
-    // DLL Plugin 로드
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        AppendLog(_T("[CM StateMachine] Failed to load equipment plugin DLL.\r\n"));
-        return;
-    }
-
-    // Strategy 객체 생성
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
-    if (!pStrategy)
-    {
-        AppendLog(_T("[CM StateMachine] Failed to create strategy from DLL.\r\n"));
-        ::FreeLibrary(hPlugin);
-        return;
-    }
-
-    auto strategyPtr = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
-        });
 
     VMF::VisionConnectionConfig connConfig("192.168.1.100", 5000, 5000);
 
-    bool started = m_orchestrator->StartSequenceFromStrategy(
-        strategyPtr, nullptr /* actuator */, connConfig);
+    bool started = m_orchestrator->RunSequence(nullptr /* actuator */, connConfig);
 
     if (started)
     {
@@ -356,43 +314,6 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 }
 
 //=============================================================================
-// [예제] DLL Plugin Helper - Orchestrator 생성 및 Strategy 로드
-//=============================================================================
-static std::shared_ptr<VMF::Orchestrator> CreatePluginOrchestrator(
-    HWND hWnd,
-    LPCTSTR name,
-    const VMF::VisionConnectionConfig& config,
-    std::shared_ptr<VMF::ComponentSetupBase>& outStrategy)
-{
-    auto orchestrator = std::make_shared<VMF::Orchestrator>();
-    AttachObserverToOrchestrator(orchestrator, hWnd, name);
-
-    // DLL Plugin 로드
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
-
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        return nullptr;
-    }
-
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
-    if (!pStrategy)
-    {
-        ::FreeLibrary(hPlugin);
-        return nullptr;
-    }
-
-    outStrategy = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
-        });
-
-    return orchestrator;
-}
-
-//=============================================================================
 // [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
@@ -402,43 +323,36 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 
     m_multiServerOrchestrators.clear();
 
-    // ---- Orchestrator #1: Server A (DLL Plugin) ----
-    logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) [DLL Plugin] ---\r\n");
-    VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
-    std::shared_ptr<VMF::ComponentSetupBase> strategy1;
-    auto orch1 = CreatePluginOrchestrator(m_hWnd, _T("ServerA"), configA, strategy1);
-    bool started1 = false;
-    if (orch1 && strategy1)
+    auto makeOrchestrator = [this](LPCTSTR name) -> std::shared_ptr<VMF::Orchestrator>
     {
-        started1 = orch1->StartSequenceFromStrategy(strategy1, nullptr, configA);
-    }
-    logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
-    if (orch1) m_multiServerOrchestrators.push_back(orch1);
+        auto strategy = std::make_shared<SampleComponentSetup>();
+        auto orch = std::make_shared<VMF::Orchestrator>(strategy, strategy);
+        AttachObserverToOrchestrator(orch, m_hWnd, name);
+        return orch;
+    };
 
-    // ---- Orchestrator #2: Server A (같은 서버 - DLL Plugin + 소켓 공유!) ----
+    // ---- Orchestrator #1: Server A ----
+    logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) ---\r\n");
+    VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
+    auto orch1 = makeOrchestrator(_T("ServerA"));
+    bool started1 = orch1->RunSequence(nullptr, configA);
+    logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch1);
+
+    // ---- Orchestrator #2: Server A (같은 서버 - 소켓 공유!) ----
     logMsg += _T("--- Orchestrator #2 → Server A (192.168.1.100:5000) [Socket Shared!] ---\r\n");
-    std::shared_ptr<VMF::ComponentSetupBase> strategy2;
-    auto orch2 = CreatePluginOrchestrator(m_hWnd, _T("ServerA-2"), configA, strategy2);
-    bool started2 = false;
-    if (orch2 && strategy2)
-    {
-        started2 = orch2->StartSequenceFromStrategy(strategy2, nullptr, configA);
-    }
+    auto orch2 = makeOrchestrator(_T("ServerA-2"));
+    bool started2 = orch2->RunSequence(nullptr, configA);
     logMsg.AppendFormat(_T("  StartSequence: %s (Same socket reused!)\r\n\r\n"), started2 ? _T("SUCCESS") : _T("FAILED"));
-    if (orch2) m_multiServerOrchestrators.push_back(orch2);
+    m_multiServerOrchestrators.push_back(orch2);
 
     // ---- Orchestrator #3: Server B (별도 소켓) ----
     logMsg += _T("--- Orchestrator #3 → Server B (10.0.0.50:6000) [Separate Socket] ---\r\n");
     VMF::VisionConnectionConfig configB("10.0.0.50", 6000, 5000);
-    std::shared_ptr<VMF::ComponentSetupBase> strategy3;
-    auto orch3 = CreatePluginOrchestrator(m_hWnd, _T("ServerB"), configB, strategy3);
-    bool started3 = false;
-    if (orch3 && strategy3)
-    {
-        started3 = orch3->StartSequenceFromStrategy(strategy3, nullptr, configB);
-    }
+    auto orch3 = makeOrchestrator(_T("ServerB"));
+    bool started3 = orch3->RunSequence(nullptr, configB);
     logMsg.AppendFormat(_T("  StartSequence: %s (New socket for Server B)\r\n"), started3 ? _T("SUCCESS") : _T("FAILED"));
-    if (orch3) m_multiServerOrchestrators.push_back(orch3);
+    m_multiServerOrchestrators.push_back(orch3);
 
     logMsg += _T("\r\n[Multi-Server] Summary:\r\n");
     logMsg += _T("  Server A: 1 socket (shared by 2 Orchestrators)\r\n");
@@ -449,51 +363,27 @@ void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 }
 
 //=============================================================================
-// [예제] VMF 직접 모드 (Direct Mode) - 클릭 핸들러 (DLL Plugin 방식)
+// [예제] VMF 직접 모드 (Direct Mode)
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
-    // DLL Plugin 로드
-    HMODULE hPlugin = nullptr;
-    PFN_CREATE_SETUP_STRATEGY pfnCreate = nullptr;
-    PFN_DESTROY_SETUP_STRATEGY pfnDestroy = nullptr;
+    auto strategy = std::make_shared<SampleComponentSetup>();
 
-    if (!LoadPluginDLL(hPlugin, pfnCreate, pfnDestroy))
-    {
-        AppendLog(_T("[Direct Mode] Failed to load equipment plugin DLL.\r\n"));
-        return;
-    }
-
-    // Strategy 객체 생성
-    VMF::ComponentSetupBase* pStrategy = pfnCreate();
-    if (!pStrategy)
-    {
-        AppendLog(_T("[Direct Mode] Failed to create strategy from DLL.\r\n"));
-        ::FreeLibrary(hPlugin);
-        return;
-    }
-
-    auto strategyPtr = std::shared_ptr<VMF::ComponentSetupBase>(pStrategy,
-        [pfnDestroy](VMF::ComponentSetupBase* ptr) {
-            if (pfnDestroy) pfnDestroy(ptr);
-        });
-
-    m_orchestrator = std::make_shared<VMF::Orchestrator>();
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, nullptr /* sequenceFactory 불필요 */);
     AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_Direct"));
 
-    bool ok = m_orchestrator->InitializeDirect(strategyPtr);
+    bool ok = m_orchestrator->InitializeDirect(strategy);
 
     if (!ok)
     {
-        AfxMessageBox(_T("[Direct Mode] InitializeDirect failed.\r\n")
-                      _T("  - Check DLL Plugin implementation.\r\n"));
+        AfxMessageBox(_T("[Direct Mode] InitializeDirect failed.\r\n"));
         return;
     }
 
     CString logMsg;
-    logMsg = _T("[Direct Mode] DLL Plugin Strategy로 컴포넌트 조립 완료.\r\n\r\n");
+    logMsg = _T("[Direct Mode] Factory 초기화 완료.\r\n\r\n");
 
-// Measure 명령 실행
+    // Measure 명령 실행
     bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
     logMsg.AppendFormat(_T("[Direct Mode] Execute(Measure) → %s\r\n"),
                         cmdOk ? _T("SUCCESS") : _T("FAILED"));
@@ -518,14 +408,14 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
         logMsg += _T("\r\n");
     }
 
-    // Context 통해 저장된 파라미터 확인
+    // Context 정보 확인
     VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
     if (ctx)
     {
-        std::string recipe = ctx->GetSeqParam("Recipe");
-        int camIdx = ctx->GetSeqParamAs<int>("CameraIndex", -1);
-        logMsg.AppendFormat(_T("  - Context: Recipe=%s, CameraIndex=%d\r\n"),
-                            CString(recipe.c_str()), camIdx);
+        VMF::VisionProcessorPtr vp = ctx->GetVisionProcessorInterface();
+        logMsg.AppendFormat(_T("  - Context: available=%s, VP=%s\r\n"),
+                            ctx ? _T("true") : _T("false"),
+                            vp ? _T("valid") : _T("null"));
     }
 
     AppendLog(logMsg);

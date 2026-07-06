@@ -41,24 +41,30 @@ namespace VMF
         VisionMemoryProcessor();
         ~VisionMemoryProcessor() override;
 
-		bool RequestSetCokAsync(const StringMap& params) override;
-		bool RequestInspReadyAsync(const StringMap& params) override;
-		bool RequestMeasureAsync(const StringMap& params) override;
-		bool RequestDeviceCheckAsync(const StringMap& params) override;
-		bool RequestLightAsync(const StringMap& params) override;
+        // IVisionProcessor 인터페이스: 개별 명령 메서드
+        bool RequestSetCokAsync(const StringMap& params) override;
+        bool RequestInspReadyAsync(const StringMap& params) override;
+        bool RequestMeasureAsync(const StringMap& params) override;
+        bool RequestDeviceCheckAsync(const StringMap& params) override;
+        bool RequestLightAsync(const StringMap& params) override;
 
-		// 변경: 바디를 by-value로 받아 호출자가 std::move로 소유권을 전달할 수 있도록 함
-		void OnSetCok(ByteArray body) override;
-		void OnInspReady(ByteArray body) override;
-		void OnMeasure(ByteArray body) override;
-		void OnDeviceCheck(ByteArray body) override;
-		void OnLight(ByteArray body) override;
+        // IVisionProcessor 인터페이스: 개별 응답 메서드
+        void OnSetCok(ByteArray body) override;
+        void OnInspReady(ByteArray body) override;
+        void OnMeasure(ByteArray body) override;
+        void OnDeviceCheck(ByteArray body) override;
+        void OnLight(ByteArray body) override;
 
         void Process() override;
 
     private:
         VisionMemoryProcessor(const VisionMemoryProcessor&) = delete;
         VisionMemoryProcessor& operator=(const VisionMemoryProcessor&) = delete;
+
+        /// <summary>
+        /// Control 명령(SetCok, InspReady) 전송 공통 헬퍼
+        /// </summary>
+        bool SendControlRequest(const StringMap& params, VisionCommand cmd);
 
         std::vector<std::string> ParseMeasureBody(const ByteArray& body);
     };

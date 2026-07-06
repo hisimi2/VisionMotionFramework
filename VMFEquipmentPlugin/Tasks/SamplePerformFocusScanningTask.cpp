@@ -18,8 +18,15 @@ SamplePerformFocusScanningTask::~SamplePerformFocusScanningTask()
 
 void SamplePerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
 {
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	// [Task-specific VisionParams]
+	// 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
+	// 2순위: Context의 파라미터 (ctx.GetSeqParamAs)
+	m_cameraId  = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
+
+	// 타임아웃도 task-specific params에서 읽기 (override 가능)
+	m_moveTimeoutMs   = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
+	m_visionTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_TIMEOUT_MS, m_visionTimeoutMs);
 
 	m_locationIds.clear();
 
@@ -50,7 +57,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveDown(
 		return SetErrorAndReturn(ctx, "Z down failed");
 
 	VMF::VisionPosition position;
-	if (!ctx.PeekVisionPosition(position))
+	if (!PeekTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
@@ -70,7 +77,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveWait(
 		return SetErrorAndReturn(ctx, "Z Down Fail");
 
 	VMF::VisionPosition position;
-	if (!ctx.PeekVisionPosition(position))
+	if (!PeekTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
@@ -102,8 +109,9 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionRequest(
 		return SetErrorAndReturn(ctx, "No Vision Processor");
 	}
 
-visionProcessor->InitializeRecvThread();
+	visionProcessor->InitializeRecvThread();
 
+	// Measure 명령 실행
 	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 	{
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
@@ -165,7 +173,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
 	}
 
 	VMF::VisionPosition position;
-	if (!ctx.PopVisionPosition(position))
+	if (!PopTaskVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Pop Position Failed");
 	}
@@ -237,7 +245,7 @@ VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
 		}
 	}
 
-	if (ctx.IsVisionPositionEmpty())
+	if (IsTaskVisionPositionEmpty())
 	{
 		return VMF::TR_NEXT;
 	}

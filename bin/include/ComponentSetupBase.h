@@ -1,37 +1,46 @@
-#pragma once
+﻿#pragma once
 
 #include "VMF_API.h"
 #include "IComponentSetup.h"
-#include "ISequenceSetup.h"
 #include "ConnectionManager.h"
-#include "Context.h"
 #include "IActuator.h"
 #include "Controller.h"
-#include <sstream>
+#include "IVisionProcessor.h"
+#include "IDataRepository.h"
 #include <memory>
 
 namespace VMF
 {
     /// <summary>
     /// IComponentSetup의 기본 구현 클래스.
-    /// SetParam, AddVisionPoint 등의 헬퍼 메서드를 제공합니다.
-    /// CreateRepository, CreateVisionProcessor, ConfigureParams는 파생 클래스에서 구현해야 합니다.
+    /// 
+    /// [책임 범위]
+    /// - IComponentSetup 인터페이스 구현 (Repository, VisionProcessor 생성)
+    /// - Connection 관리 (SetConnectionConfig, GetOrCreateSharedController)
+    /// - Actuator 설정 (SetActuator, GetActuator)
+    /// - CreateRepository(), CreateVisionProcessor() 기본 구현 제공
+    ///   (SqliteDataRepository + CMockVisionEventHandler)
+    ///   → 파생 클래스에서 필요 시 오버라이드
+    /// 
+    /// ※ 시퀀스 생성(GetSequenceName, CreateBuilder)은 SequenceFactoryBase(ISequenceSetup)로 분리되었습니다.
+    ///   두 인터페이스가 모두 필요한 경우, 다중 상속 또는 컴포지션 패턴을 사용하세요.
     /// </summary>
-    class VMF_API ComponentSetupBase : public IComponentSetup, public ISequenceSetup
+    class VMF_API ComponentSetupBase : public IComponentSetup
     {
-    protected:
+    private:
         IActuator* m_adapter;
+        VisionConnectionConfig m_connectionConfig;
 
     public:
         ComponentSetupBase();
         ~ComponentSetupBase() override = default;
 
-        void SetActuator(IActuator* adapter);
-        IActuator* GetActuator();
+        // IComponentSetup
+        void SetActuator(IActuator* adapter) override;
+        IActuator* GetActuator() override;
 
-        /// 연결 설정 저장
-        void SetConnectionConfig(const VisionConnectionConfig& config);
-        const VisionConnectionConfig& GetConnectionConfig() const;
+        void SetConnectionConfig(const VisionConnectionConfig& config) override;
+        const VisionConnectionConfig& GetConnectionConfig() const override;
 
         /// ConnectionManager 사용 여부 판단
         bool IsUsingConnectionManager() const;
@@ -39,24 +48,8 @@ namespace VMF
         /// ConnectionManager로부터 공유 Controller 획득
         std::shared_ptr<VC::Controller> GetOrCreateSharedController();
 
-        // IComponentSetup 인터페이스 (파생 클래스에서 구현)
-        // DataRepositoryPtr CreateRepository() override = 0;
-        // VisionProcessorPtr CreateVisionProcessor() override = 0;
-        // void ConfigureParams(VisionContextPtr context) override = 0;
-
-    protected:
-        VisionConnectionConfig m_connectionConfig;
-
-        /// 문자열 파라미터 설정
-        void SetParam(VisionParams& params, const std::string& key, const std::string& value);
-
-        /// 정수 파라미터 설정 (자동 문자열 변환)
-        void SetParam(VisionParams& params, const std::string& key, double value);
-
-        /// 비전 검사 위치 추가 (3축)
-        void AddVisionPoint(VisionParams& params, int locateId, int requestId, double x, double y, double z);
-
-        /// 비전 검사 위치 추가 (5축)
-        void AddVisionPoint(VisionParams& params, int locateId, int requestId, double x, double y, double z, double t1, double t2);
+        void ConfigureParams(VisionContextPtr context) override;
+        DataRepositoryPtr CreateRepository() override;
+        VisionProcessorPtr CreateVisionProcessor() override;
     };
 }

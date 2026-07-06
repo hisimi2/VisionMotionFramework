@@ -99,6 +99,36 @@ namespace VMF_Sample
 		return VMF::ActOk;
 	}
 
+	VMF::ActError SampleActuatorAdapter::Stop()
+	{
+		// !!! 수정 필요: 장비의 비상정지/이동 중단 호출 !!!
+		// Load1 예시: m_parts->StopAllAxes();
+
+		// [SAMPLE] 항상 성공 가정
+		return VMF::ActOk;
+	}
+
+	std::vector<double> SampleActuatorAdapter::getPosition()
+	{
+		// !!! 수정 필요: 장비의 현재 위치 반환 !!!
+		// Load1 예시:
+		//   std::vector<double> pos;
+		//   pos.push_back(m_parts->GetAxisPosition(AXIS_X));
+		//   pos.push_back(m_parts->GetAxisPosition(AXIS_Y));
+		//   pos.push_back(m_parts->GetAxisPosition(AXIS_Z));
+		//   return pos;
+
+		// [SAMPLE] 빈 벡터 반환
+		return std::vector<double>();
+	}
+
+	std::vector<double> SampleActuatorAdapter::getPulse()
+	{
+		// !!! 수정 필요: 장비의 현재 펄스 위치 반환 !!!
+		// [SAMPLE] 빈 벡터 반환
+		return std::vector<double>();
+	}
+
 	int SampleActuatorAdapter::SetLightState(int cameraId, bool on)
 	{
 		// !!! 수정 필요: 장비의 조명 제어 호출 !!!
@@ -109,5 +139,45 @@ namespace VMF_Sample
 		// [SAMPLE] 로그만 출력, 성공 시 0 반환
 		// Logger::Info("SetLightState: Camera=%d, On=%d", cameraId, (int)on);
 		return 0;  // 0 = 성공
+	}
+
+	int SampleActuatorAdapter::GetLightState(int camIndex, bool& outOn)
+	{
+		// !!! 수정 필요: 장비의 조명 상태 조회 !!!
+		// [SAMPLE] 항상 false 반환
+		outOn = false;
+		return 0;
+	}
+
+	VMF::ActError SampleActuatorAdapter::SetLaserState(int laserChannel, bool on)
+	{
+		// !!! 수정 필요: 장비의 레이저 제어 호출 !!!
+		(void)laserChannel;
+		(void)on;
+		return VMF::ActOk;
+	}
+
+	VMF::ActError SampleActuatorAdapter::GetLaserState(int laserChannel, bool& outOn)
+	{
+		// !!! 수정 필요: 장비의 레이저 상태 조회 !!!
+		(void)laserChannel;
+		outOn = false;
+		return VMF::ActOk;
+	}
+
+	VMF::ActError SampleActuatorAdapter::SetTriggerState(bool enable, double intervalMm)
+	{
+		// !!! 수정 필요: 장비의 트리거 제어 호출 !!!
+		(void)enable;
+		(void)intervalMm;
+		return VMF::ActOk;
+	}
+
+	VMF::ActError SampleActuatorAdapter::GetTriggerState(bool& outEnabled, double& outIntervalMm)
+	{
+		// !!! 수정 필요: 장비의 트리거 상태 조회 !!!
+		outEnabled = false;
+		outIntervalMm = 0.0;
+		return VMF::ActOk;
 	}
 } // namespace VMF_Sample

@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "VMF_API.h"
 #include "Types.h"
+#include "IActuator.h"
+#include "IVisionProcessor.h"
 #include <memory>
 
 namespace VMF
@@ -31,5 +33,27 @@ namespace VMF
         /// 생성된 Context에 파라미터를 설정합니다.
         /// </summary>
         virtual void ConfigureParams(VisionContextPtr context) = 0;
+
+        // ---- Actuator 설정 (IComponentSetup 레벨로 승격) ----
+        /// <summary>
+        /// Actuator(IActuator*)를 설정합니다.
+        /// </summary>
+        virtual void SetActuator(IActuator* adapter) = 0;
+
+        /// <summary>
+        /// 설정된 Actuator를 반환합니다.
+        /// </summary>
+        virtual IActuator* GetActuator() = 0;
+
+        // ---- Connection 설정 ----
+        /// <summary>
+        /// Vision 서버 연결 설정을 저장합니다.
+        /// </summary>
+        virtual void SetConnectionConfig(const VisionConnectionConfig& config) = 0;
+
+        /// <summary>
+        /// 저장된 연결 설정을 반환합니다.
+        /// </summary>
+        virtual const VisionConnectionConfig& GetConnectionConfig() const = 0;
     };
 }

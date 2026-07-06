@@ -42,12 +42,48 @@ namespace VMF_Sample
 				return "Task_MoveToStartPosition";
 			}
 
+			/// <summary>
+			/// Builder에서 Task-specific 파라미터를 주입합니다.
+			/// </summary>
+			void SetTaskParams(const VMF::VisionParams& params) { m_taskParams = params; }
+
 		protected:
 			void OnInitialize(VMF::Context& ctx) override;
 			VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
+			/// <summary>
+			/// Task-specific 파라미터를 읽습니다.
+			/// m_taskParams.visionParams에서 키를 찾고, 없으면 defaultValue 반환
+			/// </summary>
+			template <typename T>
+			T GetTaskSeqParamAs(VMF::Context& ctx, const std::string& key, const T& defaultValue)
+			{
+				(void)ctx;
+				auto it = m_taskParams.visionParams.find(key);
+				if (it != m_taskParams.visionParams.end())
+				{
+					T converted;
+					if (VMF::detail::ParamConverter<T>::Convert(it->second, converted))
+						return converted;
+				}
+				return defaultValue;
+			}
+
+			/// <summary>
+			/// Task-specific VisionPosition 목록에서 첫 번째 항목을 제거하지 않고 조회합니다.
+			/// </summary>
+			bool PeekTaskVisionPosition(VMF::VisionPosition& outPos)
+			{
+				if (m_taskParams.visionPositions.empty())
+					return false;
+				outPos = m_taskParams.visionPositions.front();
+				return true;
+			}
+
 			std::vector<double> m_targetPosition;
 			long m_moveTimeoutMs;
+
+			VMF::VisionParams m_taskParams;
 		};
 	} // namespace Task
 } // namespace VMF_Sample
