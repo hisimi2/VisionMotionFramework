@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include "SequenceBuilderBase.h"
-#include "..\DefineVAT.h"
+#include "DefineVAT.h"
 
-#include "Tasks/SampleMoveToStartPositionTask.h"
-#include "Tasks/SamplePerformFocusScanningTask.h"
+#include "SampleMoveToStartPositionTask.h"
+#include "SamplePerformFocusScanningTask.h"
 
 namespace VMF_Sample
 {

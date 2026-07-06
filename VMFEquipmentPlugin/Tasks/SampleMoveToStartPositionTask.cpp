@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
-#include "SampleMoveToStartPositionTask.h"
-#include "..\DefineVAT.h"
+#include "include/SampleMoveToStartPositionTask.h"
+#include "include/DefineVAT.h"
 
 using namespace VMF_Sample::Task;
 using namespace VMF;

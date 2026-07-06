@@ -27,7 +27,7 @@
 #include "Context.h"
 #include "Sequence.h"
 #include "Types.h"
-#include "DefineVAT.h"
+
 
 #endif //PCH_H
 

@@ -2,12 +2,13 @@
 // Equipment App은 import library(.lib)를 통한 암시적 링크로 이 DLL을 사용합니다.
 #include "pch.h"
 
-#include "PluginFactory.h"
+#include "include/PluginFactory.h"
 
 // !!! 수정 가이드 !!!
 // 아래 include를 장비의 실제 Strategy 클래스로 변경하세요.
 // 예: #include "Strategies/CLoad1LeftPlateJIGFocusCheckSequenceStrategy.h"
-#include "Strategies/SampleSequenceStrategy.h"
+#include "include/SampleSequenceStrategy.h"
+
 
 // ============================================================================
 // Plugin Factory Implementation
@@ -44,7 +45,6 @@ VMFEQUIPMENTPLUGIN_API std::shared_ptr<VMF::Orchestrator> CreateOrchestrator()
     return std::make_shared<VMF::Orchestrator>(strategy);
 }
 
-
 /// <summary>
 /// Orchestrator를 직접 모드(Direct Mode)로 초기화합니다.
 /// Plugin 내부의 Strategy를 사용하여 Repository, VisionProcessor, Context를 생성합니다.
@@ -58,7 +58,6 @@ VMFEQUIPMENTPLUGIN_API bool InitializeOrchestratorDirect(std::shared_ptr<VMF::Or
     auto strategy = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
     return orch->InitializeDirect(strategy);
 }
-
 
 VMF::DefaultSetupStrategy* CreateSetupStrategy()
 {

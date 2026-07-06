@@ -1,4 +1,4 @@
-// Equipment2015Dlg.cpp : 구현 파일
+﻿// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -7,7 +7,11 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
+
+
 #include "PluginFactory.h"
+#include "SampleSequenceStrategy.h"
+
 
 #include <thread>
 
@@ -79,7 +83,6 @@ BOOL CEquipment2015Dlg::OnInitDialog()
 
     return TRUE;
 }
-
 
 void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
 {
@@ -205,7 +208,15 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    // Plugin DLL에서 Orchestrator 생성 (Strategy가 내부에서 주입됨)
+
+ //   auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
+
+
+ //   m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
+
+
+
+    /*
     m_orchestrator = CreateOrchestrator();
     if (!m_orchestrator)
     {
@@ -216,7 +227,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->RunSequence(nullptr /* actuator */);
+    bool started = m_orchestrator->RunSequence(nullptr );
 
     if (started)
     {
@@ -226,6 +237,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     {
         AppendLog(_T("[StateMachine Mode] Failed to start sequence.\r\n"));
     }
+    */
 }
 
 //=============================================================================

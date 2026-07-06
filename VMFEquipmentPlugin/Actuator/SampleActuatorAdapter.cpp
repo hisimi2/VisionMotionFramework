@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "SampleActuatorAdapter.h"
+#include "include/SampleActuatorAdapter.h"
 
 // [SAMPLE] 축 인덱스 (pos 벡터 순서)
 //   pos[0] = X

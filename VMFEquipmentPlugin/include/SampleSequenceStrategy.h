@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 // DefaultSetupStrategy is not DLL-exported, so suppress C4275 for derived class.
 #pragma warning(push)
 #pragma warning(disable : 4275)
 
 #include "DefaultSetupStrategy.h"
-#include "Sequences/SampleZFocusSequenceBuilder.h"
+#include "SampleZFocusSequenceBuilder.h"
 #include "VMFEquipmentPluginExport.h"
 
 namespace VMF_Sample

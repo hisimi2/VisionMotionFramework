@@ -1,9 +1,10 @@
 ﻿#include "pch.h"
-#include "VisionMemoryProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "VisionMemoryKeys.h"
-#include "VisionPacketMemory.h"
+
+#include "include/VisionMemoryProcessor.h"
+#include "include/VisionMemoryKeys.h"
+#include "include/VisionPacketMemory.h"
 
 #include <vector>
 #include <cstring>
