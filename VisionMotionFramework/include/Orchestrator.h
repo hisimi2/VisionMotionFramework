@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
@@ -98,7 +98,7 @@ namespace VMF
 		bool ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params);
 		bool ExecuteDirectVisionCommand(VisionCommand cmd, const std::string& paramsName);
 
-/// <summary>
+        /// <summary>
 		/// [Plugin] 외부 Plugin DLL에서 생성된 DefaultSetupStrategy를 받아 시퀀스를 실행합니다.
 		/// DefaultSetupStrategy는 IComponentSetup + ISequenceSetup을 통합합니다.
 		/// </summary>

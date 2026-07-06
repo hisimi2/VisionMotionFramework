@@ -1,6 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
+#include "VMFEquipmentPluginExport.h"
 
 namespace VMF_Sample
 {
@@ -16,7 +17,7 @@ namespace VMF_Sample
 		/// 3. VisionCommand 종류: VisionCommands::Measure 외에 다른 명령이 필요하면 변경
 		/// 4. 조명 제어: actuator->SetLightState()는 장비의 조명 제어 방식에 맞게 수정
 		/// </summary>
-		class SamplePerformFocusScanningTask : public VMF::NonBlockingTaskBase
+		class VMFEQUIPMENTPLUGIN_API SamplePerformFocusScanningTask : public VMF::NonBlockingTaskBase
 		{
 			enum Substep
 			{

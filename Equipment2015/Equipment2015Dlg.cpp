@@ -7,11 +7,9 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
-
-#include "PluginFactory.h"
 #include "SampleSequenceStrategy.h"
 
-#include <thread>
+//#include <thread>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

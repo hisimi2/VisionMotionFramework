@@ -60,9 +60,6 @@
     <ClInclude Include="include\DefineVAT.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\PluginFactory.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="include\VMFEquipmentPluginExport.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>

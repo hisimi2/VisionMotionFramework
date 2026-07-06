@@ -1,6 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "NonBlockingTaskBase.h"
+#include "VMFEquipmentPluginExport.h"
 
 namespace VMF_Sample
 {
@@ -16,7 +17,7 @@ namespace VMF_Sample
 		/// 3. HandleMoveTargetPositionXY/HandleMoveTargetPositionZ: Target 위치를 Context에서 읽거나 고정값으로 변경
 		/// 4. 축 이름 (X/Y/Z/TABLE1/TABLE2) 은 장비의 실제 축 구성에 맞게 수정
 		/// </summary>
-		class SampleMoveToStartPositionTask : public VMF::NonBlockingTaskBase
+		class VMFEQUIPMENTPLUGIN_API SampleMoveToStartPositionTask : public VMF::NonBlockingTaskBase
 		{
 			enum Substep
 			{
