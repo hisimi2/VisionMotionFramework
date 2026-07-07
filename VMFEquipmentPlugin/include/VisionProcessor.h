@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VisionProcessorBase.h"
 #include "VisionParamKeys.h"
 #include <vector>
@@ -19,18 +19,10 @@ namespace VMF
         DeviceCheckAck = 4
     };
 
-    static const VC::VisionProtocolId Protocol_Measure(
-        static_cast<int>(Stream::Measure),
-        static_cast<int>(Function::Measure));
-    static const VC::VisionProtocolId Protocol_ControlRequest(
-        static_cast<int>(Stream::Control),
-        static_cast<int>(Function::ControlRequest));
-    static const VC::VisionProtocolId Protocol_ControlAck(
-        static_cast<int>(Stream::Control),
-        static_cast<int>(Function::ControlAck));
-    static const VC::VisionProtocolId Protocol_DeviceCheckAck(
-        static_cast<int>(Stream::Control),
-        static_cast<int>(Function::DeviceCheckAck));
+extern const VC::VisionProtocolId Protocol_Measure;
+    extern const VC::VisionProtocolId Protocol_ControlRequest;
+    extern const VC::VisionProtocolId Protocol_ControlAck;
+    extern const VC::VisionProtocolId Protocol_DeviceCheckAck;
 
 
     class VisionProcessor : public VisionProcessorBase

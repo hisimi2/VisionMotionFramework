@@ -11,6 +11,19 @@
 
 namespace VMF
 {
+    const VC::VisionProtocolId Protocol_Measure(
+        static_cast<int>(Stream::Measure),
+        static_cast<int>(Function::Measure));
+    const VC::VisionProtocolId Protocol_ControlRequest(
+        static_cast<int>(Stream::Control),
+        static_cast<int>(Function::ControlRequest));
+    const VC::VisionProtocolId Protocol_ControlAck(
+        static_cast<int>(Stream::Control),
+        static_cast<int>(Function::ControlAck));
+    const VC::VisionProtocolId Protocol_DeviceCheckAck(
+        static_cast<int>(Stream::Control),
+        static_cast<int>(Function::DeviceCheckAck));
+
     VisionProcessor::VisionProcessor()
     {
         VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
