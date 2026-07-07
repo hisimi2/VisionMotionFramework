@@ -46,6 +46,7 @@ namespace EC
         // --- Poll 실행 ---
         try
         {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
             return OnPoll(ctx);
         }
         catch (const std::exception& ex)

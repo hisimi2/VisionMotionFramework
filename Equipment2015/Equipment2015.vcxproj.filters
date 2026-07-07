@@ -96,9 +96,6 @@
     <ClInclude Include="OperationThreads\Load2ActivityBuilder.h">
       <Filter>OperationThreads\UnitLoad2</Filter>
     </ClInclude>
-    <ClInclude Include="OperationThreads\ThreadsManager.h">
-      <Filter>OperationThreads</Filter>
-    </ClInclude>
     <ClInclude Include="Actuators\CylinderTypes.h">
       <Filter>Actuators</Filter>
     </ClInclude>
@@ -142,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="OperationThreads\Load2TaskPick.cpp">
       <Filter>OperationThreads\UnitLoad2</Filter>
-    </ClCompile>
-    <ClCompile Include="OperationThreads\ThreadsManager.cpp">
-      <Filter>OperationThreads</Filter>
     </ClCompile>
     <ClCompile Include="OperationThreads\Load1ActivityBuilder.cpp">
       <Filter>OperationThreads\UnitLoad1</Filter>

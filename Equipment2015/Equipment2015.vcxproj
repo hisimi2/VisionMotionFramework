@@ -97,7 +97,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)bin\ThirdParty\sqlite3\lib\;$(SolutionDir)EquipmentCore\$(Platform)\;$(SolutionDir)VMFEquipmentPlugin\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)bin\ThirdParty\sqlite3\lib\;$(SolutionDir)VMFEquipmentPlugin\$(Platform)\$(Configuration)\;$(SolutionDir)EquipmentCore\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;sqlite3.lib;EquipmentCore.lib;VMFEquipmentPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
@@ -212,7 +212,6 @@
     <ClInclude Include="OperationThreads\Load2ActivityBuilder.h" />
     <ClInclude Include="OperationThreads\Load2TaskPick.h" />
     <ClInclude Include="OperationThreads\Load2TaskPlace.h" />
-    <ClInclude Include="OperationThreads\ThreadsManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -232,7 +231,6 @@
     <ClCompile Include="OperationThreads\Load2ActivityBuilder.cpp" />
     <ClCompile Include="OperationThreads\Load2TaskPick.cpp" />
     <ClCompile Include="OperationThreads\Load2TaskPlace.cpp" />
-    <ClCompile Include="OperationThreads\ThreadsManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

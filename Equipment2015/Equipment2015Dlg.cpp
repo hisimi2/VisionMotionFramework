@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -9,7 +9,12 @@
 #include "Orchestrator.h"
 #include "SampleSequenceStrategy.h"
 
-//#include <thread>
+
+#include "Actuators\Load1Parts.h"
+#include "Actuators\Load2Parts.h"
+#include "OperationThreads\Load1ActivityBuilder.h"
+#include "OperationThreads\Load2ActivityBuilder.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,6 +30,29 @@ CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
     m_StartSwitch.setGroup(&m_StopSwitch).setOption(IOPSwitch::PUSH, false);
     m_StopSwitch.setGroup(&m_StartSwitch).setOption(IOPSwitch::PUSH, false);
     m_StopSwitch.setStatus(true);
+
+
+    m_threadsMgr = std::make_shared<EC::ThreadsManager>();
+
+    // ★ Builder 등록 (방식 2: 직접 Builder 인스턴스 등록 — 각 Builder에 전용 Parts 주입) ★
+    {
+        // EquipmentParts에서 Stacker 부품만 추출하여 StackerParts 생성
+        auto load1Parts = std::make_shared<Load1Parts>();
+
+        auto stackerBuilder = std::make_shared<OperationThread::CLoad1ActivityBuilder>();
+        stackerBuilder->SetParts(load1Parts);
+        m_threadsMgr->RegisterBuilder("Load1Activity", stackerBuilder);
+    }
+    {
+        // EquipmentParts에서 Sorter 부품만 추출하여 SorterParts 생성
+        auto load2Parts = std::make_shared<Load2Parts>();
+        auto sorterBuilder = std::make_shared<OperationThread::CLoad2ActivityBuilder>();
+        sorterBuilder->SetParts(load2Parts);
+        m_threadsMgr->RegisterBuilder("Load2Activity", sorterBuilder);
+    }
+
+    m_threadsMgr->Initialize();
+
 }
 
 void CEquipment2015Dlg::DoDataExchange(CDataExchange* pDX)
@@ -59,10 +87,9 @@ BOOL CEquipment2015Dlg::OnInitDialog()
     SetIcon(m_hIcon, TRUE);
     SetIcon(m_hIcon, FALSE);
 
-    m_threadsMgr.Initialize();
 
     // Observer 등록 — PostMessage로 UI 스레드에 결과 전달
-    m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
+    m_threadsMgr->AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
     {
         CString msg;
         msg.Format(_T("[%hs] RequestId=%d\r\n"), name.c_str(), requestId);
@@ -86,13 +113,13 @@ void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
     {
         if (m_StartSwitch.getStatus())
         {
-            m_threadsMgr.GetManager().RunAll();
+            m_threadsMgr->RunAll();
             m_BtnStart.SetFaceColor(RGB(0, 180, 0), TRUE);
             m_BtnStop.SetFaceColor(RGB(240, 240, 240), TRUE);
         }
         else
         {
-            m_threadsMgr.GetManager().PauseAll();
+            m_threadsMgr->PauseAll();
             m_BtnStart.SetFaceColor(RGB(240, 240, 240), TRUE);
             m_BtnStop.SetFaceColor(RGB(200, 50, 50), TRUE);
         }

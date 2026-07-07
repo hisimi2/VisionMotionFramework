@@ -54,6 +54,9 @@
     <ClCompile Include="src\ActivityManager.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
+    <ClCompile Include="src\ThreadsManager.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EquipmentCore.h">
@@ -66,9 +69,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EquipmentCore.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\EC_API.h">
@@ -109,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="include\ActivityManager.h">
       <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ThreadsManager.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EquipmentCore.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

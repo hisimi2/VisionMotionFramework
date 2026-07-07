@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "ActivityBuilderBase.h"
 #include "Actuators\Load1Parts.h"
 
@@ -16,6 +16,9 @@ namespace OperationThread
     class CLoad1ActivityBuilder : public ActivityBuilderBase
     {
         std::shared_ptr<Load1Parts> m_parts;
+
+    public:
+        void SetParts(std::shared_ptr<Load1Parts> parts) { m_parts = parts; }
 
     protected:
         ActivityPtr Build() override;

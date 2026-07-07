@@ -1,1 +1,1 @@
-﻿D:\project\VisionMotionFramework\EquipmentCore\Win32\EquipmentCore.dll
+D:\project\IntelligentPM\EquipmentCore\Win32\EquipmentCore.dll

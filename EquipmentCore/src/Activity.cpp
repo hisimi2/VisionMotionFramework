@@ -64,11 +64,12 @@ namespace EC
                 return false;
             }
 
-            // 모든 Task 완료
+            // 모든 Task 완료 → 다시 처음부터 반복 (무한 루프)
             if (idx >= tasks.size())
             {
-                LogTask(makeLogPrefix(m_ActivityName) + "All steps finished.");
-                return true;
+                LogTask(makeLogPrefix(m_ActivityName) + "All steps finished. Restarting from beginning...");
+                idx = 0;
+                continue;
             }
 
             TaskPtr curTask = tasks[idx];
@@ -126,8 +127,9 @@ namespace EC
                 return true;
 
             case TR_ERROR:
-                LogTask(makeLogPrefix(m_ActivityName) + "Activity signaled ERROR by step [" + curTask->GetName() + "]");
-                return false;
+                LogTask(makeLogPrefix(m_ActivityName) + "Activity ERROR by step [" + curTask->GetName() + "]. Restarting from beginning...");
+                idx = 0;
+                break;
 
             default:
                 LogTask(makeLogPrefix(m_ActivityName) + "Step [" + curTask->GetName() + "] returned unknown result: " + std::to_string(static_cast<int>(res)));

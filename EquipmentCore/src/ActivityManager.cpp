@@ -88,7 +88,6 @@ namespace EC
     }
 
     // ============ 실행 제어 ============
-
     bool ActivityManager::RunActivity(const std::string& name)
     {
         auto entry = FindActivity(name);

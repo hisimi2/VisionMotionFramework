@@ -1,13 +1,15 @@
-﻿// Equipment2015Dlg.h : 헤더 파일
+// Equipment2015Dlg.h : 헤더 파일
 //
 
 #pragma once
 
-#include "OperationThreads/ThreadsManager.h"
+
 #include "Actuators/COPSwitch.h"
 
 #include <memory> // std::shared_ptr
 #include <vector> // std::vector
+
+#include "ThreadsManager.h"
 
 namespace VMF { class Orchestrator; }
 
@@ -19,6 +21,9 @@ class CEquipment2015Dlg : public CDialogEx
 {
     COPSwitch m_StartSwitch;
     COPSwitch m_StopSwitch;
+
+
+    std::shared_ptr<EC::ThreadsManager>	m_threadsMgr;
 
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
@@ -40,7 +45,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-    OperationThread::ThreadsManager m_threadsMgr;
     std::shared_ptr<VMF::Orchestrator> m_orchestrator;
 public:
 	afx_msg void OnBnClickedStart();

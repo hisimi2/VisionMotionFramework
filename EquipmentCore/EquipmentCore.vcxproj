@@ -75,8 +75,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(SolutionDir)$(ProjectName)\$(Platform)\</IntDir>
-    <OutDir>$(SolutionDir)$(ProjectName)\$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -109,6 +109,10 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -196,6 +200,7 @@
     <ClCompile Include="src\Activity.cpp" />
     <ClCompile Include="src\ActivityBuilderBase.cpp" />
     <ClCompile Include="src\TaskBase.cpp" />
+    <ClCompile Include="src\ThreadsManager.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -219,6 +224,7 @@
     <ClInclude Include="include\Activity.h" />
     <ClInclude Include="include\ActivityBuilderBase.h" />
     <ClInclude Include="include\TaskBase.h" />
+    <ClInclude Include="include\ThreadsManager.h" />
     <ClInclude Include="include\Utils.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
