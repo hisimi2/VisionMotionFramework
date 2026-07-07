@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 #include <string>
@@ -7,7 +7,7 @@ namespace VisionComm { enum Status : int; } // 전방 선언 시 기본 underlyi
 
 namespace VMF
 {
-    class IResultSink
+    class VMF_API IResultSink
     {
     public:
         virtual ~IResultSink() = default;
