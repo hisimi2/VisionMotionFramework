@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
 
@@ -222,5 +222,4 @@ namespace VMF
         results.push_back(pkt.cData[4]);
         return results;
     }
-
 } // namespace VMF
