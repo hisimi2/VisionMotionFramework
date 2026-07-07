@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // ============================================================================
 // VMFEquipmentPlugin DLL Export/Import Macro
@@ -9,7 +9,7 @@
 // ============================================================================
 
 #ifdef VMFEQUIPMENTPLUGIN_EXPORTS
-    #define VMFEQUIPMENTPLUGIN_API __declspec(dllexport)
+    #define VMF_PLUGIN_API __declspec(dllexport)
 #else
-    #define VMFEQUIPMENTPLUGIN_API __declspec(dllimport)
+    #define VMF_PLUGIN_API __declspec(dllimport)
 #endif

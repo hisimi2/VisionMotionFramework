@@ -7,9 +7,8 @@
 namespace VMF_Sample
 {
 	using namespace VMF;
-	using namespace Sequence;
 
-	class VMFEQUIPMENTPLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
+	class VMF_PLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
 	{
 	public:
         std::string GetSequenceName() const override;

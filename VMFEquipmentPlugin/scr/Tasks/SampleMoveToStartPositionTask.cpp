@@ -1,171 +1,177 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "include/SampleMoveToStartPositionTask.h"
 #include "include/DefineVAT.h"
 
-using namespace VMF_Sample::Task;
-using namespace VMF;
 
-SampleMoveToStartPositionTask::SampleMoveToStartPositionTask()
-	: m_moveTimeoutMs(7000)
-{}
-
-SampleMoveToStartPositionTask::~SampleMoveToStartPositionTask()
-{}
-
-void SampleMoveToStartPositionTask::OnInitialize(Context& ctx)
+namespace VMF_Sample
 {
-	// [Task-specific VisionParams]
-	// 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
-	// 2순위: Context의 파라미터 (ctx.GetSeqParamAs)
-	const int timeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_TIMEOUT_MS, m_moveTimeoutMs);
-	if (timeoutMs > 0)
-		m_moveTimeoutMs = timeoutMs;
 
-	EnterState(MoveSafeZ);
-}
+    using namespace VMF;
 
-TaskResult SampleMoveToStartPositionTask::OnPoll(Context& ctx, IActuator* actuator)
-{
-	switch (GetState())
-	{
-	case MoveSafeZ:            return HandleMoveSafeZ(ctx, actuator);
-	case MoveOrigin:           return HandleMoveOrigin(ctx, actuator);
-	case MoveTargetPositionXY: return HandleMoveTargetPositionXY(ctx, actuator);
-	case MoveTargetPositionZ:  return HandleMoveTargetPositionZ(ctx, actuator);
-	case CompleteMove:         return HandleCompleteMove(ctx, actuator);
-	case CS_ERROR:
-	default:                   return TR_ERROR;
-	}
-}
+    SampleMoveToStartPositionTask::SampleMoveToStartPositionTask()
+        : m_moveTimeoutMs(7000)
+    {
+    }
 
-TaskResult SampleMoveToStartPositionTask::HandleMoveSafeZ(
-	Context& ctx, IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
+    SampleMoveToStartPositionTask::~SampleMoveToStartPositionTask()
+    {
+    }
 
-	VisionPosition visionPosition;
-	if (!PeekTaskVisionPosition(visionPosition))
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: Get Position Failed.");
+    void SampleMoveToStartPositionTask::OnInitialize(Context& ctx)
+    {
+        // [Task-specific VisionParams]
+        // 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
+        // 2순위: Context의 파라미터 (ctx.GetSeqParamAs)
+        const int timeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_TIMEOUT_MS, m_moveTimeoutMs);
+        if (timeoutMs > 0)
+            m_moveTimeoutMs = timeoutMs;
 
-	m_targetPosition = visionPosition.pos;
+        EnterState(MoveSafeZ);
+    }
 
-	if (actuator->MoveZ(0.0) != ActOk)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToSafeZ failed.");
+    TaskResult SampleMoveToStartPositionTask::OnPoll(Context& ctx, IActuator* actuator)
+    {
+        switch (GetState())
+        {
+        case MoveSafeZ:            return HandleMoveSafeZ(ctx, actuator);
+        case MoveOrigin:           return HandleMoveOrigin(ctx, actuator);
+        case MoveTargetPositionXY: return HandleMoveTargetPositionXY(ctx, actuator);
+        case MoveTargetPositionZ:  return HandleMoveTargetPositionZ(ctx, actuator);
+        case CompleteMove:         return HandleCompleteMove(ctx, actuator);
+        case CS_ERROR:
+        default:                   return TR_ERROR;
+        }
+    }
 
-	EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
-	return TR_KEEP;
-}
+    TaskResult SampleMoveToStartPositionTask::HandleMoveSafeZ(
+        Context& ctx, IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
-TaskResult SampleMoveToStartPositionTask::HandleMoveOrigin(
-	Context& ctx, IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
+        VisionPosition visionPosition;
+        if (!PeekTaskVisionPosition(visionPosition))
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: Get Position Failed.");
 
-	if (actuator->isMoveZ(0.0) != ActOk)
-	{
-		if (IsDeadlineExpired())
-			return SetErrorAndReturn(ctx, "MoveToStartPosition: SafeZ timeout.");
-		return TR_KEEP;
-	}
+        m_targetPosition = visionPosition.pos;
 
-	// Origin XY 이동 — X=0, Y=0
-	// !!! 수정 필요: 장비의 Origin 위치/축 이름으로 변경 !!!
-	MotionCommand cmd;
-	cmd.Set("X", 0.0);
-	cmd.Set("Y", 0.0);
-	cmd.pitch = Narrow;
+        if (actuator->MoveZ(0.0) != ActOk)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToSafeZ failed.");
 
-	if (actuator->Move(cmd) != ActOk)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToOrigin failed.");
+        EnterStateWithTimeout(MoveOrigin, m_moveTimeoutMs);
+        return TR_KEEP;
+    }
 
-	EnterStateWithTimeout(MoveTargetPositionXY, m_moveTimeoutMs);
-	return TR_KEEP;
-}
+    TaskResult SampleMoveToStartPositionTask::HandleMoveOrigin(
+        Context& ctx, IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
-TaskResult SampleMoveToStartPositionTask::HandleMoveTargetPositionXY(
-	Context& ctx, IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
+        if (actuator->isMoveZ(0.0) != ActOk)
+        {
+            if (IsDeadlineExpired())
+                return SetErrorAndReturn(ctx, "MoveToStartPosition: SafeZ timeout.");
+            return TR_KEEP;
+        }
 
-	// Origin 도달 확인
-	MotionCommand originCmd;
-	originCmd.Set("X", 0.0);
-	originCmd.Set("Y", 0.0);
-	originCmd.pitch = Narrow;
+        // Origin XY 이동 — X=0, Y=0
+        // !!! 수정 필요: 장비의 Origin 위치/축 이름으로 변경 !!!
+        MotionCommand cmd;
+        cmd.Set("X", 0.0);
+        cmd.Set("Y", 0.0);
+        cmd.pitch = Narrow;
 
-	if (actuator->isMove(originCmd) != ActOk)
-	{
-		if (IsDeadlineExpired())
-			return SetErrorAndReturn(ctx, "MoveToStartPosition: Origin timeout.");
-		return TR_KEEP;
-	}
+        if (actuator->Move(cmd) != ActOk)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToOrigin failed.");
 
-	MotionCommand targetCmd;
-	targetCmd.Set("X", m_targetPosition[0]);
-	targetCmd.Set("Y", m_targetPosition[1]);
-	targetCmd.pitch = Narrow;
+        EnterStateWithTimeout(MoveTargetPositionXY, m_moveTimeoutMs);
+        return TR_KEEP;
+    }
 
-	// !!! 수정 필요: 장비의 Table 축이 있다면 추가 !!!
-	if (m_targetPosition.size() > 3)
-	{
-		targetCmd.Set("TABLE1", m_targetPosition[3]);
-		targetCmd.Set("TABLE2", m_targetPosition[4]);
-	}
+    TaskResult SampleMoveToStartPositionTask::HandleMoveTargetPositionXY(
+        Context& ctx, IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
-	if (actuator->Move(targetCmd) != ActOk)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToFocusInspPos (XY) failed.");
+        // Origin 도달 확인
+        MotionCommand originCmd;
+        originCmd.Set("X", 0.0);
+        originCmd.Set("Y", 0.0);
+        originCmd.pitch = Narrow;
 
-	EnterStateWithTimeout(MoveTargetPositionZ, m_moveTimeoutMs);
-	return TR_KEEP;
-}
+        if (actuator->isMove(originCmd) != ActOk)
+        {
+            if (IsDeadlineExpired())
+                return SetErrorAndReturn(ctx, "MoveToStartPosition: Origin timeout.");
+            return TR_KEEP;
+        }
 
-TaskResult SampleMoveToStartPositionTask::HandleMoveTargetPositionZ(
-	Context& ctx, IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
+        MotionCommand targetCmd;
+        targetCmd.Set("X", m_targetPosition[0]);
+        targetCmd.Set("Y", m_targetPosition[1]);
+        targetCmd.pitch = Narrow;
 
-	MotionCommand targetCmd;
-	targetCmd.Set("X", m_targetPosition[0]);
-	targetCmd.Set("Y", m_targetPosition[1]);
-	targetCmd.pitch = Narrow;
+        // !!! 수정 필요: 장비의 Table 축이 있다면 추가 !!!
+        if (m_targetPosition.size() > 3)
+        {
+            targetCmd.Set("TABLE1", m_targetPosition[3]);
+            targetCmd.Set("TABLE2", m_targetPosition[4]);
+        }
 
-	if (m_targetPosition.size() > 3)
-	{
-		targetCmd.Set("TABLE1", m_targetPosition[3]);
-		targetCmd.Set("TABLE2", m_targetPosition[4]);
-	}
+        if (actuator->Move(targetCmd) != ActOk)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToFocusInspPos (XY) failed.");
 
-	if (actuator->isMove(targetCmd) != ActOk)
-	{
-		if (IsDeadlineExpired())
-			return SetErrorAndReturn(ctx, "MoveToStartPosition: Move XY timeout.");
-		return TR_KEEP;
-	}
+        EnterStateWithTimeout(MoveTargetPositionZ, m_moveTimeoutMs);
+        return TR_KEEP;
+    }
 
-	if (actuator->MoveZ(m_targetPosition[2]) != ActOk)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToFocusInspPos (Z) failed.");
+    TaskResult SampleMoveToStartPositionTask::HandleMoveTargetPositionZ(
+        Context& ctx, IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
-	EnterStateWithTimeout(CompleteMove, m_moveTimeoutMs);
-	return TR_KEEP;
-}
+        MotionCommand targetCmd;
+        targetCmd.Set("X", m_targetPosition[0]);
+        targetCmd.Set("Y", m_targetPosition[1]);
+        targetCmd.pitch = Narrow;
 
-TaskResult SampleMoveToStartPositionTask::HandleCompleteMove(
-	Context& ctx, IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
+        if (m_targetPosition.size() > 3)
+        {
+            targetCmd.Set("TABLE1", m_targetPosition[3]);
+            targetCmd.Set("TABLE2", m_targetPosition[4]);
+        }
 
-	if (actuator->isMoveZ(m_targetPosition[2]) != ActOk)
-	{
-		if (IsDeadlineExpired())
-			return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveZ timeout.");
-		return TR_KEEP;
-	}
+        if (actuator->isMove(targetCmd) != ActOk)
+        {
+            if (IsDeadlineExpired())
+                return SetErrorAndReturn(ctx, "MoveToStartPosition: Move XY timeout.");
+            return TR_KEEP;
+        }
 
-	EnterState(MoveSafeZ);  // 다음 호출을 위한 초기 상태 복귀
-	return TR_NEXT;
+        if (actuator->MoveZ(m_targetPosition[2]) != ActOk)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToFocusInspPos (Z) failed.");
+
+        EnterStateWithTimeout(CompleteMove, m_moveTimeoutMs);
+        return TR_KEEP;
+    }
+
+    TaskResult SampleMoveToStartPositionTask::HandleCompleteMove(
+        Context& ctx, IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
+
+        if (actuator->isMoveZ(m_targetPosition[2]) != ActOk)
+        {
+            if (IsDeadlineExpired())
+                return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveZ timeout.");
+            return TR_KEEP;
+        }
+
+        EnterState(MoveSafeZ);  // 다음 호출을 위한 초기 상태 복귀
+        return TR_NEXT;
+    }
 }

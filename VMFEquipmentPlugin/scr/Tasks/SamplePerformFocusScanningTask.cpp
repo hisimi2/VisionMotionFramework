@@ -1,256 +1,259 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "include/SamplePerformFocusScanningTask.h"
 #include "include/DefineVAT.h"
 
-using namespace VMF_Sample::Task;
 
-SamplePerformFocusScanningTask::SamplePerformFocusScanningTask()
-	: m_cameraId(0)
-	, m_packageId(0)
-	, m_moveTimeoutMs(7000)
-	, m_visionTimeoutMs(60000)
+namespace VMF_Sample
 {
-}
 
-SamplePerformFocusScanningTask::~SamplePerformFocusScanningTask()
-{
-}
+    SamplePerformFocusScanningTask::SamplePerformFocusScanningTask()
+        : m_cameraId(0)
+        , m_packageId(0)
+        , m_moveTimeoutMs(7000)
+        , m_visionTimeoutMs(60000)
+    {
+    }
 
-void SamplePerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
-{
-	// [Task-specific VisionParams]
-	// 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
-	// 2순위: Context의 파라미터 (ctx.GetSeqParamAs)
-	m_cameraId  = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
+    SamplePerformFocusScanningTask::~SamplePerformFocusScanningTask()
+    {
+    }
 
-	// 타임아웃도 task-specific params에서 읽기 (override 가능)
-	m_moveTimeoutMs   = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
-	m_visionTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_TIMEOUT_MS, m_visionTimeoutMs);
+    void SamplePerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
+    {
+        // [Task-specific VisionParams]
+        // 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
+        // 2순위: Context의 파라미터 (ctx.GetSeqParamAs)
+        m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+        m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
-	m_locationIds.clear();
+        // 타임아웃도 task-specific params에서 읽기 (override 가능)
+        m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
+        m_visionTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_TIMEOUT_MS, m_visionTimeoutMs);
 
-	EnterState(MoveDown);
-}
+        m_locationIds.clear();
 
-VMF::TaskResult SamplePerformFocusScanningTask::OnPoll(
-	VMF::Context& ctx,
-	VMF::IActuator* actuator)
-{
-	switch (GetState())
-	{
-	case MoveDown:        return HandleMoveDown(ctx, actuator);
-	case MoveWait:        return HandleMoveWait(ctx, actuator);
-	case VisionRequest:   return HandleVisionRequest(ctx, actuator);
-	case VisionWait:      return HandleVisionWait(ctx, actuator);
-	case ReturnHome:      return HandleReturnHome(ctx, actuator);
-	case SaveFocusResult: return HandleSaveFocusResult(ctx);
-	default:              return VMF::TR_ERROR;
-	}
-}
+        EnterState(MoveDown);
+    }
 
-VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveDown(
-	VMF::Context& ctx,
-	VMF::IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "Z down failed");
+    VMF::TaskResult SamplePerformFocusScanningTask::OnPoll(
+        VMF::Context& ctx,
+        VMF::IActuator* actuator)
+    {
+        switch (GetState())
+        {
+        case MoveDown:        return HandleMoveDown(ctx, actuator);
+        case MoveWait:        return HandleMoveWait(ctx, actuator);
+        case VisionRequest:   return HandleVisionRequest(ctx, actuator);
+        case VisionWait:      return HandleVisionWait(ctx, actuator);
+        case ReturnHome:      return HandleReturnHome(ctx, actuator);
+        case SaveFocusResult: return HandleSaveFocusResult(ctx);
+        default:              return VMF::TR_ERROR;
+        }
+    }
 
-	VMF::VisionPosition position;
-	if (!PeekTaskVisionPosition(position))
-	{
-		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
-	}
+    VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveDown(
+        VMF::Context& ctx,
+        VMF::IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "Z down failed");
 
-	if (actuator->MoveZ(position.pos[2]) != VMF::ActOk)
-		return SetErrorAndReturn(ctx, "Z down failed");
+        VMF::VisionPosition position;
+        if (!PeekTaskVisionPosition(position))
+        {
+            return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
+        }
 
-	EnterStateWithTimeout(MoveWait, m_moveTimeoutMs);
-	return VMF::TR_KEEP;
-}
+        if (actuator->MoveZ(position.pos[2]) != VMF::ActOk)
+            return SetErrorAndReturn(ctx, "Z down failed");
 
-VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveWait(
-	VMF::Context& ctx,
-	VMF::IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "Z Down Fail");
+        EnterStateWithTimeout(MoveWait, m_moveTimeoutMs);
+        return VMF::TR_KEEP;
+    }
 
-	VMF::VisionPosition position;
-	if (!PeekTaskVisionPosition(position))
-	{
-		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
-	}
+    VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveWait(
+        VMF::Context& ctx,
+        VMF::IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "Z Down Fail");
 
-	if (actuator->isMoveZ(position.pos[2]) != VMF::ActOk)
-	{
-		if (IsDeadlineExpired())
-			return SetErrorAndReturn(ctx, "Z Down Fail");
+        VMF::VisionPosition position;
+        if (!PeekTaskVisionPosition(position))
+        {
+            return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
+        }
 
-		return VMF::TR_KEEP;
-	}
+        if (actuator->isMoveZ(position.pos[2]) != VMF::ActOk)
+        {
+            if (IsDeadlineExpired())
+                return SetErrorAndReturn(ctx, "Z Down Fail");
 
-	EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
-	return VMF::TR_KEEP;
-}
+            return VMF::TR_KEEP;
+        }
 
-VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionRequest(
-	VMF::Context& ctx,
-	VMF::IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "No Actuator");
+        EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
+        return VMF::TR_KEEP;
+    }
 
-	actuator->SetLightState(m_cameraId, true);
+    VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionRequest(
+        VMF::Context& ctx,
+        VMF::IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "No Actuator");
 
-	auto visionProcessor = ctx.GetVisionProcessorInterface();
-	if (!visionProcessor)
-	{
-		return SetErrorAndReturn(ctx, "No Vision Processor");
-	}
+        actuator->SetLightState(m_cameraId, true);
 
-	visionProcessor->InitializeRecvThread();
+        auto visionProcessor = ctx.GetVisionProcessorInterface();
+        if (!visionProcessor)
+        {
+            return SetErrorAndReturn(ctx, "No Vision Processor");
+        }
 
-	// Measure 명령 실행
-	if (!ctx.ExecuteVisionCommand(VMF::Measure))
-	{
-		return SetErrorAndReturn(ctx, "Vision Command Failed");
-	}
+        visionProcessor->InitializeRecvThread();
 
-	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
-	return VMF::TR_KEEP;
-}
+        // Measure 명령 실행
+        if (!ctx.ExecuteVisionCommand(VMF::Measure))
+        {
+            return SetErrorAndReturn(ctx, "Vision Command Failed");
+        }
 
-VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
-	VMF::Context& ctx,
-	VMF::IActuator* actuator)
-{
-	auto visionProcessor = ctx.GetVisionProcessorInterface();
-	if (!visionProcessor)
-		return SetErrorAndReturn(ctx, "No Vision Processor");
+        EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
+        return VMF::TR_KEEP;
+    }
 
-	if (!visionProcessor->IsValid(VMF::Measure))
-	{
-		if (IsDeadlineExpired())
-			return SetErrorAndReturn(ctx, "Vision Time Out");
+    VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
+        VMF::Context& ctx,
+        VMF::IActuator* actuator)
+    {
+        auto visionProcessor = ctx.GetVisionProcessorInterface();
+        if (!visionProcessor)
+            return SetErrorAndReturn(ctx, "No Vision Processor");
 
-		return VMF::TR_KEEP;
-	}
+        if (!visionProcessor->IsValid(VMF::Measure))
+        {
+            if (IsDeadlineExpired())
+                return SetErrorAndReturn(ctx, "Vision Time Out");
 
-	auto data = visionProcessor->GetLatestData(VMF::Measure);
-	(void)data;
+            return VMF::TR_KEEP;
+        }
 
-	if (actuator)
-	{
-		actuator->SetLightState(m_cameraId, false);
-	}
+        auto data = visionProcessor->GetLatestData(VMF::Measure);
+        (void)data;
 
-	EnterState(ReturnHome);
-	return VMF::TR_KEEP;
-}
+        if (actuator)
+        {
+            actuator->SetLightState(m_cameraId, false);
+        }
 
-VMF::TaskResult SamplePerformFocusScanningTask::HandleReturnHome(
-	VMF::Context& ctx,
-	VMF::IActuator* actuator)
-{
-	if (!actuator)
-		return SetErrorAndReturn(ctx, "Z Home Return Fail");
+        EnterState(ReturnHome);
+        return VMF::TR_KEEP;
+    }
 
-	if (actuator->MoveZ(0.0) != VMF::ActOk)
-		return SetErrorAndReturn(ctx, "Z Home Return Fail");
+    VMF::TaskResult SamplePerformFocusScanningTask::HandleReturnHome(
+        VMF::Context& ctx,
+        VMF::IActuator* actuator)
+    {
+        if (!actuator)
+            return SetErrorAndReturn(ctx, "Z Home Return Fail");
 
-	EnterStateWithTimeout(SaveFocusResult, m_moveTimeoutMs);
-	return VMF::TR_KEEP;
-}
+        if (actuator->MoveZ(0.0) != VMF::ActOk)
+            return SetErrorAndReturn(ctx, "Z Home Return Fail");
 
-VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
-	VMF::Context& ctx)
-{
-	auto repo = ctx.GetRepository();
-	if (!repo)
-	{
-		return SetErrorAndReturn(ctx, "DB Access Fail");
-	}
+        EnterStateWithTimeout(SaveFocusResult, m_moveTimeoutMs);
+        return VMF::TR_KEEP;
+    }
 
-	VMF::VisionPosition position;
-	if (!PopTaskVisionPosition(position))
-	{
-		return SetErrorAndReturn(ctx, "FocusScanning: Pop Position Failed");
-	}
+    VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
+        VMF::Context& ctx)
+    {
+        auto repo = ctx.GetRepository();
+        if (!repo)
+        {
+            return SetErrorAndReturn(ctx, "DB Access Fail");
+        }
 
-	const int locationId = position.locateId;
-	const double bestZPlateJig = position.pos[2];
+        VMF::VisionPosition position;
+        if (!PopTaskVisionPosition(position))
+        {
+            return SetErrorAndReturn(ctx, "FocusScanning: Pop Position Failed");
+        }
 
-	// !!! 수정 가이드 !!!
-	// 아래는 Load1 장비의 샘플 DB 저장 로직입니다.
-	// 장비의 DB 테이블/필드 구조에 맞게 수정하세요.
-	//
-	// 예시:
-	// - CameraIndex, PackageId, LocateId 기반으로 bestZ 저장
-	// - 보정값(15.63, -7.8, -9.0)은 장비별 캘리브레이션 값으로 변경
+        const int locationId = position.locateId;
+        const double bestZPlateJig = position.pos[2];
 
-	if (repo->LoadCamLocationGroup(m_cameraId, m_locationIds) != VMF::StorageSuccess)
-	{
-		return SetErrorAndReturn(ctx, "DB Read Fail");
-	}
+        // !!! 수정 가이드 !!!
+        // 아래는 Load1 장비의 샘플 DB 저장 로직입니다.
+        // 장비의 DB 테이블/필드 구조에 맞게 수정하세요.
+        //
+        // 예시:
+        // - CameraIndex, PackageId, LocateId 기반으로 bestZ 저장
+        // - 보정값(15.63, -7.8, -9.0)은 장비별 캘리브레이션 값으로 변경
 
-	// CameraIndex > 5 조건은 장비별 Camera 구성에 맞게 수정
-	if (m_cameraId > 5)
-	{
-		if (repo->SaveZFocusResult(m_cameraId, UpperTarget, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
-		{
-			return SetErrorAndReturn(ctx, "DB Write Fail");
-		}
+        if (repo->LoadCamLocationGroup(m_cameraId, m_locationIds) != VMF::StorageSuccess)
+        {
+            return SetErrorAndReturn(ctx, "DB Read Fail");
+        }
 
-		if (repo->SaveZFocusResult(m_cameraId, TargetA, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
-		{
-			return SetErrorAndReturn(ctx, "DB Write Fail");
-		}
+        // CameraIndex > 5 조건은 장비별 Camera 구성에 맞게 수정
+        if (m_cameraId > 5)
+        {
+            if (repo->SaveZFocusResult(m_cameraId, UpperTarget, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
+            {
+                return SetErrorAndReturn(ctx, "DB Write Fail");
+            }
 
-		if (repo->SaveZFocusResult(m_cameraId, TargetB, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
-		{
-			return SetErrorAndReturn(ctx, "DB Write Fail");
-		}
-	}
+            if (repo->SaveZFocusResult(m_cameraId, TargetA, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
+            {
+                return SetErrorAndReturn(ctx, "DB Write Fail");
+            }
 
-	for (std::vector<int>::iterator it = m_locationIds.begin(); it != m_locationIds.end(); ++it)
-	{
-		double bestZCok = 0.0;
+            if (repo->SaveZFocusResult(m_cameraId, TargetB, m_packageId, bestZPlateJig) != VMF::StorageSuccess)
+            {
+                return SetErrorAndReturn(ctx, "DB Write Fail");
+            }
+        }
 
-		// !!! 수정 필요: 위치별 보정값은 장비의 캘리브레이션 데이터로 변경 !!!
-		if (*it < LoadTable1)
-		{
-			bestZCok = bestZPlateJig + 15.63;
-		}
-		else if (*it < Picker)
-		{
-			bestZCok = bestZPlateJig - 7.8;
-		}
-		else
-		{
-			double dummy = 0.0;
-			double upperTargetBestZ = 0.0;
+        for (std::vector<int>::iterator it = m_locationIds.begin(); it != m_locationIds.end(); ++it)
+        {
+            double bestZCok = 0.0;
 
-			if (repo->LoadInspInitPos(6, UpperTarget, m_packageId, dummy, dummy, upperTargetBestZ) != VMF::StorageSuccess)
-			{
-				return SetErrorAndReturn(ctx, "DB Read Fail");
-			}
+            // !!! 수정 필요: 위치별 보정값은 장비의 캘리브레이션 데이터로 변경 !!!
+            if (*it < LoadTable1)
+            {
+                bestZCok = bestZPlateJig + 15.63;
+            }
+            else if (*it < Picker)
+            {
+                bestZCok = bestZPlateJig - 7.8;
+            }
+            else
+            {
+                double dummy = 0.0;
+                double upperTargetBestZ = 0.0;
 
-			bestZCok = upperTargetBestZ - 9.0;
-		}
+                if (repo->LoadInspInitPos(6, UpperTarget, m_packageId, dummy, dummy, upperTargetBestZ) != VMF::StorageSuccess)
+                {
+                    return SetErrorAndReturn(ctx, "DB Read Fail");
+                }
 
-		if (repo->SaveZFocusResult(m_cameraId, *it, m_packageId, bestZCok) != VMF::StorageSuccess)
-		{
-			return SetErrorAndReturn(ctx, "DB Write Fail");
-		}
-	}
+                bestZCok = upperTargetBestZ - 9.0;
+            }
 
-	if (IsTaskVisionPositionEmpty())
-	{
-		return VMF::TR_NEXT;
-	}
+            if (repo->SaveZFocusResult(m_cameraId, *it, m_packageId, bestZCok) != VMF::StorageSuccess)
+            {
+                return SetErrorAndReturn(ctx, "DB Write Fail");
+            }
+        }
 
-	(void)locationId;
-	EnterState(MoveDown);
-	return VMF::TR_PREV;
+        if (IsTaskVisionPositionEmpty())
+        {
+            return VMF::TR_NEXT;
+        }
+
+        (void)locationId;
+        EnterState(MoveDown);
+        return VMF::TR_PREV;
+    }
 }
