@@ -8,7 +8,7 @@
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
-<ClCompile Include="src\RepositoryFactory.cpp" />
+    <ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\Context.cpp" />
@@ -71,7 +71,6 @@
     <None Include="VisionMotionFramework.def" />
     <None Include="ReadMe.txt" />
     <None Include="res\VisionMotionFramework.rc2" />
-    <None Include="..\docs\VMF_DeploymentStrategy.md" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Mocks">

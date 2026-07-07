@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SampleSequenceStrategy.h"
 #include "SampleZFocusSequenceBuilder.h"
 

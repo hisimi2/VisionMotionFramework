@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DefaultSetupStrategy.h"
 #include "SampleZFocusSequenceBuilder.h"
@@ -16,5 +16,9 @@ namespace VMF_Sample
         SequenceBuilderPtr CreateBuilder() override;
         void ConfigureParams(VMF::VisionContextPtr context) override;
 	};
-} // namespace VMF_Sample
+}
+
+
+
+
 

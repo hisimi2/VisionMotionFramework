@@ -16,9 +16,6 @@
     <Filter Include="Sequences">
       <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Strategies">
-      <UniqueIdentifier>{6f8f3207-e91c-4781-942f-eca96a05fd62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tasks">
       <UniqueIdentifier>{8b1531be-a7d8-48e7-a8b8-4d8386449958}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,12 @@
     </Filter>
     <Filter Include="Protocol">
       <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sequences\ZFocus">
+      <UniqueIdentifier>{7b863074-b4ba-4487-a158-daec21a4572b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tasks\ZFocus">
+      <UniqueIdentifier>{cc1f6a0b-f237-4db4-ae50-54f71cf43f65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,18 +48,6 @@
     <ClInclude Include="include\VisionPacket.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="include\SampleZFocusSequenceBuilder.h">
-      <Filter>Sequences</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SampleSequenceStrategy.h">
-      <Filter>Strategies</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SampleMoveToStartPositionTask.h">
-      <Filter>Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SamplePerformFocusScanningTask.h">
-      <Filter>Tasks</Filter>
-    </ClInclude>
     <ClInclude Include="include\DefineVAT.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -66,6 +57,18 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="include\SampleZFocusSequenceBuilder.h">
+      <Filter>Sequences\ZFocus</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SampleSequenceStrategy.h">
+      <Filter>Sequences\ZFocus</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SamplePerformFocusScanningTask.h">
+      <Filter>Tasks\ZFocus</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SampleMoveToStartPositionTask.h">
+      <Filter>Tasks\ZFocus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -74,20 +77,20 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Tasks\SampleMoveToStartPositionTask.cpp">
-      <Filter>Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Tasks\SamplePerformFocusScanningTask.cpp">
-      <Filter>Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="Actuator\SampleActuatorAdapter.cpp">
-      <Filter>Actuator</Filter>
-    </ClCompile>
-    <ClCompile Include="Protocol\VisionProcessor.cpp">
+    <ClCompile Include="scr\Protocol\VisionProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="Strategies\SampleSequenceStrategy.cpp">
-      <Filter>Strategies</Filter>
+    <ClCompile Include="scr\Strategies\SampleSequenceStrategy.cpp">
+      <Filter>Sequences\ZFocus</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\SampleMoveToStartPositionTask.cpp">
+      <Filter>Tasks\ZFocus</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\SamplePerformFocusScanningTask.cpp">
+      <Filter>Tasks\ZFocus</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Actuator\SampleActuatorAdapter.cpp">
+      <Filter>Actuator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
