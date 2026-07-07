@@ -2,6 +2,7 @@
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
+#include "IStrategySetup.h"
 #include "ISequenceSetup.h"
 #include "IComponentSetup.h"
 #include "IResultSink.h"
@@ -47,7 +48,15 @@ namespace VMF
 		Orchestrator();
 
 		/// <summary>
-		/// 생성자: ComponentFactory와 SequenceFactory를 주입하여 객체 조립
+		/// 생성자: IStrategySetup (IComponentSetup + ISequenceSetup 통합)을 주입하여 객체 조립
+		/// DefaultSetupStrategy 및 그 파생 클래스(SampleSequenceStrategy 등)를 하나의 인자로 전달합니다.
+		/// </summary>
+		/// <param name="strategy">IStrategySetup 구현체 — 컴포넌트 생성 + 시퀀스 설정 통합 객체</param>
+		explicit Orchestrator(std::shared_ptr<IStrategySetup> strategy);
+
+		/// <summary>
+		/// 생성자: ComponentFactory와 SequenceFactory를 각각 주입하여 객체 조립
+		/// (하위 호환성 유지 — ComponentSetup/SequenceSetup이 분리된 경우 사용)
 		/// </summary>
 		/// <param name="componentFactory">IComponentSetup — Repository, VisionProcessor 생성</param>
 		/// <param name="sequenceFactory">ISequenceSetup — 시퀀스 이름, Builder 생성 (직접 모드에서는 nullptr 가능)</param>
@@ -89,7 +98,7 @@ namespace VMF
 		bool ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params);
 		bool ExecuteDirectVisionCommand(VisionCommand cmd, const std::string& paramsName);
 
-/// <summary>
+        /// <summary>
 		/// [Plugin] 외부 Plugin DLL에서 생성된 DefaultSetupStrategy를 받아 시퀀스를 실행합니다.
 		/// DefaultSetupStrategy는 IComponentSetup + ISequenceSetup을 통합합니다.
 		/// </summary>
@@ -114,6 +123,23 @@ namespace VMF
 		bool InitializeComponents(IComponentSetup* factory, IActuator* actuator,
 		                          bool runSequence,
 		                          const VisionConnectionConfig* connectionConfig = nullptr);
+
+		/// <summary>
+		/// [Refactored] 공통 컴포넌트 생성 + 선택적 시퀀스 실행
+		/// InitializeComponents()와 StartSequenceFromStrategy()의 중복 로직을 통합합니다.
+		/// </summary>
+		/// <param name="factory">컴포넌트 생성 팩토리</param>
+		/// <param name="actuator">액추에이터 (또는 nullptr)</param>
+		/// <param name="connectionConfig">Vision 서버 연결 설정 (선택)</param>
+		/// <param name="presetStrategy">preset 조회용 전략 (m_pCurrentStrategy에 저장)</param>
+		/// <param name="runSequence">true=시퀀스 실행 모드, false=직접 모드</param>
+		/// <param name="builderFactory">Builder 생성 콜백 (runSequence=true 일 때 필요)</param>
+		bool CreateComponentsAndRun(IComponentSetup* factory,
+		                            IActuator* actuator,
+		                            const VisionConnectionConfig* connectionConfig,
+		                            SequenceSetupPtr presetStrategy,
+		                            bool runSequence,
+		                            std::function<SequenceBuilderPtr()> builderFactory = nullptr);
 
 		SequenceSetupPtr m_pCurrentStrategy;  // 현재 전략 (직접 모드에서 preset 조회용)
 		VisionEnginePtr m_pVisionEngine;

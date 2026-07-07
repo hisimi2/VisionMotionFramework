@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "VMF_API.h"
 #include "Types.h"
+#include "Sequence.h"
+
 
 namespace VMF
 {

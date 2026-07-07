@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
-#include "SamplePerformFocusScanningTask.h"
-#include "..\DefineVAT.h"
+#include "include/SamplePerformFocusScanningTask.h"
+#include "include/DefineVAT.h"
 
 using namespace VMF_Sample::Task;
 

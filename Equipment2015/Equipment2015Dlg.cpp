@@ -1,4 +1,4 @@
-// Equipment2015Dlg.cpp : 구현 파일
+﻿// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -7,15 +7,9 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
-#include "IActuator.h"
-#include "ComponentSetupBase.h"
-#include "SequenceFactoryBase.h"
-#include "DefaultSetupStrategy.h"
-#include "SequenceBuilderBase.h"
-#include "Sequence.h"
-#include "ISequence.h"
+#include "SampleSequenceStrategy.h"
 
-#include <thread>
+//#include <thread>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -70,23 +64,21 @@ BOOL CEquipment2015Dlg::OnInitDialog()
     // Observer 등록 — PostMessage로 UI 스레드에 결과 전달
     m_threadsMgr.AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
     {
-        ActivityResultData* pData = new ActivityResultData();
-        pData->activityName = name.c_str();
-        pData->requestId = requestId;
+        CString msg;
+        msg.Format(_T("[%hs] RequestId=%d\r\n"), name.c_str(), requestId);
 
         for (const auto& result : results)
         {
-            pData->detail += CString(result.c_str()) + _T("\r\n");
+            msg += CString(result.c_str()) + _T("\r\n");
         }
 
-        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new CString(msg), 0);
     });
 
     SetTimer(1, 1000, NULL);
 
     return TRUE;
 }
-
 
 void CEquipment2015Dlg::OnTimer(UINT_PTR nIDEvent)
 {
@@ -175,112 +167,61 @@ void CEquipment2015Dlg::OnBnClickedStop()
 // OnActivityResult — UI 스레드에서 실행됨 (PostMessage 수신)
 LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 {
-    ActivityResultData* pData = reinterpret_cast<ActivityResultData*>(wParam);
-    if (pData)
+    CString* pMsg = reinterpret_cast<CString*>(wParam);
+    if (pMsg)
     {
-        CString msg;
-        msg.Format(_T("[%s] completed (requestId=%d)\r\n%s"),
-            pData->activityName.GetString(),
-            pData->requestId,
-            pData->detail.GetString());
-
-        AppendLog(msg);
-        delete pData;
+        AppendLog(*pMsg);
+        delete pMsg;
     }
     return 0;
 }
 
 
 //=============================================================================
-// 공통 Observer 헬퍼 — Orchestrator에 Observer를 등록하고
-// PostMessage로 UI 스레드에 결과 전달
+// Observer 헬퍼 — Orchestrator에 Observer를 등록하고
+// PostMessage로 UI 스레드에 간단한 CString 로그 전달
 //=============================================================================
-static void AttachObserverToOrchestrator(
+void CEquipment2015Dlg::RegisterOrchestratorObserver(
     std::shared_ptr<VMF::Orchestrator> orchestrator,
-    HWND hWnd,
     LPCTSTR activityName)
 {
-    std::wstring activityNameW(activityName);
-    orchestrator->AddObserver([hWnd, activityNameW](const VMF::VisionResultPayload& payload)
+    orchestrator->AddObserver([this, activityName](const VMF::VisionResultPayload& payload)
     {
         CString msg;
-        msg.Format(_T("[%s] RequestId=%d\r\n"), activityNameW.c_str(), payload.requestId);
+        msg.Format(_T("[%s] RequestId=%d\r\n"), activityName, payload.requestId);
 
         for (const auto& result : payload.results)
         {
             msg += CString(result.c_str()) + _T("\r\n");
         }
 
-        ActivityResultData* pData = new ActivityResultData();
-        pData->activityName = activityNameW.c_str();
-        pData->requestId = payload.requestId;
-        pData->detail = msg;
-        ::PostMessage(hWnd, WM_ACTIVITY_RESULT, (WPARAM)pData, 0);
+        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new CString(msg), 0);
     });
 }
 
 //=============================================================================
-// 샘플 Strategy 구현 (Plugin DLL 제거 후 인라인 대체)
-//=============================================================================
-
-/// <summary>
-/// 샘플 전략 — DefaultSetupStrategy를 상속하여
-/// IComponentSetup + ISequenceSetup 통합 인터페이스 제공
-/// </summary>
-class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
-{
-protected:
-    VMF::SequencePtr BuildSequence(const std::string& sequenceName) override
-    {
-        // 빈 시퀀스 생성 (실제 Equipment에서는 Task로 구성)
-        auto seq = std::unique_ptr<VMF::ISequence>(new VMF::Sequence(sequenceName));
-        return seq;
-    }
-};
-
-class SampleComponentSetup : public VMF::DefaultSetupStrategy
-{
-public:
-    VMF::DataRepositoryPtr CreateRepository() override
-    {
-        // 부모 기본 구현 사용 (SqliteDataRepository)
-        return VMF::DefaultSetupStrategy::CreateRepository();
-    }
-
-    VMF::VisionProcessorPtr CreateVisionProcessor() override
-    {
-        // 부모 기본 구현 사용 (CMockVisionEventHandler)
-        return VMF::DefaultSetupStrategy::CreateVisionProcessor();
-    }
-
-    std::string GetSequenceName() const override
-    {
-        return "SampleZFocusSequence";
-    }
-
-    VMF::SequenceBuilderPtr CreateBuilder() override
-    {
-        // 샘플 시퀀스 빌더 생성
-        return std::make_shared<SampleZFocusSequenceBuilder>();
-    }
-};
-
-//=============================================================================
-// [예제] VMF 상태머신 모드 (State Machine) - 팩토리 주입 방식
+// [예제] VMF 상태머신 모드 (State Machine) - Plugin DLL 기반
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    auto strategy = std::make_shared<SampleComponentSetup>();
+    auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
 
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-    AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_StateMachine"));
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
+
+    if (!m_orchestrator)
+    {
+        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
+
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->RunSequence(nullptr /* actuator */);
+    bool started = m_orchestrator->RunSequence(nullptr);
 
     if (started)
     {
-        AppendLog(_T("[StateMachine Mode] Sequence started via factory injection.\r\n"));
+        AppendLog(_T("[StateMachine Mode] Sequence started via Plugin DLL.\r\n"));
     }
     else
     {
@@ -293,14 +234,19 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 {
-    auto strategy = std::make_shared<SampleComponentSetup>();
+    /*
+    m_orchestrator = CreateOrchestrator();
+    if (!m_orchestrator)
+    {
+        AppendLog(_T("[CM StateMachine] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
 
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-    AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_CM_StateMachine"));
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_CM_StateMachine"));
 
     VMF::VisionConnectionConfig connConfig("192.168.1.100", 5000, 5000);
 
-    bool started = m_orchestrator->RunSequence(nullptr /* actuator */, connConfig);
+    bool started = m_orchestrator->RunSequence(nullptr , connConfig);
 
     if (started)
     {
@@ -311,68 +257,27 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
     {
         AppendLog(_T("[CM StateMachine] Failed to start sequence.\r\n"));
     }
+    */
 }
 
 //=============================================================================
-// [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속
-//=============================================================================
-void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
-{
-    CString logMsg;
-    logMsg = _T("[Multi-Server Example] Starting...\r\n\r\n");
-
-    m_multiServerOrchestrators.clear();
-
-    auto makeOrchestrator = [this](LPCTSTR name) -> std::shared_ptr<VMF::Orchestrator>
-    {
-        auto strategy = std::make_shared<SampleComponentSetup>();
-        auto orch = std::make_shared<VMF::Orchestrator>(strategy, strategy);
-        AttachObserverToOrchestrator(orch, m_hWnd, name);
-        return orch;
-    };
-
-    // ---- Orchestrator #1: Server A ----
-    logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) ---\r\n");
-    VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
-    auto orch1 = makeOrchestrator(_T("ServerA"));
-    bool started1 = orch1->RunSequence(nullptr, configA);
-    logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
-    m_multiServerOrchestrators.push_back(orch1);
-
-    // ---- Orchestrator #2: Server A (같은 서버 - 소켓 공유!) ----
-    logMsg += _T("--- Orchestrator #2 → Server A (192.168.1.100:5000) [Socket Shared!] ---\r\n");
-    auto orch2 = makeOrchestrator(_T("ServerA-2"));
-    bool started2 = orch2->RunSequence(nullptr, configA);
-    logMsg.AppendFormat(_T("  StartSequence: %s (Same socket reused!)\r\n\r\n"), started2 ? _T("SUCCESS") : _T("FAILED"));
-    m_multiServerOrchestrators.push_back(orch2);
-
-    // ---- Orchestrator #3: Server B (별도 소켓) ----
-    logMsg += _T("--- Orchestrator #3 → Server B (10.0.0.50:6000) [Separate Socket] ---\r\n");
-    VMF::VisionConnectionConfig configB("10.0.0.50", 6000, 5000);
-    auto orch3 = makeOrchestrator(_T("ServerB"));
-    bool started3 = orch3->RunSequence(nullptr, configB);
-    logMsg.AppendFormat(_T("  StartSequence: %s (New socket for Server B)\r\n"), started3 ? _T("SUCCESS") : _T("FAILED"));
-    m_multiServerOrchestrators.push_back(orch3);
-
-    logMsg += _T("\r\n[Multi-Server] Summary:\r\n");
-    logMsg += _T("  Server A: 1 socket (shared by 2 Orchestrators)\r\n");
-    logMsg += _T("  Server B: 1 socket (dedicated)\r\n");
-    logMsg += _T("  Total: 2 sockets (not 3)\r\n");
-
-    AppendLog(logMsg);
-}
-
-//=============================================================================
-// [예제] VMF 직접 모드 (Direct Mode)
+// [예제] VMF 직접 모드 (Direct Mode) - Plugin DLL 기반
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
-    auto strategy = std::make_shared<SampleComponentSetup>();
+    /*
+    // Plugin DLL에서 Orchestrator 생성
+    m_orchestrator = CreateOrchestrator();
+    if (!m_orchestrator)
+    {
+        AfxMessageBox(_T("[Direct Mode] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
 
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy, nullptr /* sequenceFactory 불필요 */);
-    AttachObserverToOrchestrator(m_orchestrator, m_hWnd, _T("VMF_Direct"));
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_Direct"));
 
-    bool ok = m_orchestrator->InitializeDirect(strategy);
+    // Plugin DLL의 InitializeOrchestratorDirect를 통해 직접 모드 초기화
+    bool ok = InitializeOrchestratorDirect(m_orchestrator);
 
     if (!ok)
     {
@@ -381,7 +286,7 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     }
 
     CString logMsg;
-    logMsg = _T("[Direct Mode] Factory 초기화 완료.\r\n\r\n");
+    logMsg = _T("[Direct Mode] Plugin 기반 초기화 완료.\r\n\r\n");
 
     // Measure 명령 실행
     bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
@@ -412,11 +317,66 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
     if (ctx)
     {
-        VMF::VisionProcessorPtr vp = ctx->GetVisionProcessorInterface();
+        VMF::VisionProcessorPtr vp2 = ctx->GetVisionProcessorInterface();
         logMsg.AppendFormat(_T("  - Context: available=%s, VP=%s\r\n"),
                             ctx ? _T("true") : _T("false"),
-                            vp ? _T("valid") : _T("null"));
+                            vp2 ? _T("valid") : _T("null"));
     }
 
     AppendLog(logMsg);
+    */
+}
+
+
+
+//=============================================================================
+// [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속
+//=============================================================================
+void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
+{
+
+    /*
+    CString logMsg;
+    logMsg = _T("[Multi-Server Example] Starting...\r\n\r\n");
+
+    m_multiServerOrchestrators.clear();
+
+    auto makeOrchestrator = [this](LPCTSTR name) -> std::shared_ptr<VMF::Orchestrator>
+        {
+            auto orch = CreateOrchestrator();
+            if (orch)
+                RegisterOrchestratorObserver(orch, name);
+            return orch;
+        };
+
+    // ---- Orchestrator #1: Server A ----
+    logMsg += _T("--- Orchestrator #1 → Server A (192.168.1.100:5000) ---\r\n");
+    VMF::VisionConnectionConfig configA("192.168.1.100", 5000, 5000);
+    auto orch1 = makeOrchestrator(_T("ServerA"));
+    bool started1 = orch1 ? orch1->RunSequence(nullptr, configA) : false;
+    logMsg.AppendFormat(_T("  StartSequence: %s\r\n\r\n"), started1 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch1);
+
+    // ---- Orchestrator #2: Server A (같은 서버 - 소켓 공유!) ----
+    logMsg += _T("--- Orchestrator #2 → Server A (192.168.1.100:5000) [Socket Shared!] ---\r\n");
+    auto orch2 = makeOrchestrator(_T("ServerA-2"));
+    bool started2 = orch2 ? orch2->RunSequence(nullptr, configA) : false;
+    logMsg.AppendFormat(_T("  StartSequence: %s (Same socket reused!)\r\n\r\n"), started2 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch2);
+
+    // ---- Orchestrator #3: Server B (별도 소켓) ----
+    logMsg += _T("--- Orchestrator #3 → Server B (10.0.0.50:6000) [Separate Socket] ---\r\n");
+    VMF::VisionConnectionConfig configB("10.0.0.50", 6000, 5000);
+    auto orch3 = makeOrchestrator(_T("ServerB"));
+    bool started3 = orch3 ? orch3->RunSequence(nullptr, configB) : false;
+    logMsg.AppendFormat(_T("  StartSequence: %s (New socket for Server B)\r\n"), started3 ? _T("SUCCESS") : _T("FAILED"));
+    m_multiServerOrchestrators.push_back(orch3);
+
+    logMsg += _T("\r\n[Multi-Server] Summary:\r\n");
+    logMsg += _T("  Server A: 1 socket (shared by 2 Orchestrators)\r\n");
+    logMsg += _T("  Server B: 1 socket (dedicated)\r\n");
+    logMsg += _T("  Total: 2 sockets (not 3)\r\n");
+
+    AppendLog(logMsg);
+    */
 }

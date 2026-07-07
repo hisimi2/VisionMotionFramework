@@ -30,41 +30,41 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DefineVAT.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="PluginFactory.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Tasks\SampleMoveToStartPositionTask.h">
-      <Filter>Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Tasks\SamplePerformFocusScanningTask.h">
-      <Filter>Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="Actuator\SampleActuatorAdapter.h">
+    <ClInclude Include="include\SampleActuatorAdapter.h">
       <Filter>Actuator</Filter>
     </ClInclude>
-    <ClInclude Include="Strategies\SampleSequenceStrategy.h">
-      <Filter>Strategies</Filter>
+    <ClInclude Include="include\VisionParamKeys.h">
+      <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="Sequences\SampleZFocusSequenceBuilder.h">
+    <ClInclude Include="include\VisionProcessor.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VisionPacket.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SampleZFocusSequenceBuilder.h">
       <Filter>Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol\VisionPacketMemory.h">
-      <Filter>Protocol</Filter>
+    <ClInclude Include="include\SampleSequenceStrategy.h">
+      <Filter>Strategies</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol\VisionMemoryKeys.h">
-      <Filter>Protocol</Filter>
+    <ClInclude Include="include\SampleMoveToStartPositionTask.h">
+      <Filter>Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol\VisionMemoryProcessor.h">
-      <Filter>Protocol</Filter>
+    <ClInclude Include="include\SamplePerformFocusScanningTask.h">
+      <Filter>Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DefineVAT.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VMFEquipmentPluginExport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,8 +83,11 @@
     <ClCompile Include="Actuator\SampleActuatorAdapter.cpp">
       <Filter>Actuator</Filter>
     </ClCompile>
-    <ClCompile Include="Protocol\VisionMemoryProcessor.cpp">
+    <ClCompile Include="Protocol\VisionProcessor.cpp">
       <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="Strategies\SampleSequenceStrategy.cpp">
+      <Filter>Strategies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

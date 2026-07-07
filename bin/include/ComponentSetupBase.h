@@ -25,7 +25,7 @@ namespace VMF
     /// ※ 시퀀스 생성(GetSequenceName, CreateBuilder)은 SequenceFactoryBase(ISequenceSetup)로 분리되었습니다.
     ///   두 인터페이스가 모두 필요한 경우, 다중 상속 또는 컴포지션 패턴을 사용하세요.
     /// </summary>
-    class VMF_API ComponentSetupBase : public IComponentSetup
+    class VMF_API ComponentSetupBase : public virtual IComponentSetup
     {
     private:
         IActuator* m_adapter;

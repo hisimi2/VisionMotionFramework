@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Platform)\$(configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>.\VisionMotionFramework.def</ModuleDefinitionFile>
       <AdditionalDependencies>VisionComm.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(ProjectDir)..\bin\thirdparty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(configuration)\;$(ProjectDir)..\bin\thirdparty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -136,7 +136,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\AsyncExecutor.cpp" />
     <ClCompile Include="src\FileDataRepository.cpp" />
     <ClCompile Include="src\Logger.cpp" />
-<ClCompile Include="src\RepositoryFactory.cpp" />
+    <ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\ConnectionManager.cpp" />

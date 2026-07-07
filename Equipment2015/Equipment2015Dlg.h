@@ -11,15 +11,7 @@
 
 namespace VMF { class Orchestrator; }
 
-// PostMessage로 전달할 Activity 결과 데이터 구조체
-struct ActivityResultData
-{
-    CString activityName;
-    int     requestId = 0;
-    CString detail;
-};
-
-// 사용자 정의 메시지 ID
+// 사용자 정의 메시지 ID — Observer에서 PostMessage로 전달할 로그 메시지
 #define WM_ACTIVITY_RESULT (WM_USER + 100)
 
 // CEquipment2015Dlg 대화 상자
@@ -27,11 +19,6 @@ class CEquipment2015Dlg : public CDialogEx
 {
     COPSwitch m_StartSwitch;
     COPSwitch m_StopSwitch;
-
-    void InitOrchestratorExample();
-    void RunOrchestratorSequenceExample();
-    void StopOrchestratorSequenceExample();
-    void AccessSequenceDataExample();
 
 public:
 	CEquipment2015Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
@@ -69,6 +56,11 @@ public:
 
     void AppendLog(LPCTSTR msg);
     void AppendLogFormat(LPCTSTR fmt, ...);
+
+    // Observer 헬퍼 — Orchestrator에 Observer 등록 (PostMessage로 로그 전달)
+    void RegisterOrchestratorObserver(
+        std::shared_ptr<VMF::Orchestrator> orchestrator,
+        LPCTSTR activityName);
 
     std::vector<std::shared_ptr<VMF::Orchestrator>> m_multiServerOrchestrators;
 };

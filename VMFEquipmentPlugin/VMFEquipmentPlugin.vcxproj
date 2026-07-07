@@ -31,6 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -75,18 +76,22 @@
     <VMF_ProjectRoot>.</VMF_ProjectRoot>
     <VMF_SourcePath>..\VisionMotionFramework\</VMF_SourcePath>
     <!-- 다른 프로젝트와 동일한 출력 경로 -->
-    <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(VMF_ProjectRoot);$(VMF_SourcePath)include\;..\VisionComm\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VMFEQUIPMENTPLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4250</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,7 +107,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(VMF_ProjectRoot);$(VMF_SourcePath)include\;..\VisionComm\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;VMFEQUIPMENTPLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
@@ -158,18 +163,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Actuator\SampleActuatorAdapter.h" />
-    <ClInclude Include="DefineVAT.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="include\DefineVAT.h" />
+    <ClInclude Include="include\SampleActuatorAdapter.h" />
+    <ClInclude Include="include\SampleMoveToStartPositionTask.h" />
+    <ClInclude Include="include\SamplePerformFocusScanningTask.h" />
+    <ClInclude Include="include\SampleSequenceStrategy.h" />
+    <ClInclude Include="include\SampleZFocusSequenceBuilder.h" />
+    <ClInclude Include="include\VisionParamKeys.h" />
+    <ClInclude Include="include\VisionProcessor.h" />
+    <ClInclude Include="include\VisionPacket.h" />
+    <ClInclude Include="include\VMFEquipmentPluginExport.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PluginFactory.h" />
-    <ClInclude Include="Protocol\VisionMemoryKeys.h" />
-    <ClInclude Include="Protocol\VisionMemoryProcessor.h" />
-    <ClInclude Include="Protocol\VisionPacketMemory.h" />
-    <ClInclude Include="Sequences\SampleZFocusSequenceBuilder.h" />
-    <ClInclude Include="Strategies\SampleSequenceStrategy.h" />
-    <ClInclude Include="Tasks\SampleMoveToStartPositionTask.h" />
-    <ClInclude Include="Tasks\SamplePerformFocusScanningTask.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actuator\SampleActuatorAdapter.cpp" />
@@ -180,7 +185,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Protocol\VisionMemoryProcessor.cpp" />
+    <ClCompile Include="Protocol\VisionProcessor.cpp" />
+    <ClCompile Include="Strategies\SampleSequenceStrategy.cpp" />
     <ClCompile Include="Tasks\SampleMoveToStartPositionTask.cpp" />
     <ClCompile Include="Tasks\SamplePerformFocusScanningTask.cpp" />
   </ItemGroup>

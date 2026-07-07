@@ -17,6 +17,13 @@ namespace VMF
     {
     }
 
+    Orchestrator::Orchestrator(std::shared_ptr<IStrategySetup> strategy)
+        : m_pVisionEngine()
+        , m_componentFactory(std::static_pointer_cast<IComponentSetup>(strategy))
+        , m_sequenceFactory(std::static_pointer_cast<ISequenceSetup>(strategy))
+    {
+    }
+
     Orchestrator::Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory)
         : m_pVisionEngine()
         , m_componentFactory(componentFactory)
@@ -142,12 +149,15 @@ namespace VMF
     }
 
     // ============================================================================
-    // 공통 컴포넌트 조립 로직
+    // 공통 컴포넌트 조립 로직 (리팩토링: 최종 통합 버전)
     // ============================================================================
 
-    bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* actuator,
-                                             bool runSequence,
-                                             const VisionConnectionConfig* connectionConfig)
+    bool Orchestrator::CreateComponentsAndRun(IComponentSetup* factory,
+                                              IActuator* actuator,
+                                              const VisionConnectionConfig* connectionConfig,
+                                              SequenceSetupPtr presetStrategy,
+                                              bool runSequence,
+                                              std::function<SequenceBuilderPtr()> builderFactory)
     {
         if (!factory)
             return false;
@@ -162,7 +172,6 @@ namespace VMF
 
         DataRepositoryPtr repo;
         VisionProcessorPtr vp;
-        SequenceBuilderPtr builder;
 
         try
         {
@@ -191,23 +200,14 @@ namespace VMF
         if (runSequence)
         {
             // 시퀀스 모드: Builder 필요
-            if (!m_sequenceFactory)
+            if (!builderFactory)
                 return false;
 
-            try
-            {
-                builder = m_sequenceFactory->CreateBuilder();
-            }
-            catch (...)
-            {
-                return false;
-            }
-
+            SequenceBuilderPtr builder = builderFactory();
             if (!builder) return false;
 
-            // m_pCurrentStrategy는 직접 모드에서 preset 조회용으로만 사용
-            // (ISequenceSetup 포인터로 저장)
-            m_pCurrentStrategy = m_sequenceFactory;
+            // m_pCurrentStrategy 저장 (preset 조회용)
+            m_pCurrentStrategy = presetStrategy;
 
             VisionActuatorPtr act = factory->GetActuator();
 
@@ -225,7 +225,7 @@ namespace VMF
             runner->SetResultSink(this);
             m_pVisionEngine->SetRunner(runner);
 
-            std::string seqName = m_sequenceFactory->GetSequenceName();
+            std::string seqName = presetStrategy ? presetStrategy->GetSequenceName() : "";
             if (!m_pVisionEngine->RunSequence(seqName))
             {
                 m_pVisionEngine->StopSequence();
@@ -240,9 +240,35 @@ namespace VMF
             m_directVisionProcessor = vp;
             m_directDataRepository = repo;
             m_directContext = ctx;
+            m_pCurrentStrategy = presetStrategy;  // [버그 수정] 누락된 m_pCurrentStrategy 저장
         }
 
         return true;
+    }
+
+    // ============================================================================
+    // InitializeComponents (기존 유지보수 호환용 — CreateComponentsAndRun 호출)
+    // ============================================================================
+
+    bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* actuator,
+                                             bool runSequence,
+                                             const VisionConnectionConfig* connectionConfig)
+    {
+        if (runSequence)
+        {
+            return CreateComponentsAndRun(
+                factory, actuator, connectionConfig,
+                m_sequenceFactory,   // presetStrategy = m_sequenceFactory
+                true,
+                [this]() { return m_sequenceFactory ? m_sequenceFactory->CreateBuilder() : nullptr; });
+        }
+        else
+        {
+            return CreateComponentsAndRun(
+                factory, actuator, connectionConfig,
+                nullptr,   // presetStrategy = nullptr
+                false);
+        }
     }
 
     // ============================================================================
@@ -389,70 +415,13 @@ namespace VMF
         if (!strategy)
             return false;
 
-        strategy->SetActuator(actuator);
-
-        if (!connectionConfig.address.empty() && connectionConfig.port > 0)
-        {
-            strategy->SetConnectionConfig(connectionConfig);
-        }
-
-        DataRepositoryPtr repo;
-        VisionProcessorPtr vp;
-        SequenceBuilderPtr builder;
-
-        try
-        {
-            repo = strategy->CreateRepository();
-            vp = strategy->CreateVisionProcessor();
-            builder = strategy->CreateBuilder();
-        }
-        catch (...)
-        {
-            return false;
-        }
-
-        if (!repo || !vp || !builder) return false;
-
-        auto ctx = CreateContext(vp, repo);
-        if (!ctx) return false;
-
-        try
-        {
-            strategy->ConfigureParams(ctx);
-        }
-        catch (...)
-        {
-            return false;
-        }
-
-        m_pCurrentStrategy = strategy;
-
-        VisionActuatorPtr act = strategy->GetActuator();
-
-        try
-        {
-            m_pVisionEngine = std::make_shared<RunController>(builder, ctx, act);
-        }
-        catch (...)
-        {
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        AsyncExecutorPtr runner = std::make_shared<AsyncExecutor>();
-        runner->SetResultSink(this);
-        m_pVisionEngine->SetRunner(runner);
-
-        std::string seqName = strategy->GetSequenceName();
-        if (!m_pVisionEngine->RunSequence(seqName))
-        {
-            m_pVisionEngine->StopSequence();
-            m_pVisionEngine.reset();
-            m_pCurrentStrategy.reset();
-            return false;
-        }
-
-        return true;
+        return CreateComponentsAndRun(
+            strategy.get(),              // factory = strategy (IComponentSetup)
+            actuator,
+            (!connectionConfig.address.empty() && connectionConfig.port > 0) ? &connectionConfig : nullptr,
+            strategy,                    // presetStrategy = strategy
+            true,                        // runSequence = true
+            [strategy]() { return strategy->CreateBuilder(); });
     }
 
     // ============================================================================
@@ -466,38 +435,14 @@ namespace VMF
         if (!strategy)
             return false;
 
-        DataRepositoryPtr repo;
-        VisionProcessorPtr vp;
-
-        try
-        {
-            repo = strategy->CreateRepository();
-            vp = strategy->CreateVisionProcessor();
-        }
-        catch (...)
-        {
-            return false;
-        }
-
-        if (!repo || !vp) return false;
-
-        auto ctx = CreateContext(vp, repo);
-        if (!ctx) return false;
-
-        try
-        {
-            strategy->ConfigureParams(ctx);
-        }
-        catch (...)
-        {
-            return false;
-        }
-
-        m_directVisionProcessor = vp;
-        m_directDataRepository = repo;
-        m_directContext = ctx;
-
-return true;
+        // CreateComponentsAndRun을 통해 공통 로직 재사용
+        // runSequence = false, builder 람다는 nullptr로 전달 (사용 안 함)
+        return CreateComponentsAndRun(
+            strategy.get(),
+            nullptr,     // actuator = nullptr (직접 모드)
+            nullptr,     // connectionConfig = nullptr
+            strategy,    // presetStrategy = strategy (m_pCurrentStrategy 저장)
+            false);      // runSequence = false
     }
 
 } // namespace VMF
