@@ -1,4 +1,4 @@
-// Equipment2015Dlg.cpp : 구현 파일
+﻿// Equipment2015Dlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
@@ -265,7 +265,6 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
-
     /*
     // Plugin DLL에서 Orchestrator 생성
     m_orchestrator = CreateOrchestrator();
