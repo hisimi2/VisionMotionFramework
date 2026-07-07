@@ -36,13 +36,13 @@
     <ClInclude Include="include\SampleActuatorAdapter.h">
       <Filter>Actuator</Filter>
     </ClInclude>
-    <ClInclude Include="include\VisionMemoryKeys.h">
+    <ClInclude Include="include\VisionParamKeys.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="include\VisionMemoryProcessor.h">
+    <ClInclude Include="include\VisionProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="include\VisionPacketMemory.h">
+    <ClInclude Include="include\VisionPacket.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\SampleZFocusSequenceBuilder.h">
@@ -83,7 +83,7 @@
     <ClCompile Include="Actuator\SampleActuatorAdapter.cpp">
       <Filter>Actuator</Filter>
     </ClCompile>
-    <ClCompile Include="Protocol\VisionMemoryProcessor.cpp">
+    <ClCompile Include="Protocol\VisionProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="Strategies\SampleSequenceStrategy.cpp">

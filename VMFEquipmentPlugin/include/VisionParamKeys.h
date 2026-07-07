@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace VMF
 {
@@ -28,5 +28,4 @@ namespace VMF
     constexpr const char* Y_OFFSET              = "YOffset";
     constexpr const char* ANGLE                 = "Angle";
     constexpr const char* AUTO_VISION_SETTING   = "AutoVisionSetting";
-
 }
