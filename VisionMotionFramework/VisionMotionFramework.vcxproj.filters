@@ -22,6 +22,9 @@
     <ClCompile Include="src\Mock\CMockVisionEventHandler.cpp">
       <Filter>Mocks</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mock\CMockVisionProcessor.cpp">
+      <Filter>Mocks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AsyncExecutor.h" />
@@ -63,6 +66,9 @@
       <Filter>Mocks</Filter>
     </ClInclude>
     <ClInclude Include="include\Orchestrator.h" />
+    <ClInclude Include="include\Mock\CMockVisionProcessor.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VisionMotionFramework.rc" />

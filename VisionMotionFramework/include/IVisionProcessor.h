@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VMF_API.h"
 #include "Controller.h"
@@ -51,7 +51,7 @@ namespace VMF
         using DataMap = StringMap;
         virtual ~IVisionProcessor() = default;
 
-// 연결 관리
+        // 연결 관리
         virtual VC::Status Initialize(const VisionConnectionConfig& config) = 0;
 
         /// <summary>

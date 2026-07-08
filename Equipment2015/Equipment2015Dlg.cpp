@@ -15,10 +15,72 @@
 #include "OperationThreads\Load1ActivityBuilder.h"
 #include "OperationThreads\Load2ActivityBuilder.h"
 
+#include "Mock\CMockVisionProcessor.h"
+#include "Mock\CMockDataRepository.h"
+#include "SqliteDataRepository.h"
+#include "VisionProcessor.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+//=============================================================================
+// Observer 헬퍼 — Orchestrator에 Observer를 등록하고
+// PostMessage로 UI 스레드에 간단한 CString 로그 전달
+//=============================================================================
+void CEquipment2015Dlg::RegisterOrchestratorObserver(
+    std::shared_ptr<VMF::Orchestrator> orchestrator,
+    LPCTSTR activityName)
+{
+    orchestrator->AddObserver([this, activityName](const VMF::VisionResultPayload& payload)
+        {
+            CString msg;
+            msg.Format(_T("[%s] RequestId=%d\r\n"), activityName, payload.requestId);
+
+            for (const auto& result : payload.results)
+            {
+                msg += CString(result.c_str()) + _T("\r\n");
+            }
+
+            ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new CString(msg), 0);
+        });
+}
+
+
+
+
+//=============================================================================
+// [예제] VMF 상태머신 모드 (State Machine) - Plugin DLL 기반
+//=============================================================================
+void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
+{
+    auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
+
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
+
+    if (!m_orchestrator)
+    {
+        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator from Plugin.\r\n"));
+        return;
+    }
+
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
+
+    // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
+    bool started = m_orchestrator->RunSequence(nullptr);
+
+    if (started)
+    {
+        AppendLog(_T("[StateMachine Mode] Sequence started via Plugin DLL.\r\n"));
+    }
+    else
+    {
+        AppendLog(_T("[StateMachine Mode] Failed to start sequence.\r\n"));
+    }
+}
+
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
     : CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
@@ -204,57 +266,6 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 }
 
 
-//=============================================================================
-// Observer 헬퍼 — Orchestrator에 Observer를 등록하고
-// PostMessage로 UI 스레드에 간단한 CString 로그 전달
-//=============================================================================
-void CEquipment2015Dlg::RegisterOrchestratorObserver(
-    std::shared_ptr<VMF::Orchestrator> orchestrator,
-    LPCTSTR activityName)
-{
-    orchestrator->AddObserver([this, activityName](const VMF::VisionResultPayload& payload)
-    {
-        CString msg;
-        msg.Format(_T("[%s] RequestId=%d\r\n"), activityName, payload.requestId);
-
-        for (const auto& result : payload.results)
-        {
-            msg += CString(result.c_str()) + _T("\r\n");
-        }
-
-        ::PostMessage(m_hWnd, WM_ACTIVITY_RESULT, (WPARAM)new CString(msg), 0);
-    });
-}
-
-//=============================================================================
-// [예제] VMF 상태머신 모드 (State Machine) - Plugin DLL 기반
-//=============================================================================
-void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
-{
-    auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
-
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
-
-    if (!m_orchestrator)
-    {
-        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator from Plugin.\r\n"));
-        return;
-    }
-
-    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
-
-    // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->RunSequence(nullptr);
-
-    if (started)
-    {
-        AppendLog(_T("[StateMachine Mode] Sequence started via Plugin DLL.\r\n"));
-    }
-    else
-    {
-        AppendLog(_T("[StateMachine Mode] Failed to start sequence.\r\n"));
-    }
-}
 
 //=============================================================================
 // [예제] VMF 상태머신 모드 - ConnectionManager 사용
@@ -353,8 +364,6 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
     AppendLog(logMsg);
     */
 }
-
-
 
 //=============================================================================
 // [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속
