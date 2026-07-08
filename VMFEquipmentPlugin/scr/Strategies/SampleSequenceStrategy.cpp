@@ -4,6 +4,10 @@
 #include "SqliteDataRepository.h"
 #include "VisionProcessor.h"
 
+#include "Mock\CMockVisionProcessor.h"
+#include "Mock\CMockDataRepository.h"
+
+
 namespace VMF_Sample
 {
     DataRepositoryPtr SampleSequenceStrategy::CreateRepository()
@@ -12,6 +16,7 @@ namespace VMF_Sample
         auto repo = std::make_shared<VMF::SqliteDataRepository>(
             "Data\\VAT_DATABASE.db", "Data\\Images");
         repo->Initialize();
+
         return repo;
     }
 
@@ -35,7 +40,9 @@ namespace VMF_Sample
 
         // 기본 모드: VisionProcessor 생성 및 초기화
         VMF::VisionConnectionConfig config("127.0.0.1", 8080, 3000);
-        auto vp = std::make_shared<VMF::VisionProcessor>();
+
+        auto vp = std::make_shared < VMF::CMockVisionProcessor>();
+        // auto vp = std::make_shared<VMF::VisionProcessor>();
         vp->Initialize(config);
         return vp;
     }

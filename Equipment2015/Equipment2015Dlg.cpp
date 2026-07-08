@@ -15,10 +15,7 @@
 #include "OperationThreads\Load1ActivityBuilder.h"
 #include "OperationThreads\Load2ActivityBuilder.h"
 
-#include "Mock\CMockVisionProcessor.h"
-#include "Mock\CMockDataRepository.h"
-#include "SqliteDataRepository.h"
-#include "VisionProcessor.h"
+
 
 
 #ifdef _DEBUG
