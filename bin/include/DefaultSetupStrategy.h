@@ -1,32 +1,29 @@
-﻿#pragma once
+#pragma once
 
 #include "VMF_API.h"
 #include "ComponentSetupBase.h"
-#include "IStrategySetup.h"
+#include "ISequenceSetup.h"
 #include <string>
 
 namespace VMF
 {
     /// <summary>
-    /// DefaultSetupStrategy — 컴포넌트 생성 + 시퀀스 설정 통합 클래스.
+    /// DefaultSetupStrategy — IComponentSetup(ComponentSetupBase) + ISequenceSetup 통합 클래스.
     /// 
-    /// ComponentSetupBase(IComponentSetup)와 IStrategySetup(IComponentSetup+ISequenceSetup)을
-    /// 다중 상속하여, 기존 IComponentSetup + IStrategySetup 통합 인터페이스를 유지합니다.
+    /// ComponentSetupBase를 상속받아 Repository, VisionProcessor 생성 기능을 제공하고,
+    /// ISequenceSetup을 상속받아 시퀀스 이름 및 Builder 생성을 파생 클래스에 위임합니다.
     /// 
-    /// [사용 목적]
-    /// - VMFEquipmentPlugin과 같은 외부 코드에서 하나의 Strategy 객체로
-    ///   컴포넌트(Repository, VP) 생성과 시퀀스 이름/빌더 생성을 동시에 처리합니다.
+    /// [상속 구조 단순화]
+    /// - IStrategySetup 인터페이스 제거 (다이아몬드 상속 문제 해결)
+    /// - DefaultSetupStrategy는 ComponentSetupBase와 ISequenceSetup을 직접 상속
+    /// - Orchestrator는 IStrategySetup 대신 DefaultSetupStrategy를 직접 사용
     /// 
-    /// - Orchestrator에서는 IStrategySetup 하나만 주입받아도
-    ///   IComponentSetup과 ISequenceSetup을 모두 사용할 수 있습니다.
-    /// 
-    /// 파생 클래스에서 오버라이드해야 할 메서드:
-    ///   - GetSequenceName()
-    ///   - CreateBuilder()
-    ///   - (선택) ConfigureParams(), GetVisionParams()
-    ///   - (선택) CreateRepository(), CreateVisionProcessor()
+    /// [파생 클래스 책임]
+    /// - GetSequenceName(): 실행할 시퀀스 이름 반환
+    /// - CreateBuilder(): 시퀀스 빌더 생성
+    /// - (선택) CreateRepository(), CreateVisionProcessor(), ConfigureParams() 오버라이드
     /// </summary>
-    class VMF_API DefaultSetupStrategy : public ComponentSetupBase, public IStrategySetup
+    class VMF_API DefaultSetupStrategy : public ComponentSetupBase, public ISequenceSetup
     {
     public:
         DefaultSetupStrategy() = default;

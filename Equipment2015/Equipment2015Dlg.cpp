@@ -1,6 +1,5 @@
 // Equipment2015Dlg.cpp : 구현 파일
 //
-
 #include "stdafx.h"
 #include "Equipment2015.h"
 #include "Equipment2015Dlg.h"
@@ -9,19 +8,14 @@
 #include "Orchestrator.h"
 #include "SampleSequenceStrategy.h"
 
-
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"
 #include "OperationThreads\Load1ActivityBuilder.h"
 #include "OperationThreads\Load2ActivityBuilder.h"
 
-
-
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
 
 //=============================================================================
 // Observer 헬퍼 — Orchestrator에 Observer를 등록하고
@@ -45,16 +39,15 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
         });
 }
 
-
-
-
 //=============================================================================
 // [예제] VMF 상태머신 모드 (State Machine) - Plugin DLL 기반
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
+    // Plugin DLL에서 Orchestrator 생성
     auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
 
+    // Plugin DLL의 InitializeOrchestratorStateMachine를 통해 상태머신 모드 초기화
     m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
 
     if (!m_orchestrator)
@@ -63,6 +56,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
         return;
     }
 
+    // Observer 등록
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
@@ -77,7 +71,6 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
         AppendLog(_T("[StateMachine Mode] Failed to start sequence.\r\n"));
     }
 }
-
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
     : CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)
@@ -146,7 +139,6 @@ BOOL CEquipment2015Dlg::OnInitDialog()
     SetIcon(m_hIcon, TRUE);
     SetIcon(m_hIcon, FALSE);
 
-
     // Observer 등록 — PostMessage로 UI 스레드에 결과 전달
     m_threadsMgr->AddObserver([this](const std::string& name, int requestId, const std::vector<std::string>& results)
     {
@@ -206,6 +198,7 @@ void CEquipment2015Dlg::OnPaint()
 		// 클라이언트 사각형에서 아이콘을 가운데에 맞춥니다.
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
+
 		CRect rect;
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
@@ -261,8 +254,6 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
-
-
 
 //=============================================================================
 // [예제] VMF 상태머신 모드 - ConnectionManager 사용
@@ -367,7 +358,6 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfMultiServerExample()
 {
-
     /*
     CString logMsg;
     logMsg = _T("[Multi-Server Example] Starting...\r\n\r\n");

@@ -2,7 +2,6 @@
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
-#include "IStrategySetup.h"
 #include "ISequenceSetup.h"
 #include "IComponentSetup.h"
 #include "IResultSink.h"
@@ -48,11 +47,11 @@ namespace VMF
 		Orchestrator();
 
 		/// <summary>
-		/// 생성자: IStrategySetup (IComponentSetup + ISequenceSetup 통합)을 주입하여 객체 조립
-		/// DefaultSetupStrategy 및 그 파생 클래스(SampleSequenceStrategy 등)를 하나의 인자로 전달합니다.
+		/// 생성자: DefaultSetupStrategy (IComponentSetup + ISequenceSetup 통합)을 주입하여 객체 조립
+		/// SampleSequenceStrategy 등 DefaultSetupStrategy 파생 클래스를 하나의 인자로 전달합니다.
 		/// </summary>
-		/// <param name="strategy">IStrategySetup 구현체 — 컴포넌트 생성 + 시퀀스 설정 통합 객체</param>
-		explicit Orchestrator(std::shared_ptr<IStrategySetup> strategy);
+		/// <param name="strategy">DefaultSetupStrategy 구현체 — 컴포넌트 생성 + 시퀀스 설정 통합 객체</param>
+		explicit Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy);
 
 		/// <summary>
 		/// 생성자: ComponentFactory와 SequenceFactory를 각각 주입하여 객체 조립

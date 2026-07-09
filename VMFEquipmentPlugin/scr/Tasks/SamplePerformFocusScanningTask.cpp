@@ -2,10 +2,8 @@
 #include "include/SamplePerformFocusScanningTask.h"
 #include "include/DefineVAT.h"
 
-
 namespace VMF_Sample
 {
-
     SamplePerformFocusScanningTask::SamplePerformFocusScanningTask()
         : m_cameraId(0)
         , m_packageId(0)

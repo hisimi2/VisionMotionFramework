@@ -1,14 +1,10 @@
 // Equipment2015Dlg.h : 헤더 파일
 //
-
 #pragma once
 
-
 #include "Actuators/COPSwitch.h"
-
 #include <memory> // std::shared_ptr
 #include <vector> // std::vector
-
 #include "ThreadsManager.h"
 
 namespace VMF { class Orchestrator; }

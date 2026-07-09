@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Orchestrator.h"
 #include "RunController.h"
 #include "Context.h"
@@ -17,7 +17,7 @@ namespace VMF
     {
     }
 
-    Orchestrator::Orchestrator(std::shared_ptr<IStrategySetup> strategy)
+    Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy)
         : m_pVisionEngine()
         , m_componentFactory(std::static_pointer_cast<IComponentSetup>(strategy))
         , m_sequenceFactory(std::static_pointer_cast<ISequenceSetup>(strategy))
