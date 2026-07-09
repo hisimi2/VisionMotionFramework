@@ -16,7 +16,7 @@ namespace VMF_Sample
 	/// 3. HandleMoveTargetPositionXY/HandleMoveTargetPositionZ: Target 위치를 Context에서 읽거나 고정값으로 변경
 	/// 4. 축 이름 (X/Y/Z/TABLE1/TABLE2) 은 장비의 실제 축 구성에 맞게 수정
 	/// </summary>
-	class VMF_PLUGIN_API SampleMoveToStartPositionTask : public VMF::NonBlockingTaskBase
+	class VMF_PLUGIN_API TaskLoad1MoveToStartPosition : public VMF::NonBlockingTaskBase
 	{
 		enum Substep
 		{
@@ -34,8 +34,8 @@ namespace VMF_Sample
 		VMF::TaskResult HandleCompleteMove(VMF::Context& ctx, VMF::IActuator* actuator);
 
 	public:
-		SampleMoveToStartPositionTask();
-		virtual ~SampleMoveToStartPositionTask();
+		TaskLoad1MoveToStartPosition();
+		virtual ~TaskLoad1MoveToStartPosition();
 
 		std::string GetName() const override
 		{

@@ -2,8 +2,8 @@
 #include "SequenceBuilderBase.h"
 #include "DefineVAT.h"
 
-#include "SampleMoveToStartPositionTask.h"
-#include "SamplePerformFocusScanningTask.h"
+#include "TaskLoad1MoveToStartPosition.h"
+#include "TaskLoad1PerformFocusScanning.h"
 
 namespace VMF_Sample
 {
@@ -35,7 +35,7 @@ namespace VMF_Sample
 		params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
 	}
 
-	class SampleZFocusSequenceBuilder : public VMF::SequenceBuilderBase
+	class ZFocusLoad1Builder : public VMF::SequenceBuilderBase
 	{
 	protected:
 		VMF::SequencePtr BuildSequence(const std::string& sequenceName) override
@@ -44,7 +44,7 @@ namespace VMF_Sample
 
 			// [1] Task_MoveToStartPosition 생성 및 params 주입
 			{
-				auto task = std::make_shared<SampleMoveToStartPositionTask>();
+				auto task = std::make_shared<TaskLoad1MoveToStartPosition>();
 
 				VMF::VisionParams moveParams;
 				moveParams.visionParams[VAT_SEQ_PARAM_TIMEOUT_MS] = "10000";
@@ -58,18 +58,18 @@ namespace VMF_Sample
 
 			// [2] Task_PerformFocusScanning 생성 및 params 주입
 			{
-				auto task = std::make_shared<SamplePerformFocusScanningTask>();
+				auto task = std::make_shared<TaskLoad1PerformFocusScanning>();
 
 				VMF::VisionParams focusParams;
-				const int cameraIndex = 6;
-				const int packageId = 1;
-				const int pickerMaxRow = 4;
-				const int pickerMaxCol = 9;
+				const int cameraIndex   = 6;
+				const int packageId     = 1;
+				const int pickerMaxRow  = 4;
+				const int pickerMaxCol  = 9;
 
-				focusParams.visionParams[VAT_SEQ_PARAM_CAMERA_INDEX] = std::to_string(cameraIndex);
-				focusParams.visionParams[VAT_SEQ_PARAM_PACKAGE_ID] = std::to_string(packageId);
-				focusParams.visionParams[VAT_SEQ_PARAM_MOTION_TIMEOUT_MS] = "7000";
-				focusParams.visionParams[VAT_SEQ_PARAM_VISION_TIMEOUT_MS] = "30000";
+				focusParams.visionParams[VAT_SEQ_PARAM_CAMERA_INDEX]        = std::to_string(cameraIndex);
+				focusParams.visionParams[VAT_SEQ_PARAM_PACKAGE_ID]          = std::to_string(packageId);
+				focusParams.visionParams[VAT_SEQ_PARAM_MOTION_TIMEOUT_MS]   = "7000";
+				focusParams.visionParams[VAT_SEQ_PARAM_VISION_TIMEOUT_MS]   = "30000";
 
 				AddVisionPoint(focusParams, 1, 1, 125.3, 48.7, -2.5);
 				AddVisionPoint(focusParams, 2, 2, 130.1, 52.3, -1.8);

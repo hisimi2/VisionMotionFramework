@@ -13,29 +13,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ZFocus">
-      <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ZFocus\Loader1">
+    <Filter Include="Loader1">
       <UniqueIdentifier>{ea569707-ffce-4ff2-9541-c49d4ea5e343}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ZFocus\Loader1\Protocol">
-      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ZFocus\Loader1\Sequences">
-      <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ZFocus\Loader1\Tasks">
+    <Filter Include="Loader1\Tasks">
       <UniqueIdentifier>{8b1531be-a7d8-48e7-a8b8-4d8386449958}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ZFocus\Loader1\Actuator">
+    <Filter Include="Loader1\ZFocus">
+      <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader1\ZFocus\Actuator">
       <UniqueIdentifier>{24c29f5e-214e-4a9b-8794-a8fafaceb535}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PLVI">
-      <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
+    <Filter Include="Loader1\ZFocus\Protocol">
+      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PlateZIG">
+    <Filter Include="Loader1\ZFocus\Sequences">
+      <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader1\PlateZIG">
       <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader1\PLVI">
+      <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,16 +43,16 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\SampleActuatorAdapter.h">
-      <Filter>ZFocus\Loader1\Actuator</Filter>
+      <Filter>Loader1\ZFocus\Actuator</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionParamKeys.h">
-      <Filter>ZFocus\Loader1\Protocol</Filter>
+      <Filter>Loader1\ZFocus\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionProcessor.h">
-      <Filter>ZFocus\Loader1\Protocol</Filter>
+      <Filter>Loader1\ZFocus\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionPacket.h">
-      <Filter>ZFocus\Loader1\Protocol</Filter>
+      <Filter>Loader1\ZFocus\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\DefineVAT.h">
       <Filter>헤더 파일</Filter>
@@ -63,17 +63,17 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\SampleMoveToStartPositionTask.h">
-      <Filter>ZFocus\Loader1\Tasks</Filter>
+    <ClInclude Include="include\TaskLoad1MoveToStartPosition.h">
+      <Filter>Loader1\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="include\SamplePerformFocusScanningTask.h">
-      <Filter>ZFocus\Loader1\Tasks</Filter>
+    <ClInclude Include="include\TaskLoad1PerformFocusScanning.h">
+      <Filter>Loader1\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="include\SampleSequenceStrategy.h">
-      <Filter>ZFocus\Loader1\Sequences</Filter>
+    <ClInclude Include="include\ZfocusLoad1Strategy.h">
+      <Filter>Loader1\ZFocus\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="include\SampleZFocusSequenceBuilder.h">
-      <Filter>ZFocus\Loader1\Sequences</Filter>
+    <ClInclude Include="include\ZFocusLoad1Builder.h">
+      <Filter>Loader1\ZFocus\Sequences</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -84,19 +84,19 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp">
-      <Filter>ZFocus\Loader1\Protocol</Filter>
+      <Filter>Loader1\ZFocus\Protocol</Filter>
     </ClCompile>
     <ClCompile Include="scr\Actuator\SampleActuatorAdapter.cpp">
-      <Filter>ZFocus\Loader1\Actuator</Filter>
+      <Filter>Loader1\ZFocus\Actuator</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Tasks\SamplePerformFocusScanningTask.cpp">
-      <Filter>ZFocus\Loader1\Tasks</Filter>
+    <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp">
+      <Filter>Loader1\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Tasks\SampleMoveToStartPositionTask.cpp">
-      <Filter>ZFocus\Loader1\Tasks</Filter>
+    <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp">
+      <Filter>Loader1\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Strategies\SampleSequenceStrategy.cpp">
-      <Filter>ZFocus\Loader1\Sequences</Filter>
+    <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp">
+      <Filter>Loader1\ZFocus\Sequences</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

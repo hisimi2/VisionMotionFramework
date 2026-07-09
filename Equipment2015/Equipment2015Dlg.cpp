@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
-#include "SampleSequenceStrategy.h"
+#include "zfocusload1strategy.h"
 
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"
@@ -45,7 +45,7 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
     // Plugin DLL에서 Orchestrator 생성
-    auto componentFactory = std::make_shared<VMF_Sample::SampleSequenceStrategy>();
+    auto componentFactory = std::make_shared<VMF_Sample::ZfocusLoad1Strategy>();
 
     // Plugin DLL의 InitializeOrchestratorStateMachine를 통해 상태머신 모드 초기화
     m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);

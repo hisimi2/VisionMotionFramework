@@ -16,7 +16,7 @@ namespace VMF_Sample
 	/// 3. VisionCommand 종류: VisionCommands::Measure 외에 다른 명령이 필요하면 변경
 	/// 4. 조명 제어: actuator->SetLightState()는 장비의 조명 제어 방식에 맞게 수정
 	/// </summary>
-	class VMF_PLUGIN_API SamplePerformFocusScanningTask : public VMF::NonBlockingTaskBase
+	class VMF_PLUGIN_API TaskLoad1PerformFocusScanning : public VMF::NonBlockingTaskBase
 	{
 		enum Substep
 		{
@@ -36,8 +36,8 @@ namespace VMF_Sample
 		VMF::TaskResult HandleSaveFocusResult(VMF::Context& ctx);
 
 	public:
-		SamplePerformFocusScanningTask();
-		virtual ~SamplePerformFocusScanningTask();
+		TaskLoad1PerformFocusScanning();
+		virtual ~TaskLoad1PerformFocusScanning();
 
 		std::string GetName() const override
 		{

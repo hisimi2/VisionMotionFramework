@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "SampleSequenceStrategy.h"
-#include "SampleZFocusSequenceBuilder.h"
+#include "ZfocusLoad1Strategy.h"
+#include "ZFocusLoad1Builder.h"
 #include "SqliteDataRepository.h"
 #include "VisionProcessor.h"
 
@@ -10,7 +10,7 @@
 
 namespace VMF_Sample
 {
-    DataRepositoryPtr SampleSequenceStrategy::CreateRepository()
+    DataRepositoryPtr ZfocusLoad1Strategy::CreateRepository()
     {
         // SqliteDataRepository 생성 및 초기화
         auto repo = std::make_shared<VMF::SqliteDataRepository>(
@@ -20,7 +20,7 @@ namespace VMF_Sample
         return repo;
     }
 
-    VisionProcessorPtr SampleSequenceStrategy::CreateVisionProcessor()
+    VisionProcessorPtr ZfocusLoad1Strategy::CreateVisionProcessor()
     {
         // ConnectionManager 모드 확인
         if (IsUsingConnectionManager())
@@ -47,17 +47,17 @@ namespace VMF_Sample
         return vp;
     }
 
-    std::string SampleSequenceStrategy::GetSequenceName() const
+    std::string ZfocusLoad1Strategy::GetSequenceName() const
     {
         return "SampleZFocus";
     }
 
-    SequenceBuilderPtr SampleSequenceStrategy::CreateBuilder()
+    SequenceBuilderPtr ZfocusLoad1Strategy::CreateBuilder()
     {
-        return std::make_shared<SampleZFocusSequenceBuilder>();
+        return std::make_shared<ZFocusLoad1Builder>();
     }
 
-    void SampleSequenceStrategy::ConfigureParams(VMF::VisionContextPtr context) 
+    void ZfocusLoad1Strategy::ConfigureParams(VMF::VisionContextPtr context) 
     {
         if (!context)
             return;

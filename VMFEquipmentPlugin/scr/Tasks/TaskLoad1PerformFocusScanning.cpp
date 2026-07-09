@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "include/SamplePerformFocusScanningTask.h"
+#include "include/TaskLoad1PerformFocusScanning.h"
 #include "include/DefineVAT.h"
 
 namespace VMF_Sample
 {
-    SamplePerformFocusScanningTask::SamplePerformFocusScanningTask()
+    TaskLoad1PerformFocusScanning::TaskLoad1PerformFocusScanning()
         : m_cameraId(0)
         , m_packageId(0)
         , m_moveTimeoutMs(7000)
@@ -12,11 +12,11 @@ namespace VMF_Sample
     {
     }
 
-    SamplePerformFocusScanningTask::~SamplePerformFocusScanningTask()
+    TaskLoad1PerformFocusScanning::~TaskLoad1PerformFocusScanning()
     {
     }
 
-    void SamplePerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
+    void TaskLoad1PerformFocusScanning::OnInitialize(VMF::Context& ctx)
     {
         // [Task-specific VisionParams]
         // 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
@@ -33,7 +33,7 @@ namespace VMF_Sample
         EnterState(MoveDown);
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::OnPoll(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::OnPoll(
         VMF::Context& ctx,
         VMF::IActuator* actuator)
     {
@@ -49,7 +49,7 @@ namespace VMF_Sample
         }
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveDown(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::HandleMoveDown(
         VMF::Context& ctx,
         VMF::IActuator* actuator)
     {
@@ -69,7 +69,7 @@ namespace VMF_Sample
         return VMF::TR_KEEP;
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::HandleMoveWait(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::HandleMoveWait(
         VMF::Context& ctx,
         VMF::IActuator* actuator)
     {
@@ -94,7 +94,7 @@ namespace VMF_Sample
         return VMF::TR_KEEP;
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionRequest(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::HandleVisionRequest(
         VMF::Context& ctx,
         VMF::IActuator* actuator)
     {
@@ -121,7 +121,7 @@ namespace VMF_Sample
         return VMF::TR_KEEP;
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::HandleVisionWait(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::HandleVisionWait(
         VMF::Context& ctx,
         VMF::IActuator* actuator)
     {
@@ -149,7 +149,7 @@ namespace VMF_Sample
         return VMF::TR_KEEP;
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::HandleReturnHome(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::HandleReturnHome(
         VMF::Context& ctx,
         VMF::IActuator* actuator)
     {
@@ -163,7 +163,7 @@ namespace VMF_Sample
         return VMF::TR_KEEP;
     }
 
-    VMF::TaskResult SamplePerformFocusScanningTask::HandleSaveFocusResult(
+    VMF::TaskResult TaskLoad1PerformFocusScanning::HandleSaveFocusResult(
         VMF::Context& ctx)
     {
         auto repo = ctx.GetRepository();

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "DefaultSetupStrategy.h"
-#include "SampleZFocusSequenceBuilder.h"
+#include "ZFocusLoad1Builder.h"
 #include "VMFEquipmentPluginExport.h"
 
 namespace VMF_Sample
 {
 	using namespace VMF;
 
-	class VMF_PLUGIN_API SampleSequenceStrategy : public DefaultSetupStrategy
+	class VMF_PLUGIN_API ZfocusLoad1Strategy : public DefaultSetupStrategy
 	{
 	public:
 		// --- IComponentSetup 재정의 ---

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
@@ -48,7 +48,7 @@ namespace VMF
 
 		/// <summary>
 		/// 생성자: DefaultSetupStrategy (IComponentSetup + ISequenceSetup 통합)을 주입하여 객체 조립
-		/// SampleSequenceStrategy 등 DefaultSetupStrategy 파생 클래스를 하나의 인자로 전달합니다.
+		/// ZfocusLoad1Strategy 등 DefaultSetupStrategy 파생 클래스를 하나의 인자로 전달합니다.
 		/// </summary>
 		/// <param name="strategy">DefaultSetupStrategy 구현체 — 컴포넌트 생성 + 시퀀스 설정 통합 객체</param>
 		explicit Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy);

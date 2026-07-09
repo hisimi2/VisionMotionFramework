@@ -21,7 +21,7 @@ namespace VMF
     /// SetTaskParams()로 설정하면, GetTaskSeqParamAs / GetTaskVisionParamAs 로 조회합니다.
     /// 
     /// 사용 예:
-    ///   auto moveTask = std::make_shared<SampleMoveToStartPositionTask>();
+    ///   auto moveTask = std::make_shared<TaskLoad1MoveToStartPosition>();
     ///   VisionParams moveParams;
     ///   moveParams.visionParams["TargetX"] = "125.3";
     ///   moveTask->SetTaskParams(moveParams);

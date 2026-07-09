@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "include/SampleMoveToStartPositionTask.h"
+#include "include/TaskLoad1MoveToStartPosition.h"
 #include "include/DefineVAT.h"
 
 
@@ -8,16 +8,16 @@ namespace VMF_Sample
 
     using namespace VMF;
 
-    SampleMoveToStartPositionTask::SampleMoveToStartPositionTask()
+    TaskLoad1MoveToStartPosition::TaskLoad1MoveToStartPosition()
         : m_moveTimeoutMs(7000)
     {
     }
 
-    SampleMoveToStartPositionTask::~SampleMoveToStartPositionTask()
+    TaskLoad1MoveToStartPosition::~TaskLoad1MoveToStartPosition()
     {
     }
 
-    void SampleMoveToStartPositionTask::OnInitialize(Context& ctx)
+    void TaskLoad1MoveToStartPosition::OnInitialize(Context& ctx)
     {
         // [Task-specific VisionParams]
         // 1순위: Task 자체 파라미터 (Builder에서 SetTaskParams로 주입)
@@ -29,7 +29,7 @@ namespace VMF_Sample
         EnterState(MoveSafeZ);
     }
 
-    TaskResult SampleMoveToStartPositionTask::OnPoll(Context& ctx, IActuator* actuator)
+    TaskResult TaskLoad1MoveToStartPosition::OnPoll(Context& ctx, IActuator* actuator)
     {
         switch (GetState())
         {
@@ -43,7 +43,7 @@ namespace VMF_Sample
         }
     }
 
-    TaskResult SampleMoveToStartPositionTask::HandleMoveSafeZ(
+    TaskResult TaskLoad1MoveToStartPosition::HandleMoveSafeZ(
         Context& ctx, IActuator* actuator)
     {
         if (!actuator)
@@ -62,7 +62,7 @@ namespace VMF_Sample
         return TR_KEEP;
     }
 
-    TaskResult SampleMoveToStartPositionTask::HandleMoveOrigin(
+    TaskResult TaskLoad1MoveToStartPosition::HandleMoveOrigin(
         Context& ctx, IActuator* actuator)
     {
         if (!actuator)
@@ -89,7 +89,7 @@ namespace VMF_Sample
         return TR_KEEP;
     }
 
-    TaskResult SampleMoveToStartPositionTask::HandleMoveTargetPositionXY(
+    TaskResult TaskLoad1MoveToStartPosition::HandleMoveTargetPositionXY(
         Context& ctx, IActuator* actuator)
     {
         if (!actuator)
@@ -127,7 +127,7 @@ namespace VMF_Sample
         return TR_KEEP;
     }
 
-    TaskResult SampleMoveToStartPositionTask::HandleMoveTargetPositionZ(
+    TaskResult TaskLoad1MoveToStartPosition::HandleMoveTargetPositionZ(
         Context& ctx, IActuator* actuator)
     {
         if (!actuator)
@@ -158,7 +158,7 @@ namespace VMF_Sample
         return TR_KEEP;
     }
 
-    TaskResult SampleMoveToStartPositionTask::HandleCompleteMove(
+    TaskResult TaskLoad1MoveToStartPosition::HandleCompleteMove(
         Context& ctx, IActuator* actuator)
     {
         if (!actuator)

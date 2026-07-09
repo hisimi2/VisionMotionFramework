@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(SolutionDir)VMFEquipmentPlugin\include;$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)EquipmentCore\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)EquipmentCore\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
@@ -239,11 +239,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VMFEquipmentPlugin\VMFEquipmentPlugin.vcxproj">
-      <Project>{47e9888b-8124-4387-a71e-5326579e6acf}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Equipment2015.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +246,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Equipment2015.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VMFEquipmentPlugin\VMFEquipmentPlugin.vcxproj">
+      <Project>{47e9888b-8124-4387-a71e-5326579e6acf}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
