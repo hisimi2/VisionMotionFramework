@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
-#include "zfocusload1strategy.h"
+#include "ZfocusLoad1Strategy.h"
 
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"
