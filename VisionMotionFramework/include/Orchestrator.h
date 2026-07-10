@@ -40,13 +40,8 @@ namespace VMF
 	public:
 		using ObserverId = std::uint64_t;
 		using VisionResultObserver = std::function<void(const VisionResultPayload& payload)>;
-
-		/// <summary>
-		/// 기본 생성자: 팩토리 없이 Orchestrator만 생성 (직접 모드 또는 수동 주입 후 사용)
-		/// </summary>
-		Orchestrator();
-
-/// <summary>
+        
+        /// <summary>
 		/// 생성자: DefaultSetupStrategy + Actuator + ConnectionConfig를 한 번에 주입하여
 		/// 생성 시점에 Repository, VisionProcessor, Context를 미리 조립합니다.
 		/// 상태머신 모드: 생성 후 RunSequence() 호출
@@ -59,13 +54,7 @@ namespace VMF
 		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig(),
                      IActuator * actuator=nullptr );
 
-		/// <summary>
-		/// 생성자: ComponentFactory와 SequenceFactory를 각각 주입하여 객체 조립
-		/// (하위 호환성 유지 — ComponentSetup/SequenceSetup이 분리된 경우 사용)
-		/// </summary>
-		/// <param name="componentFactory">IComponentSetup — Repository, VisionProcessor 생성</param>
-		/// <param name="sequenceFactory">ISequenceSetup — 시퀀스 이름, Builder 생성 (직접 모드에서는 nullptr 가능)</param>
-		Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory);
+		
 
 		~Orchestrator() override;
 
@@ -121,11 +110,7 @@ namespace VMF
 			IActuator* actuator,
 			const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
 
-		/// <summary>
-		/// [Direct Mode] 외부 DLL에서 생성된 DefaultSetupStrategy를 받아
-		/// 직접 모드로 컴포넌트를 초기화합니다. (시퀀스 실행 없음)
-		/// </summary>
-		bool InitializeDirect(std::shared_ptr<DefaultSetupStrategy> strategy);
+		
 
 	protected:
 		/// <summary>

@@ -2,7 +2,6 @@
 #include "Orchestrator.h"
 #include "RunController.h"
 #include "Context.h"
-
 #include "AsyncExecutor.h"
 
 #include <memory>
@@ -10,14 +9,7 @@
 
 namespace VMF
 {
-    Orchestrator::Orchestrator()
-        : m_pVisionEngine()
-        , m_componentFactory()
-        , m_sequenceFactory()
-    {
-    }
-
-Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
+    Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
                                 const VisionConnectionConfig& connectionConfig,
                                 IActuator* actuator)
         : m_pVisionEngine()
@@ -35,12 +27,6 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
             false);     // runSequence = false (시퀀스는 별도 호출)
     }
 
-    Orchestrator::Orchestrator(ComponentSetupPtr componentFactory, SequenceSetupPtr sequenceFactory)
-        : m_pVisionEngine()
-        , m_componentFactory(componentFactory)
-        , m_sequenceFactory(sequenceFactory)
-    {
-    }
 
     Orchestrator::~Orchestrator()
     {
@@ -173,7 +159,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
         if (!factory)
             return false;
 
-// Actuator 설정 — nullptr이면 기존 설정 유지 (Strategy에 미리 주입된 값 보존)
+        // Actuator 설정 — nullptr이면 기존 설정 유지 (Strategy에 미리 주입된 값 보존)
         if (actuator != nullptr)
         {
             factory->SetActuator(actuator);
@@ -342,22 +328,6 @@ bool Orchestrator::RunSequence(IActuator* actuator,
             nullptr);   // connectionConfig = nullptr → 기존 주입값 유지
     }
 
-    // ============================================================================
-    // [직접 모드] 구현
-    // ============================================================================
-
-    void Orchestrator::SetVisionProcessor(VisionProcessorPtr vp)
-    {
-        std::lock_guard<std::mutex> guard(m_seqMutex);
-        m_directVisionProcessor = vp;
-
-        // 직접 모드: 이미 Context가 생성된 경우에도 VP 연결 업데이트
-        if (m_directContext)
-        {
-            m_directContext->SetVisionProcessor(vp);
-        }
-    }
-
     VisionProcessorPtr Orchestrator::GetVisionProcessor() const
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
@@ -369,18 +339,6 @@ bool Orchestrator::RunSequence(IActuator* actuator,
             if (ctx) return ctx->GetVisionProcessorInterface();
         }
         return m_directVisionProcessor;
-    }
-
-    void Orchestrator::SetDataRepository(DataRepositoryPtr repo)
-    {
-        std::lock_guard<std::mutex> guard(m_seqMutex);
-        m_directDataRepository = repo;
-
-        // 직접 모드: 이미 Context가 생성된 경우에도 Repo 연결 업데이트
-        if (m_directContext)
-        {
-            m_directContext->SetDataRepository(repo);
-        }
     }
 
     VisionContextPtr Orchestrator::GetOrCreateContext()
@@ -467,25 +425,5 @@ bool Orchestrator::RunSequence(IActuator* actuator,
             [strategy]() { return strategy->CreateBuilder(); });
     }
 
-    // ============================================================================
-    // [Direct Mode] InitializeDirect (DefaultSetupStrategy 기반)
-    // ============================================================================
-
-    bool Orchestrator::InitializeDirect(std::shared_ptr<DefaultSetupStrategy> strategy)
-    {
-        std::lock_guard<std::mutex> guard(m_seqMutex);
-
-        if (!strategy)
-            return false;
-
-        // CreateComponentsAndRun을 통해 공통 로직 재사용
-        // runSequence = false, builder 람다는 nullptr로 전달 (사용 안 함)
-        return CreateComponentsAndRun(
-            strategy.get(),
-            nullptr,     // actuator = nullptr (직접 모드)
-            nullptr,     // connectionConfig = nullptr
-            strategy,    // presetStrategy = strategy (m_pCurrentStrategy 저장)
-            false);      // runSequence = false
-    }
 
 } // namespace VMF
