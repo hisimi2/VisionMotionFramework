@@ -13,49 +13,49 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Loader1">
+    <Filter Include="LoadPP">
       <UniqueIdentifier>{ea569707-ffce-4ff2-9541-c49d4ea5e343}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\Tasks">
+    <Filter Include="LoadPP\Tasks">
       <UniqueIdentifier>{8b1531be-a7d8-48e7-a8b8-4d8386449958}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\PlateZIG">
-      <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Loader1\PLVI">
+    <Filter Include="LoadPP\PLVI">
       <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\SideInspection">
+    <Filter Include="LoadPP\SideInspection">
       <UniqueIdentifier>{85fa31bd-da55-4d24-bb86-85c9cc371a23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\VisionAutoTeaching">
+    <Filter Include="LoadPP\VisionAutoTeaching">
       <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\VisionAutoTeaching\Actuator">
-      <UniqueIdentifier>{24c29f5e-214e-4a9b-8794-a8fafaceb535}</UniqueIdentifier>
+    <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG">
+      <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\VisionAutoTeaching\Protocol">
+    <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG\Protocol">
       <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Loader1\VisionAutoTeaching\Sequences">
+    <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG\Sequences">
       <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadPP\VisionAutoTeaching\AutoMode">
+      <UniqueIdentifier>{078026cb-cadf-434b-98e0-2ef71facde64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadPP\VisionAutoTeaching\NonePlateZIG">
+      <UniqueIdentifier>{7ce0ed5d-dc49-45b8-a575-d15ee9088a3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\SampleActuatorAdapter.h">
-      <Filter>Loader1\VisionAutoTeaching\Actuator</Filter>
-    </ClInclude>
     <ClInclude Include="include\VisionParamKeys.h">
-      <Filter>Loader1\VisionAutoTeaching\Protocol</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionProcessor.h">
-      <Filter>Loader1\VisionAutoTeaching\Protocol</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionPacket.h">
-      <Filter>Loader1\VisionAutoTeaching\Protocol</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\DefineVAT.h">
       <Filter>헤더 파일</Filter>
@@ -67,16 +67,16 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\TaskLoad1MoveToStartPosition.h">
-      <Filter>Loader1\Tasks</Filter>
+      <Filter>LoadPP\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="include\TaskLoad1PerformFocusScanning.h">
-      <Filter>Loader1\Tasks</Filter>
+      <Filter>LoadPP\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="include\ZfocusLoad1Strategy.h">
-      <Filter>Loader1\VisionAutoTeaching\Sequences</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="include\ZFocusLoad1Builder.h">
-      <Filter>Loader1\VisionAutoTeaching\Sequences</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,19 +87,16 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp">
-      <Filter>Loader1\VisionAutoTeaching\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="scr\Actuator\SampleActuatorAdapter.cpp">
-      <Filter>Loader1\VisionAutoTeaching\Actuator</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp">
-      <Filter>Loader1\Tasks</Filter>
+      <Filter>LoadPP\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp">
-      <Filter>Loader1\Tasks</Filter>
+      <Filter>LoadPP\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp">
-      <Filter>Loader1\VisionAutoTeaching\Sequences</Filter>
+      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

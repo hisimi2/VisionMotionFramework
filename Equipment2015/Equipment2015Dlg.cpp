@@ -13,6 +13,8 @@
 #include "OperationThreads\Load1ActivityBuilder.h"
 #include "OperationThreads\Load2ActivityBuilder.h"
 
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -60,7 +62,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
     // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->RunSequence(nullptr);
+    bool started = m_orchestrator->RunSequence(m_loadPPAdapter.get(), VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
 
     if (started)
     {

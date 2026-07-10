@@ -25,6 +25,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="VAT">
+      <UniqueIdentifier>{1b4cf6d5-579f-4263-9983-21e450ff74d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -99,6 +102,9 @@
     <ClInclude Include="Actuators\CylinderTypes.h">
       <Filter>Actuators</Filter>
     </ClInclude>
+    <ClInclude Include="VAT\LoadPPAdapter.h">
+      <Filter>VAT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">
@@ -145,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="OperationThreads\Load2ActivityBuilder.cpp">
       <Filter>OperationThreads\UnitLoad2</Filter>
+    </ClCompile>
+    <ClCompile Include="VAT\LoadPPAdapter.cpp">
+      <Filter>VAT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

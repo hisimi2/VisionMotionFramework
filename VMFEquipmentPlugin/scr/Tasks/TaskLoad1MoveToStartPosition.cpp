@@ -2,14 +2,12 @@
 #include "include/TaskLoad1MoveToStartPosition.h"
 #include "include/DefineVAT.h"
 
-
 namespace VMF_Sample
 {
-
     using namespace VMF;
 
     TaskLoad1MoveToStartPosition::TaskLoad1MoveToStartPosition()
-        : m_moveTimeoutMs(7000)
+        : m_moveTimeoutMs(100)
     {
     }
 

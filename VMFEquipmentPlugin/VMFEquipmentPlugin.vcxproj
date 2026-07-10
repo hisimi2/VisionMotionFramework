@@ -173,7 +173,6 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="include\DefineVAT.h" />
-    <ClInclude Include="include\SampleActuatorAdapter.h" />
     <ClInclude Include="include\TaskLoad1MoveToStartPosition.h" />
     <ClInclude Include="include\TaskLoad1PerformFocusScanning.h" />
     <ClInclude Include="include\ZfocusLoad1Strategy.h" />
@@ -192,7 +191,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="scr\Actuator\SampleActuatorAdapter.cpp" />
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp" />
     <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp" />
     <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp" />

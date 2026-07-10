@@ -3,9 +3,11 @@
 #pragma once
 
 #include "Actuators/COPSwitch.h"
-#include <memory> // std::shared_ptr
-#include <vector> // std::vector
+#include <memory> 
+#include <vector> 
 #include "ThreadsManager.h"
+
+#include "VAT/LoadPPAdapter.h"
 
 namespace VMF { class Orchestrator; }
 
@@ -42,6 +44,8 @@ protected:
 
 private:
     std::shared_ptr<VMF::Orchestrator> m_orchestrator;
+
+    std::shared_ptr<VMF::LoadPPAdapter> m_loadPPAdapter;
 public:
 	afx_msg void OnBnClickedStart();
 	afx_msg void OnBnClickedStop();
