@@ -9,9 +9,9 @@
 
 namespace VMF
 {
-    Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
-                                const VisionConnectionConfig& connectionConfig,
-                                IActuator* actuator)
+Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
+                                IActuator* actuator,
+                                const VisionConnectionConfig& connectionConfig)
         : m_pVisionEngine()
         , m_componentFactory(std::static_pointer_cast<IComponentSetup>(strategy))
         , m_sequenceFactory(std::static_pointer_cast<ISequenceSetup>(strategy))
@@ -371,7 +371,7 @@ bool Orchestrator::RunSequence(IActuator* actuator,
         return ctx->ExecuteVisionCommand(cmd);
     }
 
-    bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params)
+bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params)
     {
         auto ctx = GetOrCreateContext();
         if (!ctx) return false;
@@ -389,41 +389,5 @@ bool Orchestrator::RunSequence(IActuator* actuator,
         // 기존 (cmd, params) 오버로드로 위임
         return ExecuteDirectVisionCommand(cmd, params);
     }
-
-// ============================================================================
-    // [직접 모드] IComponentSetup 기반 초기화
-    // ============================================================================
-
-    // ============================================================================
-    // [DLL Plugin] StartSequenceFromStrategy (DefaultSetupStrategy 기반)
-    // ============================================================================
-
-    bool Orchestrator::StartSequenceFromStrategy(
-        std::shared_ptr<DefaultSetupStrategy> strategy,
-        IActuator* actuator,
-        const VisionConnectionConfig& connectionConfig)
-    {
-        std::lock_guard<std::mutex> guard(m_seqMutex);
-
-        // 기존 엔진 중지
-        if (m_pVisionEngine)
-        {
-            m_pVisionEngine->StopSequence();
-            m_pVisionEngine.reset();
-        }
-        m_pCurrentStrategy.reset();
-
-        if (!strategy)
-            return false;
-
-        return CreateComponentsAndRun(
-            strategy.get(),              // factory = strategy (IComponentSetup)
-            actuator,
-            (!connectionConfig.address.empty() && connectionConfig.port > 0) ? &connectionConfig : nullptr,
-            strategy,                    // presetStrategy = strategy
-            true,                        // runSequence = true
-            [strategy]() { return strategy->CreateBuilder(); });
-    }
-
 
 } // namespace VMF

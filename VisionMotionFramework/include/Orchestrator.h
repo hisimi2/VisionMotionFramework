@@ -41,7 +41,7 @@ namespace VMF
 		using ObserverId = std::uint64_t;
 		using VisionResultObserver = std::function<void(const VisionResultPayload& payload)>;
         
-        /// <summary>
+/// <summary>
 		/// 생성자: DefaultSetupStrategy + Actuator + ConnectionConfig를 한 번에 주입하여
 		/// 생성 시점에 Repository, VisionProcessor, Context를 미리 조립합니다.
 		/// 상태머신 모드: 생성 후 RunSequence() 호출
@@ -51,8 +51,8 @@ namespace VMF
 		/// <param name="actuator">액추에이터 (직접 모드에서는 nullptr 가능)</param>
 		/// <param name="connectionConfig">Vision 서버 연결 설정</param>
 		Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
-		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig(),
-                     IActuator * actuator=nullptr );
+		             IActuator* actuator = nullptr,
+		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
 
 		
 
@@ -82,13 +82,11 @@ namespace VMF
 
 		void StopSequence();
 
-		// Repository accessor
+// Repository accessor
 		DataRepositoryPtr GetDataRepository();
 
-		// --- [직접 모드] Strategy 없이 VisionProcessor/Repository/Context 사용 ---
-		void SetVisionProcessor(VisionProcessorPtr vp);
+		// --- [직접 모드] VisionProcessor/Repository/Context 사용 ---
 		VisionProcessorPtr GetVisionProcessor() const;
-		void SetDataRepository(DataRepositoryPtr repo);
 
 		/// Context 획득 (직접 모드/상태머신 모드 모두 지원)
 		VisionContextPtr GetOrCreateContext();
@@ -97,20 +95,6 @@ namespace VMF
 		bool ExecuteDirectVisionCommand(VisionCommand cmd);
 		bool ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params);
 		bool ExecuteDirectVisionCommand(VisionCommand cmd, const std::string& paramsName);
-
-        /// <summary>
-		/// [Plugin] 외부 Plugin DLL에서 생성된 DefaultSetupStrategy를 받아 시퀀스를 실행합니다.
-		/// DefaultSetupStrategy는 IComponentSetup + ISequenceSetup을 통합합니다.
-		/// </summary>
-		/// <param name="strategy">Plugin DLL에서 생성한 Strategy 객체 (DefaultSetupStrategy*)</param>
-		/// <param name="actuator">액추에이터 (또는 nullptr)</param>
-		/// <param name="connectionConfig">Vision 서버 연결 설정 (선택, 비워두면 기본 모드)</param>
-		bool StartSequenceFromStrategy(
-			std::shared_ptr<DefaultSetupStrategy> strategy,
-			IActuator* actuator,
-			const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
-
-		
 
 	protected:
 		/// <summary>
