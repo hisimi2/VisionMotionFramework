@@ -39,7 +39,12 @@ namespace VMF_Sample
         }
 
         // 기본 모드: VisionProcessor 생성 및 초기화
-        VMF::VisionConnectionConfig config("127.0.0.1", 8080, 3000);
+        // 생성자에서 주입된 ConnectionConfig 우선 사용, 없으면 기본값
+        VMF::VisionConnectionConfig config = GetConnectionConfig();
+        if (config.address.empty() || config.port == 0)
+        {
+            config = VMF::VisionConnectionConfig("127.0.0.1", 8080, 3000);
+        }
 
         auto vp = std::make_shared<VMF::CMockVisionProcessor>();
         // auto vp = std::make_shared<VMF::VisionProcessor>();

@@ -47,15 +47,12 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    // 1. Plugin Strategy 생성 (VMFEquipmentPlugin)
     auto strategy = std::make_shared<VMF_Sample::ZfocusLoad1Strategy>();
 
-    // 2. Strategy에 Actuator와 ConnectionConfig를 미리 주입
-    strategy->SetActuator(m_loadPPAdapter.get());
-    strategy->SetConnectionConfig(VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
-
-    // 3. Orchestrator 생성 (Strategy에 모든 정보가 설정됨)
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy);
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(
+        strategy,
+        VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000),
+        m_loadPPAdapter.get());
 
     if (!m_orchestrator)
     {
@@ -65,8 +62,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
-    // 4. 시퀀스 실행 (nullptr 전달 — Strategy에 이미 설정됨)
-    bool started = m_orchestrator->RunSequence(nullptr);
+    bool started = m_orchestrator->RunSequence();
 
     AppendLog(started ?
         _T("[StateMachine Mode] Sequence started.\r\n") :
@@ -81,30 +77,29 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
     auto strategy = std::make_shared<VMF_Sample::PLVILoad1Strategy>();
 
-    strategy->SetConnectionConfig(VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy);
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(
+        strategy,
+        VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
 
     if (!m_orchestrator)
     {
-        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator.\r\n"));
+        AppendLog(_T("[Direct Mode] Failed to create Orchestrator.\r\n"));
         return;
     }
 
-    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_Direct"));
 
-    // Measure 명령 실행
     VMF::StringMap params;
     params["ExtraParam"] = "DirectModeTest";
     bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
 
-    // 최신 데이터 조회
     VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
     if (vp)
     {
-        auto latestData = vp->GetLatestData(VMF::Measure);
+        auto latestData = vp->GetLatestData(VMF::SetCok);
     }
-
 }
+
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
     : CDialogEx(IDD_EQUIPMENT2015_DIALOG, pParent)

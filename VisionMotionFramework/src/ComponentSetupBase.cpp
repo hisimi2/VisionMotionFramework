@@ -82,8 +82,13 @@ namespace VMF
             // ConnectionManager 실패 시 기본 방식으로 fallback
         }
 
-        // [기본 모드] - 기존 방식: 직접 연결 생성
-        VisionConnectionConfig config("127.0.0.1", 8080, 3000);
+// [기본 모드] - 기존 방식: 직접 연결 생성
+        // 생성자에서 주입된 ConnectionConfig 우선 사용, 없으면 기본값
+        VisionConnectionConfig config = GetConnectionConfig();
+        if (config.address.empty() || config.port == 0)
+        {
+            config = VisionConnectionConfig("127.0.0.1", 8080, 3000);
+        }
         auto vm = std::make_shared<CMockVisionEventHandler>();
         vm->Initialize(config);
 

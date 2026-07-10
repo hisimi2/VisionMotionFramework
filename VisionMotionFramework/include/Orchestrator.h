@@ -46,12 +46,18 @@ namespace VMF
 		/// </summary>
 		Orchestrator();
 
-		/// <summary>
-		/// 생성자: DefaultSetupStrategy (IComponentSetup + ISequenceSetup 통합)을 주입하여 객체 조립
-		/// ZfocusLoad1Strategy 등 DefaultSetupStrategy 파생 클래스를 하나의 인자로 전달합니다.
+/// <summary>
+		/// 생성자: DefaultSetupStrategy + Actuator + ConnectionConfig를 한 번에 주입하여
+		/// 생성 시점에 Repository, VisionProcessor, Context를 미리 조립합니다.
+		/// 상태머신 모드: 생성 후 RunSequence() 호출
+		/// 직접 모드: 생성 후 ExecuteDirectVisionCommand() 호출
 		/// </summary>
-		/// <param name="strategy">DefaultSetupStrategy 구현체 — 컴포넌트 생성 + 시퀀스 설정 통합 객체</param>
-		explicit Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy);
+		/// <param name="strategy">DefaultSetupStrategy 구현체</param>
+		/// <param name="actuator">액추에이터 (직접 모드에서는 nullptr 가능)</param>
+		/// <param name="connectionConfig">Vision 서버 연결 설정</param>
+		Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
+		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig(),
+                     IActuator * actuator=nullptr );
 
 		/// <summary>
 		/// 생성자: ComponentFactory와 SequenceFactory를 각각 주입하여 객체 조립
@@ -72,12 +78,18 @@ namespace VMF
 		void ClearObservers();
 
 		// ---- Sequence control (상태머신 모드) ----
-		/// <summary>
+/// <summary>
 		/// 주입된 팩토리(IComponentSetup + ISequenceSetup)를 사용하여
 		/// 컴포넌트를 조립하고 시퀀스를 실행합니다.
 		/// </summary>
 		bool RunSequence(IActuator* actuator,
 		                 const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
+
+		/// <summary>
+		/// 생성자에서 이미 Actuator와 ConnectionConfig가 주입된 경우
+		/// 인자 없이 시퀀스를 실행합니다.
+		/// </summary>
+		bool RunSequence();
 
 		void StopSequence();
 
