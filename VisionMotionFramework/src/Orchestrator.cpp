@@ -162,8 +162,11 @@ namespace VMF
         if (!factory)
             return false;
 
-        // Actuator 설정
-        factory->SetActuator(actuator);
+// Actuator 설정 — nullptr이면 기존 설정 유지 (Strategy에 미리 주입된 값 보존)
+        if (actuator != nullptr)
+        {
+            factory->SetActuator(actuator);
+        }
 
         if (connectionConfig)
         {

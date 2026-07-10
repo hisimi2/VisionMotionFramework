@@ -7,6 +7,7 @@
 
 #include "Orchestrator.h"
 #include "ZfocusLoad1Strategy.h"
+#include "PLVILoad1Strategy.h"
 
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"
@@ -46,32 +47,63 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    // Plugin DLL에서 Orchestrator 생성
-    auto componentFactory = std::make_shared<VMF_Sample::ZfocusLoad1Strategy>();
+    // 1. Plugin Strategy 생성 (VMFEquipmentPlugin)
+    auto strategy = std::make_shared<VMF_Sample::ZfocusLoad1Strategy>();
 
-    // Plugin DLL의 InitializeOrchestratorStateMachine를 통해 상태머신 모드 초기화
-    m_orchestrator = std::make_shared<VMF::Orchestrator>(componentFactory);
+    // 2. Strategy에 Actuator와 ConnectionConfig를 미리 주입
+    strategy->SetActuator(m_loadPPAdapter.get());
+    strategy->SetConnectionConfig(VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
+
+    // 3. Orchestrator 생성 (Strategy에 모든 정보가 설정됨)
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy);
 
     if (!m_orchestrator)
     {
-        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator from Plugin.\r\n"));
+        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator.\r\n"));
         return;
     }
 
-    // Observer 등록
     RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
 
-    // 시퀀스 실행 (※ 실제 하드웨어 연결 시 Actuator 교체 필요)
-    bool started = m_orchestrator->RunSequence(m_loadPPAdapter.get(), VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
+    // 4. 시퀀스 실행 (nullptr 전달 — Strategy에 이미 설정됨)
+    bool started = m_orchestrator->RunSequence(nullptr);
 
-    if (started)
+    AppendLog(started ?
+        _T("[StateMachine Mode] Sequence started.\r\n") :
+        _T("[StateMachine Mode] Failed to start sequence.\r\n")
+    );
+}
+
+//=============================================================================
+// [예제] VMF 직접 모드 (Direct Mode) - Plugin DLL 기반
+//=============================================================================
+void CEquipment2015Dlg::OnBnClickedVmfDirect()
+{
+    auto strategy = std::make_shared<VMF_Sample::PLVILoad1Strategy>();
+
+    strategy->SetConnectionConfig(VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
+    m_orchestrator = std::make_shared<VMF::Orchestrator>(strategy);
+
+    if (!m_orchestrator)
     {
-        AppendLog(_T("[StateMachine Mode] Sequence started via Plugin DLL.\r\n"));
+        AppendLog(_T("[StateMachine Mode] Failed to create Orchestrator.\r\n"));
+        return;
     }
-    else
+
+    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_StateMachine"));
+
+    // Measure 명령 실행
+    VMF::StringMap params;
+    params["ExtraParam"] = "DirectModeTest";
+    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
+
+    // 최신 데이터 조회
+    VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
+    if (vp)
     {
-        AppendLog(_T("[StateMachine Mode] Failed to start sequence.\r\n"));
+        auto latestData = vp->GetLatestData(VMF::Measure);
     }
+
 }
 
 CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
@@ -288,72 +320,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
     */
 }
 
-//=============================================================================
-// [예제] VMF 직접 모드 (Direct Mode) - Plugin DLL 기반
-//=============================================================================
-void CEquipment2015Dlg::OnBnClickedVmfDirect()
-{
-    /*
-    // Plugin DLL에서 Orchestrator 생성
-    m_orchestrator = CreateOrchestrator();
-    if (!m_orchestrator)
-    {
-        AfxMessageBox(_T("[Direct Mode] Failed to create Orchestrator from Plugin.\r\n"));
-        return;
-    }
 
-    RegisterOrchestratorObserver(m_orchestrator, _T("VMF_Direct"));
-
-    // Plugin DLL의 InitializeOrchestratorDirect를 통해 직접 모드 초기화
-    bool ok = InitializeOrchestratorDirect(m_orchestrator);
-
-    if (!ok)
-    {
-        AfxMessageBox(_T("[Direct Mode] InitializeDirect failed.\r\n"));
-        return;
-    }
-
-    CString logMsg;
-    logMsg = _T("[Direct Mode] Plugin 기반 초기화 완료.\r\n\r\n");
-
-    // Measure 명령 실행
-    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::Measure);
-    logMsg.AppendFormat(_T("[Direct Mode] Execute(Measure) → %s\r\n"),
-                        cmdOk ? _T("SUCCESS") : _T("FAILED"));
-
-    // 파라미터와 함께 명령 실행
-    VMF::StringMap params;
-    params["ExtraParam"] = "DirectModeTest";
-    cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
-    logMsg.AppendFormat(_T("[Direct Mode] Execute(SetCok, params) → %s\r\n"),
-                        cmdOk ? _T("SUCCESS") : _T("FAILED"));
-
-    // 최신 데이터 조회
-    VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
-    if (vp)
-    {
-        auto latestData = vp->GetLatestData(VMF::Measure);
-        logMsg += _T("  - GetLatestData(Measure) keys: ");
-        for (const auto& kv : latestData)
-        {
-            logMsg += CString(kv.first.c_str()) + _T("=") + CString(kv.second.c_str()) + _T(" ");
-        }
-        logMsg += _T("\r\n");
-    }
-
-    // Context 정보 확인
-    VMF::VisionContextPtr ctx = m_orchestrator->GetOrCreateContext();
-    if (ctx)
-    {
-        VMF::VisionProcessorPtr vp2 = ctx->GetVisionProcessorInterface();
-        logMsg.AppendFormat(_T("  - Context: available=%s, VP=%s\r\n"),
-                            ctx ? _T("true") : _T("false"),
-                            vp2 ? _T("valid") : _T("null"));
-    }
-
-    AppendLog(logMsg);
-    */
-}
 
 //=============================================================================
 // [예제] 다중 서버 사용 예시 - 여러 Orchestrator가 다른 Vision 서버에 접속

@@ -43,6 +43,9 @@
     <Filter Include="LoadPP\VisionAutoTeaching\NonePlateZIG">
       <UniqueIdentifier>{7ce0ed5d-dc49-45b8-a575-d15ee9088a3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LoadPP\PLVI\Sequences">
+      <UniqueIdentifier>{03b73ec7-1028-4d8f-9151-3d1ddaad731b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="include\ZFocusLoad1Builder.h">
       <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClInclude>
+    <ClInclude Include="include\PLVILoad1Strategy.h">
+      <Filter>LoadPP\PLVI\Sequences</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -97,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp">
       <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\PLVILoad1Strategy.cpp">
+      <Filter>LoadPP\PLVI\Sequences</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
