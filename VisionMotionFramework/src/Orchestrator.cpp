@@ -13,17 +13,16 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
                                 const VisionConnectionConfig& connectionConfig,
                                 IActuator* actuator)
         : m_pVisionEngine()
-        , m_componentFactory(std::static_pointer_cast<IComponentSetup>(strategy))
-        , m_sequenceFactory(std::static_pointer_cast<ISequenceSetup>(strategy))
+        , m_strategy(std::move(strategy))
     {
         // 생성 시점에 Actuator와 ConnectionConfig를 주입하고
         // Repository, VisionProcessor, Context를 미리 조립 (runSequence=false)
         bool hasConfig = (!connectionConfig.address.empty() && connectionConfig.port > 0);
         CreateComponentsAndRun(
-            m_componentFactory.get(),
+            m_strategy.get(),
             actuator,
             hasConfig ? &connectionConfig : nullptr,
-            strategy,   // presetStrategy
+            m_strategy,   // presetStrategy
             false);     // runSequence = false (시퀀스는 별도 호출)
     }
 
@@ -250,7 +249,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
     // InitializeComponents (기존 유지보수 호환용 — CreateComponentsAndRun 호출)
     // ============================================================================
 
-    bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* actuator,
+bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* actuator,
                                              bool runSequence,
                                              const VisionConnectionConfig* connectionConfig)
     {
@@ -258,9 +257,9 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
         {
             return CreateComponentsAndRun(
                 factory, actuator, connectionConfig,
-                m_sequenceFactory,   // presetStrategy = m_sequenceFactory
+                m_strategy,   // presetStrategy = m_strategy
                 true,
-                [this]() { return m_sequenceFactory ? m_sequenceFactory->CreateBuilder() : nullptr; });
+                [this]() { return m_strategy ? m_strategy->CreateBuilder() : nullptr; });
         }
         else
         {
@@ -288,12 +287,12 @@ bool Orchestrator::RunSequence(IActuator* actuator,
         }
         m_pCurrentStrategy.reset();
 
-        if (!m_componentFactory || !m_sequenceFactory)
+        if (!m_strategy)
             return false;
 
         bool hasConfig = (!connectionConfig.address.empty() && connectionConfig.port > 0);
         return InitializeComponents(
-            m_componentFactory.get(),
+            m_strategy.get(),
             actuator,
             true,
             hasConfig ? &connectionConfig : nullptr);
@@ -303,7 +302,7 @@ bool Orchestrator::RunSequence(IActuator* actuator,
     // RunSequence (무인자) — 생성자에서 이미 Actuator/Config가 주입된 경우 사용
     // ============================================================================
 
-    bool Orchestrator::RunSequence()
+bool Orchestrator::RunSequence()
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
 
@@ -315,14 +314,14 @@ bool Orchestrator::RunSequence(IActuator* actuator,
         }
         m_pCurrentStrategy.reset();
 
-        if (!m_componentFactory || !m_sequenceFactory)
+        if (!m_strategy)
             return false;
 
         // 생성자에서 이미 Actuator와 ConnectionConfig가 주입되어 있으므로
         // InitializeComponents에 actuator=nullptr, connectionConfig=nullptr 전달
         // → CreateComponentsAndRun 내부에서 nullptr 체크에 따라 기존 값 유지
         return InitializeComponents(
-            m_componentFactory.get(),
+            m_strategy.get(),
             nullptr,    // actuator = nullptr → 기존 주입값 유지
             true,       // runSequence = true
             nullptr);   // connectionConfig = nullptr → 기존 주입값 유지

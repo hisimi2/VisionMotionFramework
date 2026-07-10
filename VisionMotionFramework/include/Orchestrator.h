@@ -129,9 +129,8 @@ namespace VMF
 		DataRepositoryPtr     m_directDataRepository;
 		VisionContextPtr         m_directContext;
 
-		// 주입된 팩토리
-		ComponentSetupPtr m_componentFactory;
-		SequenceSetupPtr  m_sequenceFactory;
+		// 주입된 단일 전략 (IComponentSetup + ISequenceSetup 통합)
+		std::shared_ptr<DefaultSetupStrategy> m_strategy;
 
 		virtual VisionContextPtr CreateContext(const VisionProcessorPtr& vm, DataRepositoryPtr& repo);
 
