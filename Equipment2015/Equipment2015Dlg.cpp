@@ -51,8 +51,8 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(
         strategy,
-        m_loadPPAdapter.get(),
-        VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
+        VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000),
+        m_loadPPAdapter.get());
 
     if (!m_orchestrator)
     {
@@ -79,7 +79,6 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(
         strategy,
-        nullptr,
         VMF::VisionConnectionConfig("127.0.0.1", 5000, 5000));
 
     if (!m_orchestrator)

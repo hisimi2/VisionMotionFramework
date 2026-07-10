@@ -48,11 +48,11 @@ namespace VMF
 		/// 직접 모드: 생성 후 ExecuteDirectVisionCommand() 호출
 		/// </summary>
 		/// <param name="strategy">DefaultSetupStrategy 구현체</param>
-		/// <param name="actuator">액추에이터 (직접 모드에서는 nullptr 가능)</param>
-		/// <param name="connectionConfig">Vision 서버 연결 설정</param>
+		/// <param name="connectionConfig">Vision 서버 연결 설정 (기본값 있음)</param>
+		/// <param name="actuator">액추에이터 (직접 모드에서는 기본값 nullptr)</param>
 		Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
-		             IActuator* actuator = nullptr,
-		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig());
+		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig(),
+		             IActuator* actuator = nullptr);
 
 		
 
