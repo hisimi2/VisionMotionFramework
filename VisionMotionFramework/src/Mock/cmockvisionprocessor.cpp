@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Mock/CMockVisionProcessor.h"
 #include "Controller.h"
 

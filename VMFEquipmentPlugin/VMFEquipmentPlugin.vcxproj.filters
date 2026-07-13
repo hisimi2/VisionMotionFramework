@@ -46,6 +46,18 @@
     <Filter Include="LoadPP\PLVI\Sequences">
       <UniqueIdentifier>{03b73ec7-1028-4d8f-9151-3d1ddaad731b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UnloadSetplate">
+      <UniqueIdentifier>{77a70b95-ed5e-43da-a7c7-85008ea0681e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnloadSetplate\PLVI">
+      <UniqueIdentifier>{ed23ef38-bf60-47d4-8434-c358c3f802a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnloadSetplate\Tasks">
+      <UniqueIdentifier>{f6a00aa4-5902-4ec1-8621-abb07377ce0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnloadSetplate\PLVI\Sequences">
+      <UniqueIdentifier>{1c07bd82-2311-4ffc-a5cf-fa8b54209fa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -84,6 +96,18 @@
     <ClInclude Include="include\PLVILoad1Strategy.h">
       <Filter>LoadPP\PLVI\Sequences</Filter>
     </ClInclude>
+    <ClInclude Include="include\CSetPlate1PLVIMoveToScanStartTask.h">
+      <Filter>UnloadSetplate\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSetPlate1PLVIPerformScanTask.h">
+      <Filter>UnloadSetplate\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SetPlate1PLVIStrategy.h">
+      <Filter>UnloadSetplate\PLVI\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CSetPlate1PLVISequenceBuilder.h">
+      <Filter>UnloadSetplate\PLVI\Sequences</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -106,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="scr\Strategies\PLVILoad1Strategy.cpp">
       <Filter>LoadPP\PLVI\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp">
+      <Filter>UnloadSetplate\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp">
+      <Filter>UnloadSetplate\Tasks</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

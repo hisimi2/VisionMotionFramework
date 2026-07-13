@@ -204,6 +204,7 @@
     <ClInclude Include="Actuators\IOPSwitch.h" />
     <ClInclude Include="Actuators\Load1Parts.h" />
     <ClInclude Include="Actuators\Load2Parts.h" />
+    <ClInclude Include="Actuators\SetPlate1Parts.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="OperationThreads\Load1ActivityBuilder.h" />

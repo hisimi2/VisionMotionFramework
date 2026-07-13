@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ZfocusLoad1Strategy.h"
 #include "ZFocusLoad1Builder.h"
 #include "SqliteDataRepository.h"

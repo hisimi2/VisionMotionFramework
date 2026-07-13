@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ITask.h"
 #include "Context.h"
@@ -156,7 +156,7 @@ namespace VMF
             return TR_ERROR;
         }
 
-// =====================================================
+        // =====================================================
         // [Task-specific VisionParams 지원]
         // =====================================================
         /// <summary>
@@ -170,12 +170,12 @@ namespace VMF
             m_taskParams_ = params;
         }
 
-/// <summary>
+        /// <summary>
         /// Task별 시퀀스 파라미터를 읽습니다.
         /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
         /// </summary>
         template <typename T>
-        T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
+        T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue = T()) const
         {
             (void)ctx;
             auto it = m_taskParams_.visionParams.find(key);
@@ -314,6 +314,8 @@ namespace VMF
         // 동기화 및 시간 관리 멤버를 C++ 표준 라이브러리로 대체
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
+
+    protected:
 
         // Task-specific VisionParams (Builder에서 직접 주입)
         VisionParams                          m_taskParams_;

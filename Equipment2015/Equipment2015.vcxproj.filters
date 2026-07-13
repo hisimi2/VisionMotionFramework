@@ -105,6 +105,9 @@
     <ClInclude Include="VAT\LoadPPAdapter.h">
       <Filter>VAT</Filter>
     </ClInclude>
+    <ClInclude Include="Actuators\SetPlate1Parts.h">
+      <Filter>Actuators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Equipment2015.cpp">

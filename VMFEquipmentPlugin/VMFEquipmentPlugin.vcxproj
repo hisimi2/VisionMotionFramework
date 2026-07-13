@@ -172,8 +172,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="include\CSetPlate1PLVIMoveToScanStartTask.h" />
+    <ClInclude Include="include\CSetPlate1PLVIPerformScanTask.h" />
+    <ClInclude Include="include\CSetPlate1PLVISequenceBuilder.h" />
     <ClInclude Include="include\DefineVAT.h" />
     <ClInclude Include="include\PLVILoad1Strategy.h" />
+    <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
     <ClInclude Include="include\TaskLoad1MoveToStartPosition.h" />
     <ClInclude Include="include\TaskLoad1PerformFocusScanning.h" />
     <ClInclude Include="include\ZfocusLoad1Strategy.h" />
@@ -195,6 +199,8 @@
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp" />
     <ClCompile Include="scr\Strategies\PLVILoad1Strategy.cpp" />
     <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp" />
+    <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp" />
+    <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp" />
     <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp" />
     <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp" />
   </ItemGroup>
