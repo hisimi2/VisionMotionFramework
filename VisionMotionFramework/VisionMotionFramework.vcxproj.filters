@@ -1,21 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="src\Orchestrator.cpp" />
-    <ClCompile Include="src\SqliteDataRepository.cpp" />
-    <ClCompile Include="VisionMotionFramework.cpp" />
-    <ClCompile Include="src\AsyncExecutor.cpp" />
-    <ClCompile Include="src\FileDataRepository.cpp" />
-    <ClCompile Include="src\Logger.cpp" />
-    <ClCompile Include="src\RepositoryFactory.cpp" />
-    <ClCompile Include="src\RunController.cpp" />
-    <ClCompile Include="src\Sequence.cpp" />
-    <ClCompile Include="src\Context.cpp" />
-    <ClCompile Include="src\ComponentSetupBase.cpp" />
-    <ClCompile Include="src\ConnectionManager.cpp" />
-    <ClCompile Include="src\VisionProcessorBase.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="src\Mock\CMockDataRepository.cpp">
       <Filter>Mocks</Filter>
     </ClCompile>
@@ -25,62 +10,199 @@
     <ClCompile Include="src\Mock\CMockVisionProcessor.cpp">
       <Filter>Mocks</Filter>
     </ClCompile>
+    <ClCompile Include="src\Orchestrator.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RunController.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AsyncExecutor.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Context.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComponentSetupBase.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sequence.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConnectionManager.cpp">
+      <Filter>VisionProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RepositoryFactory.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileDataRepository.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SqliteDataRepository.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="VisionMotionFramework.cpp">
+      <Filter>Build</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VisionProcessorBase.cpp">
+      <Filter>VisionProcessor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\AsyncExecutor.h" />
-    <ClInclude Include="include\CompatUtils.h" />
-    <ClInclude Include="include\CVisionOptional.h" />
-    <ClInclude Include="include\VMF_API.h" />
-    <ClInclude Include="include\FileDataRepository.h" />
-    <ClInclude Include="include\FileUtils.h" />
-    <ClInclude Include="include\IDataRepository.h" />
-    <ClInclude Include="include\IResultSink.h" />
-    <ClInclude Include="include\ITask.h" />
-    <ClInclude Include="include\IActuator.h" />
-    <ClInclude Include="include\ISequence.h" />
-    <ClInclude Include="include\ISequenceSetup.h" />
-    <ClInclude Include="include\IComponentSetup.h" />
-    <ClInclude Include="include\IVisionProcessor.h" />
-    <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\NonBlockingTaskBase.h" />
-    <ClInclude Include="include\RepositoryFactory.h" />
-    <ClInclude Include="include\SaveUtils.h" />
-    <ClInclude Include="include\DefaultSetupStrategy.h" />
-    <ClInclude Include="include\SequenceFactoryBase.h" />
-    <ClInclude Include="include\SequenceBuilderBase.h" />
-    <ClInclude Include="include\SqliteDataRepository.h" />
-    <ClInclude Include="include\Sequence.h" />
-    <ClInclude Include="include\Types.h" />
-    <ClInclude Include="include\RunController.h" />
-    <ClInclude Include="include\Context.h" />
-    <ClInclude Include="include\ComponentSetupBase.h" />
-    <ClInclude Include="include\ConnectionManager.h" />
-    <ClInclude Include="include\VisionProcessorBase.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="include\CMockDataRepository.h">
       <Filter>Mocks</Filter>
     </ClInclude>
     <ClInclude Include="include\CMockVisionEventHandler.h">
       <Filter>Mocks</Filter>
     </ClInclude>
-    <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\Mock\CMockVisionProcessor.h">
       <Filter>Mocks</Filter>
     </ClInclude>
+    <ClInclude Include="include\Orchestrator.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RunController.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AsyncExecutor.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Context.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IComponentSetup.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ComponentSetupBase.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ISequenceSetup.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SequenceFactoryBase.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SequenceBuilderBase.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IResultSink.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ISequence.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sequence.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ITask.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IVisionProcessor.h">
+      <Filter>VisionProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ConnectionManager.h">
+      <Filter>VisionProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IActuator.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IDataRepository.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RepositoryFactory.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileDataRepository.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SqliteDataRepository.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileUtils.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveUtils.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Logger.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DefaultSetupStrategy.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VMF_API.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NonBlockingTaskBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CVisionOptional.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CompatUtils.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Build</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VisionProcessorBase.h">
+      <Filter>VisionProcessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="VisionMotionFramework.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="VisionMotionFramework.def" />
-    <None Include="ReadMe.txt" />
-    <None Include="res\VisionMotionFramework.rc2" />
+    <None Include="ReadMe.txt">
+      <Filter>Build</Filter>
+    </None>
+    <None Include="VisionMotionFramework.def">
+      <Filter>Build</Filter>
+    </None>
+    <None Include="res\VisionMotionFramework.rc2">
+      <Filter>Build</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Mocks">
       <UniqueIdentifier>{87d0c5cb-7fb1-4fc4-8e74-8bfe0c68d698}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{c663798a-f865-46d1-92de-cb190737f978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VisionProcessor">
+      <UniqueIdentifier>{1e667626-9a04-43ee-afda-2e08d9c45f11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actuator">
+      <UniqueIdentifier>{3cde9f8d-8406-40bb-b66b-eff2dead1123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{298197ca-0721-416f-911f-b45d83eaf8f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{3945affa-e249-4ca9-8f9c-253e83dee4f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build">
+      <UniqueIdentifier>{e427ca7d-9e5a-4d36-90e2-d5a1e2074216}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VisionMotionFramework.rc">
+      <Filter>Build</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
