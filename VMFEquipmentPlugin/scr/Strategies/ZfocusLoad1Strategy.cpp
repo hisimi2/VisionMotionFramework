@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "ZfocusLoad1Strategy.h"
 #include "ZFocusLoad1Builder.h"
 #include "SqliteDataRepository.h"
-#include "VisionProcessor.h"
+#include "scr\protocol\VisionProcessor.h"
 
 #include "Mock\CMockVisionProcessor.h"
 #include "Mock\CMockDataRepository.h"

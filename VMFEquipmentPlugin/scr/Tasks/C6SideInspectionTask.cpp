@@ -21,11 +21,11 @@ namespace VMF_6SIDE
 		void C6SideInspectionTask::OnInitialize(VMF::Context& ctx)
 		{
 			// Tag 파라미터에서 읽기
-			m_facePosition = GetSeqParamAs<int>(ctx, "FacePosition");
-			m_selectCount = GetSeqParamAs<int>(ctx, "SelectCount");
-			m_cameraIndex = GetSeqParamAs<int>(ctx, "CameraIndex");
-			m_barcodeId = GetSeqParam<std::string>(ctx, "BarcodeID");
-			m_lotId = GetSeqParam<std::string>(ctx, "LotID");
+			m_facePosition = GetTaskSeqParamAs<int>(ctx, "FacePosition");
+			m_selectCount = GetTaskSeqParamAs<int>(ctx, "SelectCount");
+			m_cameraIndex = GetTaskSeqParamAs<int>(ctx, "CameraIndex");
+			m_barcodeId = GetTaskSeqParamAs<std::string>(ctx, "BarcodeID");
+			m_lotId = GetTaskSeqParamAs<std::string>(ctx, "LotID");
 			m_retryCount = 0;
 
 			EnterState(TurnOnLight);

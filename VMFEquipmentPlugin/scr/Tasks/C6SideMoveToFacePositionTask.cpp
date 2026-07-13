@@ -20,10 +20,10 @@ namespace VMF_6SIDE
 		void C6SideMoveToFacePositionTask::OnInitialize(VMF::Context& ctx)
 		{
 			// Tag 파라미터에서 이동 정보 읽기
-			m_needCylOp = GetSeqParamAs<int>(ctx, "NeedCylOp") != 0;
-			m_turn180Pos = GetSeqParamAs<double>(ctx, "Turn180Pos");
-			m_turn360Pos = GetSeqParamAs<double>(ctx, "Turn360Pos");
-			m_cameraZPos = GetSeqParamAs<double>(ctx, "CameraZPos");
+			m_needCylOp = GetTaskSeqParamAs<int>(ctx, "NeedCylOp") != 0;
+			m_turn180Pos = GetTaskSeqParamAs<double>(ctx, "Turn180Pos");
+			m_turn360Pos = GetTaskSeqParamAs<double>(ctx, "Turn360Pos");
+			m_cameraZPos = GetTaskSeqParamAs<double>(ctx, "CameraZPos");
 
 			EnterState(MoveTurn180);
 		}
