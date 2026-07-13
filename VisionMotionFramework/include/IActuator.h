@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include <vector>
@@ -68,7 +68,6 @@ namespace VMF
 		VisionOptional<double> accTime;    // 가속 시간 (ms, 미설정 시 장비 기본값)
 		VisionOptional<double> decTime;    // 감속 시간 (ms, 미설정 시 장비 기본값)
 	};
-
 
 	struct MotionCommand
 	{
