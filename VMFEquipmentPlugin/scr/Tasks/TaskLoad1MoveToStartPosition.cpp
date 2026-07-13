@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "include/TaskLoad1MoveToStartPosition.h"
+#include "TaskLoad1MoveToStartPosition.h"
 #include "include/DefineVAT.h"
 
 namespace VMF_Sample

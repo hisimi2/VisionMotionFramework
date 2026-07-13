@@ -172,21 +172,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="include\CSetPlate1PLVIMoveToScanStartTask.h" />
-    <ClInclude Include="include\CSetPlate1PLVIPerformScanTask.h" />
-    <ClInclude Include="include\CSetPlate1PLVISequenceBuilder.h" />
+    <ClInclude Include="include\C6SideInspectionStrategy.h" />
     <ClInclude Include="include\DefineVAT.h" />
     <ClInclude Include="include\PLVILoad1Strategy.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
-    <ClInclude Include="include\TaskLoad1MoveToStartPosition.h" />
-    <ClInclude Include="include\TaskLoad1PerformFocusScanning.h" />
     <ClInclude Include="include\ZfocusLoad1Strategy.h" />
     <ClInclude Include="include\ZFocusLoad1Builder.h" />
     <ClInclude Include="include\VisionParamKeys.h" />
-    <ClInclude Include="include\VisionProcessor.h" />
     <ClInclude Include="include\VisionPacket.h" />
     <ClInclude Include="include\VMFEquipmentPluginExport.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h" />
+    <ClInclude Include="scr\Protocol\Vision6SideProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionMemoryKeys.h" />
+    <ClInclude Include="scr\Protocol\VisionMemoryProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionPacketMemory.h" />
+    <ClInclude Include="scr\Protocol\VisionPLVIProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionProcessor.h" />
+    <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h" />
+    <ClInclude Include="scr\Tasks\C6SideInspectionTask.h" />
+    <ClInclude Include="scr\Tasks\C6SideMoveToFacePositionTask.h" />
+    <ClInclude Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h" />
+    <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h" />
+    <ClInclude Include="scr\Tasks\TaskLoad1MoveToStartPosition.h" />
+    <ClInclude Include="scr\Tasks\TaskLoad1PerformFocusScanning.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -196,9 +205,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="scr\Protocol\CMockSocketConditionVisionProcessor.cpp" />
+    <ClCompile Include="scr\Protocol\Vision6SideProcessor.cpp" />
+    <ClCompile Include="scr\Protocol\visionmemoryprocessor.cpp" />
+    <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp" />
     <ClCompile Include="scr\Strategies\PLVILoad1Strategy.cpp" />
     <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp" />
+    <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp" />
+    <ClCompile Include="scr\Tasks\C6SideMoveToFacePositionTask.cpp" />
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp" />
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp" />
     <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp" />

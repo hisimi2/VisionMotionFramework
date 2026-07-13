@@ -1,10 +1,10 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
 
-#include "include/VisionProcessor.h"
-#include "include/VisionParamKeys.h"
-#include "include/VisionPacket.h"
+#include "VisionProcessor.h"
+#include "VisionParamKeys.h"
+#include "VisionPacket.h"
 
 #include <vector>
 #include <cstring>

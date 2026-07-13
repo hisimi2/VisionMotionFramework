@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 #include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"
-#include "..\VMFEquipmentPlugin\Protocol\VisionMemoryProcessor.h"
-#include "..\VMFEquipmentPlugin\Protocol\VisionPLVIProcessor.h"
-#include "Sequences\CSetPlate1PLVISequenceBuilder.h"
+#include "scr\Protocol\VisionMemoryProcessor.h"
+#include "scr\Protocol\VisionPLVIProcessor.h"
+#include "scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
 #include <memory>
 
 namespace VMF_PLVI_SETPLATE1

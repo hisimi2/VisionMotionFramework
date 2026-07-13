@@ -22,17 +22,11 @@
     <Filter Include="LoadPP\PLVI">
       <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LoadPP\SideInspection">
-      <UniqueIdentifier>{85fa31bd-da55-4d24-bb86-85c9cc371a23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LoadPP\VisionAutoTeaching">
       <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
     </Filter>
     <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG">
       <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG\Protocol">
-      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
     </Filter>
     <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG\Sequences">
       <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
@@ -58,19 +52,31 @@
     <Filter Include="UnloadSetplate\PLVI\Sequences">
       <UniqueIdentifier>{1c07bd82-2311-4ffc-a5cf-fa8b54209fa3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ModuleUnit">
+      <UniqueIdentifier>{109bca8b-8548-4e44-8217-d2d189778575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModuleUnit\SideInspection">
+      <UniqueIdentifier>{85fa31bd-da55-4d24-bb86-85c9cc371a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModuleUnit\Tasks">
+      <UniqueIdentifier>{1fc9d886-f8b3-4dd8-87b9-0e78244c19e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModuleUnit\SideInspection\Sequences">
+      <UniqueIdentifier>{3fe2501a-3d45-4bd7-8784-fdca4904e107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionParamKeys.h">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VisionProcessor.h">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
+      <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\VisionPacket.h">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
+      <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="include\DefineVAT.h">
       <Filter>헤더 파일</Filter>
@@ -81,12 +87,6 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\TaskLoad1MoveToStartPosition.h">
-      <Filter>LoadPP\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TaskLoad1PerformFocusScanning.h">
-      <Filter>LoadPP\Tasks</Filter>
-    </ClInclude>
     <ClInclude Include="include\ZfocusLoad1Strategy.h">
       <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClInclude>
@@ -96,17 +96,53 @@
     <ClInclude Include="include\PLVILoad1Strategy.h">
       <Filter>LoadPP\PLVI\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="include\CSetPlate1PLVIMoveToScanStartTask.h">
-      <Filter>UnloadSetplate\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CSetPlate1PLVIPerformScanTask.h">
-      <Filter>UnloadSetplate\Tasks</Filter>
-    </ClInclude>
     <ClInclude Include="include\SetPlate1PLVIStrategy.h">
       <Filter>UnloadSetplate\PLVI\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="include\CSetPlate1PLVISequenceBuilder.h">
+    <ClInclude Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h">
+      <Filter>UnloadSetplate\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h">
+      <Filter>UnloadSetplate\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\TaskLoad1MoveToStartPosition.h">
+      <Filter>LoadPP\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\TaskLoad1PerformFocusScanning.h">
+      <Filter>LoadPP\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\C6SideInspectionTask.h">
+      <Filter>ModuleUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\C6SideMoveToFacePositionTask.h">
+      <Filter>ModuleUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\C6SideInspectionStrategy.h">
+      <Filter>ModuleUnit\SideInspection\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h">
       <Filter>UnloadSetplate\PLVI\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionProcessor.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\Vision6SideProcessor.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionMemoryKeys.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionMemoryProcessor.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionPacketMemory.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionPLVIProcessor.h">
+      <Filter>Protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,7 +153,7 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Protocol</Filter>
+      <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp">
       <Filter>LoadPP\Tasks</Filter>
@@ -136,6 +172,24 @@
     </ClCompile>
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp">
       <Filter>UnloadSetplate\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp">
+      <Filter>ModuleUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\C6SideMoveToFacePositionTask.cpp">
+      <Filter>ModuleUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Protocol\CMockSocketConditionVisionProcessor.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Protocol\Vision6SideProcessor.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Protocol\visionmemoryprocessor.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "include/TaskLoad1PerformFocusScanning.h"
+#include "TaskLoad1PerformFocusScanning.h"
 #include "include/DefineVAT.h"
 
 namespace VMF_Sample

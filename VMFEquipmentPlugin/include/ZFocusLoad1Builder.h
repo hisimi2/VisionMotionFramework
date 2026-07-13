@@ -2,8 +2,8 @@
 #include "SequenceBuilderBase.h"
 #include "DefineVAT.h"
 
-#include "TaskLoad1MoveToStartPosition.h"
-#include "TaskLoad1PerformFocusScanning.h"
+#include "scr\Tasks\TaskLoad1MoveToStartPosition.h"
+#include "scr\Tasks\TaskLoad1PerformFocusScanning.h"
 
 namespace VMF_Sample
 {
