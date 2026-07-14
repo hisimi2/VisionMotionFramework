@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CLoad1VATBaseSequenceStrategy.h"
 #include "Sequences\CLoad1VATPlateJigAttachSequenceBuilder.h"
 
@@ -21,7 +21,7 @@ namespace VAT_LOAD1
 				auto repo = ctx->GetRepository();
 				double x = 0.0, y = 0.0, z = 0.0;
 
-				// ¦¡¦¡ °øÅë ÆÄ¶ó¹ÌÅÍ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ê³µí†µ íŒŒë¼ë¯¸í„° â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				RegisterCommonParam()
 					.Set("HandID", 1)
 					.Set("PkgID", 1)
@@ -31,7 +31,7 @@ namespace VAT_LOAD1
 					.Set("nFovDirection", 0)
 					.End();
 
-				// ¦¡¦¡ ZFocus_L ? Cam6 ZFocus °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ZFocus_L ? Cam6 ZFocus ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("ZFocus_L")
 						.Set("CameraIndex", 6)
@@ -45,7 +45,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ ZFocus_R ? Cam7 ZFocus °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ZFocus_R ? Cam7 ZFocus ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("ZFocus_R")
 						.Set("CameraIndex", 7)
@@ -59,7 +59,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ JigFOV_L ? Cam6 PlateJig FOV °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ JigFOV_L ? Cam6 PlateJig FOV ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("JigFOV_L")
 						.Set("CameraIndex", 6)
@@ -75,7 +75,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ JigFOV_R ? Cam7 PlateJig FOV °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ JigFOV_R ? Cam7 PlateJig FOV ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("JigFOV_R")
 						.Set("CameraIndex", 7)
@@ -91,7 +91,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ JigCheck_L ? Cam6 PlateJig Check ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ JigCheck_L ? Cam6 PlateJig Check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("JigCheck_L")
 						.Set("CameraIndex", 6)
@@ -110,7 +110,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ JigCheck_R ? Cam7 PlateJig Check ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ JigCheck_R ? Cam7 PlateJig Check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("JigCheck_R")
 						.Set("CameraIndex", 7)

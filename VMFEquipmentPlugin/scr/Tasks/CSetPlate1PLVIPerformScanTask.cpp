@@ -5,8 +5,9 @@
 // PLVI 구현체가 RequestMeasureAsync/GetLatestData(Measure) 등을
 // PLVI 동작으로 오버라이딩했으므로 Task는 구현체를 알 필요가 없음
 
-using namespace VMF_PLVI::Task;
 using namespace VMF;
+
+namespace VMF_PLUGIN {
 
 CSetPlate1PLVIPerformScanTask::CSetPlate1PLVIPerformScanTask()
 	: m_plviPosition(0)
@@ -270,3 +271,5 @@ CSetPlate1PLVIPerformScanTask::PLVIStatus CSetPlate1PLVIPerformScanTask::ParsePL
 
 	return result;
 }
+
+} // namespace VMF_PLUGIN

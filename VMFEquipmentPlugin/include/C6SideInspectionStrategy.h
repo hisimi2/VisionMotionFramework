@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"
 #include "scr\Protocol\Vision6SideProcessor.h"

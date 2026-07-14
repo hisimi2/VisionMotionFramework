@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN

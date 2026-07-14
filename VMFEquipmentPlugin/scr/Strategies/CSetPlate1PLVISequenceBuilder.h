@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SequenceBuilderBase.h"
 #include "scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h"
 #include "scr\Tasks\CSetPlate1PLVIPerformScanTask.h"
@@ -19,4 +19,4 @@ namespace VMF_PLUGIN
 			return VMF::SequencePtr(seq.release());
 		}
 	};
-} // namespace VMF_PLVI
+} // namespace VMF_PLUGIN

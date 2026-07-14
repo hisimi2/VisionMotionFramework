@@ -1,8 +1,9 @@
 ﻿#include "pch.h"
 #include "CSetPlate1PLVIMoveToScanStartTask.h"
 
-using namespace VMF_PLVI::Task;
 using namespace VMF;
+
+namespace VMF_PLUGIN {
 
 CSetPlate1PLVIMoveToScanStartTask::CSetPlate1PLVIMoveToScanStartTask()
 	: m_triggerIntervalMm(1.8)
@@ -172,3 +173,5 @@ TaskResult CSetPlate1PLVIMoveToScanStartTask::HandleComplete(
 	(void)actuator;
 	return TR_NEXT;
 }
+
+} // namespace VMF_PLUGIN

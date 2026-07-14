@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SequenceBuilderBase.h"
 #include "Tasks\CLoad1VATMoveToStartPositionTask.h"
 #include "Tasks\CLoad1VATPerformCalibrationTask.h"
@@ -15,11 +15,11 @@ namespace VAT_LOAD1
 		// ----------------------------------------------------------------
 		// CLoad1VATPlateJigDetachSequenceBuilder
 		//
-		// PlateJig Å»Âø ½ÃÄö½º:
-		//   [LowCamFOV]  ÇÏ´ÜÄ«¸Ş¶ó FOV °Ë»ç (Cam1, Picker FOV)
-		//   [LowCam]     ÇÏ´ÜÄ«¸Ş¶ó ±âÁØ¿­ °Ë»ç (Cam1, Picker À§Ä¡)
-		//   [UpperFOV_L] »ó´ÜÄ«¸Ş¶ó FOV °Ë»ç (Cam6, LoadTable1/2)
-		//   [UpperFOV_R] »ó´ÜÄ«¸Ş¶ó FOV °Ë»ç (Cam7, CTray1/2)
+		// PlateJig íƒˆì°© ì‹œí€€ìŠ¤:
+		//   [LowCamFOV]  í•˜ë‹¨ì¹´ë©”ë¼ FOV ê²€ì‚¬ (Cam1, Picker FOV)
+		//   [LowCam]     í•˜ë‹¨ì¹´ë©”ë¼ ê¸°ì¤€ì—´ ê²€ì‚¬ (Cam1, Picker ìœ„ì¹˜)
+		//   [UpperFOV_L] ìƒë‹¨ì¹´ë©”ë¼ FOV ê²€ì‚¬ (Cam6, LoadTable1/2)
+		//   [UpperFOV_R] ìƒë‹¨ì¹´ë©”ë¼ FOV ê²€ì‚¬ (Cam7, CTray1/2)
 		// ----------------------------------------------------------------
 		class CLoad1VATPlateJigDetachSequenceBuilder : public VMF::SequenceBuilderBase
 		{
@@ -31,22 +31,22 @@ namespace VAT_LOAD1
 			{
 				VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
-				// ¦¡¦¡ ÇÏ´ÜÄ«¸Ş¶ó FOV °Ë»ç (Cam1) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ í•˜ë‹¨ì¹´ë©”ë¼ FOV ê²€ì‚¬ (Cam1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("LowCamFOV"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("LowCamFOV"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformPickerFOVScanningTask>("LowCamFOV"));
 
-				// ¦¡¦¡ ÇÏ´ÜÄ«¸Ş¶ó ±âÁØ¿­ °Ë»ç (Cam1) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ í•˜ë‹¨ì¹´ë©”ë¼ ê¸°ì¤€ì—´ ê²€ì‚¬ (Cam1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("LowCam"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("LowCam"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATCommitPickerCamDistanceResultsTask>("LowCam"));
 
-				// ¦¡¦¡ »ó´ÜÄ«¸Ş¶ó FOV °Ë»ç (Cam6, LoadTable1/2) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ìƒë‹¨ì¹´ë©”ë¼ FOV ê²€ì‚¬ (Cam6, LoadTable1/2) â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("UpperFOV_L"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("UpperFOV_L"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformFOVScanningTask>("UpperFOV_L"));
 
-				// ¦¡¦¡ »ó´ÜÄ«¸Ş¶ó FOV °Ë»ç (Cam7, CTray1/2) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ìƒë‹¨ì¹´ë©”ë¼ FOV ê²€ì‚¬ (Cam7, CTray1/2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("UpperFOV_R"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("UpperFOV_R"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformFOVScanningTask>("UpperFOV_R"));

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "VisionProcessorBase.h"
 #include <vector>
 #include <string>
@@ -9,16 +9,16 @@ namespace VMF_SOCKET_CONDITION
 	// ----------------------------------------------------------------
 	// CMockSocketConditionVisionProcessor
 	//
-	// Socket Condition °Ë»ç ÇÁ·ÎÅäÄİ Mock ±¸Çö.
+	// Socket Condition ê²€ì‚¬ í”„ë¡œí† ì½œ Mock êµ¬í˜„.
 	//
-	// ½ÇÁ¦ Vision PC ¾øÀÌ ½ÃÄö½º µ¿ÀÛ °ËÁõ ¿ëµµ.
+	// ì‹¤ì œ Vision PC ì—†ì´ ì‹œí€€ìŠ¤ ë™ì‘ ê²€ì¦ ìš©ë„.
 	//
-	// ½Ã¹Ä·¹ÀÌ¼Ç Èå¸§:
-	//   1104 InspReady ¼ö½Å ¡æ Start OK ÀÀ´ä
-	//   1105 Measure ¼ö½Å   ¡æ ¼ÒÄÏº° ÁÂÇ¥¸¦ ¼ø¼­´ë·Î ¹ßÇà
-	//                         (¹Ì¸® µî·ÏµÈ MockSlotPositions »ç¿ë)
-	//   1106 DeviceCheck    ¡æ ÀüÃ¼ °á°ú ¹ßÇà
-	//                         (¹Ì¸® µî·ÏµÈ MockFailSlots »ç¿ë)
+	// ì‹œë®¬ë ˆì´ì…˜ íë¦„:
+	//   1104 InspReady ìˆ˜ì‹  â†’ Start OK ì‘ë‹µ
+	//   1105 Measure ìˆ˜ì‹    â†’ ì†Œì¼“ë³„ ì¢Œí‘œë¥¼ ìˆœì„œëŒ€ë¡œ ë°œí–‰
+	//                         (ë¯¸ë¦¬ ë“±ë¡ëœ MockSlotPositions ì‚¬ìš©)
+	//   1106 DeviceCheck    â†’ ì „ì²´ ê²°ê³¼ ë°œí–‰
+	//                         (ë¯¸ë¦¬ ë“±ë¡ëœ MockFailSlots ì‚¬ìš©)
 	// ----------------------------------------------------------------
 	class CMockSocketConditionVisionProcessor : public VMF::VisionProcessorBase
 	{
@@ -26,30 +26,30 @@ namespace VMF_SOCKET_CONDITION
 		CMockSocketConditionVisionProcessor();
 		~CMockSocketConditionVisionProcessor() override;
 
-		// ¦¡¦¡ ¿äÃ» ÀÎÅÍÆäÀÌ½º ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+		// â”€â”€ ìš”ì²­ ì¸í„°í˜ì´ìŠ¤ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 		bool RequestSetCokAsync(const VMF::StringMap& params) override;
 		bool RequestInspReadyAsync(const VMF::StringMap& params) override; // 1104
 		bool RequestMeasureAsync(const VMF::StringMap& params) override; // 1105 ACK
 		bool RequestDeviceCheckAsync(const VMF::StringMap& params) override; // 1106 ACK
 		bool RequestLightAsync(const VMF::StringMap& params) override;
 
-		// ¦¡¦¡ ¼ö½Å Äİ¹é ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+		// â”€â”€ ìˆ˜ì‹  ì½œë°± â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 		void OnSetCok(VMF::ByteArray body) override;
-		void OnInspReady(VMF::ByteArray body) override; // 1104 ÀÀ´ä ¼ö½Å
-		void OnMeasure(VMF::ByteArray body) override; // 1105 ÁÂÇ¥ ¼ö½Å
-		void OnDeviceCheck(VMF::ByteArray body) override; // 1106 °á°ú ¼ö½Å
+		void OnInspReady(VMF::ByteArray body) override; // 1104 ì‘ë‹µ ìˆ˜ì‹ 
+		void OnMeasure(VMF::ByteArray body) override; // 1105 ì¢Œí‘œ ìˆ˜ì‹ 
+		void OnDeviceCheck(VMF::ByteArray body) override; // 1106 ê²°ê³¼ ìˆ˜ì‹ 
 		void OnLight(VMF::ByteArray body) override;
 
 		void Process() override;
 
-		// ¦¡¦¡ Mock ¼³Á¤ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-		// ¼ÒÄÏº° ÀÌµ¿ ÁÂÇ¥ µî·Ï (x, y, z ¼ø¼­)
+		// â”€â”€ Mock ì„¤ì • â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+		// ì†Œì¼“ë³„ ì´ë™ ì¢Œí‘œ ë“±ë¡ (x, y, z ìˆœì„œ)
 		void AddMockSlotPosition(double x, double y, double z);
 
-		// ºÒ·® ¼ÒÄÏ ¹øÈ£ µî·Ï (Line1)
+		// ë¶ˆëŸ‰ ì†Œì¼“ ë²ˆí˜¸ ë“±ë¡ (Line1)
 		void AddMockFailSlotLine1(int slotNo);
 
-		// ºÒ·® ¼ÒÄÏ ¹øÈ£ µî·Ï (Line2)
+		// ë¶ˆëŸ‰ ì†Œì¼“ ë²ˆí˜¸ ë“±ë¡ (Line2)
 		void AddMockFailSlotLine2(int slotNo);
 
 	private:
@@ -66,10 +66,10 @@ namespace VMF_SOCKET_CONDITION
 		bool                      m_motionPending;
 		bool                      m_endPending;
 
-		// ÄŞ¸¶ ±¸ºĞ ¹®ÀÚ¿­ »ı¼º
+		// ì½¤ë§ˆ êµ¬ë¶„ ë¬¸ìì—´ ìƒì„±
 		std::string BuildFailPositionString(const std::vector<int>& slots);
 
-		// Mock ±âº» ¼ÒÄÏ À§Ä¡ ÃÊ±âÈ­ (3°³ ¼ÒÄÏ ¿¹½Ã)
+		// Mock ê¸°ë³¸ ì†Œì¼“ ìœ„ì¹˜ ì´ˆê¸°í™” (3ê°œ ì†Œì¼“ ì˜ˆì‹œ)
 		void InitDefaultMockData();
 	};
 

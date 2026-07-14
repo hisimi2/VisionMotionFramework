@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SequenceBuilderBase.h"
 #include "Tasks\CLoad1VATMoveToStartPositionTask.h"
 #include "Tasks\CLoad1VATPerformCalibrationTask.h"
@@ -15,11 +15,11 @@ namespace VAT_LOAD1
 		// ----------------------------------------------------------------
 		// CLoad1VATAutoModeSequenceBuilder
 		//
-		// 3°³ ±×·ìÀÇ Task¸¦ ÇÏ³ªÀÇ Sequence·Î ±¸¼º.
-		// °¢ Task¿¡ ÅÂ±×¸¦ ÁöÁ¤ ¡æ ½ÇÇà Àü ctx.ApplyTagParams(tag) ÀÚµ¿ È£Ãâ.
+		// 3ê°œ ê·¸ë£¹ì˜ Taskë¥¼ í•˜ë‚˜ì˜ Sequenceë¡œ êµ¬ì„±.
+		// ê° Taskì— íƒœê·¸ë¥¼ ì§€ì • â†’ ì‹¤í–‰ ì „ ctx.ApplyTagParams(tag) ìë™ í˜¸ì¶œ.
 		//
-		// ÅÂ±× ÀÇ¹Ì (Strategy::ConfigureParams¿¡¼­ µ¿ÀÏ ÅÂ±×·Î µî·Ï):
-		//   "HandPitch" - ÇÏ´ÜÄ«¸Ş¶ó, ±âÁØ Picker À§Ä¡ ÃøÁ¤
+		// íƒœê·¸ ì˜ë¯¸ (Strategy::ConfigureParamsì—ì„œ ë™ì¼ íƒœê·¸ë¡œ ë“±ë¡):
+		//   "HandPitch" - í•˜ë‹¨ì¹´ë©”ë¼, ê¸°ì¤€ Picker ìœ„ì¹˜ ì¸¡ì •
 		//   "LeftCam"   - Cam6, LoadTable1/2 + CTray1
 		//   "RightCam"  - Cam7, CTray2
 		// ----------------------------------------------------------------
@@ -33,17 +33,17 @@ namespace VAT_LOAD1
 			{
 				VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
-				// ¦¡¦¡ ±×·ì 1: HandPitch °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ê·¸ë£¹ 1: HandPitch ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("HandPitch"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("HandPitch"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformHandPitchScanningTask>("HandPitch"));
 
-				// ¦¡¦¡ ±×·ì 2: Left »ó´ÜÄ«¸Ş¶ó Teaching (Cam6) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ê·¸ë£¹ 2: Left ìƒë‹¨ì¹´ë©”ë¼ Teaching (Cam6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("LeftCam"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATFindAlignPosTask>("LeftCam"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATCommitTeachingPosTask>("LeftCam"));
 
-				// ¦¡¦¡ ±×·ì 3: Right »ó´ÜÄ«¸Ş¶ó Teaching (Cam7) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ê·¸ë£¹ 3: Right ìƒë‹¨ì¹´ë©”ë¼ Teaching (Cam7) â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("RightCam"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATFindAlignPosTask>("RightCam"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATCommitTeachingPosTask>("RightCam"));

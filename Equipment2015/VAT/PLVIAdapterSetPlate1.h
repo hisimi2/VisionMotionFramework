@@ -44,4 +44,4 @@ namespace VMF
 		VMF::ActError IsSetplateLift(int idx) const;
 	};
 
-} // namespace VMF_PLVI
+} // namespace VMF_PLUGIN

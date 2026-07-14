@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VisionProcessorBase.h"
 #include "scr\Protocol\VisionMemoryKeys.h"
 #include <vector>

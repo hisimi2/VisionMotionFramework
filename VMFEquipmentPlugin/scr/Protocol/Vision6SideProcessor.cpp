@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Vision6SideProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
@@ -7,13 +7,13 @@
 namespace VMF
 {
 	// ================================================================
-	// »ı¼ºÀÚ ? ¼ö½Å ÇÚµé·¯ µî·Ï
+	// ìƒì„±ì ? ìˆ˜ì‹  í•¸ë“¤ëŸ¬ ë“±ë¡
 	// ================================================================
 	Vision6SideProcessor::Vision6SideProcessor()
 	{
 		VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
-		// S107/F2 ¼ö½Å ¡æ OnMeasure È£Ãâ
+		// S107/F2 ìˆ˜ì‹  â†’ OnMeasure í˜¸ì¶œ
 		disp.RegisterHandler(Vision6SideProtocol::SideResult,
 			[this](int, int, std::vector<uint8_t>&& body, int)
 		{
@@ -24,15 +24,15 @@ namespace VMF
 	Vision6SideProcessor::~Vision6SideProcessor() = default;
 
 	// ================================================================
-	// [RequestMeasureAsync] 6¸é °Ë»ç ¿äÃ» (CMD 1102, S107/F1)
+	// [RequestMeasureAsync] 6ë©´ ê²€ì‚¬ ìš”ì²­ (CMD 1102, S107/F1)
 	//
-	// ÆĞÅ¶ Á¶¸³:
-	//   nDataID    = 1102 (CMD ID °íÁ¤)
+	// íŒ¨í‚· ì¡°ë¦½:
+	//   nDataID    = 1102 (CMD ID ê³ ì •)
 	//   nStatus    = VisionType (SIDE6_VISION_TYPE)
 	//   cData[0]   = CamPosition (SIDE6_CAM_POSITION)
-	//   cData[1]   = ¸é ¹øÈ£ (SIDE6_FACE_POSITION) "1"~"6"
+	//   cData[1]   = ë©´ ë²ˆí˜¸ (SIDE6_FACE_POSITION) "1"~"6"
 	//   cData[2]   = SelectCount (SIDE6_SELECT_COUNT)
-	//   cData[3]   = Skip ¿©ºÎ (SIDE6_SKIP) "0"=°Ë»ç, "1"=Skip
+	//   cData[3]   = Skip ì—¬ë¶€ (SIDE6_SKIP) "0"=ê²€ì‚¬, "1"=Skip
 	//   cData[4]   = Barcode ID (SIDE6_BARCODE_ID)
 	//   cData[5]   = Lot ID (SIDE6_LOT_ID)
 	// ================================================================
@@ -43,7 +43,7 @@ namespace VMF
 		CPacketBody_S107F1_6Side body;
 		body.Clear();
 
-		// nDataID = 1102 °íÁ¤
+		// nDataID = 1102 ê³ ì •
 		body.nDataID = 1102;
 
 		// nStatus = VisionType
@@ -54,7 +54,7 @@ namespace VMF
 		it = params.find(SIDE6_CAM_POSITION);
 		if (it != params.end()) body.SetData(0, it->second.c_str());
 
-		// cData[1] = ¸é ¹øÈ£ (1~6)
+		// cData[1] = ë©´ ë²ˆí˜¸ (1~6)
 		it = params.find(SIDE6_FACE_POSITION);
 		if (it != params.end()) body.SetData(1, it->second.c_str());
 
@@ -62,10 +62,10 @@ namespace VMF
 		it = params.find(SIDE6_SELECT_COUNT);
 		if (it != params.end()) body.SetData(2, it->second.c_str());
 
-		// cData[3] = Skip (0=°Ë»ç, 1=Skip)
+		// cData[3] = Skip (0=ê²€ì‚¬, 1=Skip)
 		it = params.find(SIDE6_SKIP);
 		if (it != params.end()) body.SetData(3, it->second.c_str());
-		else                    body.SetData(3, "0"); // ±âº»°ª: °Ë»ç
+		else                    body.SetData(3, "0"); // ê¸°ë³¸ê°’: ê²€ì‚¬
 
 													  // cData[4] = Barcode ID
 		it = params.find(SIDE6_BARCODE_ID);
@@ -75,7 +75,7 @@ namespace VMF
 		it = params.find(SIDE6_LOT_ID);
 		if (it != params.end()) body.SetData(5, it->second.c_str());
 
-		// ÆĞÅ¶ ¼Û½Å
+		// íŒ¨í‚· ì†¡ì‹ 
 		std::vector<uint8_t> bodyBytes;
 		const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
 		bodyBytes.assign(p, p + sizeof(body));
@@ -89,23 +89,23 @@ namespace VMF
 	}
 
 	// ================================================================
-	// [OnMeasure] 6¸é °Ë»ç °á°ú ¼ö½Å (S107/F2)
+	// [OnMeasure] 6ë©´ ê²€ì‚¬ ê²°ê³¼ ìˆ˜ì‹  (S107/F2)
 	//
-	// ÆÄ½Ì:
+	// íŒŒì‹±:
 	//   nDataID    = 1102 (echo)
 	//   nStatus    = VisionType (echo)
-	//   cData[0]   ¡æ SIDE6_CAM_POSITION  (echo)
-	//   cData[1]   ¡æ SIDE6_RESULT_FACE   (¸é ¹øÈ£ echo)
-	//   cData[2]   ¡æ SIDE6_GRAB_CHECK    ("1"=OK, "2"=Fail)
-	//   cData[3]   ¡æ SIDE6_INSP_RESULT   ("1"=OK, "2"=NG)
-	//   cData[4]   ¡æ SIDE6_BARCODE_ID    (echo)
-	//   cData[5]   ¡æ SIDE6_LOT_ID        (echo)
+	//   cData[0]   â†’ SIDE6_CAM_POSITION  (echo)
+	//   cData[1]   â†’ SIDE6_RESULT_FACE   (ë©´ ë²ˆí˜¸ echo)
+	//   cData[2]   â†’ SIDE6_GRAB_CHECK    ("1"=OK, "2"=Fail)
+	//   cData[3]   â†’ SIDE6_INSP_RESULT   ("1"=OK, "2"=NG)
+	//   cData[4]   â†’ SIDE6_BARCODE_ID    (echo)
+	//   cData[5]   â†’ SIDE6_LOT_ID        (echo)
 	//
-	// Task¿¡¼­ »ç¿ë:
+	// Taskì—ì„œ ì‚¬ìš©:
 	//   auto& data = vp->GetLatestData(Measure);
-	//   data[SIDE6_GRAB_CHECK]  ¡æ "1"=OK, "2"=Fail
-	//   data[SIDE6_INSP_RESULT] ¡æ "1"=OK, "2"=NG
-	//   data[SIDE6_RESULT_FACE] ¡æ ¾î´À ¸éÀÇ °á°úÀÎÁö È®ÀÎ
+	//   data[SIDE6_GRAB_CHECK]  â†’ "1"=OK, "2"=Fail
+	//   data[SIDE6_INSP_RESULT] â†’ "1"=OK, "2"=NG
+	//   data[SIDE6_RESULT_FACE] â†’ ì–´ëŠ ë©´ì˜ ê²°ê³¼ì¸ì§€ í™•ì¸
 	// ================================================================
 	void Vision6SideProcessor::OnMeasure(ByteArray body)
 	{
@@ -118,7 +118,7 @@ namespace VMF
 
 		DataMap data;
 		data[SIDE6_CAM_POSITION] = std::string(pkt.cData[0]); // CamPosition echo
-		data[SIDE6_RESULT_FACE] = std::string(pkt.cData[1]); // ¸é ¹øÈ£ echo
+		data[SIDE6_RESULT_FACE] = std::string(pkt.cData[1]); // ë©´ ë²ˆí˜¸ echo
 		data[SIDE6_GRAB_CHECK] = std::string(pkt.cData[2]); // "1"=OK, "2"=Fail
 		data[SIDE6_INSP_RESULT] = std::string(pkt.cData[3]); // "1"=OK, "2"=NG
 		data[SIDE6_BARCODE_ID] = std::string(pkt.cData[4]); // Barcode echo

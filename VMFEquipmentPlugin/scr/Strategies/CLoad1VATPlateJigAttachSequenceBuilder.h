@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "SequenceBuilderBase.h"
 #include "Tasks\CLoad1VATMoveToStartPositionTask.h"
 #include "Tasks\CLoad1VATPerformFocusScanningTask.h"
@@ -15,11 +15,11 @@ namespace VAT_LOAD1
 		// ----------------------------------------------------------------
 		// CLoad1VATPlateJigAttachSequenceBuilder
 		//
-		// PlateJig ÀåÂø ½ÃÄö½º:
-		//   [ZFocus_L]   Cam6 ZFocus °Ë»ç
-		//   [ZFocus_R]   Cam7 ZFocus °Ë»ç
-		//   [JigFOV_L]   Cam6 PlateJig FOV °Ë»ç
-		//   [JigFOV_R]   Cam7 PlateJig FOV °Ë»ç
+		// PlateJig ì¥ì°© ì‹œí€€ìŠ¤:
+		//   [ZFocus_L]   Cam6 ZFocus ê²€ì‚¬
+		//   [ZFocus_R]   Cam7 ZFocus ê²€ì‚¬
+		//   [JigFOV_L]   Cam6 PlateJig FOV ê²€ì‚¬
+		//   [JigFOV_R]   Cam7 PlateJig FOV ê²€ì‚¬
 		//   [JigCheck_L] Cam6 PlateJig Check (TargetA/B/Upper)
 		//   [JigCheck_R] Cam7 PlateJig Check (TargetA/B/Upper)
 		// ----------------------------------------------------------------
@@ -33,29 +33,29 @@ namespace VAT_LOAD1
 			{
 				VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
-				// ¦¡¦¡ ZFocus °Ë»ç (Cam6) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ZFocus ê²€ì‚¬ (Cam6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("ZFocus_L"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformFocusScanningTask>("ZFocus_L"));
 
-				// ¦¡¦¡ ZFocus °Ë»ç (Cam7) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ZFocus ê²€ì‚¬ (Cam7) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("ZFocus_R"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformFocusScanningTask>("ZFocus_R"));
 
-				// ¦¡¦¡ PlateJig FOV °Ë»ç (Cam6) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ PlateJig FOV ê²€ì‚¬ (Cam6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("JigFOV_L"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("JigFOV_L"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformFOVScanningTask>("JigFOV_L"));
 
-				// ¦¡¦¡ PlateJig FOV °Ë»ç (Cam7) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ PlateJig FOV ê²€ì‚¬ (Cam7) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("JigFOV_R"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformCalibrationTask>("JigFOV_R"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATPerformFOVScanningTask>("JigFOV_R"));
 
-				// ¦¡¦¡ PlateJig Check (Cam6) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ PlateJig Check (Cam6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("JigCheck_L"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATFindAlignPosTask>("JigCheck_L"));
 
-				// ¦¡¦¡ PlateJig Check (Cam7) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ PlateJig Check (Cam7) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				seq->AddTask(MakeTaggedTask<CLoad1VATMoveToStartPositionTask>("JigCheck_R"));
 				seq->AddTask(MakeTaggedTask<CLoad1VATFindAlignPosTask>("JigCheck_R"));
 

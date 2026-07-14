@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMockSocketConditionVisionProcessor.h"
 #include <sstream>
 
@@ -41,7 +41,7 @@ namespace VMF_SOCKET_CONDITION
 		m_mockFailSlotsLine2.push_back(slotNo);
 	}
 
-	// ¦¡¦¡ ¿äÃ» ÀÎÅÍÆäÀÌ½º ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	// â”€â”€ ìš”ì²­ ì¸í„°íŽ˜ì´ìŠ¤ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 	bool CMockSocketConditionVisionProcessor::RequestSetCokAsync(
 		const VMF::StringMap& params)
@@ -79,7 +79,7 @@ namespace VMF_SOCKET_CONDITION
 		return true;
 	}
 
-	// ¦¡¦¡ ¼ö½Å ÄÝ¹é ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	// â”€â”€ ìˆ˜ì‹  ì½œë°± â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 	void CMockSocketConditionVisionProcessor::OnSetCok(VMF::ByteArray body) {}
 	void CMockSocketConditionVisionProcessor::OnLight(VMF::ByteArray body) {}
@@ -123,7 +123,7 @@ namespace VMF_SOCKET_CONDITION
 		SetReceived(VMF::DeviceCheck, true);
 	}
 
-	// ¦¡¦¡ Process ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	// â”€â”€ Process â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 	void CMockSocketConditionVisionProcessor::Process()
 	{
@@ -133,7 +133,7 @@ namespace VMF_SOCKET_CONDITION
 			VMF::ByteArray dummy;
 			OnInspReady(dummy);
 
-			// Start ACK ÈÄ Ã¹ ¹øÂ° ¼ÒÄÏ ÁÂÇ¥ Áï½Ã ¹ßÇà
+			// Start ACK í›„ ì²« ë²ˆì§¸ ì†Œì¼“ ì¢Œí‘œ ì¦‰ì‹œ ë°œí–‰
 			m_motionPending = true;
 		}
 
@@ -152,7 +152,7 @@ namespace VMF_SOCKET_CONDITION
 		}
 	}
 
-	// ¦¡¦¡ ÇïÆÛ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	// â”€â”€ í—¬í¼ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 	std::string CMockSocketConditionVisionProcessor::BuildFailPositionString(
 		const std::vector<int>& slots)

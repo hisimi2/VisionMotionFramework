@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CLoad1VATBaseSequenceStrategy.h"
 #include "Sequences\CLoad1VATPlateJigDetachSequenceBuilder.h"
 
@@ -21,7 +21,7 @@ namespace VAT_LOAD1
 				auto repo = ctx->GetRepository();
 				double x = 0.0, y = 0.0, z = 0.0;
 
-				// ¦¡¦¡ °øÅë ÆÄ¶ó¹ÌÅÍ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ê³µí†µ íŒŒë¼ë¯¸í„° â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				RegisterCommonParam()
 					.Set("HandID", 1)
 					.Set("PkgID", 1)
@@ -39,7 +39,7 @@ namespace VAT_LOAD1
 					.Set("nFovDirection", 0)
 					.End();
 
-				// ¦¡¦¡ LowCamFOV ? ÇÏ´ÜÄ«¸Ş¶ó Picker FOV °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ LowCamFOV ? í•˜ë‹¨ì¹´ë©”ë¼ Picker FOV ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("LowCamFOV")
 						.Set("CameraIndex", 1)
@@ -52,7 +52,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ LowCam ? ÇÏ´ÜÄ«¸Ş¶ó ±âÁØ¿­ °Ë»ç ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ LowCam ? í•˜ë‹¨ì¹´ë©”ë¼ ê¸°ì¤€ì—´ ê²€ì‚¬ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("LowCam")
 						.Set("CameraIndex", 1)
@@ -68,7 +68,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ UpperFOV_L ? Cam6 »ó´ÜÄ«¸Ş¶ó FOV (LoadTable1/2) ¦¡¦¡
+				// â”€â”€ UpperFOV_L ? Cam6 ìƒë‹¨ì¹´ë©”ë¼ FOV (LoadTable1/2) â”€â”€
 				RegisterTagParam("UpperFOV_L")
 					.Set("CameraIndex", 6)
 					.Set("CameraID", 3128)
@@ -79,7 +79,7 @@ namespace VAT_LOAD1
 					.AddPosition(13, 9, 0.0, 0.0, 0.0)
 					.End();
 
-				// ¦¡¦¡ UpperFOV_R ? Cam7 »ó´ÜÄ«¸Ş¶ó FOV (CTray1/2) ¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ UpperFOV_R ? Cam7 ìƒë‹¨ì¹´ë©”ë¼ FOV (CTray1/2) â”€â”€â”€â”€â”€â”€
 				RegisterTagParam("UpperFOV_R")
 					.Set("CameraIndex", 7)
 					.Set("CameraID", 3130)

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATCommitPickerCamDistanceResultsTask.h"
 #include "DefineVAT.h"
 

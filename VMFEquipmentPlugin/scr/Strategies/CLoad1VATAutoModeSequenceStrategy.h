@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CLoad1VATBaseSequenceStrategy.h"
 #include "Sequences\CLoad1VATAutoModeSequenceBuilder.h"
 
@@ -21,7 +21,7 @@ namespace VAT_LOAD1
 				auto repo = ctx->GetRepository();
 				double x = 0.0, y = 0.0, z = 0.0;
 
-				// ¦¡¦¡ °øÅë ÆÄ¶ó¹ÌÅÍ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ ê³µí†µ íŒŒë¼ë¯¸í„° â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				RegisterCommonParam()
 					.Set("HandID", 1)
 					.Set("PkgID", 1)
@@ -37,7 +37,7 @@ namespace VAT_LOAD1
 					.Set("TargetDiffY", "108.477")
 					.End();
 
-				// ¦¡¦¡ HandPitch ? ÇÏ´ÜÄ«¸Ş¶ó (CameraIndex=1) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ HandPitch ? í•˜ë‹¨ì¹´ë©”ë¼ (CameraIndex=1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("HandPitch")
 						.Set("CameraIndex", 1)
@@ -54,7 +54,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ LeftCam ? »ó´Ü ÁÂ Ä«¸Ş¶ó (CameraIndex=6) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ LeftCam ? ìƒë‹¨ ì¢Œ ì¹´ë©”ë¼ (CameraIndex=6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("LeftCam")
 						.Set("CameraIndex", 6)
@@ -75,7 +75,7 @@ namespace VAT_LOAD1
 					tag.End();
 				}
 
-				// ¦¡¦¡ RightCam ? »ó´Ü ¿ì Ä«¸Ş¶ó (CameraIndex=7) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+				// â”€â”€ RightCam ? ìƒë‹¨ ìš° ì¹´ë©”ë¼ (CameraIndex=7) â”€â”€â”€â”€â”€â”€â”€â”€â”€
 				{
 					auto& tag = RegisterTagParam("RightCam")
 						.Set("CameraIndex", 7)

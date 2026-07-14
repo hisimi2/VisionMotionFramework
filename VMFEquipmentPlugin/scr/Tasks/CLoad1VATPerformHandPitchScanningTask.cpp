@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATPerformHandPitchScanningTask.h"
 #include "DefineVAT.h"
 #include "scr\Protocol\VisionMemoryKeys.h"
