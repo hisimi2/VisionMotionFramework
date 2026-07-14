@@ -251,5 +251,23 @@
     <ClCompile Include="scr\Strategies\C6SideInspectionSequenceBuilder.cpp">
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClCompile>
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.cpp">
+      <Filter>PickPlaceUnit\PlateZIG\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceBuilder.cpp">
+      <Filter>PickPlaceUnit\PlateZIG\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.cpp">
+      <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.cpp">
+      <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceBuilder.cpp">
+      <Filter>PickPlaceUnit\NonePlateZIG\Sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceStrategy.cpp">
+      <Filter>PickPlaceUnit\NonePlateZIG\Sequences</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

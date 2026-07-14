@@ -224,6 +224,12 @@
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp" />
     <ClCompile Include="scr\Strategies\C6SideInspectionSequenceBuilder.cpp" />
     <ClCompile Include="scr\Strategies\C6SideInspectionStrategy.cpp" />
+    <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.cpp" />
+    <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.cpp" />
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceBuilder.cpp" />
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.cpp" />
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceBuilder.cpp" />
+    <ClCompile Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceStrategy.cpp" />
     <ClCompile Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.cpp" />
     <ClCompile Include="scr\Strategies\SetPlate1PLVIStrategy.cpp" />
     <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp" />
