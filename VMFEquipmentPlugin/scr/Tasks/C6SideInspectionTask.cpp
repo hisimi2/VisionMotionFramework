@@ -127,7 +127,7 @@ namespace VMF_6SIDE
 			std::string key = "Face_" + std::to_string(m_facePosition) + "_Result";
 			//ctx.SetSeqParam(key, result == "1" ? 1 : 0);
 
-			//if (result == "2")
+			// if (result == "2")
 			//	return SetErrorAndReturn(ctx, "Inspection NG on face " +
 			//		std::to_string(m_facePosition));
 
@@ -142,6 +142,5 @@ namespace VMF_6SIDE
 			EnterState(Done);
 			return VMF::TR_KEEP;
 		}
-
 	} // namespace Task
 } // namespace VMF_6SIDE

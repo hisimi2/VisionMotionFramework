@@ -1,9 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "LoadPPAdapter.h"
 
 namespace VMF
 {
-   
     // 축 인덱스 (pos 벡터 순서)
     // X=0, Y=1, Z=2, TABLE1=3, TABLE2=4
 

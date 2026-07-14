@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -175,6 +175,8 @@
     <ClInclude Include="include\C6SideInspectionStrategy.h" />
     <ClInclude Include="include\DefineVAT.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
+    <ClInclude Include="include\ZfocusLoad1Strategy.h" />
+    <ClInclude Include="include\ZFocusLoad1Builder.h" />
     <ClInclude Include="include\VisionParamKeys.h" />
     <ClInclude Include="include\VisionPacket.h" />
     <ClInclude Include="include\VMFEquipmentPluginExport.h" />
@@ -186,26 +188,13 @@
     <ClInclude Include="scr\Protocol\VisionPacketMemory.h" />
     <ClInclude Include="scr\Protocol\VisionPLVIProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionProcessor.h" />
-    <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h" />
-    <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.h" />
-    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceBuilder.h" />
-    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.h" />
-    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceBuilder.h" />
-    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceStrategy.h" />
     <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h" />
     <ClInclude Include="scr\Tasks\C6SideInspectionTask.h" />
     <ClInclude Include="scr\Tasks\C6SideMoveToFacePositionTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATCommitTeachingPosTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATFindAlignPosTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATMoveToStartPositionTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATPerformCalibrationTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATPerformFocusScanningTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATPerformFOVScanningTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATPerformHandPitchScanningTask.h" />
-    <ClInclude Include="scr\Tasks\CLoad1VATPerformPickerFOVScanningTask.h" />
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h" />
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h" />
+    <ClInclude Include="scr\Tasks\TaskLoad1MoveToStartPosition.h" />
+    <ClInclude Include="scr\Tasks\TaskLoad1PerformFocusScanning.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -220,19 +209,13 @@
     <ClCompile Include="scr\Protocol\visionmemoryprocessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp" />
+    <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp" />
     <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp" />
     <ClCompile Include="scr\Tasks\C6SideMoveToFacePositionTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATCommitTeachingPosTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATFindAlignPosTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATMoveToStartPositionTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATPerformCalibrationTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATPerformFocusScanningTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATPerformFOVScanningTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATPerformHandPitchScanningTask.cpp" />
-    <ClCompile Include="scr\Tasks\CLoad1VATPerformPickerFOVScanningTask.cpp" />
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp" />
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp" />
+    <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp" />
+    <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

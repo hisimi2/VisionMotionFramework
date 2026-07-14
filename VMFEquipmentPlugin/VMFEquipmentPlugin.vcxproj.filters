@@ -34,27 +34,6 @@
     <Filter Include="PickPlaceUnit\Tasks">
       <UniqueIdentifier>{8b1531be-a7d8-48e7-a8b8-4d8386449958}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PickPlaceUnit\PLVI">
-      <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PickPlaceUnit\PLVI\Sequences">
-      <UniqueIdentifier>{03b73ec7-1028-4d8f-9151-3d1ddaad731b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PickPlaceUnit\VisionAutoTeaching">
-      <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PickPlaceUnit\VisionAutoTeaching\PlateZIG">
-      <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences">
-      <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PickPlaceUnit\VisionAutoTeaching\AutoMode">
-      <UniqueIdentifier>{078026cb-cadf-434b-98e0-2ef71facde64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PickPlaceUnit\VisionAutoTeaching\NonePlateZIG">
-      <UniqueIdentifier>{7ce0ed5d-dc49-45b8-a575-d15ee9088a3a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SetplateUnit">
       <UniqueIdentifier>{77a70b95-ed5e-43da-a7c7-85008ea0681e}</UniqueIdentifier>
     </Filter>
@@ -66,6 +45,24 @@
     </Filter>
     <Filter Include="SetplateUnit\Tasks">
       <UniqueIdentifier>{f6a00aa4-5902-4ec1-8621-abb07377ce0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\AutoMode">
+      <UniqueIdentifier>{078026cb-cadf-434b-98e0-2ef71facde64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\NonePlateZIG">
+      <UniqueIdentifier>{7ce0ed5d-dc49-45b8-a575-d15ee9088a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\PlateZIG">
+      <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\PlateZIG\Sequences">
+      <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\AutoMode\Sequences">
+      <UniqueIdentifier>{2042195f-edf3-4c71-bc26-c3f671311fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\NonePlateZIG\Sequences">
+      <UniqueIdentifier>{4df22a44-048f-48ab-a0a3-a990c4ec7bf4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,15 +84,6 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\ZfocusLoad1Strategy.h">
-      <Filter>PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ZFocusLoad1Builder.h">
-      <Filter>PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PLVILoad1Strategy.h">
-      <Filter>PickPlaceUnit\PLVI\Sequences</Filter>
-    </ClInclude>
     <ClInclude Include="include\SetPlate1PLVIStrategy.h">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
@@ -104,12 +92,6 @@
     </ClInclude>
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h">
       <Filter>SetplateUnit\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="scr\Tasks\TaskLoad1MoveToStartPosition.h">
-      <Filter>PickPlaceUnit\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="scr\Tasks\TaskLoad1PerformFocusScanning.h">
-      <Filter>PickPlaceUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="scr\Tasks\C6SideInspectionTask.h">
       <Filter>ModuleUnit\Tasks</Filter>
@@ -144,6 +126,51 @@
     <ClInclude Include="scr\Protocol\VisionPLVIProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h">
+      <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.h">
+      <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceBuilder.h">
+      <Filter>PickPlaceUnit\NonePlateZIG\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceStrategy.h">
+      <Filter>PickPlaceUnit\NonePlateZIG\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceBuilder.h">
+      <Filter>PickPlaceUnit\PlateZIG\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.h">
+      <Filter>PickPlaceUnit\PlateZIG\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATCommitTeachingPosTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATFindAlignPosTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATMoveToStartPositionTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATPerformCalibrationTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATPerformFocusScanningTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATPerformFOVScanningTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATPerformHandPitchScanningTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Tasks\CLoad1VATPerformPickerFOVScanningTask.h">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -154,18 +181,6 @@
     </ClCompile>
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp">
       <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp">
-      <Filter>PickPlaceUnit\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp">
-      <Filter>PickPlaceUnit\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp">
-      <Filter>PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences</Filter>
-    </ClCompile>
-    <ClCompile Include="scr\Strategies\PLVILoad1Strategy.cpp">
-      <Filter>PickPlaceUnit\PLVI\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
@@ -190,6 +205,33 @@
     </ClCompile>
     <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp">
       <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATCommitTeachingPosTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATFindAlignPosTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATMoveToStartPositionTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATPerformCalibrationTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATPerformFocusScanningTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATPerformFOVScanningTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATPerformHandPitchScanningTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Tasks\CLoad1VATPerformPickerFOVScanningTask.cpp">
+      <Filter>PickPlaceUnit\Tasks</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

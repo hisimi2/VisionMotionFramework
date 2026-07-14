@@ -205,6 +205,7 @@
     <ClInclude Include="Actuators\Load1Parts.h" />
     <ClInclude Include="Actuators\Load2Parts.h" />
     <ClInclude Include="Actuators\SetPlate1Parts.h" />
+    <ClInclude Include="Actuators\VisionUnitParts.h" />
     <ClInclude Include="Equipment2015.h" />
     <ClInclude Include="Equipment2015Dlg.h" />
     <ClInclude Include="OperationThreads\Load1ActivityBuilder.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VAT\LoadPPAdapter.h" />
     <ClInclude Include="VAT\PLVIAdapterSetPlate1.h" />
+    <ClInclude Include="VAT\VisionUnitAdapter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actuators\CCylinderBase.cpp" />
@@ -242,6 +244,7 @@
     </ClCompile>
     <ClCompile Include="VAT\LoadPPAdapter.cpp" />
     <ClCompile Include="VAT\PLVIAdapterSetPlate1.cpp" />
+    <ClCompile Include="VAT\VisionUnitAdapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Equipment2015.rc" />
