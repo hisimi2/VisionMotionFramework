@@ -8,9 +8,7 @@ namespace VMF_PLUGIN
 	//
 	// 6면 검사 시퀀스:
 	//   각 면마다 [MoveToFacePosition + Inspection] 쌍으로 구성
-	//   태그로 면별 파라미터 분리:
-	//     Face_Left / Face_Right / Face_Front
-	//     Face_Top  / Face_Rear  / Face_Bottom
+	//   면별 파라미터는 SetTaskParams()로 Task에 직접 주입
 	// ----------------------------------------------------------------
 	class C6SideInspectionSequenceBuilder : public VMF::SequenceBuilderBase
 	{
@@ -18,6 +16,6 @@ namespace VMF_PLUGIN
 		std::string GetSequenceName() const { return "6SideInspection"; }
 
 	protected:
-        VMF::SequencePtr BuildSequence(const std::string& sequenceName) override;
+		VMF::SequencePtr BuildSequence(const std::string& sequenceName) override;
 	};
 }

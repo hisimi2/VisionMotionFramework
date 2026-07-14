@@ -62,12 +62,8 @@ namespace VMF_PLUGIN
 
 		vp->InitializeRecvThread();
 
-		// 요청 파라미터 설정
-		// VisionProcessor 내부에서 1102 패킷 구성 시 사용
-        m_facePosition = GetTaskSeqParamAs<int>(ctx, "ReqFacePosition");
-        m_selectCount  = GetTaskSeqParamAs<int>(ctx, "ReqSelectCount");
-        auto skip = GetTaskSeqParamAs<int>(ctx, "ReqSkip");   // 0: Inspection
-
+		// OnInitialize에서 이미 읽은 멤버 변수 사용
+		// m_facePosition, m_selectCount, m_barcodeId, m_lotId
 		if (!ctx.ExecuteVisionCommand(VMF::Measure))
 			return SetErrorAndReturn(ctx, "1102 send failed");
 
