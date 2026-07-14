@@ -65,9 +65,9 @@ namespace VMF_6SIDE
 
 			// 요청 파라미터 설정
 			// VisionProcessor 내부에서 1102 패킷 구성 시 사용
-			ctx.SetSeqParam("ReqFacePosition", m_facePosition);
-			ctx.SetSeqParam("ReqSelectCount", m_selectCount);
-			ctx.SetSeqParam("ReqSkip", 0);   // 0: Inspection
+            m_facePosition = GetTaskSeqParamAs<int>(ctx, "ReqFacePosition");
+            m_selectCount  = GetTaskSeqParamAs<int>(ctx, "ReqSelectCount");
+            auto skip = GetTaskSeqParamAs<int>(ctx, "ReqSkip");   // 0: Inspection
 
 			if (!ctx.ExecuteVisionCommand(VMF::Measure))
 				return SetErrorAndReturn(ctx, "1102 send failed");
@@ -109,27 +109,27 @@ namespace VMF_6SIDE
 			auto vp = ctx.GetVisionProcessorInterface();
 			if (!vp) return SetErrorAndReturn(ctx, "No VisionProcessor");
 
-			auto& data = vp->GetLatestData(VMF::Measure);
+			//auto& data = vp->GetLatestData(VMF::Measure);
 
 			// Grab Check
-			auto itGrab = data.find("GrabCheck");
-			if (itGrab != data.end() && itGrab->second == "2")
-				return SetErrorAndReturn(ctx, "Grab failed on face " +
-					std::to_string(m_facePosition));
+			//auto itGrab = data.find("GrabCheck");
+			//if (itGrab != data.end() && itGrab->second == "2")
+			//	return SetErrorAndReturn(ctx, "Grab failed on face " +
+			//		std::to_string(m_facePosition));
 
 			// Inspection Result (1:OK / 2:NG)
-			auto itResult = data.find("InspectionResult");
-			std::string result = "1";
-			if (itResult != data.end()) result = itResult->second;
+			//auto itResult = data.find("InspectionResult");
+			//std::string result = "1";
+			//if (itResult != data.end()) result = itResult->second;
 
 			// 면별 결과를 Context에 저장
 			// ex) "Face_1_Result" = "1" (OK)
 			std::string key = "Face_" + std::to_string(m_facePosition) + "_Result";
-			ctx.SetSeqParam(key, result == "1" ? 1 : 0);
+			//ctx.SetSeqParam(key, result == "1" ? 1 : 0);
 
-			if (result == "2")
-				return SetErrorAndReturn(ctx, "Inspection NG on face " +
-					std::to_string(m_facePosition));
+			//if (result == "2")
+			//	return SetErrorAndReturn(ctx, "Inspection NG on face " +
+			//		std::to_string(m_facePosition));
 
 			EnterState(TurnOffLight);
 			return VMF::TR_KEEP;

@@ -87,10 +87,9 @@ namespace VMF_6SIDE
 		VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoCylGrip(
 			VMF::Context& ctx, VMF::IActuator* actuator)
 		{
-			
 			if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
 
-			if (actuator->DoCylGripUngrip(true) != VMF::ActError::ActOk)
+			//if (actuator->DoCylGripUngrip(true) != VMF::ActError::ActOk)
 				return SetErrorAndReturn(ctx, "Cyl grip failed");
 
 			EnterStateWithTimeout(WaitCylGrip, m_cylTimeoutMs);
@@ -102,7 +101,7 @@ namespace VMF_6SIDE
 		{
 			if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
 
-			if (actuator->ChkCylGripUngrip(true) == VMF::ActError::ActBusy)
+			//if (actuator->ChkCylGripUngrip(true) == VMF::ActError::ActBusy)
 			{
 				if (IsDeadlineExpired()) return SetErrorAndReturn(ctx, "Cyl grip timeout");
 				return VMF::TR_KEEP;
@@ -116,7 +115,7 @@ namespace VMF_6SIDE
 		VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoGripperSafety(
 			VMF::Context& ctx, VMF::IActuator* actuator)
 		{
-			double gripperSafetyPos = GetSeqParamAs<double>(ctx, "GripperSafetyPos");
+			double gripperSafetyPos = GetTaskSeqParamAs<double>(ctx, "GripperSafetyPos");
 
 			VMF::MotionCommand cmd;
 			cmd.Set("Gripper", gripperSafetyPos);
@@ -130,7 +129,7 @@ namespace VMF_6SIDE
 		VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitGripperSafety(
 			VMF::Context& ctx, VMF::IActuator* actuator)
 		{
-			double gripperSafetyPos = GetSeqParamAs<double>(ctx, "GripperSafetyPos", 0.0);
+			double gripperSafetyPos = GetTaskSeqParamAs<double>(ctx, "GripperSafetyPos", 0.0);
 
 			VMF::MotionCommand cmd;
 			cmd.Set("Gripper", gripperSafetyPos);
@@ -150,7 +149,7 @@ namespace VMF_6SIDE
 		{
 			if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
 
-			if (actuator->DoCylGripUngrip(false) != VMF::ActError::ActOk)
+			//if (actuator->DoCylGripUngrip(false) != VMF::ActError::ActOk)
 				return SetErrorAndReturn(ctx, "Cyl ungrip failed");
 
 			EnterStateWithTimeout(WaitCylUngrip, m_cylTimeoutMs);
@@ -160,10 +159,10 @@ namespace VMF_6SIDE
 		VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitCylUngrip(
 			VMF::Context& ctx, VMF::IActuator* actuator)
 		{
-			auto* adapter = dynamic_cast<VisionUnitAdapter*>(actuator);
-			if (!adapter) return SetErrorAndReturn(ctx, "Invalid actuator type");
+			
+			if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
 
-			if (adapter->ChkCylGripUngrip(false) == VMF::ActError::ActBusy)
+			//if (actuator->ChkCylGripUngrip(false) == VMF::ActError::ActBusy)
 			{
 				if (IsDeadlineExpired()) return SetErrorAndReturn(ctx, "Cyl ungrip timeout");
 				return VMF::TR_KEEP;
@@ -177,11 +176,11 @@ namespace VMF_6SIDE
 		VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoCylBack(
 			VMF::Context& ctx, VMF::IActuator* actuator)
 		{
-			auto* adapter = dynamic_cast<VisionUnitAdapter*>(actuator);
-			if (!adapter) return SetErrorAndReturn(ctx, "Invalid actuator type");
+			
+			if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
 
-			if (adapter->DoCylTurnForBack(false) != VMF::ActError::ActOk)
-				return SetErrorAndReturn(ctx, "Cyl backward failed");
+			//if (actuator->DoCylTurnForBack(false) != VMF::ActError::ActOk)
+			//	return SetErrorAndReturn(ctx, "Cyl backward failed");
 
 			EnterStateWithTimeout(WaitCylBack, m_cylTimeoutMs);
 			return VMF::TR_KEEP;
@@ -190,10 +189,10 @@ namespace VMF_6SIDE
 		VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitCylBack(
 			VMF::Context& ctx, VMF::IActuator* actuator)
 		{
-			auto* adapter = dynamic_cast<VisionUnitAdapter*>(actuator);
-			if (!adapter) return SetErrorAndReturn(ctx, "Invalid actuator type");
+			
+			if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
 
-			if (adapter->ChkCylTurnForBack(false) == VMF::ActError::ActBusy)
+			//if (actuator->ChkCylTurnForBack(false) == VMF::ActError::ActBusy)
 			{
 				if (IsDeadlineExpired()) return SetErrorAndReturn(ctx, "Cyl backward timeout");
 				return VMF::TR_KEEP;
@@ -254,6 +253,5 @@ namespace VMF_6SIDE
 			EnterState(Done);
 			return VMF::TR_KEEP;
 		}
-
 	} // namespace Task
 } // namespace VMF_6SIDE

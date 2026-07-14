@@ -13,45 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="LoadPP">
-      <UniqueIdentifier>{ea569707-ffce-4ff2-9541-c49d4ea5e343}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\Tasks">
-      <UniqueIdentifier>{8b1531be-a7d8-48e7-a8b8-4d8386449958}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\PLVI">
-      <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\VisionAutoTeaching">
-      <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG">
-      <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\VisionAutoTeaching\PlateZIG\Sequences">
-      <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\VisionAutoTeaching\AutoMode">
-      <UniqueIdentifier>{078026cb-cadf-434b-98e0-2ef71facde64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\VisionAutoTeaching\NonePlateZIG">
-      <UniqueIdentifier>{7ce0ed5d-dc49-45b8-a575-d15ee9088a3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoadPP\PLVI\Sequences">
-      <UniqueIdentifier>{03b73ec7-1028-4d8f-9151-3d1ddaad731b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UnloadSetplate">
-      <UniqueIdentifier>{77a70b95-ed5e-43da-a7c7-85008ea0681e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UnloadSetplate\PLVI">
-      <UniqueIdentifier>{ed23ef38-bf60-47d4-8434-c358c3f802a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UnloadSetplate\Tasks">
-      <UniqueIdentifier>{f6a00aa4-5902-4ec1-8621-abb07377ce0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UnloadSetplate\PLVI\Sequences">
-      <UniqueIdentifier>{1c07bd82-2311-4ffc-a5cf-fa8b54209fa3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ModuleUnit">
       <UniqueIdentifier>{109bca8b-8548-4e44-8217-d2d189778575}</UniqueIdentifier>
     </Filter>
@@ -66,6 +27,45 @@
     </Filter>
     <Filter Include="Protocol">
       <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit">
+      <UniqueIdentifier>{ea569707-ffce-4ff2-9541-c49d4ea5e343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\Tasks">
+      <UniqueIdentifier>{8b1531be-a7d8-48e7-a8b8-4d8386449958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\PLVI">
+      <UniqueIdentifier>{ea1980f8-f4d5-40e8-8e98-5042668f35b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\PLVI\Sequences">
+      <UniqueIdentifier>{03b73ec7-1028-4d8f-9151-3d1ddaad731b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\VisionAutoTeaching">
+      <UniqueIdentifier>{5fb4bdf1-7539-449f-82a2-448b88570ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\VisionAutoTeaching\PlateZIG">
+      <UniqueIdentifier>{e4a77cd2-23d9-4fa5-9971-025a33f8c134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences">
+      <UniqueIdentifier>{0851c9b1-4925-4df7-aa6a-7fb39ce9ceb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\VisionAutoTeaching\AutoMode">
+      <UniqueIdentifier>{078026cb-cadf-434b-98e0-2ef71facde64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PickPlaceUnit\VisionAutoTeaching\NonePlateZIG">
+      <UniqueIdentifier>{7ce0ed5d-dc49-45b8-a575-d15ee9088a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SetplateUnit">
+      <UniqueIdentifier>{77a70b95-ed5e-43da-a7c7-85008ea0681e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SetplateUnit\PLVI">
+      <UniqueIdentifier>{ed23ef38-bf60-47d4-8434-c358c3f802a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SetplateUnit\PLVI\Sequences">
+      <UniqueIdentifier>{1c07bd82-2311-4ffc-a5cf-fa8b54209fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SetplateUnit\Tasks">
+      <UniqueIdentifier>{f6a00aa4-5902-4ec1-8621-abb07377ce0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,28 +88,28 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="include\ZfocusLoad1Strategy.h">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
+      <Filter>PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="include\ZFocusLoad1Builder.h">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
+      <Filter>PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="include\PLVILoad1Strategy.h">
-      <Filter>LoadPP\PLVI\Sequences</Filter>
+      <Filter>PickPlaceUnit\PLVI\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="include\SetPlate1PLVIStrategy.h">
-      <Filter>UnloadSetplate\PLVI\Sequences</Filter>
+      <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h">
-      <Filter>UnloadSetplate\Tasks</Filter>
+      <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h">
-      <Filter>UnloadSetplate\Tasks</Filter>
+      <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="scr\Tasks\TaskLoad1MoveToStartPosition.h">
-      <Filter>LoadPP\Tasks</Filter>
+      <Filter>PickPlaceUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="scr\Tasks\TaskLoad1PerformFocusScanning.h">
-      <Filter>LoadPP\Tasks</Filter>
+      <Filter>PickPlaceUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="scr\Tasks\C6SideInspectionTask.h">
       <Filter>ModuleUnit\Tasks</Filter>
@@ -121,7 +121,7 @@
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h">
-      <Filter>UnloadSetplate\PLVI\Sequences</Filter>
+      <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionProcessor.h">
       <Filter>Protocol</Filter>
@@ -156,22 +156,22 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\TaskLoad1PerformFocusScanning.cpp">
-      <Filter>LoadPP\Tasks</Filter>
+      <Filter>PickPlaceUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\TaskLoad1MoveToStartPosition.cpp">
-      <Filter>LoadPP\Tasks</Filter>
+      <Filter>PickPlaceUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\ZfocusLoad1Strategy.cpp">
-      <Filter>LoadPP\VisionAutoTeaching\PlateZIG\Sequences</Filter>
+      <Filter>PickPlaceUnit\VisionAutoTeaching\PlateZIG\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\PLVILoad1Strategy.cpp">
-      <Filter>LoadPP\PLVI\Sequences</Filter>
+      <Filter>PickPlaceUnit\PLVI\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp">
-      <Filter>UnloadSetplate\Tasks</Filter>
+      <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp">
-      <Filter>UnloadSetplate\Tasks</Filter>
+      <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp">
       <Filter>ModuleUnit\Tasks</Filter>
