@@ -29,7 +29,7 @@ namespace VMF_PLUGIN
     VMF::SequenceBuilderPtr C6SideInspectionStrategy::CreateBuilder() 
     {
         return std::make_shared<
-            VMF_6SIDE::Sequence::C6SideInspectionSequenceBuilder>();
+            C6SideInspectionSequenceBuilder>();
     }
 
     void C6SideInspectionStrategy::ConfigureParams(VMF::VisionContextPtr ctx)

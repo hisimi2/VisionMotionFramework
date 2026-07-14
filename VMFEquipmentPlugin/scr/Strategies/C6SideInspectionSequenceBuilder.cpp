@@ -13,7 +13,6 @@ namespace VMF_PLUGIN
         seq->AddTask(VMF::TaskPtr(new C6SideMoveToFacePositionTask())); 
         seq->AddTask(VMF::TaskPtr(new C6SideInspectionTask()));         
 
-
         // ── 면 2: Right ───────────────────────────────────
         seq->AddTask(VMF::TaskPtr(new C6SideMoveToFacePositionTask())); 
         seq->AddTask(VMF::TaskPtr(new C6SideInspectionTask()));         

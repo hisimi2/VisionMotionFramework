@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ITask.h"
 #include "Context.h"
@@ -34,7 +34,6 @@ namespace VMF
         static const int CS_INITIALIZING    = -1; // 초기화 상태 (공통)
         static const int CS_ERROR           = -2; // 에러 상태 (공통)
         static const int CS_IDLE            = -3; // 대기 상태 (공통)
-        
 
         /// <summary>
         /// 기본 생성자. 내부 상태와 플래그를 초기화합니다.

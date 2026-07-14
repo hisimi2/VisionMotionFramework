@@ -3,7 +3,6 @@
 
 namespace VMF_PLUGIN
 {
-
 	// ----------------------------------------------------------------
 	// C6SideMoveToFacePositionTask
 	//
