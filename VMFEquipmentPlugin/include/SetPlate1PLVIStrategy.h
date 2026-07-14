@@ -1,16 +1,15 @@
-﻿#pragma once
+#pragma once
 #include "ComponentSetupBase.h"
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
-#include "scr\Protocol\VisionMemoryProcessor.h"
-#include "scr\Protocol\VisionPLVIProcessor.h"
-#include "scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
+#include "..\scr\Protocol\VisionMemoryProcessor.h"
+#include "..\scr\Protocol\VisionPLVIProcessor.h"
+#include "..\scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
 #include <memory>
 #include <sstream>
 
 namespace VMF_PLUGIN
 {
-
 	class SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
 	{
 	protected:
@@ -163,5 +162,4 @@ namespace VMF_PLUGIN
 			return VMF::StringMap();
 		}
 	};
-
-} // namespace VMF_PLUGIN
+} 

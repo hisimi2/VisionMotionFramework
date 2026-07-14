@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "PLVIAdapterSetPlate1.h"
 
 // SetPlate1 PLVI 축 구성

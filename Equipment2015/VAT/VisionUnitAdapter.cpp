@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "VisionUnitAdapter.h"
 
 namespace VMF_6SIDE

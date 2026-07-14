@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "IActuator.h"
 #include "Actuators\VisionUnitParts.h"
 
