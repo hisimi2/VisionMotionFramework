@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "C6SideInspectionSequenceBuilder.h"
 #include "..\Tasks\C6SideMoveToFacePositionTask.h"
 #include "..\Tasks\C6SideInspectionTask.h"

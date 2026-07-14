@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATFindAlignPosTask.h"
 #include "DefineVAT.h"
 #include "scr\Protocol\VisionMemoryKeys.h"

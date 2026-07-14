@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include <algorithm>
 #include "CLoad1VATCommitTeachingPosTask.h"
 #include "DefineVAT.h"

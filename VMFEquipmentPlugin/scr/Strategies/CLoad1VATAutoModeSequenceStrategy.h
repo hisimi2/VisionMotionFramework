@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CLoad1VATBaseSequenceStrategy.h"
 #include "Sequences\CLoad1VATAutoModeSequenceBuilder.h"
 

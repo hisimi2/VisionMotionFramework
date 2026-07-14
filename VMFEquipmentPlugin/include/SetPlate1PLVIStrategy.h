@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ComponentSetupBase.h"
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"

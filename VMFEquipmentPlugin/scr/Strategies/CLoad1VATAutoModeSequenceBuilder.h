@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SequenceBuilderBase.h"
 #include "Tasks\CLoad1VATMoveToStartPositionTask.h"
 #include "Tasks\CLoad1VATPerformCalibrationTask.h"

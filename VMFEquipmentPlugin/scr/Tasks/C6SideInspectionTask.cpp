@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "C6SideInspectionTask.h"
 #include "Context.h"
 #include "IActuator.h"
