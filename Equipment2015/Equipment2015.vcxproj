@@ -255,11 +255,6 @@
   <ItemGroup>
     <Image Include="res\Equipment2015.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VMFEquipmentPlugin\VMFEquipmentPlugin.vcxproj">
-      <Project>{47e9888b-8124-4387-a71e-5326579e6acf}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
