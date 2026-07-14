@@ -1,9 +1,9 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformFOVScanningTask.h"
 #include "DefineVAT.h"
 #include "scr\Protocol\VisionMemoryKeys.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_PLUGIN;
 
 CLoad1VATPerformFOVScanningTask::CLoad1VATPerformFOVScanningTask()
 	: m_centerPositionX(0.0), m_centerPositionY(0.0), m_focusPositionZ(0.0)

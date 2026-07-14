@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformFocusScanningTask.h"
 #include "DefineVAT.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_PLUGIN;
 
 CLoad1VATPerformFocusScanningTask::CLoad1VATPerformFocusScanningTask()
 	: m_cameraId(0)

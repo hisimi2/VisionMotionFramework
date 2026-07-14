@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "SequenceBuilderBase.h"
 #include "Tasks\CLoad1VATMoveToStartPositionTask.h"
 #include "Tasks\CLoad1VATPerformCalibrationTask.h"
@@ -6,11 +6,11 @@
 #include "Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.h"
 #include "Tasks\CLoad1VATPerformFOVScanningTask.h"
 
-namespace VAT_LOAD1
+namespace VMF_PLUGIN
 {
 	namespace Sequence
 	{
-		using namespace VAT_LOAD1::Task;
+		using namespace VMF_PLUGIN::Task;
 
 		// ----------------------------------------------------------------
 		// CLoad1VATPlateJigDetachSequenceBuilder
@@ -56,4 +56,4 @@ namespace VAT_LOAD1
 		};
 
 	} // namespace Sequence
-} // namespace VAT_LOAD1
+} // namespace VMF_PLUGIN

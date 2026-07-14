@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATCommitPickerCamDistanceResultsTask.h"
 #include "DefineVAT.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_PLUGIN;
 
 CLoad1VATCommitPickerCamDistanceResultsTask::CLoad1VATCommitPickerCamDistanceResultsTask()
 	: m_lowerCameraId(0)

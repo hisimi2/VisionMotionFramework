@@ -6,11 +6,11 @@
 #include "Tasks\CLoad1VATPerformFOVScanningTask.h"
 #include "Tasks\CLoad1VATFindAlignPosTask.h"
 
-namespace VAT_LOAD1
+namespace VMF_PLUGIN
 {
 	namespace Sequence
 	{
-		using namespace VAT_LOAD1::Task;
+		using namespace VMF_PLUGIN::Task;
 
 		// ----------------------------------------------------------------
 		// CLoad1VATPlateJigAttachSequenceBuilder
@@ -64,4 +64,4 @@ namespace VAT_LOAD1
 		};
 
 	} // namespace Sequence
-} // namespace VAT_LOAD1
+} // namespace VMF_PLUGIN

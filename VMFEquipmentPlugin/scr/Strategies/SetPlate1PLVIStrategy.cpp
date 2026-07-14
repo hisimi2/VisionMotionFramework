@@ -1,12 +1,6 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 
-namespace VMF_PLUGIN
-{
-
-
-
-}
-
+using namespace VMF_PLUGIN;
 
 

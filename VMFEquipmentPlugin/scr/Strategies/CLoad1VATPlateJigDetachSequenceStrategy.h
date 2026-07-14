@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "CLoad1VATBaseSequenceStrategy.h"
 #include "Sequences\CLoad1VATPlateJigDetachSequenceBuilder.h"
 
-namespace VAT_LOAD1
+namespace VMF_PLUGIN
 {
 	namespace Strategies
 	{
@@ -13,7 +13,7 @@ namespace VAT_LOAD1
 
 			VMF::SequenceBuilderPtr CreateBuilder() override
 			{
-				return std::make_shared<VAT_LOAD1::Sequence::CLoad1VATPlateJigDetachSequenceBuilder>();
+				return std::make_shared<VMF_PLUGIN::Sequence::CLoad1VATPlateJigDetachSequenceBuilder>();
 			}
 
 			void ConfigureParams(VMF::VisionContextPtr ctx) override
@@ -95,4 +95,4 @@ namespace VAT_LOAD1
 		};
 
 	} // namespace Strategies
-} // namespace VAT_LOAD1
+} // namespace VMF_PLUGIN

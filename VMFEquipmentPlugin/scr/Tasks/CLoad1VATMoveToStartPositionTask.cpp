@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATMoveToStartPositionTask.h"
 #include "DefineVAT.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_PLUGIN;
 
 CLoad1VATMoveToStartPositionTask::CLoad1VATMoveToStartPositionTask()
 	: m_moveTimeoutMs(7000)

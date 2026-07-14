@@ -1,9 +1,9 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include <algorithm>
 #include "CLoad1VATCommitTeachingPosTask.h"
 #include "DefineVAT.h"
 
-using namespace VAT_LOAD1::Task;
+using namespace VMF_PLUGIN;
 
 CLoad1VATCommitTeachingPosTask::CLoad1VATCommitTeachingPosTask()
 	: m_pickerCameraOffsetX_Narrow(0.0)

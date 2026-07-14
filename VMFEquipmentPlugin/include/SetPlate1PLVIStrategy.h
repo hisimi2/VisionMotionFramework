@@ -2,7 +2,7 @@
 #include "ComponentSetupBase.h"
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
-#include "..\scr\Protocol\VisionMemoryProcessor.h"
+// VisionMemoryProcessor는 여기서 사용하지 않음 (제거)
 #include "..\scr\Protocol\VisionPLVIProcessor.h"
 #include "..\scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
 #include <memory>
