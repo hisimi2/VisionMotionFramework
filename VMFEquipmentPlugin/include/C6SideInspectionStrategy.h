@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "ComponentSetupBase.h"
 #include "SqliteDataRepository.h"
-#include "Protocol\Vision6SideProcessor.h"
-#include "Sequences\C6SideInspectionSequenceBuilder.h"
+#include "scr\Protocol\Vision6SideProcessor.h"
+#include "scr\Sequences\C6SideInspectionSequenceBuilder.h"
 
 namespace VMF_6SIDE
 {

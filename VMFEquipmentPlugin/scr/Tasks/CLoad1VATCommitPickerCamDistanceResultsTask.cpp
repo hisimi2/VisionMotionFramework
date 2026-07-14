@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATCommitPickerCamDistanceResultsTask.h"
 #include "DefineVAT.h"
 
@@ -26,9 +26,9 @@ void CLoad1VATCommitPickerCamDistanceResultsTask::OnInitialize(VMF::Context& ctx
 	m_currentUpperCameraIndex = 0;
 	m_currentPitchMode = VMF::Narrow;
 
-	m_lowerCameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
-	m_pickerHandId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
+	m_lowerCameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID);
+	m_pickerHandId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_HAND_ID);
 
 	m_upperCameraIds.clear();
 
@@ -173,8 +173,8 @@ VMF::TaskResult CLoad1VATCommitPickerCamDistanceResultsTask::HandleCalcCamAlignP
 	double outTargetB_X = 0.0;
 	double outTargetB_Y = 0.0;
 
-	const double targetDiffX = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_TARGET_DIFF_X, 0.0);
-	const double targetDiffY = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_TARGET_DIFF_Y, 0.0);
+	const double targetDiffX = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_TARGET_DIFF_X, 0.0);
+	const double targetDiffY = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_TARGET_DIFF_Y, 0.0);
 
 	repo->LoadInspInitPos(
 		m_lowerCameraId,

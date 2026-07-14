@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformHandPitchScanningTask.h"
 #include "DefineVAT.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 
 using namespace VAT_LOAD1::Task;
 
@@ -24,23 +24,23 @@ CLoad1VATPerformHandPitchScanningTask::~CLoad1VATPerformHandPitchScanningTask() 
 
 void CLoad1VATPerformHandPitchScanningTask::OnInitialize(VMF::Context& ctx)
 {
-	m_safePositionZ = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_SAFE_Z, 0.0);
-	m_pickerMaxRow = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PICKER_MAX_ROW, 1);
-	m_pickerMaxCol = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PICKER_MAX_COL, 1);
+	m_safePositionZ = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_SAFE_Z);
+	m_pickerMaxRow = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PICKER_MAX_ROW);
+	m_pickerMaxCol = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PICKER_MAX_COL);
 	if (m_pickerMaxRow <= 0) m_pickerMaxRow = 1;
 	if (m_pickerMaxCol <= 0) m_pickerMaxCol = 1;
 
-	m_pickerGapX_Narrow = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_GAP_X_NARROW, 0.0);
-	m_pickerGapX_Wide = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_GAP_X_WIDE, m_pickerGapX_Narrow);
-	m_pickerGapY_Narrow = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_GAP_Y_NARROW, 0.0);
-	m_pickerGapY_Wide = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_GAP_Y_WIDE, m_pickerGapY_Narrow);
-	m_standardPickerCol = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_STANDARD_PICKER_COL, 0.0);
-	m_standardPickerRow = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_STANDARD_PICKER_ROW, 0.0);
+	m_pickerGapX_Narrow = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_GAP_X_NARROW);
+	m_pickerGapX_Wide = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_GAP_X_WIDE);
+	m_pickerGapY_Narrow = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_GAP_Y_NARROW);
+	m_pickerGapY_Wide = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_GAP_Y_WIDE);
+	m_standardPickerCol = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_STANDARD_PICKER_COL);
+	m_standardPickerRow = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_STANDARD_PICKER_ROW);
 
-	const int moveTimeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
-	if (moveTimeoutMs > 0) m_moveTimeoutMs = moveTimeoutMs;
+    m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS);
+	
 
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAM_INDEX, 0);
+	m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAM_INDEX);
 
 	m_scanPoints.clear();
 	m_currentScanIndex = 0;
@@ -102,10 +102,10 @@ VMF::TaskResult CLoad1VATPerformHandPitchScanningTask::HandleMoveSafeZ(VMF::Cont
 	if (!actuator) return SetErrorAndReturn(ctx, "Calibration: actuator is null.");
 	if (actuator->MoveZ(0.0) != VMF::ActOk) return SetErrorAndReturn(ctx, "Calibration: MoveToSafeZ failed.");
 
-	std::vector<double> pos = actuator->GetEncoder();
-	m_centerPositionX = pos[0];
-	m_centerPositionY = pos[1];
-	m_focusPositionZ = pos[2];
+    // std::vector<double> pos = actuator->GetEncoder();
+    // m_centerPositionX = pos[0];
+    // m_centerPositionY = pos[1];
+    // m_focusPositionZ = pos[2];
 
 	if (!m_isScanPointsBuilt)
 		BuildScanPoints(m_standardPickerCol, m_standardPickerRow,
@@ -227,8 +227,9 @@ VMF::TaskResult CLoad1VATPerformHandPitchScanningTask::HandleVisionWait(VMF::Con
 
 	auto data = visionProcessor->GetLatestData(VMF::Measure);
 	double offsetX = 0.0, offsetY = 0.0;
-	auto itX = data.find(VAT_VISION_KEY_X_OFFSET); if (itX != data.end()) offsetX = std::stod(itX->second);
-	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET); if (itY != data.end()) offsetY = std::stod(itY->second);
+
+	//auto itX = data.find(VAT_VISION_KEY_X_OFFSET); if (itX != data.end()) offsetX = std::stod(itX->second);
+	//auto itY = data.find(VAT_VISION_KEY_Y_OFFSET); if (itY != data.end()) offsetY = std::stod(itY->second);
 
 	m_scanPoints[m_currentScanIndex].measuredOffsetX = offsetX;
 	m_scanPoints[m_currentScanIndex].measuredOffsetY = offsetY;
@@ -266,8 +267,8 @@ VMF::TaskResult CLoad1VATPerformHandPitchScanningTask::HandleSaveHandPitchResult
 	auto repo = ctx.GetRepository();
 	if (!repo) { EnterState(CS_ERROR); return VMF::TR_ERROR; }
 
-	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
-	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	const int handId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_HAND_ID);
+	const int packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID);
 
 	for (int row = 0; row < m_pickerMaxRow; ++row)
 	{

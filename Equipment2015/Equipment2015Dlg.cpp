@@ -1,4 +1,4 @@
-﻿// Equipment2015Dlg.cpp : 구현 파일
+// Equipment2015Dlg.cpp : 구현 파일
 //
 #include "stdafx.h"
 #include "Equipment2015.h"
@@ -6,8 +6,8 @@
 #include "afxdialogex.h"
 
 #include "Orchestrator.h"
-#include "ZfocusLoad1Strategy.h"
-#include "PLVILoad1Strategy.h"
+#include "SetPlate1PLVIStrategy.h"
+#include "C6SideInspectionStrategy.h"
 
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"
@@ -47,7 +47,7 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    auto strategy = std::make_shared<VMF_Sample::ZfocusLoad1Strategy>();
+    auto strategy = std::make_shared<VMF_PLUGIN::C6SideInspectionStrategy>();
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(
         strategy,
@@ -75,7 +75,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfDirect()
 {
-    auto strategy = std::make_shared<VMF_Sample::PLVILoad1Strategy>();
+    auto strategy = std::make_shared<VMF_PLUGIN::PLVILoad1Strategy>();
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(
         strategy,

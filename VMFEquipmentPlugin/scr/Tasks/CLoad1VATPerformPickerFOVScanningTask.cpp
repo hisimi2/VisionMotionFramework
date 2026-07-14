@@ -19,12 +19,12 @@ CLoad1VATPerformPickerFOVScanningTask::~CLoad1VATPerformPickerFOVScanningTask() 
 
 void CLoad1VATPerformPickerFOVScanningTask::OnInitialize(VMF::Context& ctx)
 {
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
-	m_moveTimeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, 0);
-	m_visionTimeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_VISION_TIMEOUT_MS, 0);
-	m_fovIntervalX = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_FOV_INTERVAL_X, 2.0);
-	m_fovIntervalY = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_FOV_INTERVAL_Y, 2.0);
+	m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID);
+	m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS);
+	m_visionTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_TIMEOUT_MS);
+	m_fovIntervalX = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_FOV_INTERVAL_X);
+	m_fovIntervalY = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_FOV_INTERVAL_Y);
 	m_currentScanDirection = CENTER;
 	m_centerOffsetX = m_centerOffsetY = 0.0;
 	m_frontRightOffsetX = m_frontRightOffsetY = 0.0;
@@ -67,10 +67,10 @@ VMF::TaskResult CLoad1VATPerformPickerFOVScanningTask::HandleMoveSafeZ(VMF::Cont
 
 	if (m_currentScanDirection == CENTER)
 	{
-		std::vector<double> pos = actuator->GetEncoder();
-		m_centerPositionX = pos[0];
-		m_centerPositionY = pos[1];
-		m_focusPositionZ = pos[2];
+		//std::vector<double> pos = actuator->GetEncoder();
+		//m_centerPositionX   = pos[0];
+		//m_centerPositionY   = pos[1];
+		//m_focusPositionZ    = pos[2];
 	}
 
 	if (actuator->MoveZ(0.0) != VMF::ActOk) return SetErrorAndReturn(ctx, "PickerFOV: MoveToSafeZ failed.");
@@ -177,8 +177,8 @@ VMF::TaskResult CLoad1VATPerformPickerFOVScanningTask::HandleVisionRequest(VMF::
 	if (!visionProcessor) return SetErrorAndReturn(ctx, "PickerFOV: No Vision Processor");
 
 	visionProcessor->InitializeRecvThread();
-	const int visionRequestId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_VISION_PICKER_FOV_REQUEST_ID, 0);
-	ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
+	const int visionRequestId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_PICKER_FOV_REQUEST_ID);
+	//ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
 
 	if (!ctx.ExecuteVisionCommand(VMF::Measure)) return SetErrorAndReturn(ctx, "PickerFOV: Vision Command Failed");
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
@@ -195,8 +195,8 @@ VMF::TaskResult CLoad1VATPerformPickerFOVScanningTask::HandleVisionWait(VMF::Con
 
 	auto data = visionProcessor->GetLatestData(VMF::Measure);
 	double offsetX = 0.0, offsetY = 0.0;
-	auto itX = data.find(VAT_VISION_KEY_X_OFFSET); if (itX != data.end()) offsetX = std::stod(itX->second);
-	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET); if (itY != data.end()) offsetY = std::stod(itY->second);
+	//auto itX = data.find(VAT_VISION_KEY_X_OFFSET); if (itX != data.end()) offsetX = std::stod(itX->second);
+	//auto itY = data.find(VAT_VISION_KEY_Y_OFFSET); if (itY != data.end()) offsetY = std::stod(itY->second);
 
 	if (actuator) actuator->SetLightState(m_cameraId, false);
 
@@ -220,12 +220,12 @@ VMF::TaskResult CLoad1VATPerformPickerFOVScanningTask::HandleSaveResult(VMF::Con
 	auto repo = ctx.GetRepository();
 	if (!repo) return SetErrorAndReturn(ctx, "PickerFOV: Repository is null.");
 
-	ctx.SetSeqParamAs<double>("PickerFOVCenterOffsetX", m_centerOffsetX);
-	ctx.SetSeqParamAs<double>("PickerFOVCenterOffsetY", m_centerOffsetY);
-	ctx.SetSeqParamAs<double>("PickerFOVFrontRightOffsetX", m_frontRightOffsetX);
-	ctx.SetSeqParamAs<double>("PickerFOVFrontRightOffsetY", m_frontRightOffsetY);
-	ctx.SetSeqParamAs<double>("PickerFOVFrontRightDeltaX", m_frontRightOffsetX - m_centerOffsetX);
-	ctx.SetSeqParamAs<double>("PickerFOVFrontRightDeltaY", m_frontRightOffsetY - m_centerOffsetY);
+	//ctx.SetSeqParamAs<double>("PickerFOVCenterOffsetX", m_centerOffsetX);
+	//ctx.SetSeqParamAs<double>("PickerFOVCenterOffsetY", m_centerOffsetY);
+	//ctx.SetSeqParamAs<double>("PickerFOVFrontRightOffsetX", m_frontRightOffsetX);
+	//ctx.SetSeqParamAs<double>("PickerFOVFrontRightOffsetY", m_frontRightOffsetY);
+	//ctx.SetSeqParamAs<double>("PickerFOVFrontRightDeltaX", m_frontRightOffsetX - m_centerOffsetX);
+	//ctx.SetSeqParamAs<double>("PickerFOVFrontRightDeltaY", m_frontRightOffsetY - m_centerOffsetY);
 
 	EnterState(ReturnHome);
 	return VMF::TR_KEEP;

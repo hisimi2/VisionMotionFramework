@@ -1,28 +1,22 @@
-﻿#pragma once
+#pragma once
 #include "SequenceBuilderBase.h"
-#include "..\VMFEquipmentPlugin/Tasks/CSetPlate1PLVIMoveToScanStartTask.h"
-#include "..\VMFEquipmentPlugin/Tasks/CSetPlate1PLVIPerformScanTask.h"
+#include "scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h"
+#include "scr\Tasks\CSetPlate1PLVIPerformScanTask.h"
 
-namespace VMF_PLVI
+namespace VMF_PLUGIN
 {
-	namespace Sequence
+	class CSetPlate1PLVISequenceBuilder : public VMF::SequenceBuilderBase
 	{
-		using namespace VMF_PLVI::Task;
-
-		class CSetPlate1PLVISequenceBuilder : public VMF::SequenceBuilderBase
+	protected:
+		VMF::SequencePtr BuildSequence(
+			const std::string& sequenceName) override
 		{
-		protected:
-			VMF::SequencePtr BuildSequence(
-				const std::string& sequenceName) override
-			{
-				VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
+			VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
-				seq->AddTask(VMF::TaskPtr(new CSetPlate1PLVIMoveToScanStartTask()));
-				seq->AddTask(VMF::TaskPtr(new CSetPlate1PLVIPerformScanTask()));
+			seq->AddTask(VMF::TaskPtr(new CSetPlate1PLVIMoveToScanStartTask()));
+			seq->AddTask(VMF::TaskPtr(new CSetPlate1PLVIPerformScanTask()));
 
-				return VMF::SequencePtr(seq.release());
-			}
-		};
-
-	} // namespace Sequence
+			return VMF::SequencePtr(seq.release());
+		}
+	};
 } // namespace VMF_PLVI

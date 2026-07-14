@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformFocusScanningTask.h"
 #include "DefineVAT.h"
 
@@ -18,8 +18,8 @@ CLoad1VATPerformFocusScanningTask::~CLoad1VATPerformFocusScanningTask()
 
 void CLoad1VATPerformFocusScanningTask::OnInitialize(VMF::Context& ctx)
 {
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
 	m_locationIds.clear();
 
@@ -49,14 +49,19 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleMoveDown(
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z down failed");
 
+    /*
 	VMF::VisionPosition position;
 	if (!ctx.PeekVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
+    
 
 	if (actuator->MoveZ(position.pos[2]) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "Z down failed");
+
+    */
+
 
 	EnterStateWithTimeout(MoveWait, m_moveTimeoutMs);
 	return VMF::TR_KEEP;
@@ -69,11 +74,14 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleMoveWait(
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "Z Down Fail");
 
+
+    /*
 	VMF::VisionPosition position;
 	if (!ctx.PeekVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Get Position Failed");
 	}
+    
 
 	if (actuator->isMoveZ(position.pos[2]) != VMF::ActOk)
 	{
@@ -82,6 +90,7 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleMoveWait(
 
 		return VMF::TR_KEEP;
 	}
+    */
 
 	EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
 	return VMF::TR_KEEP;
@@ -129,6 +138,7 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleVisionWait(
 		return VMF::TR_KEEP;
 	}
 
+    /*
 	std::map<std::string, std::string>& data = visionProcessor->GetLatestData(VMF::Measure);
 	(void)data;
 
@@ -136,6 +146,7 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleVisionWait(
 	{
 		actuator->SetLightState(m_cameraId, false);
 	}
+    */
 
 	EnterState(ReturnHome);
 	return VMF::TR_KEEP;
@@ -164,11 +175,13 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleSaveFocusResult(
 		return SetErrorAndReturn(ctx, "DB Access Fail");
 	}
 
+    /*
 	VMF::VisionPosition position;
 	if (!ctx.PopVisionPosition(position))
 	{
 		return SetErrorAndReturn(ctx, "FocusScanning: Pop Position Failed");
 	}
+    
 
 	const int locationId = position.locateId;
 	const double bestZPlateJig = position.pos[2];
@@ -177,6 +190,8 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleSaveFocusResult(
 	{
 		return SetErrorAndReturn(ctx, "DB Read Fail");
 	}
+
+    
 
 	if (m_cameraId > 5)
 	{
@@ -195,6 +210,8 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleSaveFocusResult(
 			return SetErrorAndReturn(ctx, "DB Write Fail");
 		}
 	}
+
+    
 
 	for (std::vector<int>::iterator it = m_locationIds.begin(); it != m_locationIds.end(); ++it)
 	{
@@ -232,7 +249,11 @@ VMF::TaskResult CLoad1VATPerformFocusScanningTask::HandleSaveFocusResult(
 		return VMF::TR_NEXT;
 	}
 
+    
+
 	(void)locationId;
+
+    */
 	EnterState(MoveDown);
 	return VMF::TR_PREV;
 }

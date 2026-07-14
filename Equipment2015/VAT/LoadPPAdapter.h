@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IActuator.h"
 
@@ -35,4 +35,4 @@ namespace VMF
         VMF::ActError SetTriggerState(bool enable, double intervalMm) override;
         VMF::ActError GetTriggerState(bool& outEnabled, double& outIntervalMm) override;
     };
-} // namespace VMF_Sample
+} // namespace VMF_PLUGIN

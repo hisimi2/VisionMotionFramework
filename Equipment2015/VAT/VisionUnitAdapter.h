@@ -1,15 +1,15 @@
 #pragma once
 #include "IActuator.h"
-#include "Actuator\VisionUnitParts.h"
+#include "Actuators\VisionUnitParts.h"
 
 namespace VMF_6SIDE
 {
 	// ----------------------------------------------------------------
 	// VisionUnitAdapter
 	//
-	// VisionUnitParts¸¦ IActuator ÀÎÅÍÆäÀÌ½º·Î ·¡ÇÎ.
-	// 6¸é °Ë»ç¿¡¼­ Turn180/Turn360/Gripper/CameraZ Ãà°ú
-	// ½Ç¸°´õ¸¦ Á¦¾î.
+	// VisionUnitPartsë¥¼ IActuator ì¸í„°í˜ì´ìŠ¤ë¡œ ë˜í•‘.
+	// 6ë©´ ê²€ì‚¬ì—ì„œ Turn180/Turn360/Gripper/CameraZ ì¶•ê³¼
+	// ì‹¤ë¦°ë”ë¥¼ ì œì–´.
 	// ----------------------------------------------------------------
 	class VisionUnitAdapter : public VMF::IActuator
 	{
@@ -25,18 +25,16 @@ namespace VMF_6SIDE
 		VMF::ActError  Move(VMF::MotionCommand& cmd)         override;
 		VMF::ActError  isMove(VMF::MotionCommand& cmd)       override;
 		VMF::ActError  Stop()                                override;
-		std::vector<double> GetEncoder()                    override;
-		std::vector<double> GetPulse()                       override;
+
+
 		int  SetLightState(int camIndex, bool on)            override;
 		int  GetLightState(int camIndex, bool& outOn)        override;
-		VMF::ActError SetLaserState(bool on)                 override;
-		VMF::ActError GetLaserState(bool& outOn)             override;
 		VMF::ActError SetTriggerState(bool enable,
 			double intervalMm)     override;
 		VMF::ActError GetTriggerState(bool& outEnabled,
 			double& outIntervalMm) override;
 
-		// ¦¡¦¡ ½Ç¸°´õ Á¦¾î (6¸é °Ë»ç Àü¿ë) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+		// â”€â”€ ì‹¤ë¦°ë” ì œì–´ (6ë©´ ê²€ì‚¬ ì „ìš©) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 		VMF::ActError DoCylTurnForBack(bool forward);
 		VMF::ActError ChkCylTurnForBack(bool forward);
 		VMF::ActError DoCylGripUngrip(bool grip);

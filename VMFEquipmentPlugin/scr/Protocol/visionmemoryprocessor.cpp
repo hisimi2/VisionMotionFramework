@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "VisionMemoryProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 #include <vector>

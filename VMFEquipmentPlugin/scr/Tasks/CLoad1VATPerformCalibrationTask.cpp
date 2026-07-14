@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformCalibrationTask.h"
 #include "DefineVAT.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 
 using namespace VAT_LOAD1::Task;
 
@@ -16,6 +16,7 @@ CLoad1VATPerformCalibrationTask::~CLoad1VATPerformCalibrationTask() {}
 
 void CLoad1VATPerformCalibrationTask::OnInitialize(VMF::Context& ctx)
 {
+    /*
 	VMF::VisionPosition position;
 	if (ctx.PeekVisionPosition(position))
 	{
@@ -27,16 +28,17 @@ void CLoad1VATPerformCalibrationTask::OnInitialize(VMF::Context& ctx)
 		EnterCommonState(CS_ERROR);
 		return;
 	}
+    */
 
-	m_maxInspectionCount = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MAX_INSP_COUNT, 1);
+	m_maxInspectionCount = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MAX_INSP_COUNT, 1);
 	if (m_maxInspectionCount <= 0) m_maxInspectionCount = 1;
 
-	const int moveTimeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
+	const int moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
 	if (moveTimeoutMs > 0) m_moveTimeoutMs = moveTimeoutMs;
 
-	m_isWideCheck = !ctx.GetSeqParamAs<std::string>(VAT_SEQ_PARAM_WIDE_CHECK, std::string()).empty();
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	m_isWideCheck = !GetTaskSeqParamAs<std::string>(ctx, VAT_SEQ_PARAM_WIDE_CHECK, std::string()).empty();
+	m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
 	m_inspectionCount = 0;
 	m_currentPitchMode = VMF::Narrow;
@@ -145,12 +147,14 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleVisionRequest(VMF::Contex
 
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 
+    /*
 	if (m_locationId == 13) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 4);
 	else if (m_locationId == 5) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 1);
 	else if (m_locationId == 1) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 5);
 	else if (m_locationId == 2) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 6);
 	else if (m_locationId == 3) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 0);
 	else if (m_locationId == 12) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 3);
+    */
 
 	visionProcessor->InitializeRecvThread();
 	if (!ctx.ExecuteVisionCommand(VMF::Measure)) return SetErrorAndReturn(ctx, "Vision Command Failed");
@@ -169,10 +173,13 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleVisionWait(VMF::Context& 
 	auto data = visionProcessor->GetLatestData(VMF::Measure);
 	double offsetX = 0.0, offsetY = 0.0;
 
+    /*
 	auto itX = data.find(VAT_VISION_KEY_X_OFFSET);
 	if (itX != data.end()) offsetX = std::stod(itX->second);
 	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET);
 	if (itY != data.end()) offsetY = std::stod(itY->second);
+
+    */
 
 	actuator->SetLightState(m_cameraId, false);
 
@@ -206,6 +213,7 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleSaveCalibrationResult(VMF
 
 	m_currentPitchMode = VMF::Narrow;
 
+    /*
 	VMF::VisionPosition position;
 	ctx.PopVisionPosition(position);
 
@@ -214,6 +222,7 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleSaveCalibrationResult(VMF
 	ctx.PeekVisionPosition(position);
 	m_targetPosition = position.pos;
 	m_locationId = position.locateId;
+    */
 
 	EnterStateWithTimeout(MoveSafeZ, m_moveTimeoutMs);
 	return VMF::TR_NEXT;

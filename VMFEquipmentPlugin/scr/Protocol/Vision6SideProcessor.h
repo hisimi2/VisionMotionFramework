@@ -1,6 +1,6 @@
 #pragma once
 #include "VisionProcessorBase.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 namespace VMF
@@ -8,20 +8,20 @@ namespace VMF
 	// ================================================================
 	// Vision6SideProcessor
 	//
-	// 6¸é °Ë»ç Àü¿ë VisionProcessor.
-	// S107/F1 (CMD_6_SIDE_INSPECTION_MEASURE) ·Î ¸éº° °Ë»ç ¿äÃ».
-	// S107/F2 ·Î °á°ú ¼ö½Å.
+	// 6ë©´ ê²€ì‚¬ ì „ìš© VisionProcessor.
+	// S107/F1 (CMD_6_SIDE_INSPECTION_MEASURE) ë¡œ ë©´ë³„ ê²€ì‚¬ ìš”ì²­.
+	// S107/F2 ë¡œ ê²°ê³¼ ìˆ˜ì‹ .
 	//
-	// VisionCommand ¸ÅÇÎ:
-	//   Measure ¡æ 6¸é °Ë»ç ¿äÃ» (¸é ¹øÈ£¸¸ ¹Ù²ã 6È¸ ¹Ýº¹)
+	// VisionCommand ë§¤í•‘:
+	//   Measure â†’ 6ë©´ ê²€ì‚¬ ìš”ì²­ (ë©´ ë²ˆí˜¸ë§Œ ë°”ê¿” 6íšŒ ë°˜ë³µ)
 	// ================================================================
 	namespace Vision6SideProtocol
 	{
 		enum class Stream : int { Measure = 107 };
 		enum class Function : int
 		{
-			Request = 1,  // H¡æV
-			Result = 2   // V¡æH
+			Request = 1,  // Hâ†’V
+			Result = 2   // Vâ†’H
 		};
 		static const VC::VisionProtocolId SideRequest(
 			static_cast<int>(Stream::Measure),
@@ -37,22 +37,22 @@ namespace VMF
 		Vision6SideProcessor();
 		~Vision6SideProcessor() override;
 
-		// ¦¡¦¡ Request ÇÔ¼ö ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-		// 6¸é °Ë»ç ¿äÃ» (CMD 1102, S107/F1)
-		// params ÇÊ¿ä Å°:
+		// â”€â”€ Request í•¨ìˆ˜ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+		// 6ë©´ ê²€ì‚¬ ìš”ì²­ (CMD 1102, S107/F1)
+		// params í•„ìš” í‚¤:
 		//   SIDE6_VISION_TYPE, SIDE6_CAM_POSITION,
 		//   SIDE6_FACE_POSITION, SIDE6_SELECT_COUNT,
 		//   SIDE6_SKIP, SIDE6_BARCODE_ID, SIDE6_LOT_ID
 		bool RequestMeasureAsync(const StringMap& params) override;
 
-		// ¹Ì»ç¿ë
+		// ë¯¸ì‚¬ìš©
 		bool RequestSetCokAsync(const StringMap& params) override;
 		bool RequestInspReadyAsync(const StringMap& params) override;
 		bool RequestDeviceCheckAsync(const StringMap& params) override;
 		bool RequestLightAsync(const StringMap& params) override;
 
-		// ¦¡¦¡ On ÇÔ¼ö (¼ö½Å ÄÝ¹é) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-		// 6¸é °Ë»ç °á°ú ¼ö½Å (S107/F2)
+		// â”€â”€ On í•¨ìˆ˜ (ìˆ˜ì‹  ì½œë°±) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+		// 6ë©´ ê²€ì‚¬ ê²°ê³¼ ìˆ˜ì‹  (S107/F2)
 		void OnMeasure(ByteArray body) override;
 		void OnSetCok(ByteArray body) override;
 		void OnInspReady(ByteArray body) override;

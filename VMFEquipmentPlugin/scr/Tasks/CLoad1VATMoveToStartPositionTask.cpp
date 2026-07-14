@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATMoveToStartPositionTask.h"
 #include "DefineVAT.h"
 
@@ -15,7 +15,7 @@ CLoad1VATMoveToStartPositionTask::~CLoad1VATMoveToStartPositionTask()
 
 void CLoad1VATMoveToStartPositionTask::OnInitialize(VMF::Context& ctx)
 {
-	const int timeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_TIMEOUT_MS, m_moveTimeoutMs);
+	const int timeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_TIMEOUT_MS, m_moveTimeoutMs);
 	if (timeoutMs > 0)
 		m_moveTimeoutMs = timeoutMs;
 
@@ -45,11 +45,13 @@ VMF::TaskResult CLoad1VATMoveToStartPositionTask::HandleMoveSafeZ(
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: actuator is null.");
 
+    /*
 	VMF::VisionPosition visionPosition;
 	if (!ctx.PeekVisionPosition(visionPosition))
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: Get Position Failed.");
 
 	m_targetPosition = visionPosition.pos;
+    */
 
 	if (actuator->MoveZ(0.0) != VMF::ActOk)
 		return SetErrorAndReturn(ctx, "MoveToStartPosition: MoveToSafeZ failed.");

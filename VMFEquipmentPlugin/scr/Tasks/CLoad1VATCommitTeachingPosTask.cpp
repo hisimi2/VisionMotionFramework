@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include <algorithm>
 #include "CLoad1VATCommitTeachingPosTask.h"
 #include "DefineVAT.h"
@@ -47,8 +47,8 @@ VMF::TaskResult CLoad1VATCommitTeachingPosTask::HandleLoadPickerCameraOffset(
 		return SetErrorAndReturn(ctx, "CommitTeachingPos: Repository null");
 	}
 
-	const int cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	const int cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	const int packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
 	if (repo->LoadPickerCamDistance(
 		cameraId,
@@ -69,7 +69,7 @@ VMF::TaskResult CLoad1VATCommitTeachingPosTask::HandleLoadVisionPositions(
 	VMF::Context& ctx,
 	VMF::IActuator* actuator)
 {
-	m_teachingPositions = ctx.GetVisionPositions();
+	//m_teachingPositions = ctx.GetVisionPositions();
 
 	EnterState(LoadHandPitchOffsets);
 	return VMF::TR_KEEP;
@@ -79,11 +79,11 @@ VMF::TaskResult CLoad1VATCommitTeachingPosTask::HandleLoadHandPitchOffsets(
 	VMF::Context& ctx,
 	VMF::IActuator* actuator)
 {
-	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
-	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	const int handId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_HAND_ID, 0);
+	const int packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
-	const int pickerMaxRow = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PICKER_MAX_ROW, 0);
-	const int pickerMaxCol = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PICKER_MAX_COL, 0);
+	const int pickerMaxRow = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PICKER_MAX_ROW, 0);
+	const int pickerMaxCol = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PICKER_MAX_COL, 0);
 
 	m_handPitchOffsets.clear();
 
@@ -144,8 +144,8 @@ VMF::TaskResult CLoad1VATCommitTeachingPosTask::HandleSaveTeachingPositions(
 	VMF::Context& ctx,
 	VMF::IActuator* actuator)
 {
-	const int handId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_HAND_ID, 0);
-	const int packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	const int handId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_HAND_ID, 0);
+	const int packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
 	std::vector<double> pitchDeltaX;
 	std::vector<double> pitchDeltaY;
@@ -192,8 +192,8 @@ VMF::TaskResult CLoad1VATCommitTeachingPosTask::HandleSaveTeachingPositions(
 	const double wideCalibrationX = widePitchCenterX - pitchDeltaCenterX;
 	const double wideCalibrationY = widePitchCenterY - pitchDeltaCenterY;
 
-	const double pickerGapX = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_GAP_X_NARROW, 0.0);
-	const double pickerGapY = ctx.GetSeqParamAs<double>(VAT_SEQ_PARAM_PICKER_GAP_Y_NARROW, 0.0);
+	const double pickerGapX = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_GAP_X_NARROW, 0.0);
+	const double pickerGapY = GetTaskSeqParamAs<double>(ctx, VAT_SEQ_PARAM_PICKER_GAP_Y_NARROW, 0.0);
 
 	auto repo = ctx.GetRepository();
 	if (!repo)

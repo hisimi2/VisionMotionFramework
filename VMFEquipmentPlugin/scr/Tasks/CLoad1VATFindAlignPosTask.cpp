@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATFindAlignPosTask.h"
 #include "DefineVAT.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 
 using namespace VAT_LOAD1::Task;
 
@@ -22,6 +22,7 @@ CLoad1VATFindAlignPosTask::~CLoad1VATFindAlignPosTask()
 
 void CLoad1VATFindAlignPosTask::OnInitialize(VMF::Context& ctx)
 {
+    /*
 	VMF::VisionPosition position;
 	if (ctx.PeekVisionPosition(position))
 	{
@@ -33,17 +34,18 @@ void CLoad1VATFindAlignPosTask::OnInitialize(VMF::Context& ctx)
 		EnterCommonState(CS_ERROR);
 		return;
 	}
+    */
 
-	m_maxInspectionCount = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MAX_INSP_COUNT, 0);
+	m_maxInspectionCount = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MAX_INSP_COUNT, 0);
 	if (m_maxInspectionCount < 0)
 		m_maxInspectionCount = 0;
 
-	const int moveTimeoutMs = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
+	const int moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MOTION_TIMEOUT_MS, m_moveTimeoutMs);
 	if (moveTimeoutMs > 0)
 		m_moveTimeoutMs = moveTimeoutMs;
 
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
-	m_packageId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_PACKAGE_ID, 0);
+	m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_packageId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_PACKAGE_ID, 0);
 
 	m_inspectionCount = 0;
 	EnterState(VisionRequest);
@@ -172,9 +174,12 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleVisionRequest(VMF::Context& ctx
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 	visionProcessor->InitializeRecvThread();
 
+
+    /*
 	VMF::VisionPosition position;
 	ctx.PeekVisionPosition(position);
 	ctx.SetSeqParam(VAT_SEQ_PARAM_INSPECTION_TYPE, position.visionRequestId);
+    */
 
 	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
@@ -197,6 +202,7 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleVisionWait(VMF::Context& ctx, V
 	double offsetX = 0.0;
 	double offsetY = 0.0;
 
+    /*
 	auto itX = data.find(VAT_VISION_KEY_X_OFFSET);
 	if (itX != data.end()) offsetX = std::stod(itX->second);
 	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET);
@@ -212,6 +218,7 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleVisionWait(VMF::Context& ctx, V
 		m_targetPosition[0] -= offsetX;
 		m_targetPosition[1] -= offsetY;
 	}
+    */
 
 	actuator->SetLightState(m_cameraId, false);
 
@@ -240,6 +247,7 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleSaveCalibrationResult(VMF::Cont
 			m_targetPosition[1]);
 	}
 
+    /*
 	VMF::VisionPosition position;
 	ctx.PopVisionPosition(position);
 
@@ -258,6 +266,7 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleSaveCalibrationResult(VMF::Cont
 	ctx.PeekVisionPosition(position);
 	m_targetPosition = position.pos;
 	m_locationId = position.locateId;
+    */
 
 	EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
 	return VMF::TR_PREV;

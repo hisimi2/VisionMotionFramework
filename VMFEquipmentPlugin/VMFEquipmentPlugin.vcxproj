@@ -93,7 +93,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;$(SolutionDir)VMFEquipmentPlugin\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VMFEQUIPMENTPLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
@@ -188,6 +188,7 @@
     <ClInclude Include="scr\Protocol\VisionProcessor.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.h" />
+    <ClInclude Include="scr\Strategies\CLoad1VATBaseSequenceStrategy.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceBuilder.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="scr\Protocol\visionmemoryprocessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionProcessor.cpp" />
+    <ClCompile Include="scr\Strategies\SetPlate1PLVIStrategy.cpp" />
     <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp" />
     <ClCompile Include="scr\Tasks\C6SideMoveToFacePositionTask.cpp" />
     <ClCompile Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.cpp" />

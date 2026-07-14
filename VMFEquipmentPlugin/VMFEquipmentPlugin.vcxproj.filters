@@ -84,9 +84,6 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\SetPlate1PLVIStrategy.h">
-      <Filter>SetplateUnit\PLVI\Sequences</Filter>
-    </ClInclude>
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
@@ -171,6 +168,12 @@
     <ClInclude Include="scr\Tasks\CLoad1VATPerformPickerFOVScanningTask.h">
       <Filter>PickPlaceUnit\Tasks</Filter>
     </ClInclude>
+    <ClInclude Include="include\SetPlate1PLVIStrategy.h">
+      <Filter>SetplateUnit\PLVI\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Strategies\CLoad1VATBaseSequenceStrategy.h">
+      <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="scr\Tasks\CLoad1VATPerformPickerFOVScanningTask.cpp">
       <Filter>PickPlaceUnit\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="scr\Strategies\SetPlate1PLVIStrategy.cpp">
+      <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

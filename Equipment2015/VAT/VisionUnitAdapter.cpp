@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "stdafx.h"
 #include "VisionUnitAdapter.h"
 
 namespace VMF_6SIDE
@@ -35,11 +35,11 @@ namespace VMF_6SIDE
 			: VMF::ActError::ActBusy;
 	}
 
-	// MotionCommand Ãà ÀÌ¸§ ±ÔÄ¢:
-	//   "Turn180"  ? Turn180 Ãà
-	//   "Turn360"  ? Turn360 Ãà
-	//   "Gripper"  ? Gripper Ãà
-	//   "CameraZ"  ? CameraZ Ãà
+	// MotionCommand ì¶• ì´ë¦„ ê·œì¹™:
+	//   "Turn180"  ? Turn180 ì¶•
+	//   "Turn360"  ? Turn360 ì¶•
+	//   "Gripper"  ? Gripper ì¶•
+	//   "CameraZ"  ? CameraZ ì¶•
 	VMF::ActError VisionUnitAdapter::Move(VMF::MotionCommand& cmd)
 	{
 		if (!m_parts) return VMF::ActError::ActFail;
@@ -81,27 +81,6 @@ namespace VMF_6SIDE
 		return VMF::ActError::ActOk;
 	}
 
-	std::vector<double> VisionUnitAdapter::GetEncoder()
-	{
-		if (!m_parts) return{};
-		return{
-			m_parts->Turn180.GetEncoder(),
-			m_parts->Turn360.GetEncoder(),
-			m_parts->Gripper.GetEncoder(),
-			m_parts->CameraZ.GetEncoder()
-		};
-	}
-
-	std::vector<double> VisionUnitAdapter::GetPulse()
-	{
-		if (!m_parts) return{};
-		return{
-			m_parts->Turn180.GetEncoder(),
-			m_parts->Turn360.GetEncoder(),
-			m_parts->Gripper.GetEncoder(),
-			m_parts->CameraZ.GetEncoder()
-		};
-	}
 
 	int VisionUnitAdapter::SetLightState(int camIndex, bool on)
 	{
@@ -117,15 +96,6 @@ namespace VMF_6SIDE
 		return 0;
 	}
 
-	VMF::ActError VisionUnitAdapter::SetLaserState(bool on)
-	{
-		return VMF::ActError::ActFail;
-	}
-
-	VMF::ActError VisionUnitAdapter::GetLaserState(bool& outOn)
-	{
-		return VMF::ActError::ActFail;
-	}
 
 	VMF::ActError VisionUnitAdapter::SetTriggerState(bool enable, double intervalMm)
 	{
@@ -137,7 +107,7 @@ namespace VMF_6SIDE
 		return VMF::ActError::ActFail;
 	}
 
-	// ¦¡¦¡ ½Ç¸°´õ Á¦¾î ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	// â”€â”€ ì‹¤ë¦°ë” ì œì–´ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 	VMF::ActError VisionUnitAdapter::DoCylTurnForBack(bool forward)
 	{

@@ -1,6 +1,6 @@
 #pragma once
 #include "VisionProcessorBase.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 
 namespace VMF
@@ -8,22 +8,22 @@ namespace VMF
 	// ================================================================
 	// VisionPLVIProcessor
 	//
-	// PLVI Àü¿ë VisionProcessor.
-	// S107/F5 (REQ_MEASURE) ·Î °Ë»ç ½ÃÀÛ ¹× °á°ú ¿äÃ».
-	// S107/F6 (REQ_RESULT)  ·Î ÀÀ´ä ¼ö½Å.
+	// PLVI ì „ìš© VisionProcessor.
+	// S107/F5 (REQ_MEASURE) ë¡œ ê²€ì‚¬ ì‹œì‘ ë° ê²°ê³¼ ìš”ì²­.
+	// S107/F6 (REQ_RESULT)  ë¡œ ì‘ë‹µ ìˆ˜ì‹ .
 	//
-	// VisionCommand ¸ÅÇÎ:
-	//   Measure   ¡æ °Ë»ç ½ÃÀÛ ¿äÃ» (1Â÷ REQ_MEASURE)
-	//   InspReady ¡æ °á°ú ¿äÃ»     (2Â÷ REQ_MEASURE)
+	// VisionCommand ë§¤í•‘:
+	//   Measure   â†’ ê²€ì‚¬ ì‹œì‘ ìš”ì²­ (1ì°¨ REQ_MEASURE)
+	//   InspReady â†’ ê²°ê³¼ ìš”ì²­     (2ì°¨ REQ_MEASURE)
 	// ================================================================
 	namespace VisionPLVIProtocol
 	{
-		// PLVI´Â S107/F5, S107/F6 »ç¿ë
+		// PLVIëŠ” S107/F5, S107/F6 ì‚¬ìš©
 		enum class Stream : int { Measure = 107 };
 		enum class Function : int
 		{
-			Request = 5,   // H¡æV REQ_MEASURE
-			Result = 6    // V¡æH REQ_RESULT
+			Request = 5,   // Hâ†’V REQ_MEASURE
+			Result = 6    // Vâ†’H REQ_RESULT
 		};
 		static const VC::VisionProtocolId PLVIRequest(
 			static_cast<int>(Stream::Measure),
@@ -39,26 +39,26 @@ namespace VMF
 		VisionPLVIProcessor();
 		~VisionPLVIProcessor() override;
 
-		// ¦¡¦¡ Request ÇÔ¼ö ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-		// °Ë»ç ½ÃÀÛ ¿äÃ» (1Â÷ REQ_MEASURE, S107/F5)
-		// params ÇÊ¿ä Å°:
+		// â”€â”€ Request í•¨ìˆ˜ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+		// ê²€ì‚¬ ì‹œì‘ ìš”ì²­ (1ì°¨ REQ_MEASURE, S107/F5)
+		// params í•„ìš” í‚¤:
 		//   PLVI_POSITION, PLVI_PKG_NAME, PLVI_CTRAY_X, PLVI_CTRAY_Y,
-		//   PLVI_DEVICE_INFO ("0,99,99,0,..." ÄŞ¸¶ ±¸ºĞ)
+		//   PLVI_DEVICE_INFO ("0,99,99,0,..." ì½¤ë§ˆ êµ¬ë¶„)
 		bool RequestMeasureAsync(const StringMap& params) override;
 
-		// °á°ú ¿äÃ» (2Â÷ REQ_MEASURE, S107/F5)
-		// params: ÇÊ¿ä ¾øÀ½ (nDataID¸¸ Àü¼Û)
+		// ê²°ê³¼ ìš”ì²­ (2ì°¨ REQ_MEASURE, S107/F5)
+		// params: í•„ìš” ì—†ìŒ (nDataIDë§Œ ì „ì†¡)
 		bool RequestInspReadyAsync(const StringMap& params) override;
 
-		// ¹Ì»ç¿ë
+		// ë¯¸ì‚¬ìš©
 		bool RequestSetCokAsync(const StringMap& params) override;
 		bool RequestDeviceCheckAsync(const StringMap& params) override;
 		bool RequestLightAsync(const StringMap& params) override;
 
-		// ¦¡¦¡ On ÇÔ¼ö (¼ö½Å Äİ¹é) ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-		// 1Â÷ ÀÀ´ä ¼ö½Å (°Ë»ç ½ÃÀÛ ACK)
+		// â”€â”€ On í•¨ìˆ˜ (ìˆ˜ì‹  ì½œë°±) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+		// 1ì°¨ ì‘ë‹µ ìˆ˜ì‹  (ê²€ì‚¬ ì‹œì‘ ACK)
 		void OnMeasure(ByteArray body) override;
-		// 2Â÷ ÀÀ´ä ¼ö½Å (°á°ú)
+		// 2ì°¨ ì‘ë‹µ ìˆ˜ì‹  (ê²°ê³¼)
 		void OnInspReady(ByteArray body) override;
 
 		void OnSetCok(ByteArray body) override;
@@ -71,8 +71,8 @@ namespace VMF
 		VisionPLVIProcessor(const VisionPLVIProcessor&) = delete;
 		VisionPLVIProcessor& operator=(const VisionPLVIProcessor&) = delete;
 
-		// Pocket °á°ú ¹è¿­ ¡æ ÄŞ¸¶ ±¸ºĞ ¹®ÀÚ¿­ ÆÄ½Ì ÇïÆÛ
-		// ex) "0,99,1,2,11" ÇüÅÂ·Î DataMap¿¡ ÀúÀå
+		// Pocket ê²°ê³¼ ë°°ì—´ â†’ ì½¤ë§ˆ êµ¬ë¶„ ë¬¸ìì—´ íŒŒì‹± í—¬í¼
+		// ex) "0,99,1,2,11" í˜•íƒœë¡œ DataMapì— ì €ì¥
 		std::string ParsePocketResult(const CPacketBody_S107F6& pkt,
 			int ctrayX, int ctrayY);
 	};

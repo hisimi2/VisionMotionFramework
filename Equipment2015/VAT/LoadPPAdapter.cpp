@@ -129,5 +129,5 @@ namespace VMF
         outIntervalMm = 0.0;
         return VMF::ActOk;
     }
-} // namespace VMF_Sample
+} // namespace VMF_PLUGIN
 

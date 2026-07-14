@@ -1,16 +1,16 @@
 #pragma once
 #include "ComponentSetupBase.h"
+#include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
 #include "scr\Protocol\VisionMemoryProcessor.h"
 #include "scr\Protocol\VisionPLVIProcessor.h"
 #include "scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
 #include <memory>
 
-namespace VMF_PLVI_SETPLATE1
+namespace VMF_PLUGIN
 {
-	using namespace VMF;
 
-	class SetPlate1PLVIStrategy : public VMF::ComponentSetupBase
+	class SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
 	{
 	public:
 		std::string GetSequenceName() const { return "SetPlate1PLVI"; }
@@ -24,7 +24,7 @@ namespace VMF_PLVI_SETPLATE1
 
 		VMF::VisionProcessorPtr CreateVisionProcessor() override
 		{
-			VisionConnectionConfig config("127.0.0.1", 8000, 3000);
+			VMF::VisionConnectionConfig config("127.0.0.1", 8000, 3000);
 			auto vm = std::make_shared<VMF::VisionPLVIProcessor>();
 			// auto vm = std::make_shared<VMF::VisionPLVIProcessor>();
 			vm->Initialize(config);

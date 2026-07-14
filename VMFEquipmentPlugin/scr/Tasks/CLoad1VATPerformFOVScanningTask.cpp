@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformFOVScanningTask.h"
 #include "DefineVAT.h"
-#include "VisionMemoryKeys.h"
+#include "scr\Protocol\VisionMemoryKeys.h"
 
 using namespace VAT_LOAD1::Task;
 
@@ -16,7 +16,7 @@ CLoad1VATPerformFOVScanningTask::~CLoad1VATPerformFOVScanningTask() {}
 
 void CLoad1VATPerformFOVScanningTask::OnInitialize(VMF::Context& ctx)
 {
-	m_cameraId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_CAMERA_INDEX, 0);
+	m_cameraId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_CAMERA_INDEX);
 	m_fovInterval = 2.0;
 	m_currentScanDirection = CENTER;
 	EnterState(MoveSafeZ);
@@ -43,11 +43,13 @@ VMF::TaskResult CLoad1VATPerformFOVScanningTask::HandleMoveSafeZ(VMF::Context& c
 
 	if (m_currentScanDirection == CENTER)
 	{
+        /*
 		std::vector<double> pos = actuator->GetEncoder();
 		m_targetPositionX = m_centerPositionX = pos[0];
 		m_targetPositionY = m_centerPositionY = pos[1];
 		m_focusPositionZ = pos[2];
 		m_currentScanDirection = static_cast<FOVDirection>(static_cast<int>(m_currentScanDirection) + 1);
+        */
 	}
 
 	if (actuator->MoveZ(0.0) != VMF::ActOk) return SetErrorAndReturn(ctx, "Calibration: MoveToSafeZ failed.");
@@ -144,8 +146,8 @@ VMF::TaskResult CLoad1VATPerformFOVScanningTask::HandleVisionRequest(VMF::Contex
 		return VMF::TR_KEEP;
 	}
 
-	const int visionRequestId = ctx.GetSeqParamAs<int>(VAT_SEQ_PARAM_VISION_FOV_REQUEST_ID, 7);
-	ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
+	const int visionRequestId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_FOV_REQUEST_ID);
+	//ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
 	actuator->SetLightState(m_cameraId, true);
 
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
@@ -168,8 +170,8 @@ VMF::TaskResult CLoad1VATPerformFOVScanningTask::HandleVisionWait(VMF::Context& 
 
 	auto data = visionProcessor->GetLatestData(VMF::Measure);
 	double offsetX = 0.0, offsetY = 0.0;
-	auto itX = data.find(VAT_VISION_KEY_X_OFFSET); if (itX != data.end()) offsetX = std::stod(itX->second);
-	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET); if (itY != data.end()) offsetY = std::stod(itY->second);
+	//auto itX = data.find(VAT_VISION_KEY_X_OFFSET); if (itX != data.end()) offsetX = std::stod(itX->second);
+	//auto itY = data.find(VAT_VISION_KEY_Y_OFFSET); if (itY != data.end()) offsetY = std::stod(itY->second);
 	(void)offsetX; (void)offsetY;
 
 	if (actuator) actuator->SetLightState(m_cameraId, false);
@@ -181,6 +183,7 @@ VMF::TaskResult CLoad1VATPerformFOVScanningTask::HandleVisionWait(VMF::Context& 
 		return VMF::TR_KEEP;
 	}
 
+    /*
 	if (!ctx.IsVisionPositionEmpty())
 	{
 		VMF::VisionPosition position;
@@ -189,6 +192,7 @@ VMF::TaskResult CLoad1VATPerformFOVScanningTask::HandleVisionWait(VMF::Context& 
 		EnterState(VisionRequest);
 		return VMF::TR_PREV;
 	}
+    */
 
 	EnterState(ReturnHome);
 	return VMF::TR_KEEP;
