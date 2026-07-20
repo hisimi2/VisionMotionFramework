@@ -1,7 +1,6 @@
-﻿#pragma once
+#pragma once
 #include "SequenceBuilderBase.h"
 #include "VMFEquipmentPluginExport.h"
-
 
 namespace VMF_PLUGIN
 {
