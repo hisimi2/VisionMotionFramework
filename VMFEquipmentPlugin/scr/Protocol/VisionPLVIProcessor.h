@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VisionProcessorBase.h"
 #include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
@@ -34,7 +34,7 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-class VMF_PLUGIN_API VisionPLVIProcessor : public VisionProcessorBase
+    class VMF_PLUGIN_API VisionPLVIProcessor : public VisionProcessorBase
 	{
 	public:
 		VisionPLVIProcessor();

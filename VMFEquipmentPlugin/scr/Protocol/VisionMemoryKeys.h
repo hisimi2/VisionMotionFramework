@@ -1,21 +1,21 @@
-﻿#pragma once
+#pragma once
 namespace VMF
 {
 	// ================================================================
 	// [VAT 공통] Request 파라미터 키
 	// ================================================================
-	constexpr const char* RECIPE_NAME = "recipe_name";
-	constexpr const char* PCD_MODE = "pcd_mode";
-	constexpr const char* DEVICE_SIZE_X = "device_size_x";
-	constexpr const char* DEVICE_SIZE_Y = "device_size_y";
-	constexpr const char* COK_TYPE = "cok_type";
-	constexpr const char* PICKER_PITCH_X = "picker_pitch_x";
-	constexpr const char* PICKER_PITCH_Y = "picker_pitch_y";
-	constexpr const char* CAMERA_ID = "CameraID";
-	constexpr const char* INSPECTION_TYPE = "InspectionType";
-	constexpr const char* MOVE_PART = "nMovePart";
-	constexpr const char* SAVE_IMAGE = "bSaveImage";
-	constexpr const char* FOV_DIRECTION = "nFovDirection";
+	constexpr const char* RECIPE_NAME       = "recipe_name";
+	constexpr const char* PCD_MODE          = "pcd_mode";
+	constexpr const char* DEVICE_SIZE_X     = "device_size_x";
+	constexpr const char* DEVICE_SIZE_Y     = "device_size_y";
+	constexpr const char* COK_TYPE          = "cok_type";
+	constexpr const char* PICKER_PITCH_X    = "picker_pitch_x";
+	constexpr const char* PICKER_PITCH_Y    = "picker_pitch_y";
+	constexpr const char* CAMERA_ID         = "CameraID";
+	constexpr const char* INSPECTION_TYPE   = "InspectionType";
+	constexpr const char* MOVE_PART         = "nMovePart";
+	constexpr const char* SAVE_IMAGE        = "bSaveImage";
+	constexpr const char* FOV_DIRECTION     = "nFovDirection";
 
 	// ================================================================
 	// [VAT 공통] Response 결과 키
