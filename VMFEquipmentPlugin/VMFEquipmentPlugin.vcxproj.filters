@@ -102,9 +102,6 @@
     <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Protocol\VisionProcessor.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
@@ -184,9 +181,6 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="scr\Protocol\VisionProcessor.cpp">
-      <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp">
       <Filter>SetplateUnit\Tasks</Filter>

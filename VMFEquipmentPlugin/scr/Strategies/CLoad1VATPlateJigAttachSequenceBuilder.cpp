@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATPlateJigAttachSequenceBuilder.h"
 
 #include "..\Tasks\CLoad1VATMoveToStartPositionTask.h"
@@ -8,8 +8,6 @@
 #include "..\Tasks\CLoad1VATFindAlignPosTask.h"
 
 using namespace VMF_PLUGIN;
-
-
 
 VMF::SequencePtr CLoad1VATPlateJigAttachSequenceBuilder::BuildSequence(const std::string& sequenceName)
 {

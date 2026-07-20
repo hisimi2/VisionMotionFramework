@@ -2,6 +2,7 @@
 #include "VisionProcessorBase.h"
 #include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
+#include "VMFEquipmentPluginExport.h"
 
 namespace VMF
 {
@@ -33,7 +34,7 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-	class VisionPLVIProcessor : public VisionProcessorBase
+class VMF_PLUGIN_API VisionPLVIProcessor : public VisionProcessorBase
 	{
 	public:
 		VisionPLVIProcessor();

@@ -2,6 +2,7 @@
 #include "ComponentSetupBase.h"
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
+#include "VMFEquipmentPluginExport.h"
 // VisionMemoryProcessor는 여기서 사용하지 않음 (제거)
 #include "..\scr\Protocol\VisionPLVIProcessor.h"
 #include "..\scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
@@ -10,7 +11,7 @@
 
 namespace VMF_PLUGIN
 {
-	class SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
+	class VMF_PLUGIN_API SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
 	{
 	protected:
 		// -----------------------------------------------------------------

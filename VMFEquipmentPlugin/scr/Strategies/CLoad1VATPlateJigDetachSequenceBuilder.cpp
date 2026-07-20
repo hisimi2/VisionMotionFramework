@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATPlateJigDetachSequenceBuilder.h"
 
 #include "..\Tasks\CLoad1VATMoveToStartPositionTask.h"

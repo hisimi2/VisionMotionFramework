@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SequenceBuilderBase.h"
 
 namespace VMF_PLUGIN

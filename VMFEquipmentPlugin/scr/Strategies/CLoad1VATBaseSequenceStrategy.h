@@ -1,17 +1,21 @@
-﻿#pragma once
+#pragma once
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
 #include "..\VisionMotionFramework\include\Mock\CMockVisionEventHandler.h"
 #include <memory>
 #include <sstream>
 
+
+#include "VMFEquipmentPluginExport.h"
+
 /// <summary>
 /// 메모리 기반 시퀀스 전략을 위한 기본 클래스입니다.
 /// Task별 파라미터는 Builder의 SetTaskParams()로 직접 주입합니다.
 /// </summary>
-class CLoad1VATBaseSequenceStrategy : public VMF::DefaultSetupStrategy
+class VMF_PLUGIN_API CLoad1VATBaseSequenceStrategy : public VMF::DefaultSetupStrategy
 {
 public:
+    virtual void ConfigureParams(std::shared_ptr<VMF::Context> ctx) = 0;  // = 0 추가
     VMF::DataRepositoryPtr CreateRepository() override
     {
         auto repo = std::make_shared<VMF::SqliteDataRepository>("Data\\VAT_DATABASE.db", "Data\\Images");

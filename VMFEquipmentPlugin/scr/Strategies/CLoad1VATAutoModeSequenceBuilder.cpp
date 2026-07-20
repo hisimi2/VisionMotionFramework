@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATAutoModeSequenceBuilder.h"
 
 #include "..\Tasks\CLoad1VATMoveToStartPositionTask.h"

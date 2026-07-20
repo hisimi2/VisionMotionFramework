@@ -1,6 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATPlateJigAttachSequenceStrategy.h"
 #include "CLoad1VATPlateJigAttachSequenceBuilder.h"
+
+
+
 
 
 using namespace VMF_PLUGIN;

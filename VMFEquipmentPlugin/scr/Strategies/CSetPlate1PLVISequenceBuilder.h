@@ -1,10 +1,11 @@
 ﻿#pragma once
 #include "SequenceBuilderBase.h"
+#include "VMFEquipmentPluginExport.h"
 
 
 namespace VMF_PLUGIN
 {
-	class CSetPlate1PLVISequenceBuilder : public VMF::SequenceBuilderBase
+	class VMF_PLUGIN_API CSetPlate1PLVISequenceBuilder : public VMF::SequenceBuilderBase
 	{
 	protected:
         VMF::SequencePtr BuildSequence(
