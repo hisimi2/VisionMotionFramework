@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace VMF_PLUGIN
 {
@@ -12,7 +12,8 @@ namespace VMF_PLUGIN
         constexpr const char* CokType          = "cok_type";
         constexpr const char* PickerPitchX     = "picker_pitch_x";
         constexpr const char* PickerPitchY     = "picker_pitch_y";
-        constexpr const char* CameraId         = "CameraID";
+        constexpr const char* CameraId         = "CameraID";       // Device ID (3028, 3128, 3130) - used in VisionVatProcessor
+        constexpr const char* CameraIndex      = "CameraIndex";    // Camera index (0, 1, 6, 7) - used for camera selection
         constexpr const char* InspectionType   = "InspectionType";
         constexpr const char* MovePart         = "nMovePart";
         constexpr const char* SaveImage        = "bSaveImage";

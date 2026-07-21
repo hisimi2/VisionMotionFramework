@@ -2,6 +2,7 @@
 #include "C6SideInspectionTask.h"
 #include "Context.h"
 #include "IActuator.h"
+#include "..\Protocol\VisionParamKeysSixSide.h"
 
 namespace VMF_PLUGIN
 {
@@ -97,34 +98,36 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	// ── 결과 처리 ────────────────────────────────────────────
+// ── 결과 처리 ────────────────────────────────────────────
 	VMF::TaskResult C6SideInspectionTask::HandleProcessResult(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		auto vp = ctx.GetVisionProcessorInterface();
 		if (!vp) return SetErrorAndReturn(ctx, "No VisionProcessor");
 
-		//auto& data = vp->GetLatestData(VMF::Measure);
+		auto& data = vp->GetLatestData(VMF::Measure);
 
 		// Grab Check
-		//auto itGrab = data.find("GrabCheck");
-		//if (itGrab != data.end() && itGrab->second == "2")
-		//	return SetErrorAndReturn(ctx, "Grab failed on face " +
-		//		std::to_string(m_facePosition));
+		auto itGrab = data.find(SixSideResult::GrabCheck);
+		if (itGrab != data.end() && itGrab->second == "2")
+			return SetErrorAndReturn(ctx, "Grab failed on face " +
+				std::to_string(m_facePosition));
 
 		// Inspection Result (1:OK / 2:NG)
-		//auto itResult = data.find("InspectionResult");
-		//std::string result = "1";
-		//if (itResult != data.end()) result = itResult->second;
+		auto itResult = data.find(SixSideResult::InspResult);
+		std::string result = "1";
+		if (itResult != data.end()) result = itResult->second;
 
-		// 면별 결과를 Context에 저장
+// 면별 결과를 Task 파라미터에 저장 (다른 Task에서 접근 불가, 디버깅 용도)
 		// ex) "Face_1_Result" = "1" (OK)
-		std::string key = "Face_" + std::to_string(m_facePosition) + "_Result";
-		//ctx.SetSeqParam(key, result == "1" ? 1 : 0);
+		{
+			std::string key = "Face_" + std::to_string(m_facePosition) + "_Result";
+			m_taskParams_.visionParams[key] = result == "1" ? "1" : "0";
+		}
 
-		// if (result == "2")
-		//	return SetErrorAndReturn(ctx, "Inspection NG on face " +
-		//		std::to_string(m_facePosition));
+		if (result == "2")
+			return SetErrorAndReturn(ctx, "Inspection NG on face " +
+				std::to_string(m_facePosition));
 
 		EnterState(TurnOffLight);
 		return VMF::TR_KEEP;

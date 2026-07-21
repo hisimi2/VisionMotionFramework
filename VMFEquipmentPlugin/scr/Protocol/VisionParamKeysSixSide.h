@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace VMF_PLUGIN
 {
@@ -7,16 +7,21 @@ namespace VMF_PLUGIN
     {
         constexpr const char* VisionType     = "Side6VisionType";
         // 0=PC1, 1=PC2, 2=PC3, 3=PC4
-        constexpr const char* CamPosition    = "Side6CamPosition";
-        // 0=CamIndex#1, 1=CamIndex#2
-        constexpr const char* FacePosition   = "Side6FacePosition";
-        // 1=Left, 2=Right, 3=Front, 4=Top, 5=Rear, 6=Bottom
-        constexpr const char* SelectCount    = "Side6SelectCount";
-        // 검사할 면 총 개수
-        constexpr const char* Skip           = "Side6Skip";
-        // 0=검사, 1=Skip
-        constexpr const char* BarcodeId      = "Side6BarcodeId";
-        constexpr const char* LotId          = "Side6LotId";
+        constexpr const char* CamPosition    = "CameraIndex";      // Builder/Task에서 실제 사용 키
+        constexpr const char* FacePosition   = "FacePosition";     // Builder/Task에서 실제 사용 키
+        constexpr const char* SelectCount    = "SelectCount";      // Builder/Task에서 실제 사용 키
+        constexpr const char* Skip           = "Side6Skip";        // Builder/Task에서 실제 사용 키 (일부 Task에서 사용)
+        constexpr const char* BarcodeId      = "BarcodeID";        // Builder/Task에서 실제 사용 키
+        constexpr const char* LotId          = "LotID";            // Builder/Task에서 실제 사용 키
+        
+        // 호환성을 위한 별칭 (기존 코드 지원)
+        constexpr const char* Side6VisionType = "Side6VisionType";
+        constexpr const char* Side6CamPosition = "Side6CamPosition";
+        constexpr const char* Side6FacePosition = "Side6FacePosition";
+        constexpr const char* Side6SelectCount = "Side6SelectCount";
+        constexpr const char* Side6Skip = "Side6Skip";
+        constexpr const char* Side6BarcodeId = "Side6BarcodeId";
+        constexpr const char* Side6LotId = "Side6LotId";
     }
 
     // ── SixSide Response Keys ──

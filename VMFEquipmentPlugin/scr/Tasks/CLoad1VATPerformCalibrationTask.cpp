@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATPerformCalibrationTask.h"
 #include "DefineVAT.h"
 #include "VisionParamKeysVAT.h"

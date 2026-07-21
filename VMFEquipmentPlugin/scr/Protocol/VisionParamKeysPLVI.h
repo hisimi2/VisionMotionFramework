@@ -1,17 +1,23 @@
-#pragma once
+﻿#pragma once
 
 namespace VMF_PLUGIN
 {
     // ── PLVI Request Keys ──
     namespace PLVI
     {
-        constexpr const char* Position     = "PlviPosition";
-        // 0=SetPlate1, 1=SetPlate2, 11=ShuttleTable1, 21=RetestBuffer1, 22=RetestBuffer2
-        constexpr const char* PkgName      = "PlviPkgName";
-        constexpr const char* CtrayX       = "PlviCtrayX";
-        constexpr const char* CtrayY       = "PlviCtrayY";
-        constexpr const char* DeviceInfo   = "PlviDeviceInfo";
+        constexpr const char* Position     = "PLVI_POSITION";      // Builder/Task에서 실제 사용 키
+        constexpr const char* PkgName      = "PLVI_PKG_NAME";
+        constexpr const char* CtrayX       = "CTRAY_X";
+        constexpr const char* CtrayY       = "CTRAY_Y";
+        constexpr const char* DeviceInfo   = "PLVI_DEVICE_INFO";
         // "0,99,99,0,..." 형태 콤마 구분 문자열 (0=없음, 99=존재)
+        
+        // 호환성을 위한 별칭 (기존 코드 지원)
+        constexpr const char* PlviPosition = "PLVI_POSITION";
+        constexpr const char* PlviPkgName  = "PLVI_PKG_NAME";
+        constexpr const char* PlviCtrayX   = "CTRAY_X";
+        constexpr const char* PlviCtrayY   = "CTRAY_Y";
+        constexpr const char* PlviDeviceInfo = "PLVI_DEVICE_INFO";
     }
 
     // ── PLVI Response Keys ──
