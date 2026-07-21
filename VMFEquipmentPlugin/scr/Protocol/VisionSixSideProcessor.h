@@ -1,7 +1,7 @@
 #pragma once
 
 #include "visioncommunicationmanager.h"
-#include "VisionParamKeys.h"
+#include "VisionParamKeysSixSide.h"
 #include "VisionPacket.h"
 #include "VMFEquipmentPluginExport.h"
 #include "ivisionclient.h"
@@ -40,12 +40,12 @@ class VMF_PLUGIN_API VisionSixSideProcessor : public VMF::VisionCommunicationMan
 		VisionSixSideProcessor();
 		~VisionSixSideProcessor() override;
 
-		// ── Request 함수 ─────────────────────────────────────────────
+// ── Request 함수 ─────────────────────────────────────────────
 		// 6면 검사 요청 (CMD 1102, S107/F1)
 		// params 필요 키:
-		//   SIDE6_VISION_TYPE, SIDE6_CAM_POSITION,
-		//   SIDE6_FACE_POSITION, SIDE6_SELECT_COUNT,
-		//   SIDE6_SKIP, SIDE6_BARCODE_ID, SIDE6_LOT_ID
+		//   SixSide::VisionType, SixSide::CamPosition,
+		//   SixSide::FacePosition, SixSide::SelectCount,
+		//   SixSide::Skip, SixSide::BarcodeId, SixSide::LotId
 		bool RequestMeasureAsync(const VMF::StringMap& params) override;
 
 		// 미사용

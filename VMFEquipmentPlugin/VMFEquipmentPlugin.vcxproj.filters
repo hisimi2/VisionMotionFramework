@@ -102,9 +102,6 @@
     <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Protocol\VisionParamKeys.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="scr\Protocol\VisionVatProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
@@ -166,6 +163,15 @@
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionPacket.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionParamKeysPLVI.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionParamKeysSixSide.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionParamKeysVAT.h">
       <Filter>Protocol</Filter>
     </ClInclude>
   </ItemGroup>

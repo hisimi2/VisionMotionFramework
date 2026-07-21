@@ -28,13 +28,13 @@ VisionSixSideProcessor::~VisionSixSideProcessor() = default;
 //
 // 패킷 조립:
 //   nDataID    = 1102 (CMD ID 고정)
-//   nStatus    = VisionType (SIDE6_VISION_TYPE)
-//   cData[0]   = CamPosition (SIDE6_CAM_POSITION)
-//   cData[1]   = 면 번호 (SIDE6_FACE_POSITION) "1"~"6"
-//   cData[2]   = SelectCount (SIDE6_SELECT_COUNT)
-//   cData[3]   = Skip 여부 (SIDE6_SKIP) "0"=검사, "1"=Skip
-//   cData[4]   = Barcode ID (SIDE6_BARCODE_ID)
-//   cData[5]   = Lot ID (SIDE6_LOT_ID)
+//   nStatus    = VisionType (SixSide::VisionType)
+//   cData[0]   = CamPosition (SixSide::CamPosition)
+//   cData[1]   = 면 번호 (SixSide::FacePosition) "1"~"6"
+//   cData[2]   = SelectCount (SixSide::SelectCount)
+//   cData[3]   = Skip 여부 (SixSide::Skip) "0"=검사, "1"=Skip
+//   cData[4]   = Barcode ID (SixSide::BarcodeId)
+//   cData[5]   = Lot ID (SixSide::LotId)
 // ================================================================
 bool VisionSixSideProcessor::RequestMeasureAsync(const StringMap& params)
 {
@@ -47,32 +47,32 @@ bool VisionSixSideProcessor::RequestMeasureAsync(const StringMap& params)
 	body.nDataID = 1102;
 
 	// nStatus = VisionType
-	auto it = params.find(SIDE6_VISION_TYPE);
+	auto it = params.find(SixSide::VisionType);
 	if (it != params.end()) body.nStatus = std::stoi(it->second);
 
 	// cData[0] = CamPosition
-	it = params.find(SIDE6_CAM_POSITION);
+	it = params.find(SixSide::CamPosition);
 	if (it != params.end()) body.SetData(0, it->second.c_str());
 
 	// cData[1] = 면 번호 (1~6)
-	it = params.find(SIDE6_FACE_POSITION);
+	it = params.find(SixSide::FacePosition);
 	if (it != params.end()) body.SetData(1, it->second.c_str());
 
 	// cData[2] = SelectCount
-	it = params.find(SIDE6_SELECT_COUNT);
+	it = params.find(SixSide::SelectCount);
 	if (it != params.end()) body.SetData(2, it->second.c_str());
 
 	// cData[3] = Skip (0=검사, 1=Skip)
-	it = params.find(SIDE6_SKIP);
+	it = params.find(SixSide::Skip);
 	if (it != params.end()) body.SetData(3, it->second.c_str());
 	else                    body.SetData(3, "0"); // 기본값: 검사
 
 													// cData[4] = Barcode ID
-	it = params.find(SIDE6_BARCODE_ID);
+	it = params.find(SixSide::BarcodeId);
 	if (it != params.end()) body.SetData(4, it->second.c_str());
 
 	// cData[5] = Lot ID
-	it = params.find(SIDE6_LOT_ID);
+	it = params.find(SixSide::LotId);
 	if (it != params.end()) body.SetData(5, it->second.c_str());
 
 	// 패킷 송신
@@ -94,18 +94,18 @@ bool VisionSixSideProcessor::RequestMeasureAsync(const StringMap& params)
 // 파싱:
 //   nDataID    = 1102 (echo)
 //   nStatus    = VisionType (echo)
-//   cData[0]   → SIDE6_CAM_POSITION  (echo)
-//   cData[1]   → SIDE6_RESULT_FACE   (면 번호 echo)
-//   cData[2]   → SIDE6_GRAB_CHECK    ("1"=OK, "2"=Fail)
-//   cData[3]   → SIDE6_INSP_RESULT   ("1"=OK, "2"=NG)
-//   cData[4]   → SIDE6_BARCODE_ID    (echo)
-//   cData[5]   → SIDE6_LOT_ID        (echo)
+//   cData[0]   → SixSide::CamPosition  (echo)
+//   cData[1]   → SixSideResult::ResultFace   (면 번호 echo)
+//   cData[2]   → SixSideResult::GrabCheck    ("1"=OK, "2"=Fail)
+//   cData[3]   → SixSideResult::InspResult   ("1"=OK, "2"=NG)
+//   cData[4]   → SixSide::BarcodeId    (echo)
+//   cData[5]   → SixSide::LotId        (echo)
 //
 // Task에서 사용:
 //   auto& data = vp->GetLatestData(Measure);
-//   data[SIDE6_GRAB_CHECK]  → "1"=OK, "2"=Fail
-//   data[SIDE6_INSP_RESULT] → "1"=OK, "2"=NG
-//   data[SIDE6_RESULT_FACE] → 어느 면의 결과인지 확인
+//   data[SixSideResult::GrabCheck]  → "1"=OK, "2"=Fail
+//   data[SixSideResult::InspResult] → "1"=OK, "2"=NG
+//   data[SixSideResult::ResultFace] → 어느 면의 결과인지 확인
 // ================================================================
 void VisionSixSideProcessor::OnMeasure(ByteArray body)
 {
@@ -117,12 +117,12 @@ void VisionSixSideProcessor::OnMeasure(ByteArray body)
 	std::memcpy(&pkt, body.data(), sizeof(pkt));
 
 	DataMap data;
-	data[SIDE6_CAM_POSITION] = std::string(pkt.cData[0]); // CamPosition echo
-	data[SIDE6_RESULT_FACE] = std::string(pkt.cData[1]); // 면 번호 echo
-	data[SIDE6_GRAB_CHECK] = std::string(pkt.cData[2]); // "1"=OK, "2"=Fail
-	data[SIDE6_INSP_RESULT] = std::string(pkt.cData[3]); // "1"=OK, "2"=NG
-	data[SIDE6_BARCODE_ID] = std::string(pkt.cData[4]); // Barcode echo
-	data[SIDE6_LOT_ID] = std::string(pkt.cData[5]); // LotID echo
+	data[SixSide::CamPosition] = std::string(pkt.cData[0]); // CamPosition echo
+	data[SixSideResult::ResultFace] = std::string(pkt.cData[1]); // 면 번호 echo
+	data[SixSideResult::GrabCheck] = std::string(pkt.cData[2]); // "1"=OK, "2"=Fail
+	data[SixSideResult::InspResult] = std::string(pkt.cData[3]); // "1"=OK, "2"=NG
+	data[SixSide::BarcodeId] = std::string(pkt.cData[4]); // Barcode echo
+	data[SixSide::LotId] = std::string(pkt.cData[5]); // LotID echo
 
 	SetLatestData(Measure, data);
 	SetReceived(Measure, true);

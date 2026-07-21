@@ -2,7 +2,7 @@
 #include "VisionVatProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
-#include "scr\Protocol\VisionParamKeys.h"
+#include "VisionParamKeysVAT.h"
 #include "VisionPacket.h"
 
 #include <vector>
@@ -44,19 +44,19 @@ bool VisionVatProcessor::RequestSetCokAsync(const StringMap& params)
     body.nCmd = 1000;
     body.nParamCount = 7;
 
-    auto it = params.find(RECIPE_NAME);
+auto it = params.find(VAT::RecipeName);
     if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(PCD_MODE);
+    it = params.find(VAT::PcdMode);
     if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(DEVICE_SIZE_X);
+    it = params.find(VAT::DeviceSizeX);
     if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(DEVICE_SIZE_Y);
+    it = params.find(VAT::DeviceSizeY);
     if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(COK_TYPE);
+    it = params.find(VAT::CokType);
     if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(PICKER_PITCH_X);
+    it = params.find(VAT::PickerPitchX);
     if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(PICKER_PITCH_Y);
+    it = params.find(VAT::PickerPitchY);
     if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
 
     std::vector<uint8_t> bodyBytes;
@@ -89,15 +89,15 @@ bool VisionVatProcessor::RequestMeasureAsync(const StringMap& params)
 
     CPacketBody_S107F9 body;
 
-    auto it = params.find(CAMERA_ID);
+    auto it = params.find(VAT::CameraId);
     if (it != params.end()) body.nDataID = std::stoi(it->second);
-    it = params.find(INSPECTION_TYPE);
+    it = params.find(VAT::InspectionType);
     if (it != params.end()) body.nStatus = std::stoi(it->second);
-    it = params.find(MOVE_PART);
+    it = params.find(VAT::MovePart);
     if (it != params.end()) body.SetData(0, it->second.c_str());
-    it = params.find(SAVE_IMAGE);
+    it = params.find(VAT::SaveImage);
     if (it != params.end()) body.SetData(1, it->second.c_str());
-    it = params.find(FOV_DIRECTION);
+    it = params.find(VAT::FovDirection);
     if (it != params.end()) body.SetData(3, it->second.c_str());
 
     std::vector<uint8_t> bodyBytes;
@@ -143,11 +143,11 @@ void VisionVatProcessor::OnSetCok(ByteArray body)
     CPacketBody_S2F41 pkt;
     std::memcpy(&pkt, body.data(), sizeof(pkt));
 
-    DataMap data;
-    data[RESULT] = std::string(pkt.szParam[0]);
-    data[SERVER_INDEX] = std::string(pkt.szParam[1]);
-    data[CAM_STATUS] = std::string(pkt.szParam[2]);
-    data[CAM_TYPE] = std::string(pkt.szParam[3]);
+DataMap data;
+    data[VATResult::Result] = std::string(pkt.szParam[0]);
+    data[VATResult::ServerIndex] = std::string(pkt.szParam[1]);
+    data[VATResult::CamStatus] = std::string(pkt.szParam[2]);
+    data[VATResult::CamType] = std::string(pkt.szParam[3]);
     SetLatestData(SetCok, data);
 }
 
@@ -165,10 +165,10 @@ void VisionVatProcessor::OnInspReady(ByteArray body)
     std::memcpy(&pkt, body.data(), sizeof(pkt));
 
     DataMap data;
-    data[RESULT] = std::string(pkt.szParam[0]);
-    data[SERVER_INDEX] = std::string(pkt.szParam[1]);
-    data[CAM_STATUS] = std::string(pkt.szParam[2]);
-    data[CAM_TYPE] = std::string(pkt.szParam[3]);
+    data[VATResult::Result] = std::string(pkt.szParam[0]);
+    data[VATResult::ServerIndex] = std::string(pkt.szParam[1]);
+    data[VATResult::CamStatus] = std::string(pkt.szParam[2]);
+    data[VATResult::CamType] = std::string(pkt.szParam[3]);
     SetLatestData(InspReady, data);
 }
 
@@ -190,12 +190,12 @@ void VisionVatProcessor::OnMeasure(ByteArray body)
         ClearLatestData(Measure); return;
     }
 
-    DataMap data;
-    data[Z_FOCUS_VALUE] = pkt.cData[0];
-    data[X_OFFSET] = pkt.cData[1];
-    data[Y_OFFSET] = pkt.cData[2];
-    data[ANGLE] = pkt.cData[3];
-    data[AUTO_VISION_SETTING] = pkt.cData[4];
+DataMap data;
+    data[VATResult::ZFocusValue] = pkt.cData[0];
+    data[VATResult::XOffset] = pkt.cData[1];
+    data[VATResult::YOffset] = pkt.cData[2];
+    data[VATResult::Angle] = pkt.cData[3];
+    data[VATResult::AutoVisionSetting] = pkt.cData[4];
     SetLatestData(Measure, data);
 }
 

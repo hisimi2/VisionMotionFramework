@@ -1,7 +1,7 @@
 #pragma once
 
 #include "visioncommunicationmanager.h"
-#include "VisionParamKeys.h"
+#include "VisionParamKeysPLVI.h"
 #include "VisionPacket.h"
 #include "VMFEquipmentPluginExport.h"
 #include "ivisionclient.h"
@@ -42,11 +42,11 @@ namespace VMF_PLUGIN
 		VisionPlviProcessor();
 		~VisionPlviProcessor() override;
 
-		// ── Request 함수 ─────────────────────────────────────────────
+// ── Request 함수 ─────────────────────────────────────────────
 		// 검사 시작 요청 (1차 REQ_MEASURE, S107/F5)
 		// params 필요 키:
-		//   PLVI_POSITION, PLVI_PKG_NAME, PLVI_CTRAY_X, PLVI_CTRAY_Y,
-		//   PLVI_DEVICE_INFO ("0,99,99,0,..." 콤마 구분)
+		//   PLVI::Position, PLVI::PkgName, PLVI::CtrayX, PLVI::CtrayY,
+		//   PLVI::DeviceInfo ("0,99,99,0,..." 콤마 구분)
 bool RequestMeasureAsync(const VMF::StringMap& params) override;
 
 		// 결과 요청 (2차 REQ_MEASURE, S107/F5)

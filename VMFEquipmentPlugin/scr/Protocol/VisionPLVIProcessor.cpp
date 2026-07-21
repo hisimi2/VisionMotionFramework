@@ -39,8 +39,8 @@ VisionPlviProcessor::~VisionPlviProcessor() = default;
 // 패킷 조립:
 //   nDataID    = PLVI 요청 ID (Strategy에서 DATA_ID로 설정)
 //   nStatus    = 0 (미사용)
-//   cData[0]   = PLVI 위치 (PLVI_POSITION)
-//   cData[1]   = PKG 명칭 (PLVI_PKG_NAME)
+//   cData[0]   = PLVI 위치 (PLVI::Position)
+//   cData[1]   = PKG 명칭 (PLVI::PkgName)
 //   cData[2]   = "CTrayX,CTrayY" 형태 문자열
 //   cData[3]   = Device 유무 배열 ("0,99,99,0,..." 콤마 구분)
 // ================================================================
@@ -56,18 +56,18 @@ bool VisionPlviProcessor::RequestMeasureAsync(const VMF::StringMap& params)
 	if (it != params.end()) body.nDataID = std::stoi(it->second);
 
 	// cData[0] ? PLVI 위치
-	it = params.find(PLVI_POSITION);
+	it = params.find(PLVI::Position);
 	if (it != params.end()) body.SetData(0, it->second.c_str());
 
 	// cData[1] ? PKG 명칭
-	it = params.find(PLVI_PKG_NAME);
+	it = params.find(PLVI::PkgName);
 	if (it != params.end()) body.SetData(1, it->second.c_str());
 
 	// cData[2] ? C-Tray 크기 "X,Y" 형태
 	{
 		std::string ctrayX = "8", ctrayY = "4";
-		auto ix = params.find(PLVI_CTRAY_X);
-		auto iy = params.find(PLVI_CTRAY_Y);
+		auto ix = params.find(PLVI::CtrayX);
+		auto iy = params.find(PLVI::CtrayY);
 		if (ix != params.end()) ctrayX = ix->second;
 		if (iy != params.end()) ctrayY = iy->second;
 		std::string ctrayStr = ctrayX + "," + ctrayY;
@@ -75,7 +75,7 @@ bool VisionPlviProcessor::RequestMeasureAsync(const VMF::StringMap& params)
 	}
 
 	// cData[3] ? Device 유무 배열 ("0,99,99,0,..." 콤마 구분)
-	it = params.find(PLVI_DEVICE_INFO);
+	it = params.find(PLVI::DeviceInfo);
 	if (it != params.end()) body.SetData(3, it->second.c_str());
 
 	// 패킷 송신
@@ -124,13 +124,13 @@ bool VisionPlviProcessor::RequestInspReadyAsync(const StringMap& params)
 // [OnMeasure] 1차 응답 수신 ? 검사 시작 ACK (S107/F6)
 //
 // 파싱:
-//   nStatus    → PLVI_STATUS  ("0"=ERROR, "1"=SUCCESS)
-//   cData[0]   → PLVI_ERR_CODE
+//   nStatus    → PLVIResult::Status  ("0"=ERROR, "1"=SUCCESS)
+//   cData[0]   → PLVIResult::ErrCode
 //
 // Task에서 사용:
 //   auto& data = vp->GetLatestData(Measure);
-//   data[PLVI_STATUS]   → "1"이면 검사 시작 OK
-//   data[PLVI_ERR_CODE] → 에러 코드 확인
+//   data[PLVIResult::Status]   → "1"이면 검사 시작 OK
+//   data[PLVIResult::ErrCode] → 에러 코드 확인
 // ================================================================
 void VisionPlviProcessor::OnMeasure(ByteArray body)
 {
@@ -142,8 +142,8 @@ void VisionPlviProcessor::OnMeasure(ByteArray body)
 	std::memcpy(&pkt, body.data(), sizeof(pkt));
 
 	DataMap data;
-	data[PLVI_STATUS] = std::to_string(pkt.nStatus); // 0=ERROR, 1=SUCCESS
-	data[PLVI_ERR_CODE] = std::string(pkt.cData[0]);   // 에러 코드
+	data[PLVIResult::Status] = std::to_string(pkt.nStatus); // 0=ERROR, 1=SUCCESS
+	data[PLVIResult::ErrCode] = std::string(pkt.cData[0]);   // 에러 코드
 
 	SetLatestData(Measure, data);
 	SetReceived(Measure, true);
@@ -153,17 +153,17 @@ void VisionPlviProcessor::OnMeasure(ByteArray body)
 // [OnInspReady] 2차 응답 수신 ? PLVI 검사 결과 (S107/F6)
 //
 // 파싱:
-//   nStatus    → PLVI_STATUS         ("0"=ERROR, "1"=SUCCESS)
-//   cData[0]   → PLVI_ERR_CODE       (에러 코드)
-//   cData[1]   → PLVI_OVERALL_RESULT ("0"=OK, "1"=NG)
-//   cData[2]   → PLVI_RESULT_POSITION (PLVI 위치 echo)
-//   cData[3]   → PLVI_POCKET_RESULT  (개별 Pocket 상태 콤마 구분)
+//   nStatus    → PLVIResult::Status         ("0"=ERROR, "1"=SUCCESS)
+//   cData[0]   → PLVIResult::ErrCode       (에러 코드)
+//   cData[1]   → PLVIResult::OverallResult ("0"=OK, "1"=NG)
+//   cData[2]   → PLVIResult::ResultPosition (PLVI 위치 echo)
+//   cData[3]   → PLVIResult::PocketResult  (개별 Pocket 상태 콤마 구분)
 //
 // Task에서 사용:
 //   auto& data = vp->GetLatestData(InspReady);
-//   data[PLVI_STATUS]          → "1"이면 수신 성공
-//   data[PLVI_OVERALL_RESULT]  → "0"=OK, "1"=NG
-//   data[PLVI_POCKET_RESULT]   → "0,99,1,2,11,..." 파싱
+//   data[PLVIResult::Status]          → "1"이면 수신 성공
+//   data[PLVIResult::OverallResult]  → "0"=OK, "1"=NG
+//   data[PLVIResult::PocketResult]   → "0,99,1,2,11,..." 파싱
 // ================================================================
 void VisionPlviProcessor::OnInspReady(ByteArray body)
 {
@@ -175,12 +175,12 @@ void VisionPlviProcessor::OnInspReady(ByteArray body)
 	std::memcpy(&pkt, body.data(), sizeof(pkt));
 
 	DataMap data;
-	data[PLVI_STATUS] = std::to_string(pkt.nStatus);
-	data[PLVI_ERR_CODE] = std::string(pkt.cData[0]);
-	data[PLVI_OVERALL_RESULT] = std::string(pkt.cData[1]); // "0"=OK, "1"=NG
-	data[PLVI_RESULT_POSITION] = std::string(pkt.cData[2]);
+	data[PLVIResult::Status] = std::to_string(pkt.nStatus);
+	data[PLVIResult::ErrCode] = std::string(pkt.cData[0]);
+	data[PLVIResult::OverallResult] = std::string(pkt.cData[1]); // "0"=OK, "1"=NG
+	data[PLVIResult::ResultPosition] = std::string(pkt.cData[2]);
 	// cData[3]은 이미 "0,99,1,2,11,..." 형태로 콤마 구분되어 있음
-	data[PLVI_POCKET_RESULT] = std::string(pkt.cData[3]);
+	data[PLVIResult::PocketResult] = std::string(pkt.cData[3]);
 
 	SetLatestData(InspReady, data);
 	SetReceived(InspReady, true);

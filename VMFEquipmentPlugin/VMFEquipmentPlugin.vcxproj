@@ -96,7 +96,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;$(ProjectDir)scr\Protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VMFEQUIPMENTPLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
@@ -182,8 +182,10 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionPacket.h" />
+    <ClInclude Include="scr\Protocol\VisionParamKeysPLVI.h" />
+    <ClInclude Include="scr\Protocol\VisionParamKeysSixSide.h" />
+    <ClInclude Include="scr\Protocol\VisionParamKeysVAT.h" />
     <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h" />
-    <ClInclude Include="scr\Protocol\VisionParamKeys.h" />
     <ClInclude Include="scr\Protocol\VisionVatProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionPlviProcessor.h" />
     <ClInclude Include="scr\Strategies\C6SideInspectionSequenceBuilder.h" />

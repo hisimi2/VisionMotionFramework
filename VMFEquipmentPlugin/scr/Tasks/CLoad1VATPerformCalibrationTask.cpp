@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CLoad1VATPerformCalibrationTask.h"
 #include "DefineVAT.h"
-#include "scr\Protocol\VisionParamKeys.h"
+#include "VisionParamKeysVAT.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
