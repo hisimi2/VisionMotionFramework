@@ -69,12 +69,6 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\VisionParamKeys.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VisionPacket.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="include\DefineVAT.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -108,13 +102,10 @@
     <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Protocol\VisionMemoryKeys.h">
+    <ClInclude Include="scr\Protocol\VisionParamKeys.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionVatProcessor.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="scr\Protocol\VisionPacketMemory.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionPlviProcessor.h">
@@ -173,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="scr\Strategies\C6SideInspectionSequenceBuilder.h">
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="scr\Protocol\VisionPacket.h">
+      <Filter>Protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

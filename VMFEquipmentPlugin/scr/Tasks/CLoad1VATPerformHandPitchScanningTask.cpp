@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CLoad1VATPerformHandPitchScanningTask.h"
 #include "DefineVAT.h"
-#include "scr\Protocol\VisionMemoryKeys.h"
+#include "scr\Protocol\VisionParamKeys.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;

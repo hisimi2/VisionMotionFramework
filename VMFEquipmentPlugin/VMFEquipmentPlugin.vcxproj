@@ -178,15 +178,13 @@
     <ClInclude Include="include\C6SideInspectionStrategy.h" />
     <ClInclude Include="include\DefineVAT.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
-    <ClInclude Include="include\VisionParamKeys.h" />
-    <ClInclude Include="include\VisionPacket.h" />
     <ClInclude Include="include\VMFEquipmentPluginExport.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionPacket.h" />
     <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h" />
-    <ClInclude Include="scr\Protocol\VisionMemoryKeys.h" />
+    <ClInclude Include="scr\Protocol\VisionParamKeys.h" />
     <ClInclude Include="scr\Protocol\VisionVatProcessor.h" />
-    <ClInclude Include="scr\Protocol\VisionPacketMemory.h" />
     <ClInclude Include="scr\Protocol\VisionPlviProcessor.h" />
     <ClInclude Include="scr\Strategies\C6SideInspectionSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h" />

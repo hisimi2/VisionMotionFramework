@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include "visioncommunicationmanager.h"
-#include "VisionMemoryKeys.h"
-#include "VisionPacketMemory.h"
+#include "VisionParamKeys.h"
+#include "VisionPacket.h"
 #include "VMFEquipmentPluginExport.h"
 #include "ivisionclient.h"
 
