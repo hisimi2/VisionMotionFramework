@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
-#include "IVisionProcessor.h"
+#include "IVisionClient.h"
 #include "IDataRepository.h"
 
 #include <cstdlib>

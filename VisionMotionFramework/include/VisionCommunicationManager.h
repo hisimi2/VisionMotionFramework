@@ -1,26 +1,26 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <vector>
-#include <mutex> 
+#include <mutex>
 #include <map>
 #include <thread>
 #include <atomic>
 
 #include "VMF_API.h"
-#include "IVisionProcessor.h"
+#include "IVisionClient.h"
 #include "IResultSink.h"
 #include "Controller.h"
 
 namespace VMF
 {
-    class VMF_API VisionProcessorBase : public IVisionProcessor
+    class VMF_API VisionCommunicationManager : public IVisionClient
     {
     public:
         using DataMap = StringMap;
 
-        VisionProcessorBase();
-        ~VisionProcessorBase() override;
+        VisionCommunicationManager();
+        ~VisionCommunicationManager() override;
 
         void Start();
         void Stop();

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "Vision6SideProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
@@ -136,6 +136,6 @@ namespace VMF
 	void Vision6SideProcessor::OnInspReady(ByteArray) {}
 	void Vision6SideProcessor::OnDeviceCheck(ByteArray) {}
 	void Vision6SideProcessor::OnLight(ByteArray) {}
-	void Vision6SideProcessor::Process() { VisionProcessorBase::Process(); }
+	void Vision6SideProcessor::Process() { VisionCommunicationManager::Process(); }
 
 } // namespace VMF

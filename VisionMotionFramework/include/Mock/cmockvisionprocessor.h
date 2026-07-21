@@ -1,26 +1,26 @@
-﻿/*
+/*
  * This is an auto-generated file.
  * DO NOT MODIFY DIRECTLY.
  */
 
 #pragma once
 
-#include "VisionProcessorBase.h"
+#include "VisionCommunicationManager.h"
 #include "Mock/CMockVisionEventHandler.h"
 
 namespace VMF
 {
     /**
-     * Mock implementation of IVisionProcessor for unit testing.
-     * This mock provides controlled responses for all IVisionProcessor methods.
+     * Mock implementation of IVisionClient for unit testing.
+     * This mock provides controlled responses for all IVisionClient methods.
      */
-    class VMF_API CMockVisionProcessor : public IVisionProcessor
+    class VMF_API CMockVisionProcessor : public IVisionClient
     {
     public:
         CMockVisionProcessor();
         virtual ~CMockVisionProcessor();
 
-        // IVisionProcessor interface
+        // IVisionClient interface
         VC::Status Initialize(const VisionConnectionConfig& config) override;
         VC::Status InitializeWithSharedController(std::shared_ptr<VC::Controller> sharedCtrl,
                                                const VisionConnectionConfig& config) override;
@@ -48,7 +48,7 @@ namespace VMF
         void OnDeviceCheck(ByteArray body) override;
         void OnLight(ByteArray body) override;
 
-// Configuration methods (from VisionProcessorBase - not virtual in interface)
+// Configuration methods (from VisionCommunicationManager - not virtual in interface)
         void SetResultSink(IResultSink* sink);
         void StartProcessThread();
         void StopProcessThread();

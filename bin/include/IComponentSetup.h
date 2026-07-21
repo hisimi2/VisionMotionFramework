@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "VMF_API.h"
 #include "Types.h"
 #include "IActuator.h"
-#include "IVisionProcessor.h"
+#include "IVisionClient.h"
 #include <memory>
 
 namespace VMF

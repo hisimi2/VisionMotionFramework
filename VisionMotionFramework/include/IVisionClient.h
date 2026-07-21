@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VMF_API.h"
 #include "Controller.h"
@@ -45,11 +45,11 @@ namespace VMF
         }
     };
 
-    class VMF_API IVisionProcessor
+    class VMF_API IVisionClient
     {
     public:
         using DataMap = StringMap;
-        virtual ~IVisionProcessor() = default;
+        virtual ~IVisionClient() = default;
 
         // 연결 관리
         virtual VC::Status Initialize(const VisionConnectionConfig& config) = 0;

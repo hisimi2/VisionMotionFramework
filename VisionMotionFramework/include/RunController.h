@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Context.h"
 #include <string>
 
 namespace VMF 
 {
-    class IVisionProcessor; 
+    class IVisionClient; 
     class IDataRepository;
     class IActuator;
     class SequenceBuilderBase;

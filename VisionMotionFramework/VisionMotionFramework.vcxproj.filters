@@ -52,7 +52,7 @@
     <ClCompile Include="VisionMotionFramework.cpp">
       <Filter>Build</Filter>
     </ClCompile>
-    <ClCompile Include="src\VisionProcessorBase.cpp">
+    <ClCompile Include="src\VisionCommunicationManager.cpp">
       <Filter>VisionProcessor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,7 +105,7 @@
     <ClInclude Include="include\ITask.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="include\IVisionProcessor.h">
+    <ClInclude Include="include\IVisionClient.h">
       <Filter>VisionProcessor</Filter>
     </ClInclude>
     <ClInclude Include="include\ConnectionManager.h">
@@ -162,7 +162,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Build</Filter>
     </ClInclude>
-    <ClInclude Include="include\VisionProcessorBase.h">
+    <ClInclude Include="include\VisionCommunicationManager.h">
       <Filter>VisionProcessor</Filter>
     </ClInclude>
   </ItemGroup>

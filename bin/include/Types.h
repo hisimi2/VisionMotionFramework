@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string> 
 #include <map> 
@@ -14,7 +14,7 @@ namespace VMF
     class IComponentSetup;
     class ISequenceSetup;
     class IDataRepository;
-    class IVisionProcessor;
+    class IVisionClient;
     class ISequence;
     class IActuator;
     class RunController;
@@ -47,7 +47,7 @@ namespace VMF
     using SequenceSetupPtr      = std::shared_ptr<ISequenceSetup>;
     using VisionEnginePtr       = std::shared_ptr<RunController>;
     using DataRepositoryPtr     = std::shared_ptr<IDataRepository>;
-    using VisionProcessorPtr    = std::shared_ptr<IVisionProcessor>;
+    using VisionProcessorPtr    = std::shared_ptr<IVisionClient>;
     using SequenceBuilderPtr    = std::shared_ptr<SequenceBuilderBase>;
     using VisionContextPtr      = std::shared_ptr<Context>;
     using AsyncExecutorPtr      = std::shared_ptr<AsyncExecutor>;

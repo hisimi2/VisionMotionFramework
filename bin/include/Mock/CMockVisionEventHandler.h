@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
-#include "IVisionProcessor.h"
+#include "IVisionClient.h"
 #include "Types.h"
 #include <map>
 #include <mutex>
@@ -9,13 +9,13 @@
 
 namespace VMF
 {
-    class VMF_API CMockVisionEventHandler : public IVisionProcessor
+    class VMF_API CMockVisionEventHandler : public IVisionClient
     {
     public:
         CMockVisionEventHandler();
         virtual ~CMockVisionEventHandler();
 
-// IVisionProcessor
+// IVisionClient
         VC::Status Initialize(const VisionConnectionConfig& config) override;
 
         /// <summary>

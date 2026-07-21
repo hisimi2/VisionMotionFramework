@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
 #include "ISequenceSetup.h"
 #include "IComponentSetup.h"
 #include "IResultSink.h"
-#include "IVisionProcessor.h"
+#include "IVisionClient.h"
 #include "IDataRepository.h"
 #include "AsyncExecutor.h"
 

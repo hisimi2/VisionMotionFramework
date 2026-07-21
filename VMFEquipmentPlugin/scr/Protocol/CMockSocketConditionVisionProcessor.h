@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "VisionProcessorBase.h"
+#pragma once
+#include "VisionCommunicationManager.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -20,7 +20,7 @@ namespace VMF_SOCKET_CONDITION
 	//   1106 DeviceCheck    → 전체 결과 발행
 	//                         (미리 등록된 MockFailSlots 사용)
 	// ----------------------------------------------------------------
-	class CMockSocketConditionVisionProcessor : public VMF::VisionProcessorBase
+	class CMockSocketConditionVisionProcessor : public VMF::VisionCommunicationManager
 	{
 	public:
 		CMockSocketConditionVisionProcessor();

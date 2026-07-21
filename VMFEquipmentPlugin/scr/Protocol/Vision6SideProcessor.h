@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "VisionProcessorBase.h"
+#pragma once
+#include "VisionCommunicationManager.h"
 #include "scr\Protocol\VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 #include "VMFEquipmentPluginExport.h"
@@ -32,7 +32,7 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-class VMF_PLUGIN_API Vision6SideProcessor : public VisionProcessorBase
+    class VMF_PLUGIN_API Vision6SideProcessor : public VisionCommunicationManager
 	{
 	public:
 		Vision6SideProcessor();
@@ -59,7 +59,6 @@ class VMF_PLUGIN_API Vision6SideProcessor : public VisionProcessorBase
 		void OnInspReady(ByteArray body) override;
 		void OnDeviceCheck(ByteArray body) override;
 		void OnLight(ByteArray body) override;
-
 		void Process() override;
 
 	private:

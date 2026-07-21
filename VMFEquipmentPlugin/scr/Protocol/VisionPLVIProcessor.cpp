@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "VisionPLVIProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
@@ -191,6 +191,6 @@ namespace VMF
 	void VisionPLVIProcessor::OnSetCok(ByteArray) {}
 	void VisionPLVIProcessor::OnDeviceCheck(ByteArray) {}
 	void VisionPLVIProcessor::OnLight(ByteArray) {}
-	void VisionPLVIProcessor::Process() { VisionProcessorBase::Process(); }
+	void VisionPLVIProcessor::Process() { VisionCommunicationManager::Process(); }
 
 } // namespace VMF

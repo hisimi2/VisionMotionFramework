@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CSetPlate1PLVIPerformScanTask.h"
 
 // CMockPLVIEventHandler include 없음 - 순수 인터페이스(IVisionEventHandler)만 사용
@@ -98,7 +98,7 @@ TaskResult CSetPlate1PLVIPerformScanTask::HandleWaitMeasureAck(Context& ctx, IAc
 		return TR_KEEP;
 	}
 
-	IVisionProcessor::DataMap ack = vp->GetLatestData(Measure);
+	IVisionClient::DataMap ack = vp->GetLatestData(Measure);
 	auto it = ack.find("STATUS");
 	if (it == ack.end() || it->second != "1")
 	{
@@ -209,7 +209,7 @@ TaskResult CSetPlate1PLVIPerformScanTask::HandleSaveResult(Context& ctx, IActuat
     if (!vp) return SetErrorAndReturn(ctx, "PLVI_PerformScan: No VisionProcessor.");
     if (!repo) return SetErrorAndReturn(ctx, "PLVI_PerformScan: No Repository.");
 
-    IVisionProcessor::DataMap raw = vp->GetLatestData(InspReady);
+    IVisionClient::DataMap raw = vp->GetLatestData(InspReady);
     PLVIStatus result = ParsePLVIResult(raw);
 
     if (!result.resultOK) return SetErrorAndReturn(ctx, "PLVI_PerformScan: VisionOS returned error.");

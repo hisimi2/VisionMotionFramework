@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "VisionMemoryProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
@@ -220,7 +220,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     void VisionMemoryProcessor::Process()
     {
-        VisionProcessorBase::Process();
+        VisionCommunicationManager::Process();
     }
 
     std::vector<std::string> VisionMemoryProcessor::ParseMeasureBody(

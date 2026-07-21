@@ -1,5 +1,5 @@
 #pragma once
-#include "VisionProcessorBase.h"
+#include "VisionCommunicationManager.h"
 #include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 #include "VMFEquipmentPluginExport.h"
@@ -34,7 +34,7 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API VisionPLVIProcessor : public VisionProcessorBase
+    class VMF_PLUGIN_API VisionPLVIProcessor : public VisionCommunicationManager
 	{
 	public:
 		VisionPLVIProcessor();
@@ -61,11 +61,9 @@ namespace VMF
 		void OnMeasure(ByteArray body) override;
 		// 2차 응답 수신 (결과)
 		void OnInspReady(ByteArray body) override;
-
 		void OnSetCok(ByteArray body) override;
 		void OnDeviceCheck(ByteArray body) override;
 		void OnLight(ByteArray body) override;
-
 		void Process() override;
 
 	private:

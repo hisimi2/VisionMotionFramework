@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "VisionProcessorBase.h"
+#pragma once
+#include "VisionCommunicationManager.h"
 #include "VisionMemoryKeys.h"
 #include <vector>
 #include <string>
@@ -35,7 +35,7 @@ namespace VMF
             static_cast<int>(Function::DeviceCheckAck));
     }
 
-    class VisionMemoryProcessor : public VisionProcessorBase
+    class VisionMemoryProcessor : public VisionCommunicationManager
     {
     public:
         VisionMemoryProcessor();
