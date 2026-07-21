@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
 #include "..\VisionMotionFramework\include\Mock\CMockVisionEventHandler.h"

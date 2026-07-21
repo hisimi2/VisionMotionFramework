@@ -3,6 +3,7 @@
 #include "CLoad1VATCommitTeachingPosTask.h"
 #include "DefineVAT.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 CLoad1VATCommitTeachingPosTask::CLoad1VATCommitTeachingPosTask()

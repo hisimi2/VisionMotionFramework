@@ -1,8 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "C6SideInspectionStrategy.h"
 #include "scr\Protocol\VisionSixSideProcessor.h"
 #include "C6SideInspectionSequenceBuilder.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 std::string C6SideInspectionStrategy::GetSequenceName() const 
@@ -21,7 +22,7 @@ VMF::DataRepositoryPtr C6SideInspectionStrategy::CreateRepository()
 VMF::VisionProcessorPtr C6SideInspectionStrategy::CreateVisionProcessor() 
 {
     VMF::VisionConnectionConfig config("127.0.0.1", 8001, 3000);
-    auto vm = std::make_shared<VMF::VisionSixSideProcessor>();
+    auto vm = std::make_shared<VisionSixSideProcessor>();
     vm->Initialize(config);
     return vm;
 }

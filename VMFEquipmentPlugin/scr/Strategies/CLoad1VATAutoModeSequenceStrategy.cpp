@@ -1,7 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoad1VATAutoModeSequenceStrategy.h"
 #include "CLoad1VATAutoModeSequenceBuilder.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 

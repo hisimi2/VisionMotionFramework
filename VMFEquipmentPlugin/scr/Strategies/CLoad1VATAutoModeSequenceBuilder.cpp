@@ -7,6 +7,7 @@
 #include "..\Tasks\CLoad1VATFindAlignPosTask.h"
 #include "..\Tasks\CLoad1VATCommitTeachingPosTask.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 

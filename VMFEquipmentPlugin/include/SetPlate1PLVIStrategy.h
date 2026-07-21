@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "ComponentSetupBase.h"
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
@@ -81,7 +81,7 @@ namespace VMF_PLUGIN
 		VMF::VisionProcessorPtr CreateVisionProcessor() override
 		{
 			VMF::VisionConnectionConfig config("127.0.0.1", 8000, 3000);
-			auto vm = std::make_shared<VMF::VisionPlviProcessor>();
+			auto vm = std::make_shared<VisionPlviProcessor>();
 			vm->Initialize(config);
 			return vm;
 		}

@@ -3,6 +3,7 @@
 #include "DefineVAT.h"
 #include "scr\Protocol\VisionMemoryKeys.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 CLoad1VATPerformHandPitchScanningTask::CLoad1VATPerformHandPitchScanningTask()

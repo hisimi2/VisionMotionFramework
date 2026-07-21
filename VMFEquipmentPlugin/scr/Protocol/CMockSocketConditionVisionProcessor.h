@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "VisionCommunicationManager.h"
 #include <vector>
 #include <string>
 #include <map>
 
-namespace VMF_SOCKET_CONDITION
+namespace VMF_PLUGIN
 {
 	// ----------------------------------------------------------------
 	// CMockSocketConditionVisionProcessor
@@ -73,4 +73,4 @@ namespace VMF_SOCKET_CONDITION
 		void InitDefaultMockData();
 	};
 
-} // namespace VMF_SOCKET_CONDITION
+} // namespace VMF_PLUGIN_SOCKET_CONDITION

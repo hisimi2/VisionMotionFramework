@@ -1,10 +1,12 @@
-#pragma once
-#include "VisionCommunicationManager.h"
-#include "VisionMemoryKeys.h"
-#include <vector>
-#include <string>
+﻿#pragma once
 
-namespace VMF
+#include "visioncommunicationmanager.h"
+#include "VisionMemoryKeys.h"
+#include "VisionPacketMemory.h"
+#include "VMFEquipmentPluginExport.h"
+#include "ivisionclient.h"
+
+namespace VMF_PLUGIN
 {
     namespace VisionMemoryProtocol
     {
@@ -35,32 +37,32 @@ namespace VMF
             static_cast<int>(Function::DeviceCheckAck));
     }
 
-    class VisionVatProcessor : public VisionCommunicationManager
+class VisionVatProcessor : public VMF::VisionCommunicationManager
     {
     public:
         VisionVatProcessor();
         ~VisionVatProcessor() override;
 
-		bool RequestSetCokAsync(const StringMap& params) override;
-		bool RequestInspReadyAsync(const StringMap& params) override;
-		bool RequestMeasureAsync(const StringMap& params) override;
-		bool RequestDeviceCheckAsync(const StringMap& params) override;
-		bool RequestLightAsync(const StringMap& params) override;
+		bool RequestSetCokAsync(const VMF::StringMap& params) override;
+		bool RequestInspReadyAsync(const VMF::StringMap& params) override;
+		bool RequestMeasureAsync(const VMF::StringMap& params) override;
+		bool RequestDeviceCheckAsync(const VMF::StringMap& params) override;
+		bool RequestLightAsync(const VMF::StringMap& params) override;
 
 		// 변경: 바디를 by-value로 받아 호출자가 std::move로 소유권을 전달할 수 있도록 함
-		void OnSetCok(ByteArray body) override;
-		void OnInspReady(ByteArray body) override;
-		void OnMeasure(ByteArray body) override;
-		void OnDeviceCheck(ByteArray body) override;
-		void OnLight(ByteArray body) override;
+		void OnSetCok(VMF::ByteArray body) override;
+		void OnInspReady(VMF::ByteArray body) override;
+		void OnMeasure(VMF::ByteArray body) override;
+		void OnDeviceCheck(VMF::ByteArray body) override;
+		void OnLight(VMF::ByteArray body) override;
 
         void Process() override;
 
-    private:
+private:
         VisionVatProcessor(const VisionVatProcessor&) = delete;
         VisionVatProcessor& operator=(const VisionVatProcessor&) = delete;
 
-        std::vector<std::string> ParseMeasureBody(const ByteArray& body);
+        std::vector<std::string> ParseMeasureBody(const VMF::ByteArray& body);
     };
 
-} // namespace VMF
+} // namespace VMF_PLUGIN

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VMF_API.h"
 #include "IVisionClient.h"
 #include "Types.h"

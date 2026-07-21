@@ -4,6 +4,7 @@
 #include "scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h"
 #include "scr\Tasks\CSetPlate1PLVIPerformScanTask.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 

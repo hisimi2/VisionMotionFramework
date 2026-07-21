@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This is an auto-generated file.
  * DO NOT MODIFY DIRECTLY.
  */

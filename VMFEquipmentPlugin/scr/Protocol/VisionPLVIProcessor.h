@@ -1,10 +1,12 @@
-#pragma once
-#include "VisionCommunicationManager.h"
+﻿#pragma once
+
+#include "visioncommunicationmanager.h"
 #include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 #include "VMFEquipmentPluginExport.h"
+#include "ivisionclient.h"
 
-namespace VMF
+namespace VMF_PLUGIN
 {
 	// ================================================================
 	// VisionPlviProcessor
@@ -34,7 +36,7 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API VisionPlviProcessor : public VisionCommunicationManager
+    class VMF_PLUGIN_API VisionPlviProcessor : public VMF::VisionCommunicationManager
 	{
 	public:
 		VisionPlviProcessor();
@@ -45,25 +47,25 @@ namespace VMF
 		// params 필요 키:
 		//   PLVI_POSITION, PLVI_PKG_NAME, PLVI_CTRAY_X, PLVI_CTRAY_Y,
 		//   PLVI_DEVICE_INFO ("0,99,99,0,..." 콤마 구분)
-		bool RequestMeasureAsync(const StringMap& params) override;
+bool RequestMeasureAsync(const VMF::StringMap& params) override;
 
 		// 결과 요청 (2차 REQ_MEASURE, S107/F5)
 		// params: 필요 없음 (nDataID만 전송)
-		bool RequestInspReadyAsync(const StringMap& params) override;
+		bool RequestInspReadyAsync(const VMF::StringMap& params) override;
 
 		// 미사용
-		bool RequestSetCokAsync(const StringMap& params) override;
-		bool RequestDeviceCheckAsync(const StringMap& params) override;
-		bool RequestLightAsync(const StringMap& params) override;
+		bool RequestSetCokAsync(const VMF::StringMap& params) override;
+		bool RequestDeviceCheckAsync(const VMF::StringMap& params) override;
+		bool RequestLightAsync(const VMF::StringMap& params) override;
 
 		// ── On 함수 (수신 콜백) ──────────────────────────────────────
 		// 1차 응답 수신 (검사 시작 ACK)
-		void OnMeasure(ByteArray body) override;
+		void OnMeasure(VMF::ByteArray body) override;
 		// 2차 응답 수신 (결과)
-		void OnInspReady(ByteArray body) override;
-		void OnSetCok(ByteArray body) override;
-		void OnDeviceCheck(ByteArray body) override;
-		void OnLight(ByteArray body) override;
+		void OnInspReady(VMF::ByteArray body) override;
+		void OnSetCok(VMF::ByteArray body) override;
+		void OnDeviceCheck(VMF::ByteArray body) override;
+		void OnLight(VMF::ByteArray body) override;
 		void Process() override;
 
 	private:
@@ -76,4 +78,4 @@ namespace VMF
 			int ctrayX, int ctrayY);
 	};
 
-} // namespace VMF
+} // namespace VMF_PLUGIN

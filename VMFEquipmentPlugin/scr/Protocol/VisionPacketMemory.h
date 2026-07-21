@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <cstring>
-namespace VMF
+namespace VMF_PLUGIN
 {
 	constexpr size_t STR_LEN = 64;
 	constexpr size_t DATA_SIZE = 10;
@@ -149,4 +149,4 @@ namespace VMF
 		}
 	};
 
-} // namespace VMF
+} // namespace VMF_PLUGIN

@@ -2,6 +2,7 @@
 #include "CLoad1VATCommitPickerCamDistanceResultsTask.h"
 #include "DefineVAT.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 CLoad1VATCommitPickerCamDistanceResultsTask::CLoad1VATCommitPickerCamDistanceResultsTask()

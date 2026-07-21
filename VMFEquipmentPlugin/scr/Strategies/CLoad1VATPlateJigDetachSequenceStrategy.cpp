@@ -3,7 +3,7 @@
 #include "CLoad1VATPlateJigDetachSequenceBuilder.h"
 
 
-
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 

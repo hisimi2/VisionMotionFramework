@@ -3,6 +3,7 @@
 #include "..\Tasks\C6SideMoveToFacePositionTask.h"
 #include "..\Tasks\C6SideInspectionTask.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 VMF::SequencePtr C6SideInspectionSequenceBuilder::BuildSequence(const std::string& sequenceName)

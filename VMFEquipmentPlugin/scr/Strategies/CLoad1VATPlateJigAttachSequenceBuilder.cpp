@@ -7,6 +7,7 @@
 #include "..\Tasks\CLoad1VATPerformFOVScanningTask.h"
 #include "..\Tasks\CLoad1VATFindAlignPosTask.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 VMF::SequencePtr CLoad1VATPlateJigAttachSequenceBuilder::BuildSequence(const std::string& sequenceName)

@@ -1,10 +1,12 @@
-#pragma once
-#include "VisionCommunicationManager.h"
-#include "scr\Protocol\VisionMemoryKeys.h"
+﻿#pragma once
+
+#include "visioncommunicationmanager.h"
+#include "VisionMemoryKeys.h"
 #include "VisionPacketMemory.h"
 #include "VMFEquipmentPluginExport.h"
+#include "ivisionclient.h"
 
-namespace VMF
+namespace VMF_PLUGIN
 {
 	// ================================================================
 	// VisionSixSideProcessor
@@ -32,7 +34,7 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API VisionSixSideProcessor : public VisionCommunicationManager
+class VMF_PLUGIN_API VisionSixSideProcessor : public VMF::VisionCommunicationManager
 	{
 	public:
 		VisionSixSideProcessor();
@@ -44,21 +46,21 @@ namespace VMF
 		//   SIDE6_VISION_TYPE, SIDE6_CAM_POSITION,
 		//   SIDE6_FACE_POSITION, SIDE6_SELECT_COUNT,
 		//   SIDE6_SKIP, SIDE6_BARCODE_ID, SIDE6_LOT_ID
-		bool RequestMeasureAsync(const StringMap& params) override;
+		bool RequestMeasureAsync(const VMF::StringMap& params) override;
 
 		// 미사용
-		bool RequestSetCokAsync(const StringMap& params) override;
-		bool RequestInspReadyAsync(const StringMap& params) override;
-		bool RequestDeviceCheckAsync(const StringMap& params) override;
-		bool RequestLightAsync(const StringMap& params) override;
+		bool RequestSetCokAsync(const VMF::StringMap& params) override;
+		bool RequestInspReadyAsync(const VMF::StringMap& params) override;
+		bool RequestDeviceCheckAsync(const VMF::StringMap& params) override;
+		bool RequestLightAsync(const VMF::StringMap& params) override;
 
 		// ── On 함수 (수신 콜백) ──────────────────────────────────────
 		// 6면 검사 결과 수신 (S107/F2)
-		void OnMeasure(ByteArray body) override;
-		void OnSetCok(ByteArray body) override;
-		void OnInspReady(ByteArray body) override;
-		void OnDeviceCheck(ByteArray body) override;
-		void OnLight(ByteArray body) override;
+		void OnMeasure(VMF::ByteArray body) override;
+		void OnSetCok(VMF::ByteArray body) override;
+		void OnInspReady(VMF::ByteArray body) override;
+		void OnDeviceCheck(VMF::ByteArray body) override;
+		void OnLight(VMF::ByteArray body) override;
 		void Process() override;
 
 	private:
@@ -66,4 +68,4 @@ namespace VMF
 		VisionSixSideProcessor& operator=(const VisionSixSideProcessor&) = delete;
 	};
 
-} // namespace VMF
+} // namespace VMF_PLUGIN

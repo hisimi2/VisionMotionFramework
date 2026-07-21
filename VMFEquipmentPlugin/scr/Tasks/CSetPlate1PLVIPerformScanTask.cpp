@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSetPlate1PLVIPerformScanTask.h"
 
 // CMockPLVIEventHandler include 없음 - 순수 인터페이스(IVisionEventHandler)만 사용
@@ -6,8 +6,8 @@
 // PLVI 동작으로 오버라이딩했으므로 Task는 구현체를 알 필요가 없음
 
 using namespace VMF;
+using namespace VMF_PLUGIN;
 
-namespace VMF_PLUGIN {
 
 CSetPlate1PLVIPerformScanTask::CSetPlate1PLVIPerformScanTask()
 	: m_plviPosition(0)
@@ -26,7 +26,7 @@ CSetPlate1PLVIPerformScanTask::CSetPlate1PLVIPerformScanTask()
 
 CSetPlate1PLVIPerformScanTask::~CSetPlate1PLVIPerformScanTask() {}
 
-void CSetPlate1PLVIPerformScanTask::OnInitialize(Context& ctx)
+void CSetPlate1PLVIPerformScanTask::OnInitialize(VMF::Context& ctx)
 {
     //  T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
     m_plviPosition = GetTaskSeqParamAs<int>(ctx, "PLVI_POSITION");
@@ -50,7 +50,7 @@ void CSetPlate1PLVIPerformScanTask::OnInitialize(Context& ctx)
     EnterState(RequestMeasure);
 }
 
-TaskResult CSetPlate1PLVIPerformScanTask::OnPoll(Context& ctx, IActuator* actuator)
+VMF::TaskResult CSetPlate1PLVIPerformScanTask::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
 {
 	switch (GetState())
 	{
@@ -68,15 +68,15 @@ TaskResult CSetPlate1PLVIPerformScanTask::OnPoll(Context& ctx, IActuator* actuat
 
 // VisionOS에 PLVI 검사 요청
 // CMockPLVIEventHandler::RequestMeasureAsync → SimulateMeasure → m_latestData[Measure] 저장
-TaskResult CSetPlate1PLVIPerformScanTask::HandleRequestMeasure(Context& ctx, IActuator* actuator)
+VMF::TaskResult CSetPlate1PLVIPerformScanTask::HandleRequestMeasure(VMF::Context& ctx, VMF::IActuator* actuator)
 {
 	auto vp = ctx.GetVisionProcessorInterface();
 	if (!vp)
 		return SetErrorAndReturn(ctx, "PLVI_PerformScan: No VisionProcessor.");
 
-	vp->ClearLatestData(Measure);
+	vp->ClearLatestData(VMF::VisionCommand::Measure);
 
-	if (!ctx.ExecuteVisionCommand(Measure))
+	if (!ctx.ExecuteVisionCommand(VMF::VisionCommand::Measure))
 		return SetErrorAndReturn(ctx, "PLVI_PerformScan: Measure request failed.");
 
 	EnterStateWithTimeout(WaitMeasureAck, m_timeoutMeasureMs);
@@ -271,5 +271,3 @@ CSetPlate1PLVIPerformScanTask::PLVIStatus CSetPlate1PLVIPerformScanTask::ParsePL
 
 	return result;
 }
-
-} // namespace VMF_PLUGIN

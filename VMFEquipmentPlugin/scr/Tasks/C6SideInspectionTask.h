@@ -63,4 +63,4 @@ namespace VMF_PLUGIN
 		int         m_maxRetry;
 	};
 
-} // namespace VMF_6SIDE
+} // namespace VMF_PLUGIN_6SIDE

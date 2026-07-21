@@ -1,5 +1,5 @@
-#pragma once
-namespace VMF
+﻿#pragma once
+namespace VMF_PLUGIN
 {
 	// ================================================================
 	// [VAT 공통] Request 파라미터 키
@@ -84,4 +84,4 @@ namespace VMF
 	constexpr const char* SIDE6_RESULT_FACE = "Side6ResultFace";
 	// 결과 면 번호 echo
 
-} // namespace VMF
+} // namespace VMF_PLUGIN

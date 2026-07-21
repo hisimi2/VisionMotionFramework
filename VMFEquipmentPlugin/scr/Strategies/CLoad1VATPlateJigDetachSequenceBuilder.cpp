@@ -8,7 +8,7 @@
 #include "..\Tasks\CLoad1VATPerformFOVScanningTask.h"
 
 
-
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 

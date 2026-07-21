@@ -2,6 +2,7 @@
 #include "CLoad1VATMoveToStartPositionTask.h"
 #include "DefineVAT.h"
 
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 CLoad1VATMoveToStartPositionTask::CLoad1VATMoveToStartPositionTask()

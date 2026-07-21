@@ -5,7 +5,7 @@
 
 
 
-
+using namespace VMF;
 using namespace VMF_PLUGIN;
 
 VMF::SequenceBuilderPtr CLoad1VATPlateJigAttachSequenceStrategy::CreateBuilder() 

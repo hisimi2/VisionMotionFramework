@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace VMF
+namespace VMF_PLUGIN
 {
     // Request parameter keys
     constexpr const char* RECIPE_NAME           = "recipe_name";

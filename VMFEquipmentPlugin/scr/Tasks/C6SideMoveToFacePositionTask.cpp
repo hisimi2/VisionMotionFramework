@@ -253,4 +253,4 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-} // namespace VMF_6SIDE
+} // namespace VMF_PLUGIN_6SIDE
