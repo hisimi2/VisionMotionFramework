@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Vision6SideProcessor.h"
+#include "VisionSixSideProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
 #include <cstring>
@@ -9,7 +9,7 @@ namespace VMF
 	// ================================================================
 	// 생성자 ? 수신 핸들러 등록
 	// ================================================================
-	Vision6SideProcessor::Vision6SideProcessor()
+	VisionSixSideProcessor::VisionSixSideProcessor()
 	{
 		VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
@@ -21,7 +21,7 @@ namespace VMF
 		});
 	}
 
-	Vision6SideProcessor::~Vision6SideProcessor() = default;
+	VisionSixSideProcessor::~VisionSixSideProcessor() = default;
 
 	// ================================================================
 	// [RequestMeasureAsync] 6면 검사 요청 (CMD 1102, S107/F1)
@@ -36,7 +36,7 @@ namespace VMF
 	//   cData[4]   = Barcode ID (SIDE6_BARCODE_ID)
 	//   cData[5]   = Lot ID (SIDE6_LOT_ID)
 	// ================================================================
-	bool Vision6SideProcessor::RequestMeasureAsync(const StringMap& params)
+	bool VisionSixSideProcessor::RequestMeasureAsync(const StringMap& params)
 	{
 		ClearLatestData(Measure);
 
@@ -107,7 +107,7 @@ namespace VMF
 	//   data[SIDE6_INSP_RESULT] → "1"=OK, "2"=NG
 	//   data[SIDE6_RESULT_FACE] → 어느 면의 결과인지 확인
 	// ================================================================
-	void Vision6SideProcessor::OnMeasure(ByteArray body)
+	void VisionSixSideProcessor::OnMeasure(ByteArray body)
 	{
 		if (body.size() < sizeof(CPacketBody_S107F2_6Side))
 		{
@@ -128,14 +128,14 @@ namespace VMF
 		SetReceived(Measure, true);
 	}
 
-	bool Vision6SideProcessor::RequestSetCokAsync(const StringMap&) { return false; }
-	bool Vision6SideProcessor::RequestInspReadyAsync(const StringMap&) { return false; }
-	bool Vision6SideProcessor::RequestDeviceCheckAsync(const StringMap&) { return false; }
-	bool Vision6SideProcessor::RequestLightAsync(const StringMap&) { return false; }
-	void Vision6SideProcessor::OnSetCok(ByteArray) {}
-	void Vision6SideProcessor::OnInspReady(ByteArray) {}
-	void Vision6SideProcessor::OnDeviceCheck(ByteArray) {}
-	void Vision6SideProcessor::OnLight(ByteArray) {}
-	void Vision6SideProcessor::Process() { VisionCommunicationManager::Process(); }
+	bool VisionSixSideProcessor::RequestSetCokAsync(const StringMap&) { return false; }
+	bool VisionSixSideProcessor::RequestInspReadyAsync(const StringMap&) { return false; }
+	bool VisionSixSideProcessor::RequestDeviceCheckAsync(const StringMap&) { return false; }
+	bool VisionSixSideProcessor::RequestLightAsync(const StringMap&) { return false; }
+	void VisionSixSideProcessor::OnSetCok(ByteArray) {}
+	void VisionSixSideProcessor::OnInspReady(ByteArray) {}
+	void VisionSixSideProcessor::OnDeviceCheck(ByteArray) {}
+	void VisionSixSideProcessor::OnLight(ByteArray) {}
+	void VisionSixSideProcessor::Process() { VisionCommunicationManager::Process(); }
 
 } // namespace VMF

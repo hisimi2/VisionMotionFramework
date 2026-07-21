@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "VisionPLVIProcessor.h"
+#include "VisionPlviProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
 #include <cstring>
@@ -10,7 +10,7 @@ namespace VMF
 	// ================================================================
 	// 생성자 ? 수신 핸들러 등록
 	// ================================================================
-	VisionPLVIProcessor::VisionPLVIProcessor()
+	VisionPlviProcessor::VisionPlviProcessor()
 	{
 		VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
@@ -30,7 +30,7 @@ namespace VMF
 		});
 	}
 
-	VisionPLVIProcessor::~VisionPLVIProcessor() = default;
+	VisionPlviProcessor::~VisionPlviProcessor() = default;
 
 	// ================================================================
 	// [1차] 검사 시작 요청 (REQ_MEASURE, S107/F5)
@@ -43,7 +43,7 @@ namespace VMF
 	//   cData[2]   = "CTrayX,CTrayY" 형태 문자열
 	//   cData[3]   = Device 유무 배열 ("0,99,99,0,..." 콤마 구분)
 	// ================================================================
-	bool VisionPLVIProcessor::RequestMeasureAsync(const StringMap& params)
+	bool VisionPlviProcessor::RequestMeasureAsync(const StringMap& params)
 	{
 		ClearLatestData(Measure);
 
@@ -97,7 +97,7 @@ namespace VMF
 	//   nDataID    = PLVI 요청 ID
 	//   cData      = 미사용
 	// ================================================================
-	bool VisionPLVIProcessor::RequestInspReadyAsync(const StringMap& params)
+	bool VisionPlviProcessor::RequestInspReadyAsync(const StringMap& params)
 	{
 		ClearLatestData(InspReady);
 
@@ -131,7 +131,7 @@ namespace VMF
 	//   data[PLVI_STATUS]   → "1"이면 검사 시작 OK
 	//   data[PLVI_ERR_CODE] → 에러 코드 확인
 	// ================================================================
-	void VisionPLVIProcessor::OnMeasure(ByteArray body)
+	void VisionPlviProcessor::OnMeasure(ByteArray body)
 	{
 		if (body.size() < sizeof(CPacketBody_S107F6))
 		{
@@ -164,7 +164,7 @@ namespace VMF
 	//   data[PLVI_OVERALL_RESULT]  → "0"=OK, "1"=NG
 	//   data[PLVI_POCKET_RESULT]   → "0,99,1,2,11,..." 파싱
 	// ================================================================
-	void VisionPLVIProcessor::OnInspReady(ByteArray body)
+	void VisionPlviProcessor::OnInspReady(ByteArray body)
 	{
 		if (body.size() < sizeof(CPacketBody_S107F6))
 		{
@@ -185,12 +185,12 @@ namespace VMF
 		SetReceived(InspReady, true);
 	}
 
-	bool VisionPLVIProcessor::RequestSetCokAsync(const StringMap&) { return false; }
-	bool VisionPLVIProcessor::RequestDeviceCheckAsync(const StringMap&) { return false; }
-	bool VisionPLVIProcessor::RequestLightAsync(const StringMap&) { return false; }
-	void VisionPLVIProcessor::OnSetCok(ByteArray) {}
-	void VisionPLVIProcessor::OnDeviceCheck(ByteArray) {}
-	void VisionPLVIProcessor::OnLight(ByteArray) {}
-	void VisionPLVIProcessor::Process() { VisionCommunicationManager::Process(); }
+	bool VisionPlviProcessor::RequestSetCokAsync(const StringMap&) { return false; }
+	bool VisionPlviProcessor::RequestDeviceCheckAsync(const StringMap&) { return false; }
+	bool VisionPlviProcessor::RequestLightAsync(const StringMap&) { return false; }
+	void VisionPlviProcessor::OnSetCok(ByteArray) {}
+	void VisionPlviProcessor::OnDeviceCheck(ByteArray) {}
+	void VisionPlviProcessor::OnLight(ByteArray) {}
+	void VisionPlviProcessor::Process() { VisionCommunicationManager::Process(); }
 
 } // namespace VMF

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "VisionMemoryProcessor.h"
+#include "VisionVatProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
 #include "scr\Protocol\VisionMemoryKeys.h"
@@ -10,7 +10,7 @@
 
 namespace VMF
 {
-    VisionMemoryProcessor::VisionMemoryProcessor()
+    VisionVatProcessor::VisionVatProcessor()
     {
         VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();
 
@@ -29,12 +29,12 @@ namespace VMF
             });
     }
 
-    VisionMemoryProcessor::~VisionMemoryProcessor() = default;
+    VisionVatProcessor::~VisionVatProcessor() = default;
 
     // -----------------------------------------------------------------------
     // [RequestSetCokAsync] - SetCok 요청
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestSetCokAsync(const StringMap& params)
+    bool VisionVatProcessor::RequestSetCokAsync(const StringMap& params)
     {
         ClearLatestData(SetCok);
 
@@ -72,7 +72,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [RequestInspReadyAsync] - InspReady 요청
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestInspReadyAsync(const StringMap& params)
+    bool VisionVatProcessor::RequestInspReadyAsync(const StringMap& params)
     {
         // InspReady는 SetCok와 동일한 ControlRequest 패킷 사용
         return RequestSetCokAsync(params);
@@ -81,7 +81,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [RequestMeasureAsync] - Measure 요청
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestMeasureAsync(const StringMap& params)
+    bool VisionVatProcessor::RequestMeasureAsync(const StringMap& params)
     {
         ClearLatestData(Measure);
 
@@ -113,7 +113,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [RequestDeviceCheckAsync] - DeviceCheck 요청
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestDeviceCheckAsync(const StringMap& params)
+    bool VisionVatProcessor::RequestDeviceCheckAsync(const StringMap& params)
     {
         (void)params;
         return false;
@@ -122,7 +122,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [RequestLightAsync] - Light 요청
     // -----------------------------------------------------------------------
-    bool VisionMemoryProcessor::RequestLightAsync(const StringMap& params)
+    bool VisionVatProcessor::RequestLightAsync(const StringMap& params)
     {
         (void)params;
         return false;
@@ -131,7 +131,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [OnSetCok] - SetCok 응답 처리
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnSetCok(ByteArray body)
+    void VisionVatProcessor::OnSetCok(ByteArray body)
     {
         if (body.size() < sizeof(CPacketBody_S2F41))
         {
@@ -152,7 +152,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [OnInspReady] - InspReady 응답 처리
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnInspReady(ByteArray body)
+    void VisionVatProcessor::OnInspReady(ByteArray body)
     {
         if (body.size() < sizeof(CPacketBody_S2F41))
         {
@@ -173,7 +173,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [OnMeasure] - Measure 응답 처리
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnMeasure(ByteArray body)
+    void VisionVatProcessor::OnMeasure(ByteArray body)
     {
         if (body.size() < sizeof(CPacketBody_S107F9))
         {
@@ -200,7 +200,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [OnDeviceCheck] - DeviceCheck 응답 처리
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnDeviceCheck(ByteArray body)
+    void VisionVatProcessor::OnDeviceCheck(ByteArray body)
     {
         (void)body;
         ClearLatestData(DeviceCheck);
@@ -209,7 +209,7 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [OnLight] - Light 응답 처리
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::OnLight(ByteArray body)
+    void VisionVatProcessor::OnLight(ByteArray body)
     {
         (void)body;
         ClearLatestData(Light);
@@ -218,12 +218,12 @@ namespace VMF
     // -----------------------------------------------------------------------
     // [Process] - 기본 Process 호출
     // -----------------------------------------------------------------------
-    void VisionMemoryProcessor::Process()
+    void VisionVatProcessor::Process()
     {
         VisionCommunicationManager::Process();
     }
 
-    std::vector<std::string> VisionMemoryProcessor::ParseMeasureBody(
+    std::vector<std::string> VisionVatProcessor::ParseMeasureBody(
         const ByteArray& body)
     {
         std::vector<std::string> results;

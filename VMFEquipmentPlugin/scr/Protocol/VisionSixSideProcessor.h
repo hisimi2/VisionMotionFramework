@@ -7,7 +7,7 @@
 namespace VMF
 {
 	// ================================================================
-	// Vision6SideProcessor
+	// VisionSixSideProcessor
 	//
 	// 6면 검사 전용 VisionProcessor.
 	// S107/F1 (CMD_6_SIDE_INSPECTION_MEASURE) 로 면별 검사 요청.
@@ -32,11 +32,11 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API Vision6SideProcessor : public VisionCommunicationManager
+    class VMF_PLUGIN_API VisionSixSideProcessor : public VisionCommunicationManager
 	{
 	public:
-		Vision6SideProcessor();
-		~Vision6SideProcessor() override;
+		VisionSixSideProcessor();
+		~VisionSixSideProcessor() override;
 
 		// ── Request 함수 ─────────────────────────────────────────────
 		// 6면 검사 요청 (CMD 1102, S107/F1)
@@ -62,8 +62,8 @@ namespace VMF
 		void Process() override;
 
 	private:
-		Vision6SideProcessor(const Vision6SideProcessor&) = delete;
-		Vision6SideProcessor& operator=(const Vision6SideProcessor&) = delete;
+		VisionSixSideProcessor(const VisionSixSideProcessor&) = delete;
+		VisionSixSideProcessor& operator=(const VisionSixSideProcessor&) = delete;
 	};
 
 } // namespace VMF

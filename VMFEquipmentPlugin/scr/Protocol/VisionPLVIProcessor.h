@@ -7,7 +7,7 @@
 namespace VMF
 {
 	// ================================================================
-	// VisionPLVIProcessor
+	// VisionPlviProcessor
 	//
 	// PLVI 전용 VisionProcessor.
 	// S107/F5 (REQ_MEASURE) 로 검사 시작 및 결과 요청.
@@ -34,11 +34,11 @@ namespace VMF
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API VisionPLVIProcessor : public VisionCommunicationManager
+    class VMF_PLUGIN_API VisionPlviProcessor : public VisionCommunicationManager
 	{
 	public:
-		VisionPLVIProcessor();
-		~VisionPLVIProcessor() override;
+		VisionPlviProcessor();
+		~VisionPlviProcessor() override;
 
 		// ── Request 함수 ─────────────────────────────────────────────
 		// 검사 시작 요청 (1차 REQ_MEASURE, S107/F5)
@@ -67,8 +67,8 @@ namespace VMF
 		void Process() override;
 
 	private:
-		VisionPLVIProcessor(const VisionPLVIProcessor&) = delete;
-		VisionPLVIProcessor& operator=(const VisionPLVIProcessor&) = delete;
+		VisionPlviProcessor(const VisionPlviProcessor&) = delete;
+		VisionPlviProcessor& operator=(const VisionPlviProcessor&) = delete;
 
 		// Pocket 결과 배열 → 콤마 구분 문자열 파싱 헬퍼
 		// ex) "0,99,1,2,11" 형태로 DataMap에 저장

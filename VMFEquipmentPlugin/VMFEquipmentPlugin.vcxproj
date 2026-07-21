@@ -183,11 +183,11 @@
     <ClInclude Include="include\VMFEquipmentPluginExport.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h" />
-    <ClInclude Include="scr\Protocol\Vision6SideProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionMemoryKeys.h" />
-    <ClInclude Include="scr\Protocol\VisionMemoryProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionVatProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionPacketMemory.h" />
-    <ClInclude Include="scr\Protocol\VisionPLVIProcessor.h" />
+    <ClInclude Include="scr\Protocol\VisionPlviProcessor.h" />
     <ClInclude Include="scr\Strategies\C6SideInspectionSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.h" />
@@ -220,9 +220,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="scr\Protocol\CMockSocketConditionVisionProcessor.cpp" />
-    <ClCompile Include="scr\Protocol\Vision6SideProcessor.cpp" />
-    <ClCompile Include="scr\Protocol\visionmemoryprocessor.cpp" />
-    <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp" />
+    <ClCompile Include="scr\Protocol\VisionSixSideProcessor.cpp" />
+    <ClCompile Include="scr\Protocol\VisionVatProcessor.cpp" />
+    <ClCompile Include="scr\Protocol\VisionPlviProcessor.cpp" />
     <ClCompile Include="scr\Strategies\C6SideInspectionSequenceBuilder.cpp" />
     <ClCompile Include="scr\Strategies\C6SideInspectionStrategy.cpp" />
     <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.cpp" />

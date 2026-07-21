@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "ComponentSetupBase.h"
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
 #include "VMFEquipmentPluginExport.h"
-// VisionMemoryProcessor는 여기서 사용하지 않음 (제거)
-#include "..\scr\Protocol\VisionPLVIProcessor.h"
+// VisionVatProcessor는 여기서 사용하지 않음 (제거)
+#include "..\scr\Protocol\VisionPlviProcessor.h"
 #include "..\scr\Strategies\CSetPlate1PLVISequenceBuilder.h"
 #include <memory>
 #include <sstream>
@@ -81,7 +81,7 @@ namespace VMF_PLUGIN
 		VMF::VisionProcessorPtr CreateVisionProcessor() override
 		{
 			VMF::VisionConnectionConfig config("127.0.0.1", 8000, 3000);
-			auto vm = std::make_shared<VMF::VisionPLVIProcessor>();
+			auto vm = std::make_shared<VMF::VisionPlviProcessor>();
 			vm->Initialize(config);
 			return vm;
 		}

@@ -105,19 +105,19 @@
     <ClInclude Include="scr\Protocol\CMockSocketConditionVisionProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Protocol\Vision6SideProcessor.h">
+    <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionMemoryKeys.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Protocol\VisionMemoryProcessor.h">
+    <ClInclude Include="scr\Protocol\VisionVatProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionPacketMemory.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Protocol\VisionPLVIProcessor.h">
+    <ClInclude Include="scr\Protocol\VisionPlviProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h">
@@ -197,13 +197,13 @@
     <ClCompile Include="scr\Protocol\CMockSocketConditionVisionProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Protocol\Vision6SideProcessor.cpp">
+    <ClCompile Include="scr\Protocol\VisionSixSideProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Protocol\visionmemoryprocessor.cpp">
+    <ClCompile Include="scr\Protocol\VisionVatProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Protocol\VisionPLVIProcessor.cpp">
+    <ClCompile Include="scr\Protocol\VisionPlviProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.cpp">

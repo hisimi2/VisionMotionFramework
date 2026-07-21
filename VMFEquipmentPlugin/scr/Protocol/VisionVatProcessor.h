@@ -35,11 +35,11 @@ namespace VMF
             static_cast<int>(Function::DeviceCheckAck));
     }
 
-    class VisionMemoryProcessor : public VisionCommunicationManager
+    class VisionVatProcessor : public VisionCommunicationManager
     {
     public:
-        VisionMemoryProcessor();
-        ~VisionMemoryProcessor() override;
+        VisionVatProcessor();
+        ~VisionVatProcessor() override;
 
 		bool RequestSetCokAsync(const StringMap& params) override;
 		bool RequestInspReadyAsync(const StringMap& params) override;
@@ -57,8 +57,8 @@ namespace VMF
         void Process() override;
 
     private:
-        VisionMemoryProcessor(const VisionMemoryProcessor&) = delete;
-        VisionMemoryProcessor& operator=(const VisionMemoryProcessor&) = delete;
+        VisionVatProcessor(const VisionVatProcessor&) = delete;
+        VisionVatProcessor& operator=(const VisionVatProcessor&) = delete;
 
         std::vector<std::string> ParseMeasureBody(const ByteArray& body);
     };
