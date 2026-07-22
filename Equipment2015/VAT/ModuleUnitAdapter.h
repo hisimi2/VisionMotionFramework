@@ -1,22 +1,22 @@
-﻿#pragma once
+#pragma once
 #include "IActuator.h"
 #include "Actuators\VisionUnitParts.h"
 
 namespace VMF_6SIDE
 {
 	// ----------------------------------------------------------------
-	// VisionUnitAdapter
+	// ModuleUnitAdapter
 	//
 	// VisionUnitParts를 IActuator 인터페이스로 래핑.
 	// 6면 검사에서 Turn180/Turn360/Gripper/CameraZ 축과
 	// 실린더를 제어.
 	// ----------------------------------------------------------------
-	class VisionUnitAdapter : public VMF::IActuator
+	class ModuleUnitAdapter : public VMF::IActuator
 	{
 		VisionUnitParts* m_parts;
 	public:
-		explicit VisionUnitAdapter(VisionUnitParts* parts);
-		virtual ~VisionUnitAdapter();
+		explicit ModuleUnitAdapter(VisionUnitParts* parts);
+		virtual ~ModuleUnitAdapter();
 
 		VMF::PitchType GetPitchType()                        override;
 		VMF::ActError  IsReadyToMove()                       override;

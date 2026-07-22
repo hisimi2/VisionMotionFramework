@@ -114,7 +114,7 @@
     <ClInclude Include="Actuators\VisionUnitParts.h">
       <Filter>Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="VAT\VisionUnitAdapter.h">
+    <ClInclude Include="VAT\ModuleUnitAdapter.h">
       <Filter>VAT</Filter>
     </ClInclude>
   </ItemGroup>
@@ -170,7 +170,7 @@
     <ClCompile Include="VAT\PLVIAdapterSetPlate1.cpp">
       <Filter>VAT</Filter>
     </ClCompile>
-    <ClCompile Include="VAT\VisionUnitAdapter.cpp">
+    <ClCompile Include="VAT\ModuleUnitAdapter.cpp">
       <Filter>VAT</Filter>
     </ClCompile>
   </ItemGroup>
