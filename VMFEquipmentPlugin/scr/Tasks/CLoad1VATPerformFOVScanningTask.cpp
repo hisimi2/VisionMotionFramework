@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "CLoad1VATPerformFOVScanningTask.h"
-#include "DefineVAT.h"
 #include "VisionParamKeysVAT.h"
+#include "DefineVAT.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;

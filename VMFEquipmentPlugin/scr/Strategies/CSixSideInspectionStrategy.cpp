@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "CSixSideInspectionStrategy.h"
+#include "SqliteDataRepository.h"
 #include "scr\Protocol\VisionSixSideProcessor.h"
 #include "CSixSideInspectionSequenceBuilder.h"
 

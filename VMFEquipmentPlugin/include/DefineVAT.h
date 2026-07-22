@@ -10,27 +10,6 @@
 // ============================================================================
 
 // --- Sequence Parameter Keys ---
-
-/*
-#define VAT_SEQ_PARAM_CAMERA_INDEX               "CameraIndex"
-#define VAT_SEQ_PARAM_CAM_INDEX                  "CamIndex"
-#define VAT_SEQ_PARAM_PACKAGE_ID                 "PkgID"
-#define VAT_SEQ_PARAM_HAND_ID                    "HandID"
-
-#define VAT_SEQ_PARAM_MAX_INSP_COUNT             "maxInspCount"
-#define VAT_SEQ_PARAM_MOTION_TIMEOUT_MS          "motion_timeout_ms"
-#define VAT_SEQ_PARAM_VISION_TIMEOUT_MS          "vision_timeout_ms"
-#define VAT_SEQ_PARAM_TIMEOUT_MS                 "TimeOutMs"
-
-#define VAT_SEQ_PARAM_WIDE_CHECK                 "wide_check"
-#define VAT_SEQ_PARAM_INSPECTION_TYPE            "InspectionType"
-#define VAT_SEQ_PARAM_MOVE_PART                  "nMovePart"
-#define VAT_SEQ_PARAM_STATUS                     "nStatus"
-
-#define VAT_SEQ_PARAM_TARGET_DIFF_X              "TargetDiffX"
-#define VAT_SEQ_PARAM_TARGET_DIFF_Y              "TargetDiffY"
-*/
-
 #define VAT_SEQ_PARAM_CAMERA_INDEX               "CameraIndex"
 #define VAT_SEQ_PARAM_CAM_INDEX                  "CamIndex"
 #define VAT_SEQ_PARAM_PACKAGE_ID                 "PkgID"
