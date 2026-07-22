@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "CLoad1VATFindAlignPosTask.h"
 #include "DefineVAT.h"
-#include "VisionParamKeysVAT.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;

@@ -3,8 +3,6 @@
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
 #include <cstring>
-#include <sstream>
-
 
 using namespace VMF;
 using namespace VMF_PLUGIN;

@@ -5,10 +5,6 @@
 namespace VMF_PLUGIN
 {
 
-	class Context;
-	class IActuator;
-	class IDataRepository;
-
 	class CLoad1VATMoveToStartPositionTask : public VMF::NonBlockingTaskBase
 	{
         enum Substep
