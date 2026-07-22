@@ -2,8 +2,6 @@
 
 #include "DefaultSetupStrategy.h"
 #include "VMFEquipmentPluginExport.h"
-
-// VMF 핵심 타입들이 정의된 헤더 포함 (전방 선언 대신 사용하여 재정의 방지)
 #include "types.h"
 
 namespace VMF_PLUGIN
