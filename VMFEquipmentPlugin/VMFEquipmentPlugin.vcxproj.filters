@@ -264,4 +264,7 @@
       <Filter>PickPlaceUnit\NonePlateZIG\Sequences</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\docs\PLVI_Vision_Communication_Spec.md" />
+  </ItemGroup>
 </Project>

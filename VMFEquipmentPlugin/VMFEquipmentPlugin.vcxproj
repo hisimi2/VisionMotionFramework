@@ -247,6 +247,9 @@
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.cpp" />
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\docs\PLVI_Vision_Communication_Spec.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
