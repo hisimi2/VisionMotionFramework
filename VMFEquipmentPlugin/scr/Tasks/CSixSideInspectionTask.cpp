@@ -1,5 +1,5 @@
-﻿#include "pch.h"
-#include "C6SideInspectionTask.h"
+#include "pch.h"
+#include "CSixSideInspectionTask.h"
 #include "Context.h"
 #include "IActuator.h"
 #include "..\Protocol\VisionParamKeysSixSide.h"
@@ -7,7 +7,7 @@
 namespace VMF_PLUGIN
 {
 
-	C6SideInspectionTask::C6SideInspectionTask()
+	CSixSideInspectionTask::CSixSideInspectionTask()
 		: m_facePosition(1)
 		, m_selectCount(6)
 		, m_cameraIndex(0)
@@ -16,9 +16,9 @@ namespace VMF_PLUGIN
 		, m_maxRetry(2)
 	{}
 
-	C6SideInspectionTask::~C6SideInspectionTask() {}
+	CSixSideInspectionTask::~CSixSideInspectionTask() {}
 
-	void C6SideInspectionTask::OnInitialize(VMF::Context& ctx)
+	void CSixSideInspectionTask::OnInitialize(VMF::Context& ctx)
 	{
 		// Tag 파라미터에서 읽기
 		m_facePosition = GetTaskSeqParamAs<int>(ctx, "FacePosition");
@@ -31,7 +31,7 @@ namespace VMF_PLUGIN
 		EnterState(TurnOnLight);
 	}
 
-	VMF::TaskResult C6SideInspectionTask::OnPoll(
+	VMF::TaskResult CSixSideInspectionTask::OnPoll(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		switch (GetState())
@@ -46,7 +46,7 @@ namespace VMF_PLUGIN
 		}
 	}
 
-	VMF::TaskResult C6SideInspectionTask::HandleTurnOnLight(
+	VMF::TaskResult CSixSideInspectionTask::HandleTurnOnLight(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (actuator) actuator->SetLightState(m_cameraIndex, true);
@@ -55,7 +55,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── 1102 H→V 요청 ────────────────────────────────────────
-	VMF::TaskResult C6SideInspectionTask::HandleSendInspRequest(
+	VMF::TaskResult CSixSideInspectionTask::HandleSendInspRequest(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		auto vp = ctx.GetVisionProcessorInterface();
@@ -73,7 +73,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── 1102 V→H 수신 대기 ──────────────────────────────────
-	VMF::TaskResult C6SideInspectionTask::HandleWaitInspResult(
+	VMF::TaskResult CSixSideInspectionTask::HandleWaitInspResult(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		auto vp = ctx.GetVisionProcessorInterface();
@@ -99,7 +99,7 @@ namespace VMF_PLUGIN
 	}
 
 // ── 결과 처리 ────────────────────────────────────────────
-	VMF::TaskResult C6SideInspectionTask::HandleProcessResult(
+	VMF::TaskResult CSixSideInspectionTask::HandleProcessResult(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		auto vp = ctx.GetVisionProcessorInterface();
@@ -133,7 +133,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideInspectionTask::HandleTurnOffLight(
+	VMF::TaskResult CSixSideInspectionTask::HandleTurnOffLight(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (actuator) actuator->SetLightState(m_cameraIndex, false);

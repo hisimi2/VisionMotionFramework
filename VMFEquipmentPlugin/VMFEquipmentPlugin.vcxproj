@@ -175,7 +175,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="include\C6SideInspectionStrategy.h" />
+    <ClInclude Include="include\CSixSideInspectionStrategy.h" />
     <ClInclude Include="include\DefineVAT.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
     <ClInclude Include="include\VMFEquipmentPluginExport.h" />
@@ -188,7 +188,7 @@
     <ClInclude Include="scr\Protocol\VisionSixSideProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionVatProcessor.h" />
     <ClInclude Include="scr\Protocol\VisionPlviProcessor.h" />
-    <ClInclude Include="scr\Strategies\C6SideInspectionSequenceBuilder.h" />
+    <ClInclude Include="scr\Strategies\CSixSideInspectionSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATBaseSequenceStrategy.h" />
@@ -197,8 +197,8 @@
     <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceBuilder.h" />
     <ClInclude Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceStrategy.h" />
     <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h" />
-    <ClInclude Include="scr\Tasks\C6SideInspectionTask.h" />
-    <ClInclude Include="scr\Tasks\C6SideMoveToFacePositionTask.h" />
+    <ClInclude Include="scr\Tasks\CSixSideInspectionTask.h" />
+    <ClInclude Include="scr\Tasks\CSixSideMoveToFacePositionTask.h" />
     <ClInclude Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.h" />
     <ClInclude Include="scr\Tasks\CLoad1VATCommitTeachingPosTask.h" />
     <ClInclude Include="scr\Tasks\CLoad1VATFindAlignPosTask.h" />
@@ -223,8 +223,8 @@
     <ClCompile Include="scr\Protocol\VisionSixSideProcessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionVatProcessor.cpp" />
     <ClCompile Include="scr\Protocol\VisionPlviProcessor.cpp" />
-    <ClCompile Include="scr\Strategies\C6SideInspectionSequenceBuilder.cpp" />
-    <ClCompile Include="scr\Strategies\C6SideInspectionStrategy.cpp" />
+    <ClCompile Include="scr\Strategies\CSixSideInspectionSequenceBuilder.cpp" />
+    <ClCompile Include="scr\Strategies\CSixSideInspectionStrategy.cpp" />
     <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceBuilder.cpp" />
     <ClCompile Include="scr\Strategies\CLoad1VATAutoModeSequenceStrategy.cpp" />
     <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceBuilder.cpp" />
@@ -233,8 +233,8 @@
     <ClCompile Include="scr\Strategies\CLoad1VATPlateJigDetachSequenceStrategy.cpp" />
     <ClCompile Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.cpp" />
     <ClCompile Include="scr\Strategies\SetPlate1PLVIStrategy.cpp" />
-    <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp" />
-    <ClCompile Include="scr\Tasks\C6SideMoveToFacePositionTask.cpp" />
+    <ClCompile Include="scr\Tasks\CSixSideInspectionTask.cpp" />
+    <ClCompile Include="scr\Tasks\CSixSideMoveToFacePositionTask.cpp" />
     <ClCompile Include="scr\Tasks\CLoad1VATCommitPickerCamDistanceResultsTask.cpp" />
     <ClCompile Include="scr\Tasks\CLoad1VATCommitTeachingPosTask.cpp" />
     <ClCompile Include="scr\Tasks\CLoad1VATFindAlignPosTask.cpp" />

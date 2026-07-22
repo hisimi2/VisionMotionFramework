@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
 {
 	// ----------------------------------------------------------------
-	// C6SideMoveToFacePositionTask
+	// CSixSideMoveToFacePositionTask
 	//
 	// 각 면 검사 전 모듈을 해당 면이 카메라 앞에 오도록 회전.
 	//
@@ -19,7 +19,7 @@ namespace VMF_PLUGIN
 	//   Front/Top/Rear/Bottom 면 진입 시
 	//   Gripper → 실린더 클램프 전환 후 Turn360 회전
 	// ----------------------------------------------------------------
-	class C6SideMoveToFacePositionTask : public VMF::NonBlockingTaskBase
+	class CSixSideMoveToFacePositionTask : public VMF::NonBlockingTaskBase
 	{
 		enum Substep
 		{
@@ -57,8 +57,8 @@ namespace VMF_PLUGIN
 		VMF::TaskResult HandleWaitCameraZ(VMF::Context& ctx, VMF::IActuator* actuator);
 
 	public:
-		C6SideMoveToFacePositionTask();
-		~C6SideMoveToFacePositionTask() override;
+		CSixSideMoveToFacePositionTask();
+		~CSixSideMoveToFacePositionTask() override;
 
 		std::string GetName() const override
 		{

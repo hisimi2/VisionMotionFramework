@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DefaultSetupStrategy.h"
 #include "SqliteDataRepository.h"
 #include "VMFEquipmentPluginExport.h"
@@ -6,7 +6,7 @@
 
 namespace VMF_PLUGIN
 {
-	class VMF_PLUGIN_API C6SideInspectionStrategy : public VMF::DefaultSetupStrategy
+	class VMF_PLUGIN_API CSixSideInspectionStrategy : public VMF::DefaultSetupStrategy
 	{
 	public:
 		std::string GetSequenceName() const override;

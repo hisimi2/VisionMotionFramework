@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
 {
 
 	// ----------------------------------------------------------------
-	// C6SideInspectionTask
+	// CSixSideInspectionTask
 	//
 	// 1102 H→V: 해당 면 Vision 검사 요청
 	//   Data[0] = 면 번호 (1~6)
@@ -19,7 +19,7 @@ namespace VMF_PLUGIN
 	//   "LotID"        ? Lot ID
 	//   "SelectCount"  ? 선택된 면 총 개수
 	// ----------------------------------------------------------------
-	class C6SideInspectionTask : public VMF::NonBlockingTaskBase
+	class CSixSideInspectionTask : public VMF::NonBlockingTaskBase
 	{
 		enum Substep
 		{
@@ -39,8 +39,8 @@ namespace VMF_PLUGIN
 		VMF::TaskResult HandleTurnOffLight(VMF::Context& ctx, VMF::IActuator* actuator);
 
 	public:
-		C6SideInspectionTask();
-		~C6SideInspectionTask() override;
+		CSixSideInspectionTask();
+		~CSixSideInspectionTask() override;
 
 		std::string GetName() const override
 		{

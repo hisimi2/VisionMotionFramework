@@ -7,7 +7,7 @@
 
 #include "Orchestrator.h"
 #include "SetPlate1PLVIStrategy.h"
-#include "C6SideInspectionStrategy.h"
+#include "CSixSideInspectionStrategy.h"
 
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"
@@ -47,7 +47,7 @@ void CEquipment2015Dlg::RegisterOrchestratorObserver(
 //=============================================================================
 void CEquipment2015Dlg::OnBnClickedVmfStateMachine()
 {
-    auto strategy = std::make_shared<VMF_PLUGIN::C6SideInspectionStrategy>();
+    auto strategy = std::make_shared<VMF_PLUGIN::CSixSideInspectionStrategy>();
 
     m_orchestrator = std::make_shared<VMF::Orchestrator>(
         strategy,

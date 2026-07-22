@@ -84,13 +84,13 @@
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Tasks\C6SideInspectionTask.h">
+    <ClInclude Include="scr\Tasks\CSixSideInspectionTask.h">
       <Filter>ModuleUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Tasks\C6SideMoveToFacePositionTask.h">
+    <ClInclude Include="scr\Tasks\CSixSideMoveToFacePositionTask.h">
       <Filter>ModuleUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="include\C6SideInspectionStrategy.h">
+    <ClInclude Include="include\CSixSideInspectionStrategy.h">
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h">
@@ -159,7 +159,7 @@
     <ClInclude Include="scr\Strategies\CLoad1VATBaseSequenceStrategy.h">
       <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="scr\Strategies\C6SideInspectionSequenceBuilder.h">
+    <ClInclude Include="scr\Strategies\CSixSideInspectionSequenceBuilder.h">
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionPacket.h">
@@ -188,10 +188,10 @@
     <ClCompile Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Tasks\C6SideInspectionTask.cpp">
+    <ClCompile Include="scr\Tasks\CSixSideInspectionTask.cpp">
       <Filter>ModuleUnit\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Tasks\C6SideMoveToFacePositionTask.cpp">
+    <ClCompile Include="scr\Tasks\CSixSideMoveToFacePositionTask.cpp">
       <Filter>ModuleUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="scr\Protocol\CMockSocketConditionVisionProcessor.cpp">
@@ -239,10 +239,10 @@
     <ClCompile Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.cpp">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Strategies\C6SideInspectionStrategy.cpp">
+    <ClCompile Include="scr\Strategies\CSixSideInspectionStrategy.cpp">
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Strategies\C6SideInspectionSequenceBuilder.cpp">
+    <ClCompile Include="scr\Strategies\CSixSideInspectionSequenceBuilder.cpp">
       <Filter>ModuleUnit\SideInspection\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.cpp">

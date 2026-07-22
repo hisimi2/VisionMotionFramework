@@ -1,11 +1,11 @@
-﻿#include "pch.h"
-#include "C6SideMoveToFacePositionTask.h"
+#include "pch.h"
+#include "CSixSideMoveToFacePositionTask.h"
 #include "Context.h"
 
 namespace VMF_PLUGIN
 {
 
-	C6SideMoveToFacePositionTask::C6SideMoveToFacePositionTask()
+	CSixSideMoveToFacePositionTask::CSixSideMoveToFacePositionTask()
 		: m_needCylOp(false)
 		, m_turn180Pos(0.0)
 		, m_turn360Pos(0.0)
@@ -14,9 +14,9 @@ namespace VMF_PLUGIN
 		, m_cylTimeoutMs(5000)
 	{}
 
-	C6SideMoveToFacePositionTask::~C6SideMoveToFacePositionTask() {}
+	CSixSideMoveToFacePositionTask::~CSixSideMoveToFacePositionTask() {}
 
-	void C6SideMoveToFacePositionTask::OnInitialize(VMF::Context& ctx)
+	void CSixSideMoveToFacePositionTask::OnInitialize(VMF::Context& ctx)
 	{
 		// Tag 파라미터에서 이동 정보 읽기
 		m_needCylOp = GetTaskSeqParamAs<int>(ctx, "NeedCylOp") != 0;
@@ -27,7 +27,7 @@ namespace VMF_PLUGIN
 		EnterState(MoveTurn180);
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::OnPoll(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::OnPoll(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		switch (GetState())
@@ -52,7 +52,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── Turn180 이동 ─────────────────────────────────────────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleMoveTurn180(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleMoveTurn180(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (!actuator) return SetErrorAndReturn(ctx, "No Actuator");
@@ -66,7 +66,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitTurn180(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitTurn180(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		VMF::MotionCommand cmd;
@@ -83,7 +83,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── 실린더 Grip (Turn360 진입 전 모듈 클램핑) ────────────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoCylGrip(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleDoCylGrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
@@ -95,7 +95,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitCylGrip(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitCylGrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
@@ -111,7 +111,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── Gripper Safety 이동 (실린더에 모듈 넘긴 후 후퇴) ─────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoGripperSafety(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleDoGripperSafety(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		double gripperSafetyPos = GetTaskSeqParamAs<double>(ctx, "GripperSafetyPos");
@@ -125,7 +125,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitGripperSafety(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitGripperSafety(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		double gripperSafetyPos = GetTaskSeqParamAs<double>(ctx, "GripperSafetyPos", 0.0);
@@ -143,7 +143,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── 실린더 Ungrip ─────────────────────────────────────────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoCylUngrip(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleDoCylUngrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
@@ -155,7 +155,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitCylUngrip(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitCylUngrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 			
@@ -172,7 +172,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── 실린더 후진 ───────────────────────────────────────────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleDoCylBack(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleDoCylBack(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 			
@@ -185,7 +185,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitCylBack(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitCylBack(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 			
@@ -202,7 +202,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── Turn360 이동 ─────────────────────────────────────────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleMoveTurn360(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleMoveTurn360(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		VMF::MotionCommand cmd;
@@ -214,7 +214,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitTurn360(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitTurn360(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		VMF::MotionCommand cmd;
@@ -230,7 +230,7 @@ namespace VMF_PLUGIN
 	}
 
 	// ── CameraZ 이동 ─────────────────────────────────────────
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleMoveCameraZ(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleMoveCameraZ(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (actuator->MoveZ(m_cameraZPos) != VMF::ActError::ActOk)
@@ -240,7 +240,7 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	VMF::TaskResult C6SideMoveToFacePositionTask::HandleWaitCameraZ(
+	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitCameraZ(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 		if (actuator->isMoveZ(m_cameraZPos) == VMF::ActError::ActBusy)
