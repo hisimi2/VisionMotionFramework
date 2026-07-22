@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include <cstring>
+
+
 namespace VMF_PLUGIN
 {
     constexpr size_t STR_LEN = 64;

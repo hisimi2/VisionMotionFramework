@@ -3,7 +3,6 @@
 #include "visioncommunicationmanager.h"
 #include "VisionPacket.h"
 #include "VMFEquipmentPluginExport.h"
-#include "ivisionclient.h"
 
 namespace VMF_PLUGIN
 {

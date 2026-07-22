@@ -2,7 +2,6 @@
 
 #include "visioncommunicationmanager.h"
 #include "VMFEquipmentPluginExport.h"
-#include "ivisionclient.h"
 
 namespace VMF_PLUGIN
 {

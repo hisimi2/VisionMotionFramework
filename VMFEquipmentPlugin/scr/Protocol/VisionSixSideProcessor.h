@@ -2,7 +2,6 @@
 
 #include "visioncommunicationmanager.h"
 #include "VMFEquipmentPluginExport.h"
-#include "ivisionclient.h"
 
 namespace VMF_PLUGIN
 {
@@ -32,7 +31,7 @@ namespace VMF_PLUGIN
 			static_cast<int>(Function::Result));
 	}
 
-class VMF_PLUGIN_API VisionSixSideProcessor : public VMF::VisionCommunicationManager
+    class VMF_PLUGIN_API VisionSixSideProcessor : public VMF::VisionCommunicationManager
 	{
 	public:
 		VisionSixSideProcessor();
