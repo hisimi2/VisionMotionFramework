@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "visioncommunicationmanager.h"
-#include "VisionParamKeysPLVI.h"
 #include "VisionPacket.h"
 #include "VMFEquipmentPluginExport.h"
 #include "ivisionclient.h"

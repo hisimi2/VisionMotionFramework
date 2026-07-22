@@ -2,6 +2,8 @@
 #include "VisionPlviProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
+#include "VisionParamKeysPLVI.h"
+#include "VisionPacket.h"
 #include <cstring>
 
 using namespace VMF;

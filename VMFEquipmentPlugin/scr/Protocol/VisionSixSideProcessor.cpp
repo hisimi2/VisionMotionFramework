@@ -2,6 +2,8 @@
 #include "VisionSixSideProcessor.h"
 #include "SecsMessageDispatcher.h"
 #include "SECSPacket.h"
+#include "VisionParamKeysSixSide.h"
+#include "VisionPacket.h"
 #include <cstring>
 
 using namespace VMF;

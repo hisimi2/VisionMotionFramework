@@ -1,8 +1,6 @@
-﻿#pragma once
+#pragma once
 #include "DefaultSetupStrategy.h"
-//#include "SqliteDataRepository.h"
 #include "VMFEquipmentPluginExport.h"
-//#include <string>
 
 namespace VMF_PLUGIN
 {
