@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSixSideInspectionSequenceBuilder.h"
 #include "..\Tasks\CSixSideMoveToFacePositionTask.h"
 #include "..\Tasks\CSixSideInspectionTask.h"
@@ -146,11 +146,11 @@ VMF::SequencePtr CSixSideInspectionSequenceBuilder::BuildSequence(const std::str
 	{
 		auto moveTask = std::make_shared<CSixSideMoveToFacePositionTask>();
 		VMF::VisionParams mp;
-		mp.visionParams["FacePosition"] = "6";
-		mp.visionParams["Turn180Pos"] = "0.0";
-		mp.visionParams["Turn360Pos"] = "360.0";
-		mp.visionParams["NeedCylOp"] = "0";
-		mp.visionParams["CameraZPos"] = "5.0";
+		mp.visionParams["FacePosition"]     = "6";
+		mp.visionParams["Turn180Pos"]       = "0.0";
+		mp.visionParams["Turn360Pos"]       = "360.0";
+		mp.visionParams["NeedCylOp"]        = "0";
+		mp.visionParams["CameraZPos"]       = "5.0";
 		mp.visionParams["GripperSafetyPos"] = std::to_string(gripperSafetyPos);
 		moveTask->SetTaskParams(mp);
 		seq->AddTask(moveTask);
@@ -159,10 +159,10 @@ VMF::SequencePtr CSixSideInspectionSequenceBuilder::BuildSequence(const std::str
 		auto inspTask = std::make_shared<CSixSideInspectionTask>();
 		VMF::VisionParams ip;
 		ip.visionParams["FacePosition"] = "6";
-		ip.visionParams["BarcodeID"] = barcodeId;
-		ip.visionParams["LotID"] = lotId;
-		ip.visionParams["SelectCount"] = std::to_string(selectCount);
-		ip.visionParams["CameraIndex"] = std::to_string(cameraIndex);
+		ip.visionParams["BarcodeID"]    = barcodeId;
+		ip.visionParams["LotID"]        = lotId;
+		ip.visionParams["SelectCount"]  = std::to_string(selectCount);
+		ip.visionParams["CameraIndex"]  = std::to_string(cameraIndex);
 		inspTask->SetTaskParams(ip);
 		seq->AddTask(inspTask);
 	}

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSixSideInspectionStrategy.h"
 #include "scr\Protocol\VisionSixSideProcessor.h"
 #include "CSixSideInspectionSequenceBuilder.h"

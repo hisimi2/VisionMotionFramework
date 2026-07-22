@@ -16,14 +16,8 @@
     <Filter Include="ModuleUnit">
       <UniqueIdentifier>{109bca8b-8548-4e44-8217-d2d189778575}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ModuleUnit\SideInspection">
-      <UniqueIdentifier>{85fa31bd-da55-4d24-bb86-85c9cc371a23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ModuleUnit\Tasks">
       <UniqueIdentifier>{1fc9d886-f8b3-4dd8-87b9-0e78244c19e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ModuleUnit\SideInspection\Sequences">
-      <UniqueIdentifier>{3fe2501a-3d45-4bd7-8784-fdca4904e107}</UniqueIdentifier>
     </Filter>
     <Filter Include="Protocol">
       <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
@@ -64,6 +58,12 @@
     <Filter Include="PickPlaceUnit\NonePlateZIG\Sequences">
       <UniqueIdentifier>{4df22a44-048f-48ab-a0a3-a990c4ec7bf4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ModuleUnit\SixSide">
+      <UniqueIdentifier>{85fa31bd-da55-4d24-bb86-85c9cc371a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModuleUnit\SixSide\Sequences">
+      <UniqueIdentifier>{3fe2501a-3d45-4bd7-8784-fdca4904e107}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -91,7 +91,7 @@
       <Filter>ModuleUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="include\CSixSideInspectionStrategy.h">
-      <Filter>ModuleUnit\SideInspection\Sequences</Filter>
+      <Filter>ModuleUnit\SixSide\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Strategies\CSetPlate1PLVISequenceBuilder.h">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
@@ -160,7 +160,7 @@
       <Filter>PickPlaceUnit\AutoMode\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Strategies\CSixSideInspectionSequenceBuilder.h">
-      <Filter>ModuleUnit\SideInspection\Sequences</Filter>
+      <Filter>ModuleUnit\SixSide\Sequences</Filter>
     </ClInclude>
     <ClInclude Include="scr\Protocol\VisionPacket.h">
       <Filter>Protocol</Filter>
@@ -240,10 +240,10 @@
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\CSixSideInspectionStrategy.cpp">
-      <Filter>ModuleUnit\SideInspection\Sequences</Filter>
+      <Filter>ModuleUnit\SixSide\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\CSixSideInspectionSequenceBuilder.cpp">
-      <Filter>ModuleUnit\SideInspection\Sequences</Filter>
+      <Filter>ModuleUnit\SixSide\Sequences</Filter>
     </ClCompile>
     <ClCompile Include="scr\Strategies\CLoad1VATPlateJigAttachSequenceStrategy.cpp">
       <Filter>PickPlaceUnit\PlateZIG\Sequences</Filter>

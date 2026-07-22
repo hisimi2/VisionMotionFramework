@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSixSideInspectionTask.h"
 #include "Context.h"
 #include "IActuator.h"
@@ -6,7 +6,6 @@
 
 namespace VMF_PLUGIN
 {
-
 	CSixSideInspectionTask::CSixSideInspectionTask()
 		: m_facePosition(1)
 		, m_selectCount(6)
