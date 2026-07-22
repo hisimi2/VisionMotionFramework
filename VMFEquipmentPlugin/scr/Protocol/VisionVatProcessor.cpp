@@ -44,20 +44,14 @@ bool VisionVatProcessor::RequestSetCokAsync(const StringMap& params)
     body.nCmd = 1000;
     body.nParamCount = 7;
 
-auto it = params.find(VAT::RecipeName);
-    if (it != params.end()) strncpy_s(body.szParam[1], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(VAT::PcdMode);
-    if (it != params.end()) strncpy_s(body.szParam[2], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(VAT::DeviceSizeX);
-    if (it != params.end()) strncpy_s(body.szParam[3], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(VAT::DeviceSizeY);
-    if (it != params.end()) strncpy_s(body.szParam[4], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(VAT::CokType);
-    if (it != params.end()) strncpy_s(body.szParam[5], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(VAT::PickerPitchX);
-    if (it != params.end()) strncpy_s(body.szParam[6], STR_LEN, it->second.c_str(), _TRUNCATE);
-    it = params.find(VAT::PickerPitchY);
-    if (it != params.end()) strncpy_s(body.szParam[7], STR_LEN, it->second.c_str(), _TRUNCATE);
+    // Set parameters using helper function
+    SetPacketParam(body, params, VAT::RecipeName, 1);
+    SetPacketParam(body, params, VAT::PcdMode, 2);
+    SetPacketParam(body, params, VAT::DeviceSizeX, 3);
+    SetPacketParam(body, params, VAT::DeviceSizeY, 4);
+    SetPacketParam(body, params, VAT::CokType, 5);
+    SetPacketParam(body, params, VAT::PickerPitchX, 6);
+    SetPacketParam(body, params, VAT::PickerPitchY, 7);
 
     std::vector<uint8_t> bodyBytes;
     const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
@@ -89,16 +83,12 @@ bool VisionVatProcessor::RequestMeasureAsync(const StringMap& params)
 
     CPacketBody_S107F9 body;
 
-    auto it = params.find(VAT::CameraId);
-    if (it != params.end()) body.nDataID = std::stoi(it->second);
-    it = params.find(VAT::InspectionType);
-    if (it != params.end()) body.nStatus = std::stoi(it->second);
-    it = params.find(VAT::MovePart);
-    if (it != params.end()) body.SetData(0, it->second.c_str());
-    it = params.find(VAT::SaveImage);
-    if (it != params.end()) body.SetData(1, it->second.c_str());
-    it = params.find(VAT::FovDirection);
-    if (it != params.end()) body.SetData(3, it->second.c_str());
+    // Set parameters using helper function - Use CameraIndex (what Builders actually use)
+    SetPacketParam(body, params, VAT::CameraIndex, "nDataID");
+    SetPacketParam(body, params, VAT::InspectionType, "nStatus");
+    SetPacketParam(body, params, VAT::MovePart, 0);
+    SetPacketParam(body, params, VAT::SaveImage, 1);
+    SetPacketParam(body, params, VAT::FovDirection, 3);
 
     std::vector<uint8_t> bodyBytes;
     const uint8_t* p = reinterpret_cast<const uint8_t*>(&body);
@@ -131,6 +121,52 @@ bool VisionVatProcessor::RequestLightAsync(const StringMap& params)
 }
 
 // -----------------------------------------------------------------------
+// Helper: Set packet parameter (non-template implementations)
+// -----------------------------------------------------------------------
+void VisionVatProcessor::SetPacketParam(CPacketBody_S2F41& body, const StringMap& params, const char* key, int index)
+{
+    auto it = params.find(key);
+    if (it != params.end())
+    {
+        std::string value = it->second;
+        if (index >= 0 && static_cast<size_t>(index) < DATA_SIZE)
+        {
+            strncpy_s(body.szParam[index], STR_LEN, value.c_str(), _TRUNCATE);
+        }
+    }
+}
+
+void VisionVatProcessor::SetPacketParam(CPacketBody_S107F9& body, const StringMap& params, const char* key, const char* fieldName)
+{
+    auto it = params.find(key);
+    if (it != params.end())
+    {
+        std::string value = it->second;
+        if (strcmp(fieldName, "nDataID") == 0)
+        {
+            body.nDataID = std::stoi(value);
+        }
+        else if (strcmp(fieldName, "nStatus") == 0)
+        {
+            body.nStatus = std::stoi(value);
+        }
+    }
+}
+
+void VisionVatProcessor::SetPacketParam(CPacketBody_S107F9& body, const StringMap& params, const char* key, int index)
+{
+    auto it = params.find(key);
+    if (it != params.end())
+    {
+        std::string value = it->second;
+        if (index >= 0 && static_cast<size_t>(index) < DATA_SIZE)
+        {
+            strncpy_s(body.cData[index], STR_LEN, value.c_str(), _TRUNCATE);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------
 // [OnSetCok] - SetCok 응답 처리
 // -----------------------------------------------------------------------
 void VisionVatProcessor::OnSetCok(ByteArray body)
@@ -143,7 +179,7 @@ void VisionVatProcessor::OnSetCok(ByteArray body)
     CPacketBody_S2F41 pkt;
     std::memcpy(&pkt, body.data(), sizeof(pkt));
 
-DataMap data;
+    DataMap data;
     data[VATResult::Result] = std::string(pkt.szParam[0]);
     data[VATResult::ServerIndex] = std::string(pkt.szParam[1]);
     data[VATResult::CamStatus] = std::string(pkt.szParam[2]);
@@ -190,7 +226,7 @@ void VisionVatProcessor::OnMeasure(ByteArray body)
         ClearLatestData(Measure); return;
     }
 
-DataMap data;
+    DataMap data;
     data[VATResult::ZFocusValue] = pkt.cData[0];
     data[VATResult::XOffset] = pkt.cData[1];
     data[VATResult::YOffset] = pkt.cData[2];

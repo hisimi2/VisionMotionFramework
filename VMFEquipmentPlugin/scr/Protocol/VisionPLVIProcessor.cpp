@@ -193,3 +193,14 @@ void VisionPlviProcessor::OnSetCok(ByteArray) {}
 void VisionPlviProcessor::OnDeviceCheck(ByteArray) {}
 void VisionPlviProcessor::OnLight(ByteArray) {}
 void VisionPlviProcessor::Process() { VisionCommunicationManager::Process(); }
+
+// ================================================================
+// [ParsePocketResult] Pocket 결과 배열 파싱 헬퍼
+// ================================================================
+std::string VisionPlviProcessor::ParsePocketResult(const CPacketBody_S107F6& pkt,
+    int ctrayX, int ctrayY)
+{
+    // pkt.cData[3]은 이미 "0,99,1,2,11,12,..." 형태의 콤마 구분 문자열
+    // 그대로 반환 (Task에서 필요시 파싱)
+    return std::string(pkt.cData[3]);
+}

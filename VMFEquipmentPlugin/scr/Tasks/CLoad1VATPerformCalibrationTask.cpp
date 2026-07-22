@@ -16,20 +16,6 @@ CLoad1VATPerformCalibrationTask::~CLoad1VATPerformCalibrationTask() {}
 
 void CLoad1VATPerformCalibrationTask::OnInitialize(VMF::Context& ctx)
 {
-    /*
-	VMF::VisionPosition position;
-	if (ctx.PeekVisionPosition(position))
-	{
-		m_targetPosition = position.pos;
-		m_locationId = position.locateId;
-	}
-	else
-	{
-		EnterCommonState(CS_ERROR);
-		return;
-	}
-    */
-
 	m_maxInspectionCount = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MAX_INSP_COUNT, 1);
 	if (m_maxInspectionCount <= 0) m_maxInspectionCount = 1;
 
@@ -147,15 +133,6 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleVisionRequest(VMF::Contex
 
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 
-    /*
-	if (m_locationId == 13) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 4);
-	else if (m_locationId == 5) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 1);
-	else if (m_locationId == 1) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 5);
-	else if (m_locationId == 2) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 6);
-	else if (m_locationId == 3) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 0);
-	else if (m_locationId == 12) ctx.SetSeqParam(VAT_SEQ_PARAM_MOVE_PART, 3);
-    */
-
 	visionProcessor->InitializeRecvThread();
 	if (!ctx.ExecuteVisionCommand(VMF::Measure)) return SetErrorAndReturn(ctx, "Vision Command Failed");
 
@@ -172,14 +149,6 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleVisionWait(VMF::Context& 
 
 	auto data = visionProcessor->GetLatestData(VMF::Measure);
 	double offsetX = 0.0, offsetY = 0.0;
-
-    /*
-	auto itX = data.find(VAT_VISION_KEY_X_OFFSET);
-	if (itX != data.end()) offsetX = std::stod(itX->second);
-	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET);
-	if (itY != data.end()) offsetY = std::stod(itY->second);
-
-    */
 
 	actuator->SetLightState(m_cameraId, false);
 
@@ -212,17 +181,6 @@ VMF::TaskResult CLoad1VATPerformCalibrationTask::HandleSaveCalibrationResult(VMF
 	}
 
 	m_currentPitchMode = VMF::Narrow;
-
-    /*
-	VMF::VisionPosition position;
-	ctx.PopVisionPosition(position);
-
-	if (ctx.IsVisionPositionEmpty()) return VMF::TR_NEXT;
-
-	ctx.PeekVisionPosition(position);
-	m_targetPosition = position.pos;
-	m_locationId = position.locateId;
-    */
 
 	EnterStateWithTimeout(MoveSafeZ, m_moveTimeoutMs);
 	return VMF::TR_NEXT;

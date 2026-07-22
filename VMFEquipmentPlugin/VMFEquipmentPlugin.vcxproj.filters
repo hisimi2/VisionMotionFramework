@@ -176,6 +176,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Equipment2015\VAT\ModuleUnitAdapter.cpp">
+      <Filter>ModuleUnit</Filter>
+    </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

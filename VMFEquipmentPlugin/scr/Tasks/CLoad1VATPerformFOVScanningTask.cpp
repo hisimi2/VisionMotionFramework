@@ -146,8 +146,7 @@ VMF::TaskResult CLoad1VATPerformFOVScanningTask::HandleVisionRequest(VMF::Contex
 		return VMF::TR_KEEP;
 	}
 
-	const int visionRequestId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_FOV_REQUEST_ID);
-	//ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
+const int visionRequestId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_FOV_REQUEST_ID);
 	actuator->SetLightState(m_cameraId, true);
 
 	auto visionProcessor = ctx.GetVisionProcessorInterface();

@@ -22,20 +22,6 @@ CLoad1VATFindAlignPosTask::~CLoad1VATFindAlignPosTask()
 
 void CLoad1VATFindAlignPosTask::OnInitialize(VMF::Context& ctx)
 {
-    /*
-	VMF::VisionPosition position;
-	if (ctx.PeekVisionPosition(position))
-	{
-		m_targetPosition = position.pos;
-		m_locationId = position.locateId;
-	}
-	else
-	{
-		EnterCommonState(CS_ERROR);
-		return;
-	}
-    */
-
 	m_maxInspectionCount = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_MAX_INSP_COUNT, 0);
 	if (m_maxInspectionCount < 0)
 		m_maxInspectionCount = 0;
@@ -174,13 +160,6 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleVisionRequest(VMF::Context& ctx
 	auto visionProcessor = ctx.GetVisionProcessorInterface();
 	visionProcessor->InitializeRecvThread();
 
-
-    /*
-	VMF::VisionPosition position;
-	ctx.PeekVisionPosition(position);
-	ctx.SetSeqParam(VAT_SEQ_PARAM_INSPECTION_TYPE, position.visionRequestId);
-    */
-
 	if (!ctx.ExecuteVisionCommand(VMF::Measure))
 		return SetErrorAndReturn(ctx, "Vision Command Failed");
 
@@ -201,24 +180,6 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleVisionWait(VMF::Context& ctx, V
 
 	double offsetX = 0.0;
 	double offsetY = 0.0;
-
-    /*
-	auto itX = data.find(VAT_VISION_KEY_X_OFFSET);
-	if (itX != data.end()) offsetX = std::stod(itX->second);
-	auto itY = data.find(VAT_VISION_KEY_Y_OFFSET);
-	if (itY != data.end()) offsetY = std::stod(itY->second);
-
-	if (m_cameraId < 6)
-	{
-		m_targetPosition[0] += offsetX;
-		m_targetPosition[1] += offsetY;
-	}
-	else
-	{
-		m_targetPosition[0] -= offsetX;
-		m_targetPosition[1] -= offsetY;
-	}
-    */
 
 	actuator->SetLightState(m_cameraId, false);
 
@@ -246,27 +207,6 @@ VMF::TaskResult CLoad1VATFindAlignPosTask::HandleSaveCalibrationResult(VMF::Cont
 			m_targetPosition[0],
 			m_targetPosition[1]);
 	}
-
-    /*
-	VMF::VisionPosition position;
-	ctx.PopVisionPosition(position);
-
-	position.pos = m_targetPosition;
-	m_alignedPositions.push_back(position);
-
-	if (ctx.IsVisionPositionEmpty())
-	{
-		for (size_t i = 0; i < m_alignedPositions.size(); ++i)
-			ctx.AddVisionPosition(m_alignedPositions[i]);
-
-		m_alignedPositions.clear();
-		return VMF::TR_NEXT;
-	}
-
-	ctx.PeekVisionPosition(position);
-	m_targetPosition = position.pos;
-	m_locationId = position.locateId;
-    */
 
 	EnterStateWithTimeout(VisionRequest, m_moveTimeoutMs);
 	return VMF::TR_PREV;

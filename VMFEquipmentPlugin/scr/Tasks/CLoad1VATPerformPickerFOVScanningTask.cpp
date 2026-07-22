@@ -177,9 +177,7 @@ VMF::TaskResult CLoad1VATPerformPickerFOVScanningTask::HandleVisionRequest(VMF::
 	if (!visionProcessor) return SetErrorAndReturn(ctx, "PickerFOV: No Vision Processor");
 
 	visionProcessor->InitializeRecvThread();
-	const int visionRequestId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_PICKER_FOV_REQUEST_ID);
-	//ctx.SetSeqParam(VAT_SEQ_PARAM_STATUS, visionRequestId);
-
+const int visionRequestId = GetTaskSeqParamAs<int>(ctx, VAT_SEQ_PARAM_VISION_PICKER_FOV_REQUEST_ID);
 	if (!ctx.ExecuteVisionCommand(VMF::Measure)) return SetErrorAndReturn(ctx, "PickerFOV: Vision Command Failed");
 	EnterStateWithTimeout(VisionWait, m_visionTimeoutMs);
 	return VMF::TR_KEEP;

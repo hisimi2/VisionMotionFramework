@@ -1,6 +1,6 @@
 #pragma once
 #include "IActuator.h"
-#include "Actuators\VisionUnitParts.h"
+#include "..\Actuators\VisionUnitParts.h"
 
 namespace VMF_6SIDE
 {

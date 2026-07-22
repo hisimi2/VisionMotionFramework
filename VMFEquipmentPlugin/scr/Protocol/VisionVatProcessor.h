@@ -2,6 +2,7 @@
 
 #include "visioncommunicationmanager.h"
 #include "VMFEquipmentPluginExport.h"
+#include "VisionPacket.h"
 
 namespace VMF_PLUGIN
 {
@@ -60,6 +61,11 @@ private:
         VisionVatProcessor& operator=(const VisionVatProcessor&) = delete;
 
         std::vector<std::string> ParseMeasureBody(const VMF::ByteArray& body);
+
+        // Helper functions for packet parameter setting
+        void SetPacketParam(CPacketBody_S2F41& body, const VMF::StringMap& params, const char* key, int index);
+        void SetPacketParam(CPacketBody_S107F9& body, const VMF::StringMap& params, const char* key, const char* fieldName);
+        void SetPacketParam(CPacketBody_S107F9& body, const VMF::StringMap& params, const char* key, int index);
     };
 
 } // namespace VMF_PLUGIN

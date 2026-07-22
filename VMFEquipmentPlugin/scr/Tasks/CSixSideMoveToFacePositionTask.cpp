@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CSixSideMoveToFacePositionTask.h"
 #include "Context.h"
+#include "..\..\Equipment2015\VAT\ModuleUnitAdapter.h"
 
 namespace VMF_PLUGIN
 {
@@ -82,13 +83,14 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	// ── 실린더 Grip (Turn360 진입 전 모듈 클램핑) ────────────
+// ── 실린더 Grip (Turn360 진입 전 모듈 클램핑) ────────────
 	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleDoCylGrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
-		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
+		auto* moduleActuator = dynamic_cast<VMF_6SIDE::ModuleUnitAdapter*>(actuator);
+		if (!moduleActuator) return SetErrorAndReturn(ctx, "Invalid actuator type for cylinder grip");
 
-		//if (actuator->DoCylGripUngrip(true) != VMF::ActError::ActOk)
+		if (moduleActuator->DoCylGripUngrip(true) != VMF::ActError::ActOk)
 			return SetErrorAndReturn(ctx, "Cyl grip failed");
 
 		EnterStateWithTimeout(WaitCylGrip, m_cylTimeoutMs);
@@ -98,9 +100,10 @@ namespace VMF_PLUGIN
 	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleWaitCylGrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
-		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
+		auto* moduleActuator = dynamic_cast<VMF_6SIDE::ModuleUnitAdapter*>(actuator);
+		if (!moduleActuator) return SetErrorAndReturn(ctx, "Invalid actuator type for cylinder grip check");
 
-		//if (actuator->ChkCylGripUngrip(true) == VMF::ActError::ActBusy)
+		if (moduleActuator->ChkCylGripUngrip(true) == VMF::ActError::ActBusy)
 		{
 			if (IsDeadlineExpired()) return SetErrorAndReturn(ctx, "Cyl grip timeout");
 			return VMF::TR_KEEP;
@@ -142,13 +145,14 @@ namespace VMF_PLUGIN
 		return VMF::TR_KEEP;
 	}
 
-	// ── 실린더 Ungrip ─────────────────────────────────────────
+// ── 실린더 Ungrip ─────────────────────────────────────────
 	VMF::TaskResult CSixSideMoveToFacePositionTask::HandleDoCylUngrip(
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
-		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
+		auto* moduleActuator = dynamic_cast<VMF_6SIDE::ModuleUnitAdapter*>(actuator);
+		if (!moduleActuator) return SetErrorAndReturn(ctx, "Invalid actuator type for cylinder ungrip");
 
-		//if (actuator->DoCylGripUngrip(false) != VMF::ActError::ActOk)
+		if (moduleActuator->DoCylGripUngrip(false) != VMF::ActError::ActOk)
 			return SetErrorAndReturn(ctx, "Cyl ungrip failed");
 
 		EnterStateWithTimeout(WaitCylUngrip, m_cylTimeoutMs);
@@ -159,9 +163,10 @@ namespace VMF_PLUGIN
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 			
-		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
+		auto* moduleActuator = dynamic_cast<VMF_6SIDE::ModuleUnitAdapter*>(actuator);
+		if (!moduleActuator) return SetErrorAndReturn(ctx, "Invalid actuator type for cylinder ungrip check");
 
-		//if (actuator->ChkCylGripUngrip(false) == VMF::ActError::ActBusy)
+		if (moduleActuator->ChkCylGripUngrip(false) == VMF::ActError::ActBusy)
 		{
 			if (IsDeadlineExpired()) return SetErrorAndReturn(ctx, "Cyl ungrip timeout");
 			return VMF::TR_KEEP;
@@ -176,10 +181,11 @@ namespace VMF_PLUGIN
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 			
-		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
+		auto* moduleActuator = dynamic_cast<VMF_6SIDE::ModuleUnitAdapter*>(actuator);
+		if (!moduleActuator) return SetErrorAndReturn(ctx, "Invalid actuator type for cylinder back");
 
-		//if (actuator->DoCylTurnForBack(false) != VMF::ActError::ActOk)
-		//	return SetErrorAndReturn(ctx, "Cyl backward failed");
+		if (moduleActuator->DoCylTurnForBack(false) != VMF::ActError::ActOk)
+			return SetErrorAndReturn(ctx, "Cyl backward failed");
 
 		EnterStateWithTimeout(WaitCylBack, m_cylTimeoutMs);
 		return VMF::TR_KEEP;
@@ -189,9 +195,10 @@ namespace VMF_PLUGIN
 		VMF::Context& ctx, VMF::IActuator* actuator)
 	{
 			
-		if (!actuator) return SetErrorAndReturn(ctx, "Invalid actuator type");
+		auto* moduleActuator = dynamic_cast<VMF_6SIDE::ModuleUnitAdapter*>(actuator);
+		if (!moduleActuator) return SetErrorAndReturn(ctx, "Invalid actuator type for cylinder back check");
 
-		//if (actuator->ChkCylTurnForBack(false) == VMF::ActError::ActBusy)
+		if (moduleActuator->ChkCylTurnForBack(false) == VMF::ActError::ActBusy)
 		{
 			if (IsDeadlineExpired()) return SetErrorAndReturn(ctx, "Cyl backward timeout");
 			return VMF::TR_KEEP;

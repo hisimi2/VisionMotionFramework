@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "Actuators\CAxisController.h"
-#include "Actuators\CylinderTypes.h"
-#include "Actuators\CLamp.h"
+#include "CAxisController.h"
+#include "CylinderTypes.h"
+#include "CLamp.h"
 
 // ----------------------------------------------------------------
 // VisionUnitParts

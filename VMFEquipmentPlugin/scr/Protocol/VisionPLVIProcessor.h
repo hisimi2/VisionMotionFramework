@@ -70,9 +70,9 @@ bool RequestMeasureAsync(const VMF::StringMap& params) override;
 		VisionPlviProcessor(const VisionPlviProcessor&) = delete;
 		VisionPlviProcessor& operator=(const VisionPlviProcessor&) = delete;
 
-		// Pocket 결과 배열 → 콤마 구분 문자열 파싱 헬퍼
+// Pocket 결과 배열 → 콤마 구분 문자열 파싱 헬퍼
 		// ex) "0,99,1,2,11" 형태로 DataMap에 저장
-		std::string ParsePocketResult(const CPacketBody_S107F6& pkt,
+		static std::string ParsePocketResult(const CPacketBody_S107F6& pkt,
 			int ctrayX, int ctrayY);
 	};
 
