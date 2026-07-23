@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ITask.h"
 #include "Context.h"
@@ -315,7 +315,7 @@ namespace VMF
         std::chrono::steady_clock::time_point m_deadline_;
 
     protected:
-
+        VMF::IActuator*                         m_actuator;
         // Task-specific VisionParams (Builder에서 직접 주입)
         VisionParams                          m_taskParams_;
     };

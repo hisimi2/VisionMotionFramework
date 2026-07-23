@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CSixSideMoveToFacePositionTask.h"
 #include "Context.h"
 #include "..\..\Equipment2015\VAT\ModuleUnitAdapter.h"
@@ -6,14 +6,18 @@
 namespace VMF_PLUGIN
 {
 
-	CSixSideMoveToFacePositionTask::CSixSideMoveToFacePositionTask()
+    
+
+    CSixSideMoveToFacePositionTask::CSixSideMoveToFacePositionTask(VMF::IActuator* actuator)
 		: m_needCylOp(false)
 		, m_turn180Pos(0.0)
 		, m_turn360Pos(0.0)
 		, m_cameraZPos(0.0)
 		, m_moveTimeoutMs(10000)
 		, m_cylTimeoutMs(5000)
-	{}
+	{
+        m_actuator = actuator;
+    }
 
 	CSixSideMoveToFacePositionTask::~CSixSideMoveToFacePositionTask() {}
 

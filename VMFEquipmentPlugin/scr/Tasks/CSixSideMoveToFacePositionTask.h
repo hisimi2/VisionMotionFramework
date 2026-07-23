@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
@@ -56,8 +56,8 @@ namespace VMF_PLUGIN
 		VMF::TaskResult HandleMoveCameraZ(VMF::Context& ctx, VMF::IActuator* actuator);
 		VMF::TaskResult HandleWaitCameraZ(VMF::Context& ctx, VMF::IActuator* actuator);
 
-	public:
-		CSixSideMoveToFacePositionTask();
+public:
+		explicit CSixSideMoveToFacePositionTask(VMF::IActuator* actuator=nullptr);
 		~CSixSideMoveToFacePositionTask() override;
 
 		std::string GetName() const override

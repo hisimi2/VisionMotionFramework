@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 #include "Sequence.h"
@@ -43,5 +43,7 @@ namespace VMF
         /// <param name="sequenceName">시퀀스 이름</param>
         /// <returns>조립된 ISequence 객체의 소유권</returns>
         virtual SequencePtr BuildSequence(const std::string& sequenceName) = 0;
+
+        IActuator* m_actuator = nullptr; // 시퀀스 빌더에서 사용할 액추에이터 인터페이스
     };
 }

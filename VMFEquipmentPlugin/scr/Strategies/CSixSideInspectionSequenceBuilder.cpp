@@ -1,10 +1,15 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CSixSideInspectionSequenceBuilder.h"
 #include "..\Tasks\CSixSideMoveToFacePositionTask.h"
 #include "..\Tasks\CSixSideInspectionTask.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
+
+CSixSideInspectionSequenceBuilder::CSixSideInspectionSequenceBuilder(IActuator* actuator)
+{
+    m_actuator = actuator;
+}
 
 VMF::SequencePtr CSixSideInspectionSequenceBuilder::BuildSequence(const std::string& sequenceName)
 {
@@ -17,9 +22,9 @@ VMF::SequencePtr CSixSideInspectionSequenceBuilder::BuildSequence(const std::str
 	const std::string barcodeId = "SN0000001";
 	const std::string lotId = "TESTLOT_20240325_1209";
 
-	// ── 면 1: Left ────────────────────────────────────
+// ── 면 1: Left ────────────────────────────────────
 	{
-		auto moveTask = std::make_shared<CSixSideMoveToFacePositionTask>();
+		auto moveTask = std::make_shared<CSixSideMoveToFacePositionTask>(m_actuator);
 		VMF::VisionParams mp;
 		mp.visionParams["FacePosition"]     = "1";
 		mp.visionParams["Turn180Pos"]       = "10.0";

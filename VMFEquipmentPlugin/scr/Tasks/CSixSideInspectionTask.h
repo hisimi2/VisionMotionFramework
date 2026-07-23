@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
@@ -48,8 +48,7 @@ namespace VMF_PLUGIN
 
 	protected:
 		void            OnInitialize(VMF::Context& ctx) override;
-		VMF::TaskResult OnPoll(VMF::Context& ctx,
-			VMF::IActuator* actuator) override;
+		VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
 	private:
 		int         m_facePosition;   // 1~6

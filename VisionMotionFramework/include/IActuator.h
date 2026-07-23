@@ -135,6 +135,12 @@ namespace VMF
 
 		virtual ActError SetTriggerState(bool enable, double intervalMm) = 0;
 		virtual ActError GetTriggerState(bool& outEnabled, double& outIntervalMm) = 0;
+
+		// ── 실린더 제어 (6면 검사 전용) ──────────────────────────
+		virtual ActError DoCylTurnForBack(bool forward) = 0;
+		virtual ActError ChkCylTurnForBack(bool forward) = 0;
+		virtual ActError DoCylGripUngrip(bool grip) = 0;
+		virtual ActError ChkCylGripUngrip(bool grip) = 0;
 	};
 
 } // namespace VMF

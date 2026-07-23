@@ -176,9 +176,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Equipment2015\VAT\ModuleUnitAdapter.cpp">
-      <Filter>ModuleUnit</Filter>
-    </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -269,5 +266,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\docs\PLVI_Vision_Communication_Spec.md" />
+    <None Include="C:\Users\bongsoo.kim\AppData\Roaming\LazyBugDB\D_01GitHub_PROJECT_VisionMotionFramework_VisionMotionFramework\_skills\VMF Protocol\SKILL.md" />
   </ItemGroup>
 </Project>

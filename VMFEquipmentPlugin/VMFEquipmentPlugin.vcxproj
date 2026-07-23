@@ -96,7 +96,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-<AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;$(ProjectDir)scr\Protocol;$(ProjectDir)..\Equipment2015\Actuators;$(ProjectDir)..\Equipment2015\VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\VisionComm\include;$(ProjectDir)..\VisionMotionFramework\include;$(ProjectDir)..\bin\thirdparty\sqlite3\include;$(ProjectDir);$(ProjectDir)include;$(ProjectDir)scr\Protocol;$(ProjectDir)..\Equipment2015\Actuators;$(ProjectDir)..\Equipment2015\VAT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;VMFEQUIPMENTPLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
@@ -212,7 +212,6 @@
     <ClInclude Include="scr\Tasks\CSetPlate1PLVIPerformScanTask.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Equipment2015\VAT\ModuleUnitAdapter.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -250,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\docs\PLVI_Vision_Communication_Spec.md" />
+    <None Include="C:\Users\bongsoo.kim\AppData\Roaming\LazyBugDB\D_01GitHub_PROJECT_VisionMotionFramework_VisionMotionFramework\_skills\VMF Protocol\SKILL.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
