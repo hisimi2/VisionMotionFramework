@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include <vector>
@@ -11,18 +11,6 @@
 
 namespace VMF
 {
-	enum PitchType
-	{
-		Fixed,      // 비가변
-		Variable    // 가변
-	};
-
-	enum PitchStatus
-	{
-		Narrow,
-		Wide
-	};
-
 	enum ActError
     {
         // ----- 정상 / 진행 상태 -----
@@ -61,60 +49,23 @@ namespace VMF
         ActStateMismatch           // Pitch 등 상태 불일치
     };
 
-	struct AxisCommand
-	{
-		VisionOptional<double> targetPos;  // 목표 위치 (미설정 시 이동 안 함)
-		VisionOptional<double> speed;      // 속도 (mm/s, 미설정 시 장비 기본값)
-		VisionOptional<double> accTime;    // 가속 시간 (ms, 미설정 시 장비 기본값)
-		VisionOptional<double> decTime;    // 감속 시간 (ms, 미설정 시 장비 기본값)
-	};
-
-	struct MotionCommand
-	{
-		std::map<std::string, AxisCommand> axes;
-		PitchStatus                        pitch = Narrow;
-
-		// 위치만 설정
-		void Set(const std::string& axisName, double targetPos)
-		{
-			axes[axisName].targetPos = targetPos;
-		}
-
-		// 위치 + 속도/가감속 설정
-		void SetWithSpeed(const std::string& axisName,
-			double targetPos,
-			double speed,
-			double accTime,
-			double decTime)
-		{
-			AxisCommand& ac = axes[axisName];
-			ac.targetPos = targetPos;
-			ac.speed = speed;
-			ac.accTime = accTime;
-			ac.decTime = decTime;
-		}
-
-		// 해당 축 명령 존재 여부
-		bool Exist(const std::string& axisName) const
-		{
-			return axes.find(axisName) != axes.end();
-		}
-
-		// 해당 축 명령 조회
-		VisionOptional<AxisCommand> Get(const std::string& axisName) const
-		{
-			std::map<std::string, AxisCommand>::const_iterator it = axes.find(axisName);
-			if (it == axes.end()) return{};
-			return it->second;
-		}
-	};
-
 	class VMF_API IActuator
 	{
 	public:
 		IActuator() = default;
 		virtual ~IActuator() = default;
 
+        // 
+        virtual ActError MoveMeasurementLoacation() = 0;
+        virtual ActError IsMeasurementLoacation() = 0;
+
+
+
+
+
+
+
+        /*
 		virtual PitchType GetPitchType() = 0;
 		virtual ActError IsReadyToMove() = 0;
 
@@ -141,6 +92,7 @@ namespace VMF
 		virtual ActError ChkCylTurnForBack(bool forward) = 0;
 		virtual ActError DoCylGripUngrip(bool grip) = 0;
 		virtual ActError ChkCylGripUngrip(bool grip) = 0;
+        */
 	};
 
 } // namespace VMF
