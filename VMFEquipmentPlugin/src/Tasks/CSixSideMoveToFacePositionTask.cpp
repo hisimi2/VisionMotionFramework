@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSixSideMoveToFacePositionTask.h"
 #include "Context.h"
 #include "..\..\Equipment2015\VAT\ModuleUnitAdapter.h"

@@ -17,7 +17,7 @@ VMF::DataRepositoryPtr CSixSideInspectionStrategy::CreateRepository()
     auto repo = std::make_shared<VMF::SqliteDataRepository>(
         "Data\\6SIDE_DATABASE.db", "Data\\Images");
     repo->Initialize();
-    return repo;
+    return repo; 
 }
 
 VMF::VisionProcessorPtr CSixSideInspectionStrategy::CreateVisionProcessor() 

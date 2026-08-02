@@ -125,7 +125,7 @@ namespace VMF_6SIDE
 		return done ? VMF::ActError::ActOk : VMF::ActError::ActBusy;
 	}
 
-	VMF::ActError ModuleUnitAdapter::DoCylGripUngrip(bool grip)
+VMF::ActError ModuleUnitAdapter::DoCylGripUngrip(bool grip)
 	{
 		if (!m_parts) return VMF::ActError::ActFail;
 		grip ? m_parts->GripUngrip.actA(true)
@@ -133,12 +133,81 @@ namespace VMF_6SIDE
 		return VMF::ActError::ActOk;
 	}
 
-	VMF::ActError ModuleUnitAdapter::ChkCylGripUngrip(bool grip)
+VMF::ActError ModuleUnitAdapter::ChkCylGripUngrip(bool grip)
 	{
 		if (!m_parts) return VMF::ActError::ActFail;
 		bool done = grip ? m_parts->GripUngrip.actA(true)
 			: m_parts->GripUngrip.actB(true);
 		return done ? VMF::ActError::ActOk : VMF::ActError::ActBusy;
+	}
+
+	// IActuator 인터페이스 구현: PrepareForInspection 관련 체크 메서드
+	VMF::ActError ModuleUnitAdapter::IsAtPrepareForInspection()
+	{
+		if (!m_parts) return VMF::ActError::ActFail;
+
+		// Gripper Safety 위치에 도달했는지 확인 (Gripper 위치가 0.0인지)
+		if (m_parts->Gripper.GetEncoder() != 0.0)
+			return VMF::ActError::ActFail;
+
+		// TurnForBack 실린더가 전진 위치에 있는지 확인
+		if (m_parts->TurnForBack.actA(true)) // actA(true) = 전진 위치
+			return VMF::ActError::ActOk;
+		if (m_parts->TurnForBack.actB(true)) // actB(true) = 후진 위치
+			return VMF::ActError::ActFail;
+
+		return VMF::ActError::ActOk;
+	}
+
+	// IActuator 인터페이스 구현: CompleteInspection 관련 체크 메서드
+	VMF::ActError ModuleUnitAdapter::IsAtCompleteInspection()
+	{
+		if (!m_parts) return VMF::ActError::ActFail;
+
+		// Gripper가 언클램프 상태인지 확인 (actB(true) = 언클램프)
+		if (m_parts->GripUngrip.actB(true)) // actB(true) = 언클램프
+			return VMF::ActError::ActOk;
+		if (m_parts->GripUngrip.actA(true)) // actA(true) = 클램프 상태
+			return VMF::ActError::ActFail;
+
+		// TurnForBack 실린더가 후진 위치에 있는지 확인
+		if (m_parts->TurnForBack.actB(true)) // actB(true) = 후진 위치
+			return VMF::ActError::ActOk;
+		if (m_parts->TurnForBack.actA(true)) // actA(true) = 전진 위치
+			return VMF::ActError::ActFail;
+
+		return VMF::ActError::ActFail;
+	}
+
+	// ── IActuator 인터페이스 구현: PrepareForInspection ──
+	VMF::ActError ModuleUnitAdapter::PrepareForInspection()
+	{
+		if (!m_parts) return VMF::ActError::ActFail;
+
+		// 1. Gripper Safety 위치로 이동
+		m_parts->Gripper.Move(0.0);  // Safety position
+
+		// 2. 실린더 클램프 (GripUngrip.actA)
+		m_parts->GripUngrip.actA(true);
+
+		// 3. TurnForBack 실린더 전진 (앞쪽 고정)
+		m_parts->TurnForBack.actA(true);
+
+		return VMF::ActError::ActOk;
+	}
+
+	// ── IActuator 인터페이스 구현: CompleteInspection ──
+	VMF::ActError ModuleUnitAdapter::CompleteInspection()
+	{
+		if (!m_parts) return VMF::ActError::ActFail;
+
+		// 1. 실린더 언클램프 (GripUngrip.actB)
+		m_parts->GripUngrip.actB(true);
+
+		// 2. TurnForBack 실린더 후진
+		m_parts->TurnForBack.actB(true);
+
+		return VMF::ActError::ActOk;
 	}
 
 } // namespace VMF_6SIDE

@@ -1,30 +1,28 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
 {
-	
 	class CSetPlate1PLVIPerformScanTask : public VMF::NonBlockingTaskBase
 	{
-
 		// PLVI 파싱 결과 구조체
 		// pocketStatus[row][col] = PLVIPocketCode 값 (0/1/2/11/12/99)
 		struct PLVIStatus
 		{
 			bool resultOK = false;
-			int  overallResult = 1;    // cData[1]: 0=OK, 1=NG
-			int  plviPosition = 0;    // cData[2]: 검사 위치 코드
+			int  overallResult = 1;     // cData[1]: 0=OK, 1=NG
+			int  plviPosition = 0;      // cData[2]: 검사 위치 코드
 			int  rows = 0;
 			int  cols = 0;
 
-			int  normalCount = 0;   // 99
-			int  emptyCount = 0;   // 0
-			int  leaveCount = 0;   // 1
-			int  doubleCount = 0;   // 2
-			int  missingCount = 0;   // 11
-			int  mismatchCount = 0;   // 12
+			int  normalCount = 0;       // 99
+			int  emptyCount = 0;        // 0
+			int  leaveCount = 0;        // 1
+			int  doubleCount = 0;       // 2
+			int  missingCount = 0;      // 11
+			int  mismatchCount = 0;     // 12
 
-										// [row][col] = PLVIPocketCode
+			// [row][col] = PLVIPocketCode
 			std::vector<std::vector<int>> pocketStatus;
 		};
 
@@ -82,8 +80,6 @@ namespace VMF_PLUGIN
 		long   m_timeoutMoveMs;
 
 		std::vector<double> m_scanStartPos;
-
-
         VMF::VisionPosition m_measurepos;
 	};
 }

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CSetPlate1PLVIPerformScanTask.h"
 
 // CMockPLVIEventHandler include 없음 - 순수 인터페이스(IVisionEventHandler)만 사용
@@ -119,14 +119,8 @@ TaskResult CSetPlate1PLVIPerformScanTask::HandlePerformScan(Context& ctx, IActua
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PLVI_PerformScan: actuator is null.");
 
-	MotionCommand cmd;
-	cmd.Set("Y", m_scanEndY);
-	cmd.pitch = Narrow;
-
-	if (cmd.axes.find("Y") != cmd.axes.end())
-		cmd.axes["Y"].speed = m_scanSpeedMmS;
-
-	if (actuator->Move(cmd) != ActOk)
+	// Y축 스캔 이동
+	if (actuator->MoveToY(m_scanEndY) != ActError::ActOk)
 		return SetErrorAndReturn(ctx, "PLVI_PerformScan: Scan move failed.");
 
 	EnterStateWithTimeout(WaitScanComplete, m_timeoutScanMs);
@@ -139,17 +133,15 @@ TaskResult CSetPlate1PLVIPerformScanTask::HandleWaitScanComplete(Context& ctx, I
 	if (!actuator)
 		return SetErrorAndReturn(ctx, "PLVI_PerformScan: actuator is null.");
 
-	MotionCommand cmd;
-	cmd.Set("Y", m_scanEndY);
-
-	if (actuator->isMove(cmd) != ActOk)
+	// Y축 스캔 완료 확인
+	if (actuator->IsAtY(m_scanEndY) != ActError::ActOk)
 	{
 		if (IsDeadlineExpired())
 			return SetErrorAndReturn(ctx, "PLVI_PerformScan: Scan timeout.");
 		return TR_KEEP;
 	}
 
-	actuator->SetTriggerState(0, false);
+	actuator->SetTriggerState(false, 0.0);
 	actuator->SetLaserState(0, false);
 
 	EnterStateWithTimeout(RequestResult, m_timeoutMeasureMs);

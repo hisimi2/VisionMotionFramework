@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -63,5 +63,17 @@ namespace VMF
         // MoveMeasurementLocation() 수행 시 충돌을 방지하기 위해 Z축 또는 실린더를 회피 위치로 이동시킵니다.
         virtual ActError MoveToZSafe() = 0;
         virtual ActError IsAtZSafe(double targetZ) = 0;
+
+        /// 측정 준비 동작: 실린더 클램프 + Gripper Safety 위치로 이동
+        /// Robot 구성에 따라 내부적으로 모터/실린더를 조합하여 수행
+        virtual ActError PrepareForInspection() = 0;
+        /// 측정 준비 완료 여부 확인
+        virtual ActError IsAtPrepareForInspection() = 0;
+
+        /// 측정 완료 동작: 실린더 언클램프 + 후진
+        /// Robot 구성에 따라 내부적으로 모터/실린더를 조합하여 수행
+        virtual ActError CompleteInspection() = 0;
+        /// 측정 완료 여부 확인
+        virtual ActError IsAtCompleteInspection() = 0;
     };
 } // namespace VMF

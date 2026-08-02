@@ -310,13 +310,11 @@ namespace VMF
         bool                                  m_initialized_;
         bool                                  m_hasDeadline_;
         
-        // 동기화 및 시간 관리 멤버를 C++ 표준 라이브러리로 대체
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
 
     protected:
-        VMF::IActuator*                         m_actuator;
-        // Task-specific VisionParams (Builder에서 직접 주입)
+        VMF::IActuator*                        m_actuator;
         VisionParams                          m_taskParams_;
     };
 }

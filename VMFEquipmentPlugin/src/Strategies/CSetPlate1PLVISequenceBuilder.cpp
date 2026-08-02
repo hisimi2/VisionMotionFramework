@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CSetPlate1PLVISequenceBuilder.h"
 
-#include "scr\Tasks\CSetPlate1PLVIMoveToScanStartTask.h"
+#include "scr\Tasks\CSetPlate1CommonMoveToStartTask.h"
 #include "scr\Tasks\CSetPlate1PLVIPerformScanTask.h"
 
 using namespace VMF;
@@ -15,7 +15,7 @@ VMF::SequencePtr CSetPlate1PLVISequenceBuilder::BuildSequence(
 
     // ── MoveToScanStart ─────────────────────────────────
     {
-        auto task = std::make_shared<CSetPlate1PLVIMoveToScanStartTask>();
+        auto task = std::make_shared<CSetPlate1CommonMoveToStartTask>();
         VMF::VisionParams mp;
         mp.visionParams["TIMEOUT_MOVE_MS"] = "7000";
         mp.visionParams["TRIGGER_INTERVAL_MM"] = "2.0";
