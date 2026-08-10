@@ -117,8 +117,4 @@
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\docs\PLVI_Vision_Communication_Spec.md" />
-    <None Include="C:\Users\bongsoo.kim\AppData\Roaming\LazyBugDB\D_01GitHub_PROJECT_VisionMotionFramework_VisionMotionFramework\_skills\VMF Protocol\SKILL.md" />
-  </ItemGroup>
 </Project>
