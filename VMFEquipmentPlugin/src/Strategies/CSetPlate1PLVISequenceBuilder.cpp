@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "CSetPlate1PLVISequenceBuilder.h"
 
-#include "scr\Tasks\CSetPlate1CommonMoveToStartTask.h"
-#include "scr\Tasks\CSetPlate1PLVIPerformScanTask.h"
+#include "src\Tasks\CSetPlate1CommonMoveToStartTask.h"
+#include "src\Tasks\CSetPlate1PLVIPerformScanTask.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
