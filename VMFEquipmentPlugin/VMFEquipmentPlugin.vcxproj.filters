@@ -48,10 +48,10 @@
     <ClInclude Include="src\Strategies\CSetPlate1PLVISequenceBuilder.h">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tasks\CSetPlate1PLVIPerformScanTask.h">
+    <ClInclude Include="src\Tasks\CSetPlate1PLVIFinishTask.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tasks\CSetPlate1CommonMoveToStartTask.h">
+    <ClInclude Include="src\Tasks\CSetPlate1PLVISetupTask.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\CMockSocketConditionVisionProcessor.h">
@@ -78,7 +78,7 @@
     <ClInclude Include="src\Protocol\VisionVatProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="CSetPlate1PLVITriggerTask.h">
+    <ClInclude Include="src\Tasks\CSetPlate1PLVIExecuteScanTask.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,10 +95,10 @@
     <ClCompile Include="src\Strategies\CSetPlate1PLVISequenceBuilder.cpp">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tasks\CSetPlate1PLVIPerformScanTask.cpp">
+    <ClCompile Include="src\Tasks\CSetPlate1PLVIFinishTask.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tasks\CSetPlate1CommonMoveToStartTask.cpp">
+    <ClCompile Include="src\Tasks\CSetPlate1PLVISetupTask.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="src\Protocol\CMockSocketConditionVisionProcessor.cpp">
@@ -113,7 +113,7 @@
     <ClCompile Include="src\Protocol\VisionVatProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="CSetPlate1PLVITriggerTask.cpp">
+    <ClCompile Include="src\Tasks\CSetPlate1PLVIExecuteScanTask.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
   </ItemGroup>
