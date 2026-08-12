@@ -45,14 +45,8 @@ namespace VMF_PLUGIN
         /// </summary>
         void ConfigureContext(VMF::Context& ctx) override;
 
-    protected:
+protected:
         VMF::SequencePtr BuildSequence(
             const std::string& sequenceName) override;
-        
-    private:
-        // Helper: 파라미터 설정
-        void SetParam(VMF::VisionParams& params, const std::string& key, const std::string& value);
-        void SetParam(VMF::VisionParams& params, const std::string& key, int value);
-        void SetParam(VMF::VisionParams& params, const std::string& key, double value);
     };
 } // namespace VMF_PLUGIN

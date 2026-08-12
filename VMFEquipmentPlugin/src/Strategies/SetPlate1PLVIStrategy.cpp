@@ -9,58 +9,6 @@
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-// -----------------------------------------------------------------
-// Helper: VisionParams에 string 값 설정
-// -----------------------------------------------------------------
-void SetPlate1PLVIStrategy::SetParam(VMF::VisionParams& params, const std::string& key, const std::string& value)
-{
-    params.visionParams[key] = value;
-}
-
-// Helper: VisionParams에 int 값 설정
-void SetPlate1PLVIStrategy::SetParam(VMF::VisionParams& params, const std::string& key, int value)
-{
-    params.visionParams[key] = std::to_string(value);
-}
-
-// Helper: VisionParams에 double 값 설정
-void SetPlate1PLVIStrategy::SetParam(VMF::VisionParams& params, const std::string& key, double value)
-{
-    std::ostringstream oss;
-    oss << value;
-    params.visionParams[key] = oss.str();
-}
-
-// -----------------------------------------------------------------
-// Helper: VisionPosition 추가
-// -----------------------------------------------------------------
-void SetPlate1PLVIStrategy::AddVisionPoint(VMF::VisionParams& params, int locateId, int requestId,
-    double x, double y, double z)
-{
-    std::vector<double> pos;
-    pos.push_back(x);
-    pos.push_back(y);
-    pos.push_back(z);
-    params.visionPositions.push_back(
-        VMF::VisionPosition(pos, locateId, requestId));
-}
-
-// -----------------------------------------------------------------
-// Helper: VisionParams를 Repository에 저장
-// -----------------------------------------------------------------
-void SetPlate1PLVIStrategy::SaveVisionParamsToRepo(VMF::VisionContextPtr ctx,
-    const VMF::VisionParams& params)
-{
-    auto repo = ctx->GetRepository();
-    if (!repo)
-        return;
-
-    for (const auto& kv : params.visionParams)
-    {
-        repo->SaveParam("PLVI", kv.first, kv.second);
-    }
-}
-
 std::string SetPlate1PLVIStrategy::GetSequenceName() const
 {
     return "SetPlate1PLVI";
@@ -93,30 +41,53 @@ void SetPlate1PLVIStrategy::ConfigureParams(VMF::VisionContextPtr ctx)
     VMF::VisionParams params;
 
     // 기본 파라미터 설정
-    SetParam(params, "HandID", 1);
-    SetParam(params, "PkgID", 1);
-    SetParam(params, "PLVI_POSITION", 0);
-    SetParam(params, "TIMEOUT_MEASURE_MS", 5000);
-    SetParam(params, "TIMEOUT_SCAN_MS", 15000);
-    SetParam(params, "TIMEOUT_RESULT_MS", 10000);
-    SetParam(params, "TIMEOUT_MOVE_MS", 7000);
-    SetParam(params, "SCAN_SPEED_MM_S", 100.0);
-    SetParam(params, "TRIGGER_INTERVAL_MM", 2.0);
+    auto setParam = [&params](const std::string& key, const std::string& value) {
+        params.visionParams[key] = value;
+    };
+    auto setParamInt = [&params](const std::string& key, int value) {
+        params.visionParams[key] = std::to_string(value);
+    };
+    auto setParamDouble = [&params](const std::string& key, double value) {
+        std::ostringstream oss;
+        oss << value;
+        params.visionParams[key] = oss.str();
+    };
+    auto addVisionPoint = [&params](int locateId, int requestId, double x, double y, double z) {
+        std::vector<double> pos = {x, y, z};
+        params.visionPositions.push_back(VMF::VisionPosition(pos, locateId, requestId));
+    };
+    auto saveVisionParamsToRepo = [&](VMF::VisionContextPtr ctx, const VMF::VisionParams& params) {
+        auto repo = ctx->GetRepository();
+        if (!repo) return;
+        for (const auto& kv : params.visionParams) {
+            repo->SaveParam("PLVI", kv.first, kv.second);
+        }
+    };
+
+    setParamInt("HandID", 1);
+    setParamInt("PkgID", 1);
+    setParamInt("PLVI_POSITION", 0);
+    setParamInt("TIMEOUT_MEASURE_MS", 5000);
+    setParamInt("TIMEOUT_SCAN_MS", 15000);
+    setParamInt("TIMEOUT_RESULT_MS", 10000);
+    setParamInt("TIMEOUT_MOVE_MS", 7000);
+    setParamDouble("SCAN_SPEED_MM_S", 100.0);
+    setParamDouble("TRIGGER_INTERVAL_MM", 2.0);
 
     // Vision 파라미터
-    SetParam(params, "DATA_ID", 1);
-    SetParam(params, "PKG_NAME", "TEST_PKG");
+    setParamInt("DATA_ID", 1);
+    setParam("PKG_NAME", "TEST_PKG");
 
     int ctrayX = 8, ctrayY = 4;
-    SetParam(params, "CTRAY_X", ctrayX);
-    SetParam(params, "CTRAY_Y", ctrayY);
+    setParamInt("CTRAY_X", ctrayX);
+    setParamInt("CTRAY_Y", ctrayY);
 
     // Handler 포켓별 Device 정보 (기본값 Device 종류 = 99)
     const int totalPockets = ctrayX * ctrayY;
     for (int i = 0; i < totalPockets; ++i)
     {
         std::string key = "DEVICE_INFO_" + std::to_string(i);
-        SetParam(params, key, 99);
+        setParamInt(key, 99);
     }
 
     // visionPositions - LoadResult(InspInitPos) 사용
@@ -142,11 +113,10 @@ void SetPlate1PLVIStrategy::ConfigureParams(VMF::VisionContextPtr ctx)
         }
     }*/
 
-    AddVisionPoint(params, nLocateId, nVisionRequestId,
-        scanStartX, scanStartY, scanStartZ);
+    addVisionPoint(nLocateId, nVisionRequestId, scanStartX, scanStartY, scanStartZ);
 
     // Repository에 params 저장
-    SaveVisionParamsToRepo(ctx, params);
+    saveVisionParamsToRepo(ctx, params);
 }
 
 VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetName) const

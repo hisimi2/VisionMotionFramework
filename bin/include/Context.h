@@ -161,7 +161,7 @@ namespace VMF
         /// </summary>
         bool ExecuteVisionCommand(VisionCommand cmd);
 
-        // ── Task 파라미터 관리 ──
+// ── Task 파라미터 관리 ──
         /// <summary>
         /// Task별 파라미터를 설정합니다.
         /// SequenceBuilder가 시퀀스 실행 전에 필요한 파라미터를 설정합니다.
@@ -201,7 +201,7 @@ namespace VMF
         /// </summary>
         std::vector<VisionPosition> GetTaskVisionPositions() const;
 
-        /// <summary>
+/// <summary>
         /// Task별 visionPositions의 첫 번째 위치를 조회합니다.
         /// </summary>
         bool PeekTaskVisionPosition(VisionPosition& outPos) const;

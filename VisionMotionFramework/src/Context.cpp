@@ -110,13 +110,13 @@ DataRepositoryPtr Context::GetRepository() const
         return "";
     }
 
-    std::vector<VisionPosition> Context::GetTaskVisionPositions() const
+std::vector<VisionPosition> Context::GetTaskVisionPositions() const
     {
         LockGuardType guard(m_mutex);
         return m_taskParams.visionPositions;
     }
 
-    bool Context::PeekTaskVisionPosition(VisionPosition& outPos) const
+bool Context::PeekTaskVisionPosition(VisionPosition& outPos) const
     {
         LockGuardType guard(m_mutex);
         if (m_taskParams.visionPositions.empty())

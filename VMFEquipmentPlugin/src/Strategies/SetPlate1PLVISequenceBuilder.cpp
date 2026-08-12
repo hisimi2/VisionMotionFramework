@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVISequenceBuilder.h"
 #include "Context.h"
 
@@ -8,26 +8,6 @@
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
-
-// Helper: VisionParams에 string 값 설정
-void SetPlate1PLVISequenceBuilder::SetParam(VisionParams& params, const std::string& key, const std::string& value)
-{
-    params.visionParams[key] = value;
-}
-
-// Helper: VisionParams에 int 값 설정
-void SetPlate1PLVISequenceBuilder::SetParam(VisionParams& params, const std::string& key, int value)
-{
-    params.visionParams[key] = std::to_string(value);
-}
-
-// Helper: VisionParams에 double 값 설정
-void SetPlate1PLVISequenceBuilder::SetParam(VisionParams& params, const std::string& key, double value)
-{
-    std::ostringstream oss;
-    oss << value;
-    params.visionParams[key] = oss.str();
-}
 
 void SetPlate1PLVISequenceBuilder::ConfigureContext(VMF::Context& ctx)
 {
@@ -40,6 +20,13 @@ void SetPlate1PLVISequenceBuilder::ConfigureContext(VMF::Context& ctx)
     executeParams.visionParams["TIMEOUT_MOVE_MS"] = "7000";
     executeParams.visionParams["TIMEOUT_RESULT_MS"] = "10000";
     
+    // VisionPositions 설정 (시작 위치)
+    VisionPosition startPos;
+    startPos.pos = {0.0, 0.0, 0.0};  // X=0, Y=0, Z=0
+    startPos.locateId = 0;
+    startPos.requestId = 1;
+    executeParams.visionPositions.push_back(startPos);
+    
     // Context에 파라미터 설정
     ctx.SetTaskParams(executeParams);
 }
@@ -51,30 +38,18 @@ VMF::SequencePtr SetPlate1PLVISequenceBuilder::BuildSequence(const std::string& 
     // 1. Setup Task
     {
         auto task = std::make_shared<SetPlate1PLVISetup>();
-        VMF::VisionParams mp;
-        mp.visionParams["TIMEOUT_MOVE_MS"] = "7000";
-        mp.visionParams["TRIGGER_INTERVAL_MM"] = "1.8";
-        task->SetTaskParams(mp);
         seq->AddTask(task);
     }
 
     // 2. Execute Scan Task
     {
         auto task = std::make_shared<SetPlate1PLVIExecuteScan>();
-        VMF::VisionParams ip;
-        ip.visionParams["SCAN_END_Y"] = "200.0";
-        ip.visionParams["TIMEOUT_MOVE_MS"] = "7000";
-        ip.visionParams["TIMEOUT_RESULT_MS"] = "10000";
-        task->SetTaskParams(ip);
         seq->AddTask(task);
     }
 
     // 3. Finish Task
     {
         auto task = std::make_shared<SetPlate1PLVIFinish>();
-        VMF::VisionParams fp;
-        fp.visionParams["TIMEOUT_MOVE_MS"] = "7000";
-        task->SetTaskParams(fp);
         seq->AddTask(task);
     }
 

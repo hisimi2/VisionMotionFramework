@@ -39,7 +39,7 @@ namespace VMF_PLUGIN
         void OnInitialize(VMF::Context& ctx) override;
         VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
-    private:
+private:
         enum SubStep
         {
             MoveSafeZ = 0,
@@ -62,6 +62,5 @@ namespace VMF_PLUGIN
         double              m_scanStartZ;
         double              m_triggerIntervalMm;
         long                m_moveTimeoutMs;
-        VMF::VisionPosition m_measurepos;
     };
 }

@@ -32,20 +32,6 @@ namespace VMF_PLUGIN
      */
     class VMF_PLUGIN_API SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
     {
-    private:
-        // Helper: VisionParams에 값 설정
-        void SetParam(VMF::VisionParams& params, const std::string& key, const std::string& value);
-        void SetParam(VMF::VisionParams& params, const std::string& key, int value);
-        void SetParam(VMF::VisionParams& params, const std::string& key, double value);
-
-        // Helper: VisionPosition 추가
-        void AddVisionPoint(VMF::VisionParams& params, int locateId, int requestId,
-            double x, double y, double z);
-
-        // Helper: VisionParams를 Repository에 저장
-        void SaveVisionParamsToRepo(VMF::VisionContextPtr ctx,
-            const VMF::VisionParams& params);
-
     public:
         std::string GetSequenceName() const override;
         VMF::DataRepositoryPtr CreateRepository() override;

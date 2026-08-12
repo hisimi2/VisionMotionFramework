@@ -19,11 +19,12 @@ void SetPlate1PLVISetup::OnInitialize(VMF::Context& ctx)
     m_triggerIntervalMm = ctx.GetTaskParamAs<double>("TRIGGER_INTERVAL_MM", 1.8);
 
     // Context에서 visionPositions 조회
-    if (ctx.PeekTaskVisionPosition(m_measurepos))
+    auto positions = ctx.GetTaskVisionPositions();
+    if (!positions.empty())
     {
-        m_scanStartX = m_measurepos.pos[0];
-        m_scanStartY = m_measurepos.pos[1];
-        m_scanStartZ = m_measurepos.pos[2];
+        m_scanStartX = positions.back().pos[0];
+        m_scanStartY = positions.back().pos[1];
+        m_scanStartZ = positions.back().pos[2];
     }
 
     EnterState(MoveSafeZ);
