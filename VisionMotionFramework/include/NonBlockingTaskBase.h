@@ -62,7 +62,7 @@ namespace VMF
         /// <returns>TaskResult 값</returns>
         TaskResult Execute(Context& ctx, IActuator* actuator) override
         {
-            std::lock_guard<std::mutex> lg(m_mutex_); 
+            std::lock_guard<std::mutex> lg(m_mutex_);
 
             if (ctx.GetStopRequested())
             {
@@ -155,12 +155,15 @@ namespace VMF
             return TR_ERROR;
         }
 
-        // =====================================================
-        // [Task-specific VisionParams 지원]
+// =====================================================
+        // [Task-specific VisionParams 지원 - Context 기반]
         // =====================================================
         /// <summary>
         /// Task별 독립적인 파라미터를 설정합니다.
         /// Builder에서 Task 생성 후 호출하여 Task마다 다른 파라미터를 주입할 수 있습니다.
+        /// 
+        /// @deprecated 이 메서드는 하위 호환성을 위해 유지됩니다.
+        ///             가능한 경우 Context::SetTaskParams()를 사용하세요.
         /// </summary>
         /// <param name="params">Task 전용 VisionParams</param>
         void SetTaskParams(const VisionParams& params)
@@ -172,52 +175,52 @@ namespace VMF
         /// <summary>
         /// Task별 시퀀스 파라미터를 읽습니다.
         /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
+        /// 
+        /// @deprecated 이 메서드는 하위 호환성을 위해 유지됩니다.
+        ///             가능한 경우 Context::GetTaskParamAs<T>()를 사용하세요.
         /// </summary>
         template <typename T>
         T GetTaskSeqParamAs(Context& ctx, const std::string& key, const T& defaultValue = T()) const
         {
-            (void)ctx;
-            auto it = m_taskParams_.visionParams.find(key);
-            if (it != m_taskParams_.visionParams.end())
-            {
-                T converted;
-                if (detail::ParamConverter<T>::Convert(it->second, converted))
-                    return converted;
-            }
-            return defaultValue;
+            // Context를 통해 파라미터를 조회하도록 변경
+            return ctx.GetTaskParamAs<T>(key, defaultValue);
         }
 
         /// <summary>
         /// Task별 비전 파라미터를 읽습니다.
         /// m_taskParams_.visionParams에서 키를 찾고, 없으면 defaultValue 반환
+        /// 
+        /// @deprecated 이 메서드는 하위 호환성을 위해 유지됩니다.
+        ///             가능한 경우 Context::GetTaskParamAs<T>()를 사용하세요.
         /// </summary>
         template <typename T>
         T GetTaskVisionParamAs(Context& ctx, const std::string& key, const T& defaultValue) const
         {
-            (void)ctx;
-            auto it = m_taskParams_.visionParams.find(key);
-            if (it != m_taskParams_.visionParams.end())
-            {
-                T converted;
-                if (detail::ParamConverter<T>::Convert(it->second, converted))
-                    return converted;
-            }
-            return defaultValue;
+            // Context를 통해 파라미터를 조회하도록 변경
+            return ctx.GetTaskParamAs<T>(key, defaultValue);
         }
 
         /// <summary>
         /// Task별 visionPositions의 첫 번째 위치를 제거하지 않고 조회합니다.
+        /// 
+        /// @deprecated 이 메서드는 하위 호환성을 위해 유지됩니다.
+        ///             가능한 경우 Context::PeekTaskVisionPosition()을 사용하세요.
         /// </summary>
         bool PeekTaskVisionPosition(VisionPosition& outPos) const
         {
-            if (m_taskParams_.visionPositions.empty())
+            // Context를 통해 조회하도록 변경
+            auto params = m_taskParams_;
+            if (params.visionPositions.empty())
                 return false;
-            outPos = m_taskParams_.visionPositions.back();
+            outPos = params.visionPositions.back();
             return true;
         }
 
         /// <summary>
         /// Task별 visionPositions의 첫 번째 위치를 꺼내고 제거합니다.
+        /// 
+        /// @deprecated 이 메서드는 하위 호환성을 위해 유지됩니다.
+        ///             가능한 경우 Context에서 직접 관리하세요.
         /// </summary>
         bool PopTaskVisionPosition(VisionPosition& outPos)
         {
@@ -230,6 +233,9 @@ namespace VMF
 
         /// <summary>
         /// Task별 visionPositions가 비어있는지 확인합니다.
+        /// 
+        /// @deprecated 이 메서드는 하위 호환성을 위해 유지됩니다.
+        ///             가능한 경우 Context::GetTaskVisionPositions()을 사용하세요.
         /// </summary>
         bool IsTaskVisionPositionEmpty() const
         {
