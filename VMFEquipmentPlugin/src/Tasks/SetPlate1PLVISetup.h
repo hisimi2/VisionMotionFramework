@@ -1,13 +1,13 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
 {
-    class CSetPlate1PLVISetupTask : public VMF::NonBlockingTaskBase
+    class SetPlate1PLVISetup : public VMF::NonBlockingTaskBase
     {
     public:
-        CSetPlate1PLVISetupTask();
-        virtual ~CSetPlate1PLVISetupTask();
+        SetPlate1PLVISetup();
+        virtual ~SetPlate1PLVISetup();
 
         std::string GetName() const override
         {

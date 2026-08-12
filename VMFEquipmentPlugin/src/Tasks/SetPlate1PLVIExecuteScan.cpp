@@ -1,17 +1,17 @@
-﻿#include "pch.h"
-#include "CSetPlate1PLVIExecuteScanTask.h"
+#include "pch.h"
+#include "SetPlate1PLVIExecuteScan.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-CSetPlate1PLVIExecuteScanTask::CSetPlate1PLVIExecuteScanTask()
+SetPlate1PLVIExecuteScan::SetPlate1PLVIExecuteScan()
     : m_scanEndY(200.0), m_timeoutMoveMs(7000), m_timeoutResultMs(10000)
 {
 }
 
-CSetPlate1PLVIExecuteScanTask::~CSetPlate1PLVIExecuteScanTask() {}
+SetPlate1PLVIExecuteScan::~SetPlate1PLVIExecuteScan() {}
 
-void CSetPlate1PLVIExecuteScanTask::OnInitialize(VMF::Context& ctx)
+void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
 {
     m_timeoutMoveMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_MOVE_MS");
     m_timeoutResultMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_RESULT_MS");
@@ -20,7 +20,7 @@ void CSetPlate1PLVIExecuteScanTask::OnInitialize(VMF::Context& ctx)
     EnterState(MoveMeasurementArea);
 }
 
-VMF::TaskResult CSetPlate1PLVIExecuteScanTask::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIExecuteScan::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     switch (GetState())
     {
@@ -34,7 +34,7 @@ VMF::TaskResult CSetPlate1PLVIExecuteScanTask::OnPoll(VMF::Context& ctx, VMF::IA
 }
 
 // 측정 영역 이동 (IActuator 호환 버전)
-VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleMoveMeasurementArea(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIExecuteScan::HandleMoveMeasurementArea(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: actuator is null.");
@@ -51,7 +51,7 @@ VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleMoveMeasurementArea(VMF::Co
 }
 
 // 측정 영역 도착 확인
-VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleWaitMeasurementArea(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIExecuteScan::HandleWaitMeasurementArea(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: actuator is null.");
@@ -75,7 +75,7 @@ VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleWaitMeasurementArea(VMF::Co
 }
 
 // 결과 요청
-VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleRequestResult(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIExecuteScan::HandleRequestResult(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     auto vp = ctx.GetVisionProcessorInterface();
     if (!vp)
@@ -91,7 +91,7 @@ VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleRequestResult(VMF::Context&
 }
 
 // 결과 응답 확인
-VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleWaitResult(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIExecuteScan::HandleWaitResult(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     auto vp = ctx.GetVisionProcessorInterface();
     if (!vp)
@@ -108,7 +108,7 @@ VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleWaitResult(VMF::Context& ct
 }
 
 // 완료
-VMF::TaskResult CSetPlate1PLVIExecuteScanTask::HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIExecuteScan::HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     (void)ctx;
     (void)actuator;

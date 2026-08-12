@@ -187,10 +187,10 @@
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h" />
     <ClInclude Include="src\Protocol\VisionSixSideProcessor.h" />
     <ClInclude Include="src\Protocol\VisionVatProcessor.h" />
-    <ClInclude Include="src\Strategies\CSetPlate1PLVISequenceBuilder.h" />
-    <ClInclude Include="src\Tasks\CSetPlate1PLVIExecuteScanTask.h" />
-    <ClInclude Include="src\Tasks\CSetPlate1PLVISetupTask.h" />
-    <ClInclude Include="src\Tasks\CSetPlate1PLVIFinishTask.h" />
+    <ClInclude Include="src\Strategies\SetPlate1PLVISequenceBuilder.h" />
+    <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h" />
+    <ClInclude Include="src\Tasks\SetPlate1PLVISetup.h" />
+    <ClInclude Include="src\Tasks\SetPlate1PLVIFinish.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -204,11 +204,11 @@
     <ClCompile Include="src\Protocol\VisionPLVIProcessor.cpp" />
     <ClCompile Include="src\Protocol\VisionSixSideProcessor.cpp" />
     <ClCompile Include="src\Protocol\VisionVatProcessor.cpp" />
-    <ClCompile Include="src\Strategies\CSetPlate1PLVISequenceBuilder.cpp" />
+    <ClCompile Include="src\Strategies\SetPlate1PLVISequenceBuilder.cpp" />
     <ClCompile Include="src\Strategies\SetPlate1PLVIStrategy.cpp" />
-    <ClCompile Include="src\Tasks\CSetPlate1PLVIExecuteScanTask.cpp" />
-    <ClCompile Include="src\Tasks\CSetPlate1PLVISetupTask.cpp" />
-    <ClCompile Include="src\Tasks\CSetPlate1PLVIFinishTask.cpp" />
+    <ClCompile Include="src\Tasks\SetPlate1PLVIExecuteScan.cpp" />
+    <ClCompile Include="src\Tasks\SetPlate1PLVISetup.cpp" />
+    <ClCompile Include="src\Tasks\SetPlate1PLVIFinish.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

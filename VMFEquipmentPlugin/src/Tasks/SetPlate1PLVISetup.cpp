@@ -1,18 +1,18 @@
-﻿#include "pch.h"
-#include "CSetPlate1PLVISetupTask.h"
+#include "pch.h"
+#include "SetPlate1PLVISetup.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-CSetPlate1PLVISetupTask::CSetPlate1PLVISetupTask()
+SetPlate1PLVISetup::SetPlate1PLVISetup()
     : m_scanStartX(0.0), m_scanStartY(0.0), m_scanStartZ(0.0)
     , m_triggerIntervalMm(1.8), m_moveTimeoutMs(7000)
 {
 }
 
-CSetPlate1PLVISetupTask::~CSetPlate1PLVISetupTask() {}
+SetPlate1PLVISetup::~SetPlate1PLVISetup() {}
 
-void CSetPlate1PLVISetupTask::OnInitialize(VMF::Context& ctx)
+void SetPlate1PLVISetup::OnInitialize(VMF::Context& ctx)
 {
     m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_MOVE_MS");
     m_triggerIntervalMm = GetTaskSeqParamAs<double>(ctx, "TRIGGER_INTERVAL_MM");
@@ -27,7 +27,7 @@ void CSetPlate1PLVISetupTask::OnInitialize(VMF::Context& ctx)
     EnterState(MoveSafeZ);
 }
 
-VMF::TaskResult CSetPlate1PLVISetupTask::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     switch (GetState())
     {
@@ -42,7 +42,7 @@ VMF::TaskResult CSetPlate1PLVISetupTask::OnPoll(VMF::Context& ctx, VMF::IActuato
 }
 
 // Z축 안전 위치로 이동
-VMF::TaskResult CSetPlate1PLVISetupTask::HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Setup: actuator is null.");
@@ -55,7 +55,7 @@ VMF::TaskResult CSetPlate1PLVISetupTask::HandleMoveSafeZ(VMF::Context& ctx, VMF:
 }
 
 // Z축 안전 위치 도착 확인
-VMF::TaskResult CSetPlate1PLVISetupTask::HandleWaitSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::HandleWaitSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Setup: actuator is null.");
@@ -72,7 +72,7 @@ VMF::TaskResult CSetPlate1PLVISetupTask::HandleWaitSafeZ(VMF::Context& ctx, VMF:
 }
 
 // 수평 시작 위치로 이동
-VMF::TaskResult CSetPlate1PLVISetupTask::HandleMoveHorizontalStart(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::HandleMoveHorizontalStart(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Setup: actuator is null.");
@@ -88,7 +88,7 @@ VMF::TaskResult CSetPlate1PLVISetupTask::HandleMoveHorizontalStart(VMF::Context&
 }
 
 // 수평 시작 위치 도착 확인
-VMF::TaskResult CSetPlate1PLVISetupTask::HandleWaitHorizontalStart(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::HandleWaitHorizontalStart(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Setup: actuator is null.");
@@ -108,7 +108,7 @@ VMF::TaskResult CSetPlate1PLVISetupTask::HandleWaitHorizontalStart(VMF::Context&
 }
 
 // 트리거 신호 발생 설정
-VMF::TaskResult CSetPlate1PLVISetupTask::HandleSetupTrigger(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::HandleSetupTrigger(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Setup: actuator is null.");
@@ -124,7 +124,7 @@ VMF::TaskResult CSetPlate1PLVISetupTask::HandleSetupTrigger(VMF::Context& ctx, V
 }
 
 // 완료
-VMF::TaskResult CSetPlate1PLVISetupTask::HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVISetup::HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     (void)ctx;
     (void)actuator;

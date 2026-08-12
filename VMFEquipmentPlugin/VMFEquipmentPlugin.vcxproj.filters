@@ -45,13 +45,13 @@
     <ClInclude Include="include\SetPlate1PLVIStrategy.h">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="src\Strategies\CSetPlate1PLVISequenceBuilder.h">
+    <ClInclude Include="src\Strategies\SetPlate1PLVISequenceBuilder.h">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tasks\CSetPlate1PLVIFinishTask.h">
+    <ClInclude Include="src\Tasks\SetPlate1PLVIFinish.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tasks\CSetPlate1PLVISetupTask.h">
+    <ClInclude Include="src\Tasks\SetPlate1PLVISetup.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\CMockSocketConditionVisionProcessor.h">
@@ -78,7 +78,7 @@
     <ClInclude Include="src\Protocol\VisionVatProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tasks\CSetPlate1PLVIExecuteScanTask.h">
+    <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,13 +92,13 @@
     <ClCompile Include="src\Strategies\SetPlate1PLVIStrategy.cpp">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClCompile>
-    <ClCompile Include="src\Strategies\CSetPlate1PLVISequenceBuilder.cpp">
+    <ClCompile Include="src\Strategies\SetPlate1PLVISequenceBuilder.cpp">
       <Filter>SetplateUnit\PLVI\Sequences</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tasks\CSetPlate1PLVIFinishTask.cpp">
+    <ClCompile Include="src\Tasks\SetPlate1PLVIFinish.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tasks\CSetPlate1PLVISetupTask.cpp">
+    <ClCompile Include="src\Tasks\SetPlate1PLVISetup.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="src\Protocol\CMockSocketConditionVisionProcessor.cpp">
@@ -113,7 +113,7 @@
     <ClCompile Include="src\Protocol\VisionVatProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tasks\CSetPlate1PLVIExecuteScanTask.cpp">
+    <ClCompile Include="src\Tasks\SetPlate1PLVIExecuteScan.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 #include "SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
-#include "..\Strategies\CSetPlate1PLVISequenceBuilder.h"
+#include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
 #include <sstream>
 #include <vector>
 
@@ -84,7 +84,7 @@ VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVisionProcessor()
 
 VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 {
-    return std::make_shared<VMF_PLUGIN::CSetPlate1PLVISequenceBuilder>();
+    return std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
 }
 
 void SetPlate1PLVIStrategy::ConfigureParams(VMF::VisionContextPtr ctx)

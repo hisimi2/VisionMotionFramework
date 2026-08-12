@@ -1,23 +1,23 @@
-﻿#include "pch.h"
-#include "CSetPlate1PLVIFinishTask.h"
+#include "pch.h"
+#include "SetPlate1PLVIFinish.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-CSetPlate1PLVIFinishTask::CSetPlate1PLVIFinishTask()
+SetPlate1PLVIFinish::SetPlate1PLVIFinish()
     : m_moveTimeoutMs(7000)
 {
 }
 
-CSetPlate1PLVIFinishTask::~CSetPlate1PLVIFinishTask() {}
+SetPlate1PLVIFinish::~SetPlate1PLVIFinish() {}
 
-void CSetPlate1PLVIFinishTask::OnInitialize(VMF::Context& ctx)
+void SetPlate1PLVIFinish::OnInitialize(VMF::Context& ctx)
 {
     m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_MOVE_MS");
     EnterState(MoveSafeZ);
 }
 
-VMF::TaskResult CSetPlate1PLVIFinishTask::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIFinish::OnPoll(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     switch (GetState())
     {
@@ -31,7 +31,7 @@ VMF::TaskResult CSetPlate1PLVIFinishTask::OnPoll(VMF::Context& ctx, VMF::IActuat
 }
 
 // Z축 안전 위치로 이동
-VMF::TaskResult CSetPlate1PLVIFinishTask::HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIFinish::HandleMoveSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Finish: actuator is null.");
@@ -44,7 +44,7 @@ VMF::TaskResult CSetPlate1PLVIFinishTask::HandleMoveSafeZ(VMF::Context& ctx, VMF
 }
 
 // Z축 안전 위치 도착 확인
-VMF::TaskResult CSetPlate1PLVIFinishTask::HandleWaitSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIFinish::HandleWaitSafeZ(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Finish: actuator is null.");
@@ -61,7 +61,7 @@ VMF::TaskResult CSetPlate1PLVIFinishTask::HandleWaitSafeZ(VMF::Context& ctx, VMF
 }
 
 // 대기 위치로 이동
-VMF::TaskResult CSetPlate1PLVIFinishTask::HandleMoveHome(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIFinish::HandleMoveHome(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Finish: actuator is null.");
@@ -74,7 +74,7 @@ VMF::TaskResult CSetPlate1PLVIFinishTask::HandleMoveHome(VMF::Context& ctx, VMF:
 }
 
 // 대기 위치 도착 확인
-VMF::TaskResult CSetPlate1PLVIFinishTask::HandleWaitHome(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIFinish::HandleWaitHome(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_Finish: actuator is null.");
@@ -90,7 +90,7 @@ VMF::TaskResult CSetPlate1PLVIFinishTask::HandleWaitHome(VMF::Context& ctx, VMF:
 }
 
 // 완료
-VMF::TaskResult CSetPlate1PLVIFinishTask::HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator)
+VMF::TaskResult SetPlate1PLVIFinish::HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator)
 {
     (void)ctx;
     (void)actuator;

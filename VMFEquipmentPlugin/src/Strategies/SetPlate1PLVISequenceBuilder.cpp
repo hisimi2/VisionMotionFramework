@@ -1,20 +1,20 @@
-﻿#include "pch.h"
-#include "CSetPlate1PLVISequenceBuilder.h"
+#include "pch.h"
+#include "SetPlate1PLVISequenceBuilder.h"
 
-#include "src\Tasks\CSetPlate1PLVISetupTask.h"
-#include "src\Tasks\CSetPlate1PLVIExecuteScanTask.h"
-#include "src\Tasks\CSetPlate1PLVIFinishTask.h"
+#include "src\Tasks\SetPlate1PLVISetup.h"
+#include "src\Tasks\SetPlate1PLVIExecuteScan.h"
+#include "src\Tasks\SetPlate1PLVIFinish.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-VMF::SequencePtr CSetPlate1PLVISequenceBuilder::BuildSequence(const std::string& sequenceName)
+VMF::SequencePtr SetPlate1PLVISequenceBuilder::BuildSequence(const std::string& sequenceName)
 {
     VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
     // 1. Setup Task
     {
-        auto task = std::make_shared<CSetPlate1PLVISetupTask>();
+        auto task = std::make_shared<SetPlate1PLVISetup>();
         VMF::VisionParams mp;
         mp.visionParams["TIMEOUT_MOVE_MS"] = "7000";
         mp.visionParams["TRIGGER_INTERVAL_MM"] = "1.8";
@@ -24,7 +24,7 @@ VMF::SequencePtr CSetPlate1PLVISequenceBuilder::BuildSequence(const std::string&
 
     // 2. Execute Scan Task
     {
-        auto task = std::make_shared<CSetPlate1PLVIExecuteScanTask>();
+        auto task = std::make_shared<SetPlate1PLVIExecuteScan>();
         VMF::VisionParams ip;
         ip.visionParams["SCAN_END_Y"] = "200.0";
         ip.visionParams["TIMEOUT_MOVE_MS"] = "7000";
@@ -35,7 +35,7 @@ VMF::SequencePtr CSetPlate1PLVISequenceBuilder::BuildSequence(const std::string&
 
     // 3. Finish Task
     {
-        auto task = std::make_shared<CSetPlate1PLVIFinishTask>();
+        auto task = std::make_shared<SetPlate1PLVIFinish>();
         VMF::VisionParams fp;
         fp.visionParams["TIMEOUT_MOVE_MS"] = "7000";
         task->SetTaskParams(fp);

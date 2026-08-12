@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DefaultSetupStrategy.h"
 #include "VMFEquipmentPluginExport.h"
@@ -8,7 +8,7 @@ namespace VMF_PLUGIN
 {
     // 전방 선언만 필요한 클래스들
     class VisionPlviProcessor;
-    class CSetPlate1PLVISequenceBuilder;
+    class SetPlate1PLVISequenceBuilder;
     class SqliteDataRepository;
 
     class VMF_PLUGIN_API SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
