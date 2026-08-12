@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVIFinish.h"
 
 using namespace VMF;
@@ -13,7 +13,8 @@ SetPlate1PLVIFinish::~SetPlate1PLVIFinish() {}
 
 void SetPlate1PLVIFinish::OnInitialize(VMF::Context& ctx)
 {
-    m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_MOVE_MS");
+    // Context를 통해 파라미터를 전달받아 사용
+    m_moveTimeoutMs = ctx.GetTaskParamAs<int>("TIMEOUT_MOVE_MS", 7000);
     EnterState(MoveSafeZ);
 }
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVISetup.h"
 
 using namespace VMF;
@@ -14,10 +14,12 @@ SetPlate1PLVISetup::~SetPlate1PLVISetup() {}
 
 void SetPlate1PLVISetup::OnInitialize(VMF::Context& ctx)
 {
-    m_moveTimeoutMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_MOVE_MS");
-    m_triggerIntervalMm = GetTaskSeqParamAs<double>(ctx, "TRIGGER_INTERVAL_MM");
+    // Context를 통해 파라미터를 전달받아 사용
+    m_moveTimeoutMs = ctx.GetTaskParamAs<int>("TIMEOUT_MOVE_MS", 7000);
+    m_triggerIntervalMm = ctx.GetTaskParamAs<double>("TRIGGER_INTERVAL_MM", 1.8);
 
-    if (PeekTaskVisionPosition(m_measurepos))
+    // Context에서 visionPositions 조회
+    if (ctx.PeekTaskVisionPosition(m_measurepos))
     {
         m_scanStartX = m_measurepos.pos[0];
         m_scanStartY = m_measurepos.pos[1];

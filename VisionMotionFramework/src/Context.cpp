@@ -87,4 +87,41 @@ DataRepositoryPtr Context::GetRepository() const
         LockGuardType guard(m_mutex);
         return m_repo;
     }
+
+    // ── Task 파라미터 관리 구현 ──
+    void Context::SetTaskParams(const VisionParams& params)
+    {
+        LockGuardType guard(m_mutex);
+        m_taskParams = params;
+    }
+
+    VisionParams Context::GetTaskParams() const
+    {
+        LockGuardType guard(m_mutex);
+        return m_taskParams;
+    }
+
+    std::string Context::GetTaskParam(const std::string& key) const
+    {
+        LockGuardType guard(m_mutex);
+        auto it = m_taskParams.visionParams.find(key);
+        if (it != m_taskParams.visionParams.end())
+            return it->second;
+        return "";
+    }
+
+    std::vector<VisionPosition> Context::GetTaskVisionPositions() const
+    {
+        LockGuardType guard(m_mutex);
+        return m_taskParams.visionPositions;
+    }
+
+    bool Context::PeekTaskVisionPosition(VisionPosition& outPos) const
+    {
+        LockGuardType guard(m_mutex);
+        if (m_taskParams.visionPositions.empty())
+            return false;
+        outPos = m_taskParams.visionPositions.back();
+        return true;
+    }
 }

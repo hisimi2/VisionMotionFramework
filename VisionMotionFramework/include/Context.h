@@ -161,9 +161,55 @@ namespace VMF
         /// </summary>
         bool ExecuteVisionCommand(VisionCommand cmd);
 
+        // ── Task 파라미터 관리 ──
+        /// <summary>
+        /// Task별 파라미터를 설정합니다.
+        /// SequenceBuilder가 시퀀스 실행 전에 필요한 파라미터를 설정합니다.
+        /// </summary>
+        void SetTaskParams(const VisionParams& params);
+
+        /// <summary>
+        /// Task별 파라미터를 반환합니다.
+        /// Task가 Context를 통해 파라미터를 읽어올 때 사용합니다.
+        /// </summary>
+        VisionParams GetTaskParams() const;
+
+        /// <summary>
+        /// Task별 파라미터에서 문자열 값을 조회합니다.
+        /// </summary>
+        std::string GetTaskParam(const std::string& key) const;
+
+        /// <summary>
+        /// Task별 파라미터에서 지정한 타입의 값을 조회합니다.
+        /// </summary>
+        template <typename T>
+        T GetTaskParamAs(const std::string& key, const T& defaultValue = T()) const
+        {
+            auto params = GetTaskParams();
+            auto it = params.visionParams.find(key);
+            if (it != params.visionParams.end())
+            {
+                T converted;
+                if (detail::ParamConverter<T>::Convert(it->second, converted))
+                    return converted;
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Task별 visionPositions을 조회합니다.
+        /// </summary>
+        std::vector<VisionPosition> GetTaskVisionPositions() const;
+
+        /// <summary>
+        /// Task별 visionPositions의 첫 번째 위치를 조회합니다.
+        /// </summary>
+        bool PeekTaskVisionPosition(VisionPosition& outPos) const;
+
 private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
+        VisionParams            m_taskParams;
         
         mutable std::mutex      m_mutex;
         std::string             m_lastError;

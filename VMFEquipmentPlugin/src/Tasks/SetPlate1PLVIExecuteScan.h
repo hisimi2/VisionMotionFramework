@@ -1,8 +1,28 @@
-#pragma once
+﻿#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
 {
+    /**
+     * @brief SetPlate1 PLVI 측정 실행 Task
+     * 
+     * PLVI 측정을 실제로 실행하는 작업을 수행합니다.
+     * 
+     * @details
+     * 이 Task는 4개의 SubStep으로 구성되어 측정 영역으로 이동하고 결과를 수신합니다.
+     * 
+     * ┌─────────────────────────────────────────────────────────────┐
+     * │ SubStep                 │ 설명                             │
+     * ├─────────────────────────┼──────────────────────────────────┤
+     * │ MoveMeasurementArea     │ 측정 영역으로 이동               │
+     * │ WaitMeasurementArea     │ 측정 영역 도착 대기              │
+     * │ RequestResult           │ 측정 결과 요청                   │
+     * │ WaitResult              │ 측정 결과 수신 대기              │
+     * │ Complete                │ Task 완료                        │
+     * └─────────────────────────┴──────────────────────────────────┘
+     * 
+     * @note 총 4개의 SubStep으로 구성됨
+     */
     class SetPlate1PLVIExecuteScan : public VMF::NonBlockingTaskBase
     {
     public:

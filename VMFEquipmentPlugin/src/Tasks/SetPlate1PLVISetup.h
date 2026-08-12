@@ -1,8 +1,29 @@
-#pragma once
+﻿#pragma once
 #include "NonBlockingTaskBase.h"
 
 namespace VMF_PLUGIN
 {
+    /**
+     * @brief SetPlate1 PLVI 측정 준비 Task
+     * 
+     * PLVI 측정을 시작하기 전의 준비 작업을 수행합니다.
+     * 
+     * @details
+     * 이 Task는 5개의 SubStep으로 구성되어 측정 준비를 완료합니다.
+     * 
+     * ┌─────────────────────────────────────────────────────────────┐
+     * │ SubStep                 │ 설명                               │
+     * ├─────────────────────────┼──────────────────────────────────┤
+     * │ MoveSafeZ               │ Z축 안전 위치로 이동             │
+     * │ WaitSafeZ               │ Z축 안전 위치 도착 대기          │
+     * │ MoveHorizontalStart     │ 수평 시작 위치로 이동            │
+     * │ WaitHorizontalStart     │ 수평 시작 위치 도착 대기         │
+     * │ SetupTrigger            │ 트리거 신호 및 레이저 설정       │
+     * │ Complete                │ Task 완료                        │
+     * └─────────────────────────┴──────────────────────────────────┘
+     * 
+     * @note 총 5개의 SubStep으로 구성됨
+     */
     class SetPlate1PLVISetup : public VMF::NonBlockingTaskBase
     {
     public:

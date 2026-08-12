@@ -6,6 +6,8 @@
 
 namespace VMF
 {
+    class Context;
+
     /// <summary>
     /// 특정 작업(Strategy)에 필요한 시퀀스를 구성(Build)하는 역할 클래스입니다.
     /// </summary>
@@ -35,6 +37,13 @@ namespace VMF
         {
             return BuildSequence(sequenceName);
         }
+
+        /// <summary>
+        /// 시퀀스 실행 전 Context에 필요한 파라미터를 설정합니다.
+        /// SequenceBuilder가 시퀀스 실행 전에 필요한 파라미터를 Context에 저장합니다.
+        /// </summary>
+        /// <param name="ctx">파라미터를 설정할 Context</param>
+        virtual void ConfigureContext(VMF::Context& ctx) {}
 
     protected:
         /// <summary>

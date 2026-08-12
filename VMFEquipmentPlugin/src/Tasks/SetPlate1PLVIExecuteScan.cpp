@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVIExecuteScan.h"
 
 using namespace VMF;
@@ -13,9 +13,10 @@ SetPlate1PLVIExecuteScan::~SetPlate1PLVIExecuteScan() {}
 
 void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
 {
-    m_timeoutMoveMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_MOVE_MS");
-    m_timeoutResultMs = GetTaskSeqParamAs<int>(ctx, "TIMEOUT_RESULT_MS");
-    m_scanEndY = GetTaskSeqParamAs<double>(ctx, "SCAN_END_Y");
+    // Context를 통해 파라미터를 전달받아 사용
+    m_timeoutMoveMs = ctx.GetTaskParamAs<int>("TIMEOUT_MOVE_MS", 7000);
+    m_timeoutResultMs = ctx.GetTaskParamAs<int>("TIMEOUT_RESULT_MS", 10000);
+    m_scanEndY = ctx.GetTaskParamAs<double>("SCAN_END_Y", 200.0);
 
     EnterState(MoveMeasurementArea);
 }

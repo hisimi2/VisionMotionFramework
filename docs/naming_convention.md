@@ -1,4 +1,4 @@
-content = '''# VisionMotionFramework 네이밍 규칙
+# VisionMotionFramework 네이밍 규칙
 
 ## 1. 네이밍 컨벤션 개요
 
@@ -208,7 +208,7 @@ VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 
 ### 8.1 코드 스타일
 - **들여쓰기**: 4 spaces (탭 금지)
-- **줄 끝**: Windows CRLF (`\\r\\n`)
+- **줄 끝**: Windows CRLF (`\r\n`)
 - **주석**: Doxygen 스타일 `/** */` 사용
 
 ### 8.2 네임스페이스
@@ -224,9 +224,3 @@ VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 **버전**: 1.0  
 **작성일**: 2024  
 **작성자**: VisionMotionFramework 팀
-'''
-
-with open('D:/01GitHub_PROJECT/VisionMotionFramework/docs/naming_convention.md', 'w', encoding='utf-8') as f:
-    f.write(content)
-    
-print("Document written successfully")

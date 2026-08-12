@@ -63,7 +63,7 @@ DataRepositoryPtr RunController::GetRepository() const
         }
     }
 
-    // C++14: 헤더 수정 사항에 맞춰 const std::string& 형태로 매개변수 일치
+// C++14: 헤더 수정 사항에 맞춰 const std::string& 형태로 매개변수 일치
     bool RunController::RunSequence(const std::string& sequenceName)
     {
         if (!m_pBuilder)
@@ -74,6 +74,12 @@ DataRepositoryPtr RunController::GetRepository() const
         if (!m_pRunner)
         {
             return false;
+        }
+
+        // Context에 파라미터 설정 (시퀀스 실행 전)
+        if (m_pBuilder)
+        {
+            m_pBuilder->ConfigureContext(*m_pCtx);
         }
 
         // boost::unique_ptr 가 아닌 std::unique_ptr 반환
