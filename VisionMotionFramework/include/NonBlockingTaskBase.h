@@ -16,16 +16,15 @@ namespace VMF
     /// 각 스텝은 상태를 가지며 OnInitialize / OnPoll 패턴으로 실행됩니다.
     /// 스레드 안전을 위해 내부적으로 std::mutex를 사용하며, 타임아웃(데드라인) 기능을 제공합니다.
     /// 
-    /// [Task-specific VisionParams]
-    /// Task별로 독립적인 VisionParams를 설정할 수 있습니다.
-    /// SetTaskParams()로 설정하면, GetTaskSeqParamAs / GetTaskVisionParamAs 로 조회합니다.
+    /// [Context 기반 파라미터]
+    /// Task는 Context를 통해 파라미터를 전달받습니다.
+    /// SequenceBuilder가 시퀀스 실행 전 Context에 파라미터를 설정하고,
+    /// Task는 ctx.GetTaskParamAs<T>()로 조회합니다.
     /// 
     /// 사용 예:
-    ///   auto moveTask = std::make_shared<TaskLoad1MoveToStartPosition>();
-    ///   VisionParams moveParams;
-    ///   moveParams.visionParams["TargetX"] = "125.3";
-    ///   moveTask->SetTaskParams(moveParams);
-    ///   seq->AddTask(moveTask);
+    ///   void OnInitialize(VMF::Context& ctx) override {
+    ///       m_timeoutMs = ctx.GetTaskParamAs<int>("TIMEOUT_MS", 5000);
+    ///   }
     /// </summary>
     class NonBlockingTaskBase : public ITask
     {
