@@ -1,9 +1,9 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 
 #include <string>
-#include <memory> 
-#include "Context.h" 
+#include <memory>
+#include "Context.h"
 
 namespace VMF
 {
@@ -19,7 +19,6 @@ namespace VMF
         TR_ERROR    // 에러 발생(시퀀스 중단)
     };
     
-
     /**
      * @class ITask
      * @brief 시퀀스를 구성하는 단위 작업(Step) 인터페이스
@@ -32,6 +31,9 @@ namespace VMF
         // 비차단 실행 함수: 호출할 때마다 짧게 실행되어야 함.
         virtual TaskResult Execute(Context& ctx, IActuator* actuator) = 0;
         virtual TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) = 0;
+
+        virtual void OnInitialize(VMF::Context& ctx) = 0;
+        virtual VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) = 0;
 
         // 중단 시 필요한 정리 작업(하드웨어 안전 복귀 등)
         virtual void Abort() = 0;

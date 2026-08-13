@@ -51,7 +51,7 @@ void SetPlate1PLVISequenceBuilder::ConfigureContext(VMF::Context& ctx)
     VisionPosition startPos;
     startPos.pos = {0.0, 0.0, 0.0};  // X=0, Y=0, Z=0
     startPos.locateId = 0;
-    startPos.requestId = 1;
+    startPos.visionRequestId = 1;
     params.visionPositions.push_back(startPos);
     
     // Context에 파라미터 설정

@@ -154,6 +154,36 @@ namespace VMF
             return TR_ERROR;
         }
 
+        /// <summary>
+        /// 현재 상태를 반환합니다.
+        /// </summary>
+        int GetState() const
+        {
+            return m_state_;
+        }
+
+        /// <summary>
+        /// 지정한 상태로 전이하고 타임아웃(데드라인)을 설정합니다.
+        /// </summary>
+        /// <param name="newState">진입할 상태 식별자</param>
+        /// <param name="timeoutMs">타임아웃 시간(밀리초)</param>
+        void EnterStateWithTimeout(int newState, long timeoutMs)
+        {
+            m_state_ = newState;
+            m_hasDeadline_ = true;
+            m_deadline_ = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutMs);
+        }
+
+        /// <summary>
+        /// 설정된 데드라인(타임아웃)이 만료되었는지 확인합니다.
+        /// </summary>
+        bool IsDeadlineExpired() const
+        {
+            if (!m_hasDeadline_)
+                return false;
+            return std::chrono::steady_clock::now() > m_deadline_;
+        }
+
 private:
         int                                   m_state_;
         bool                                  m_initialized_;
@@ -162,7 +192,7 @@ private:
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
 
-    protected:
+protected:
         VMF::IActuator*                        m_actuator;
     };
 }
