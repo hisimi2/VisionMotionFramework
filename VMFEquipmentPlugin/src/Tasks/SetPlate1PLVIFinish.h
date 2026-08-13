@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "NonBlockingTaskBase.h"
+#include "IParamProvider.h"
 
 namespace VMF_PLUGIN
 {
@@ -22,6 +23,13 @@ namespace VMF_PLUGIN
      * └─────────────────────────┴──────────────────────────────────┘
      * 
      * @note 총 4개의 SubStep으로 구성됨
+     * 
+     * @note 사용하는 파라미터 (IParamProvider를 통해 조회):
+     *   - timeoutMoveMs (int): 이동 타임아웃 [ms], 기본값 7000
+     * 
+     * @note 테스트 용이성:
+     *   IParamProvider 인터페이스를 통해 파라미터를 조회하므로,
+     *   단위 테스트 시 MockParamProvider를 주입하여 테스트할 수 있습니다.
      */
     class SetPlate1PLVIFinish : public VMF::NonBlockingTaskBase
     {

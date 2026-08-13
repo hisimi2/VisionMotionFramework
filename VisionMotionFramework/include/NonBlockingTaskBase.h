@@ -191,8 +191,5 @@ private:
         
         mutable std::mutex                    m_mutex_;
         std::chrono::steady_clock::time_point m_deadline_;
-
-protected:
-        VMF::IActuator*                        m_actuator;
     };
 }

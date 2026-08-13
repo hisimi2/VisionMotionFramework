@@ -154,6 +154,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\CMockVisionEventHandler.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVisionOptional.h" />
+    <ClInclude Include="include\IParamProvider.h" />
     <ClInclude Include="include\Mock\CMockVisionProcessor.h" />
     <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\VMF_API.h" />

@@ -1,12 +1,14 @@
 ﻿#include "pch.h"
 #include "SetPlate1PLVISetup.h"
+#include "IParamProvider.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
 SetPlate1PLVISetup::SetPlate1PLVISetup()
     : m_scanStartX(0.0), m_scanStartY(0.0), m_scanStartZ(0.0)
-    , m_triggerIntervalMm(1.8), m_moveTimeoutMs(7000)
+    , m_triggerIntervalMm(1.8)
+    , m_moveTimeoutMs(7000)
 {
 }
 
@@ -14,18 +16,15 @@ SetPlate1PLVISetup::~SetPlate1PLVISetup() {}
 
 void SetPlate1PLVISetup::OnInitialize(VMF::Context& ctx)
 {
-    // Context를 통해 파라미터를 전달받아 사용
-    m_moveTimeoutMs = ctx.GetTaskParamAs<int>("TIMEOUT_MOVE_MS", 7000);
-    m_triggerIntervalMm = ctx.GetTaskParamAs<double>("TRIGGER_INTERVAL_MM", 1.8);
-
-    // Context에서 visionPositions 조회
-    auto positions = ctx.GetTaskVisionPositions();
-    if (!positions.empty())
-    {
-        m_scanStartX = positions.back().pos[0];
-        m_scanStartY = positions.back().pos[1];
-        m_scanStartZ = positions.back().pos[2];
-    }
+    // IParamProvider 인터페이스를 통해 Setup Task 전용 파라미터를 조회
+    // Context가 IParamProvider를 구현하므로 직접 호출 가능
+    const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
+    auto setupParams = provider.GetSetupParams();
+    m_moveTimeoutMs = setupParams.timeoutMoveMs;
+    m_triggerIntervalMm = setupParams.triggerIntervalMm;
+    m_scanStartX = setupParams.startPos.pos[0];
+    m_scanStartY = setupParams.startPos.pos[1];
+    m_scanStartZ = setupParams.startPos.pos[2];
 
     EnterState(MoveSafeZ);
 }

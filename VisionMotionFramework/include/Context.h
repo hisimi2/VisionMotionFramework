@@ -4,6 +4,7 @@
 
 #include "IVisionClient.h"
 #include "IDataRepository.h"
+#include "IParamProvider.h"
 
 #include <cstdlib>
 #include <sstream>
@@ -103,7 +104,7 @@ namespace VMF
 
     } // namespace detail
 
-    class VMF_API Context : public std::enable_shared_from_this<Context>
+    class VMF_API Context : public std::enable_shared_from_this<Context>, public IParamProvider
     {
     public:
         /// <summary>
@@ -165,22 +166,50 @@ namespace VMF
         /// <summary>
         /// Task별 파라미터를 설정합니다.
         /// SequenceBuilder가 시퀀스 실행 전에 필요한 파라미터를 설정합니다.
+        /// Task가 다양해질 것을 대비하여 Task별 파라미터 구조체를 사용합니다.
         /// </summary>
-        void SetTaskParams(const VisionParams& params);
+        void SetTaskParams(const TaskParams& params);
 
         /// <summary>
         /// Task별 파라미터를 반환합니다.
         /// Task가 Context를 통해 파라미터를 읽어올 때 사용합니다.
         /// </summary>
-        VisionParams GetTaskParams() const;
+        TaskParams GetTaskParams() const;
 
         /// <summary>
-        /// Task별 파라미터에서 문자열 값을 조회합니다.
+        /// Setup Task 전용 파라미터를 반환합니다.
         /// </summary>
-        std::string GetTaskParam(const std::string& key) const;
+        SetPlate1PLVISetupParams GetSetupParams() const override;
 
         /// <summary>
-        /// Task별 파라미터에서 지정한 타입의 값을 조회합니다.
+        /// ExecuteScan Task 전용 파라미터를 반환합니다.
+        /// </summary>
+        SetPlate1PLVIExecuteScanParams GetExecuteScanParams() const override;
+
+        /// <summary>
+        /// Finish Task 전용 파라미터를 반환합니다.
+        /// </summary>
+        SetPlate1PLVIFinishParams GetFinishParams() const override;
+
+        /// <summary>
+        /// Task별 visionPositions을 조회합니다.
+        /// </summary>
+        std::vector<VisionPosition> GetVisionPositions() const override;
+
+/// <summary>
+        /// Task별 visionPositions의 마지막 위치를 조회합니다.
+        /// </summary>
+        bool PeekVisionPosition(VisionPosition& outPos) const override;
+
+        /// <summary>
+        /// 하위 호환성을 위한 문자열 파라미터 조회 (권장되지 않음)
+        /// @deprecated 새로운 코드에서는 Task별 파라미터 구조체 전용 함수를 사용하세요.
+        /// </summary>
+        std::string GetParam(const std::string& key) const override;
+
+        /// <summary>
+        /// 하위 호환성을 위한 타입 변환 파라미터 조회 (권장되지 않음)
+        /// @deprecated 새로운 코드에서는 Task별 파라미터 구조체 전용 함수를 사용하세요.
         /// </summary>
         template <typename T>
         T GetTaskParamAs(const std::string& key, const T& defaultValue = T()) const
@@ -196,20 +225,10 @@ namespace VMF
             return defaultValue;
         }
 
-        /// <summary>
-        /// Task별 visionPositions을 조회합니다.
-        /// </summary>
-        std::vector<VisionPosition> GetTaskVisionPositions() const;
-
-/// <summary>
-        /// Task별 visionPositions의 첫 번째 위치를 조회합니다.
-        /// </summary>
-        bool PeekTaskVisionPosition(VisionPosition& outPos) const;
-
 private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
-        VisionParams            m_taskParams;
+        TaskParams              m_taskParams;
         
         mutable std::mutex      m_mutex;
         std::string             m_lastError;

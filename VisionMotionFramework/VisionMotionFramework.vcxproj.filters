@@ -165,6 +165,9 @@
     <ClInclude Include="include\VisionCommunicationManager.h">
       <Filter>VisionProcessor</Filter>
     </ClInclude>
+    <ClInclude Include="include\IParamProvider.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt">

@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Context.h"
+#include "IParamProvider.h"
 
 #include <string>
 #include <memory>
@@ -14,7 +15,6 @@ namespace VMF
     {
     }
 
-    // 소멸자는 헤더 파일에 명시되어 있다면 cpp에 포함하지만 본 파일 구현에서는 간결한 형태로 둡니다
     Context::~Context() = default;
 
     void Context::SetVisionProcessor(VisionProcessorPtr vp)
@@ -60,9 +60,6 @@ namespace VMF
         if (!m_processor)
             return false;
 
-        // visionParams는 더 이상 전역으로 관리하지 않음.
-        // ExecuteVisionCommand는 프로세서를 통해 명령만 실행하고,
-        // 파라미터는 각 Task가 미리 설정한 VisionProcessor를 통해 전달됩니다.
         bool ret = false;
 
 		switch (cmd)
@@ -82,46 +79,64 @@ namespace VMF
         m_repo = repo;
     }
 
-DataRepositoryPtr Context::GetRepository() const
+    DataRepositoryPtr Context::GetRepository() const
     {
         LockGuardType guard(m_mutex);
         return m_repo;
     }
 
-    // ── Task 파라미터 관리 구현 ──
-    void Context::SetTaskParams(const VisionParams& params)
+    // ── Task 파라미터 관리 구현 (IParamProvider 인터페이스 구현) ──
+    void Context::SetTaskParams(const TaskParams& params)
     {
         LockGuardType guard(m_mutex);
         m_taskParams = params;
     }
 
-    VisionParams Context::GetTaskParams() const
+    TaskParams Context::GetTaskParams() const
     {
         LockGuardType guard(m_mutex);
         return m_taskParams;
     }
 
-    std::string Context::GetTaskParam(const std::string& key) const
+    SetPlate1PLVISetupParams Context::GetSetupParams() const
     {
         LockGuardType guard(m_mutex);
-        auto it = m_taskParams.visionParams.find(key);
-        if (it != m_taskParams.visionParams.end())
-            return it->second;
-        return "";
+        return m_taskParams.setup;
     }
 
-std::vector<VisionPosition> Context::GetTaskVisionPositions() const
+    SetPlate1PLVIExecuteScanParams Context::GetExecuteScanParams() const
+    {
+        LockGuardType guard(m_mutex);
+        return m_taskParams.executeScan;
+    }
+
+    SetPlate1PLVIFinishParams Context::GetFinishParams() const
+    {
+        LockGuardType guard(m_mutex);
+        return m_taskParams.finish;
+    }
+
+    std::vector<VisionPosition> Context::GetVisionPositions() const
     {
         LockGuardType guard(m_mutex);
         return m_taskParams.visionPositions;
     }
 
-bool Context::PeekTaskVisionPosition(VisionPosition& outPos) const
+    bool Context::PeekVisionPosition(VisionPosition& outPos) const
     {
         LockGuardType guard(m_mutex);
         if (m_taskParams.visionPositions.empty())
             return false;
         outPos = m_taskParams.visionPositions.back();
         return true;
+    }
+
+    std::string Context::GetParam(const std::string& key) const
+    {
+        LockGuardType guard(m_mutex);
+        auto it = m_taskParams.visionParams.find(key);
+        if (it != m_taskParams.visionParams.end())
+            return it->second;
+        return "";
     }
 }

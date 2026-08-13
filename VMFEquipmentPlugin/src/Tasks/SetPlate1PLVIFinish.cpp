@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "SetPlate1PLVIFinish.h"
+#include "IParamProvider.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
@@ -13,8 +14,10 @@ SetPlate1PLVIFinish::~SetPlate1PLVIFinish() {}
 
 void SetPlate1PLVIFinish::OnInitialize(VMF::Context& ctx)
 {
-    // Context를 통해 파라미터를 전달받아 사용
-    m_moveTimeoutMs = ctx.GetTaskParamAs<int>("TIMEOUT_MOVE_MS", 7000);
+    // IParamProvider 인터페이스를 통해 Finish Task 전용 파라미터를 조회
+    const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
+    auto finishParams = provider.GetFinishParams();
+    m_moveTimeoutMs = finishParams.timeoutMoveMs;
     EnterState(MoveSafeZ);
 }
 

@@ -1,11 +1,14 @@
 ﻿#include "pch.h"
 #include "SetPlate1PLVIExecuteScan.h"
+#include "IParamProvider.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
 SetPlate1PLVIExecuteScan::SetPlate1PLVIExecuteScan()
-    : m_scanEndY(200.0), m_timeoutMoveMs(7000), m_timeoutResultMs(10000)
+    : m_scanEndY(200.0)
+    , m_timeoutMoveMs(7000)
+    , m_timeoutResultMs(10000)
 {
 }
 
@@ -13,10 +16,12 @@ SetPlate1PLVIExecuteScan::~SetPlate1PLVIExecuteScan() {}
 
 void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
 {
-    // Context를 통해 파라미터를 전달받아 사용
-    m_timeoutMoveMs = ctx.GetTaskParamAs<int>("TIMEOUT_MOVE_MS", 7000);
-    m_timeoutResultMs = ctx.GetTaskParamAs<int>("TIMEOUT_RESULT_MS", 10000);
-    m_scanEndY = ctx.GetTaskParamAs<double>("SCAN_END_Y", 200.0);
+    // IParamProvider 인터페이스를 통해 ExecuteScan Task 전용 파라미터를 조회
+    const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
+    auto scanParams = provider.GetExecuteScanParams();
+    m_timeoutMoveMs = scanParams.timeoutMoveMs;
+    m_timeoutResultMs = scanParams.timeoutResultMs;
+    m_scanEndY = scanParams.scanEndY;
 
     EnterState(MoveMeasurementArea);
 }
