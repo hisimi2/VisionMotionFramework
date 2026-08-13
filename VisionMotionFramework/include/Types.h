@@ -37,7 +37,7 @@ namespace VMF
             : pos(std::move(_pos)), locateId(_locateId), visionRequestId(_visionRequestId) {}
     };
 
-    /**
+     /**
      * @brief SetPlate1 PLVI Setup Task 전용 파라미터
      */
     struct SetPlate1PLVISetupParams
