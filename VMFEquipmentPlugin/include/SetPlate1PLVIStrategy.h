@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DefaultSetupStrategy.h"
 #include "VMFEquipmentPluginExport.h"
@@ -49,7 +49,7 @@ namespace VMF_PLUGIN
         /// </summary>
         /// <details>
         /// 이 메서드는 전략(Strategy) 레벨에서 필요한 파라미터를 설정합니다.
-        /// 주로 Repository에 영구 저장되어야 하는 파라미터(예: Device 정보, PLVI 설정값 등)를 
+        /// 주로 Repository에 영구 저장되어야 하는 파라미터(예: Device 정보, PLVI 설정값 등)를
         /// 처리하는 데 사용됩니다.
         /// 
         /// 실행 시 필요한 런타임 파라미터(TIMEOUT, SCAN_END_Y 등)는 
