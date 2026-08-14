@@ -74,7 +74,7 @@ namespace VMF_PLUGIN
         /// - Setup Task: timeoutMoveMs, triggerIntervalMm, startPos
         /// - ExecuteScan Task: timeoutMoveMs, timeoutResultMs, scanEndY
         /// - Finish Task: timeoutMoveMs
-        /// - 공통 Vision 파라미터: HAND_ID, PKG_ID, DEVICE_INFO_* 등 (visionParams에 저장)
+        /// - 공통 Vision 파라미터: HAND_ID, PKG_ID, DEVICE_INFO_* 등 (executionParams에 저장)
         /// 
         /// @note 파라미터 값이 변경될 경우 이 메서드만 수정하면 됩니다.
         /// </details>

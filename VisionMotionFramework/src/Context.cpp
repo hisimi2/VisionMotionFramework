@@ -140,12 +140,4 @@ namespace VMF
         return true;
     }
 
-    std::string Context::GetParam(const std::string& key) const
-    {
-        LockGuardType guard(m_mutex);
-        auto it = m_taskParams.executionParams.find(key);
-        if (it != m_taskParams.executionParams.end())
-            return it->second;
-        return "";
-    }
 }

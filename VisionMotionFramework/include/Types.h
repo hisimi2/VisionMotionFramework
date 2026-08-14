@@ -108,17 +108,7 @@ namespace VMF
         }
     };
 
-    /**
-     * @brief 하위 호환성을 위한 기존 VisionParams 구조체
-     * @deprecated 새로운 코드에서는 TaskParams를 사용하세요.
-     */
-    struct VisionParams
-    {
-        StringMap                       visionParams;
-        std::vector<VisionPosition>     visionPositions;
-    };
-
-    // ── 파라미터 변환 헬퍼 (TaskParams 내부 템플릿에서 사용) ──
+// ── 파라미터 변환 헬퍼 (TaskParams 내부 템플릿에서 사용) ──
     namespace detail
     {
         template <typename T>
