@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 
 namespace VMF_PLUGIN

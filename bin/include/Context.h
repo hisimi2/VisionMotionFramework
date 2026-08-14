@@ -115,30 +115,7 @@ namespace VMF
         /// </summary>
         bool PeekVisionPosition(VisionPosition& outPos) const override;
 
-        /// <summary>
-        /// 하위 호환성을 위한 문자열 파라미터 조회
-        /// @deprecated 새로운 코드에서는 GetExecutionParam()을 사용하세요.
-        /// </summary>
-        std::string GetParam(const std::string& key) const override;
-
-        /// <summary>
-        /// 하위 호환성을 위한 타입 변환 파라미터 조회
-        /// @deprecated 새로운 코드에서는 GetExecutionParamAs()를 사용하세요.
-        /// </summary>
-        template <typename T>
-        T GetTaskParamAs(const std::string& key, const T& defaultValue = T()) const
-        {
-            std::string value = GetParam(key);
-            if (value.empty())
-                return defaultValue;
-
-            T converted;
-            if (detail::ParamConverter<T>::Convert(value, converted))
-                return converted;
-            return defaultValue;
-        }
-
-    private:
+private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
         TaskParams              m_taskParams;

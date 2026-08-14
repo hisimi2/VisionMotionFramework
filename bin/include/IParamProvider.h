@@ -52,10 +52,5 @@ namespace VMF
         /// </summary>
         virtual bool PeekVisionPosition(VisionPosition& outPos) const = 0;
 
-        /// <summary>
-        /// 하위 호환성을 위한 문자열 파라미터 조회
-        /// @deprecated 새로운 코드에서는 GetExecutionParam()을 사용하세요.
-        /// </summary>
-        virtual std::string GetParam(const std::string& key) const = 0;
-    };
+};
 } // namespace VMF
