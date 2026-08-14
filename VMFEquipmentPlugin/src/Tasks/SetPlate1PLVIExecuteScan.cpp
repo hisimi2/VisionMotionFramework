@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "SetPlate1PLVIExecuteScan.h"
 #include "IParamProvider.h"
+#include "ParamKeys.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
@@ -16,12 +17,11 @@ SetPlate1PLVIExecuteScan::~SetPlate1PLVIExecuteScan() {}
 
 void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
 {
-    // IParamProvider 인터페이스를 통해 ExecuteScan Task 전용 파라미터를 조회
+    // IParamProvider 인터페이스를 통해 실행 파라미터를 조회
     const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
-    auto scanParams = provider.GetExecuteScanParams();
-    m_timeoutMoveMs = scanParams.timeoutMoveMs;
-    m_timeoutResultMs = scanParams.timeoutResultMs;
-    m_scanEndY = scanParams.scanEndY;
+    m_timeoutMoveMs = provider.GetTaskParams().GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
+    m_timeoutResultMs = provider.GetTaskParams().GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
+    m_scanEndY = provider.GetTaskParams().GetExecutionParam<double>(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
 
     EnterState(MoveMeasurementArea);
 }

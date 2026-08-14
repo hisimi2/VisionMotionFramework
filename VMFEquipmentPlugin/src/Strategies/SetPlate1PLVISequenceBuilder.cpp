@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "SetPlate1PLVISequenceBuilder.h"
 #include "Context.h"
-#include "SetPlate1PLVIParams.h"
 
 #include "src\Tasks\SetPlate1PLVISetup.h"
 #include "src\Tasks\SetPlate1PLVIExecuteScan.h"
@@ -17,9 +16,8 @@ void SetPlate1PLVISequenceBuilder::SetTaskParams(const VMF::TaskParams& params)
 
 void SetPlate1PLVISequenceBuilder::ConfigureContext(VMF::Context& ctx)
 {
-    // 미리 설정된 Task 파라미터를 Context에 적용
-    // 파라미터는 SetTaskParams()로 설정되며, 일반적으로 Strategy::GetDefaultTaskParams()에서 얻습니다.
-    
+    // Strategy에서 설정한 기본 파라미터(m_taskParams)를 Context에 전달
+    // m_taskParams는 SetTaskParams()를 통해 Strategy::GetDefaultTaskParams()에서 설정됨
     ctx.SetTaskParams(m_taskParams);
 }
 

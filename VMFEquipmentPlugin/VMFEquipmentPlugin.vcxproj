@@ -176,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="include\DefineVAT.h" />
+    <ClInclude Include="include\ParamKeys.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
     <ClInclude Include="include\VMFEquipmentPluginExport.h" />
     <ClInclude Include="pch.h" />

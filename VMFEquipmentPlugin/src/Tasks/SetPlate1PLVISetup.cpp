@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "SetPlate1PLVISetup.h"
 #include "IParamProvider.h"
+#include "ParamKeys.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
@@ -16,15 +17,19 @@ SetPlate1PLVISetup::~SetPlate1PLVISetup() {}
 
 void SetPlate1PLVISetup::OnInitialize(VMF::Context& ctx)
 {
-    // IParamProvider 인터페이스를 통해 Setup Task 전용 파라미터를 조회
-    // Context가 IParamProvider를 구현하므로 직접 호출 가능
+    // IParamProvider 인터페이스를 통해 실행 파라미터를 조회
     const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
-    auto setupParams = provider.GetSetupParams();
-    m_moveTimeoutMs = setupParams.timeoutMoveMs;
-    m_triggerIntervalMm = setupParams.triggerIntervalMm;
-    m_scanStartX = setupParams.startPos.pos[0];
-    m_scanStartY = setupParams.startPos.pos[1];
-    m_scanStartZ = setupParams.startPos.pos[2];
+    m_moveTimeoutMs = provider.GetTaskParams().GetExecutionParam<int>(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
+    m_triggerIntervalMm = provider.GetTaskParams().GetExecutionParam<double>(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 1.8);
+
+    // VisionPositions에서 시작 위치 조회
+    std::vector<VMF::VisionPosition> positions = provider.GetVisionPositions();
+    if (!positions.empty())
+    {
+        m_scanStartX = positions[0].pos.size() > 0 ? positions[0].pos[0] : 0.0;
+        m_scanStartY = positions[0].pos.size() > 1 ? positions[0].pos[1] : 0.0;
+        m_scanStartZ = positions[0].pos.size() > 2 ? positions[0].pos[2] : 0.0;
+    }
 
     EnterState(MoveSafeZ);
 }

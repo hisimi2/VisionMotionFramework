@@ -3,7 +3,7 @@
 #include "SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
 #include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
-#include "..\include\SetPlate1PLVIParams.h"
+#include "ParamKeys.h"
 #include <sstream>
 #include <vector>
 
@@ -68,44 +68,42 @@ VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetN
 VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
 {
     VMF::TaskParams params;
-    
+
     // ── Setup Task 전용 파라미터 ──
-    params.setup.timeoutMoveMs = 7000;
-    params.setup.triggerIntervalMm = 2.0;
-    // startPos는 Builder에서 VisionPositions와 함께 설정
+    params.SetExecutionParam(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
+    params.SetExecutionParam(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 2.0);
 
     // ── ExecuteScan Task 전용 파라미터 ──
-    params.executeScan.timeoutMoveMs = 7000;
-    params.executeScan.timeoutResultMs = 10000;
-    params.executeScan.scanEndY = 200.0;
+    params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
+    params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
+    params.SetExecutionParam(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
 
     // ── Finish Task 전용 파라미터 ──
-    params.finish.timeoutMoveMs = 7000;
+    params.SetExecutionParam(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
 
-    // ── 공통 Vision 파라미터 (하위 호환성, Repository 저장용) ──
-    // TaskParams의 visionParams에 저장하여 Context::GetParam()에서 조회 가능
-    params.visionParams[SetPlate1PLVIParams::HAND_ID] = "1";
-    params.visionParams[SetPlate1PLVIParams::PKG_ID] = "1";
-    params.visionParams[SetPlate1PLVIParams::PLVI_POSITION] = "0";
-    params.visionParams[SetPlate1PLVIParams::TIMEOUT_MEASURE_MS] = "5000";
-    params.visionParams[SetPlate1PLVIParams::TIMEOUT_SCAN_MS] = "15000";
-    params.visionParams[SetPlate1PLVIParams::TIMEOUT_RESULT_MS] = "10000";
-    params.visionParams[SetPlate1PLVIParams::TIMEOUT_MOVE_MS] = "7000";
-    params.visionParams[SetPlate1PLVIParams::SCAN_SPEED_MM_S] = "100.0";
-    params.visionParams[SetPlate1PLVIParams::TRIGGER_INTERVAL_MM] = "2.0";
-    params.visionParams[SetPlate1PLVIParams::DATA_ID] = "1";
-    params.visionParams[SetPlate1PLVIParams::PKG_NAME] = "TEST_PKG";
+    // ── 공통 Vision 파라미터 ──
+    params.SetExecutionParam(ParamKeys::Vision::HAND_ID, "1");
+    params.SetExecutionParam(ParamKeys::Vision::PKG_ID, "1");
+    params.SetExecutionParam(ParamKeys::Vision::PLVI_POSITION, "0");
+    params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_MEASURE_MS, "5000");
+    params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_SCAN_MS, "15000");
+    params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_RESULT_MS, "10000");
+    params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_MOVE_MS, "7000");
+    params.SetExecutionParam(ParamKeys::Vision::SCAN_SPEED_MM_S, "100.0");
+    params.SetExecutionParam(ParamKeys::Vision::TRIGGER_INTERVAL_MM, "2.0");
+    params.SetExecutionParam(ParamKeys::Vision::DATA_ID, "1");
+    params.SetExecutionParam(ParamKeys::Vision::PKG_NAME, "TEST_PKG");
 
     int ctrayX = 8, ctrayY = 4;
-    params.visionParams[SetPlate1PLVIParams::CTRAY_X] = std::to_string(ctrayX);
-    params.visionParams[SetPlate1PLVIParams::CTRAY_Y] = std::to_string(ctrayY);
+    params.SetExecutionParam(ParamKeys::Vision::CTRAY_X, std::to_string(ctrayX));
+    params.SetExecutionParam(ParamKeys::Vision::CTRAY_Y, std::to_string(ctrayY));
 
     // Handler 포켓별 Device 정보 (기본값 Device 종류 = 99)
     const int totalPockets = ctrayX * ctrayY;
     for (int i = 0; i < totalPockets; ++i)
     {
-        std::string key = SetPlate1PLVIParams::DEVICE_INFO_PREFIX + std::to_string(i);
-        params.visionParams[key] = "99";
+        std::string key = std::string(ParamKeys::Vision::DEVICE_INFO_PREFIX) + std::to_string(i);
+        params.SetExecutionParam(key, "99");
     }
 
     // ── VisionPositions 설정 (시작 위치) ──
@@ -114,7 +112,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
     startPos.locateId = 0;
     startPos.visionRequestId = 1;
     params.visionPositions.push_back(startPos);
-    
+
     return params;
 }
 

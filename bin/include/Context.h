@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -11,99 +11,8 @@
 #include <memory> // std::enable_shared_from_this 사용 목적
 #include <mutex>  // std::mutex 사용 목적
 
-namespace VMF 
+namespace VMF
 {
-
-    namespace detail
-    {
-        template <typename T>
-        struct ParamConverter
-        {
-            static bool Convert(const std::string& text, T& value)
-            {
-                std::istringstream iss(text);
-                T temp;
-                iss >> temp;
-
-                if (iss.fail())
-                    return false;
-
-                value = temp;
-                return true;
-            }
-        };
-
-        template <>
-        struct ParamConverter<std::string>
-        {
-            static bool Convert(const std::string& text, std::string& value)
-            {
-                value = text;
-                return true;
-            }
-        };
-
-        template <>
-        struct ParamConverter<int>
-        {
-            static bool Convert(const std::string& text, int& value)
-            {
-                if (text.empty())
-                    return false;
-
-                char* endPtr = nullptr;
-                const long parsed = std::strtol(text.c_str(), &endPtr, 10);
-
-                if (endPtr == text.c_str() || *endPtr != '\0')
-                    return false;
-
-                value = static_cast<int>(parsed);
-                return true;
-            }
-        };
-
-        template <>
-        struct ParamConverter<double>
-        {
-            static bool Convert(const std::string& text, double& value)
-            {
-                if (text.empty())
-                    return false;
-
-                char* endPtr = nullptr;
-                const double parsed = std::strtod(text.c_str(), &endPtr);
-
-                if (endPtr == text.c_str() || *endPtr != '\0')
-                    return false;
-
-                value = parsed;
-                return true;
-            }
-        };
-
-        template <>
-        struct ParamConverter<bool>
-        {
-            static bool Convert(const std::string& text, bool& value)
-            {
-                if (text == "1" || text == "true" || text == "TRUE" || text == "True")
-                {
-                    value = true;
-                    return true;
-                }
-
-                if (text == "0" || text == "false" || text == "FALSE" || text == "False")
-                {
-                    value = false;
-                    return true;
-                }
-
-                return false;
-            }
-        };
-
-    } // namespace detail
-
     class VMF_API Context : public std::enable_shared_from_this<Context>, public IParamProvider
     {
     public:
@@ -132,7 +41,7 @@ namespace VMF
         /// </summary>
         void SetDataRepository(DataRepositoryPtr repo);
 
-/// <summary>
+        /// <summary>
         /// 현재 등록된 데이터 저장소 인터페이스를 반환합니다.
         /// </summary>
         DataRepositoryPtr GetRepository() const;
@@ -142,7 +51,7 @@ namespace VMF
         /// </summary>
         void SetLastError(const std::string& error);
 
-/// <summary>
+        /// <summary>
         /// 마지막으로 저장된 오류 메시지를 반환합니다.
         /// </summary>
         std::string GetLastError() const;
@@ -157,16 +66,16 @@ namespace VMF
         /// </summary>
         bool GetStopRequested() const;
 
-/// <summary>
+        /// <summary>
         /// 현재 저장된 비전 파라미터를 사용하여 지정한 비전 명령을 실행합니다.
         /// </summary>
         bool ExecuteVisionCommand(VisionCommand cmd);
 
-// ── Task 파라미터 관리 ──
+        // ── Task 파라미터 관리 ──
         /// <summary>
         /// Task별 파라미터를 설정합니다.
         /// SequenceBuilder가 시퀀스 실행 전에 필요한 파라미터를 설정합니다.
-        /// Task가 다양해질 것을 대비하여 Task별 파라미터 구조체를 사용합니다.
+        /// Task가 다양해질 것을 대비하여 제네릭 StringMap 기반 파라미터 저장소를 사용합니다.
         /// </summary>
         void SetTaskParams(const TaskParams& params);
 
@@ -177,59 +86,63 @@ namespace VMF
         TaskParams GetTaskParams() const;
 
         /// <summary>
-        /// Setup Task 전용 파라미터를 반환합니다.
+        /// 실행 파라미터 조회 (문자열)
         /// </summary>
-        SetPlate1PLVISetupParams GetSetupParams() const override;
+        std::string GetExecutionParam(const std::string& key) const override;
 
         /// <summary>
-        /// ExecuteScan Task 전용 파라미터를 반환합니다.
+        /// 실행 파라미터 설정 (문자열)
         /// </summary>
-        SetPlate1PLVIExecuteScanParams GetExecuteScanParams() const override;
+        void SetExecutionParam(const std::string& key, const std::string& value) override;
 
         /// <summary>
-        /// Finish Task 전용 파라미터를 반환합니다.
+        /// 실행 파라미터 설정 (정수)
         /// </summary>
-        SetPlate1PLVIFinishParams GetFinishParams() const override;
+        void SetExecutionParam(const std::string& key, int value) override;
 
         /// <summary>
-        /// Task별 visionPositions을 조회합니다.
+        /// 실행 파라미터 설정 (실수)
+        /// </summary>
+        void SetExecutionParam(const std::string& key, double value) override;
+
+        /// <summary>
+        /// VisionPositions 목록을 조회합니다.
         /// </summary>
         std::vector<VisionPosition> GetVisionPositions() const override;
 
-/// <summary>
-        /// Task별 visionPositions의 마지막 위치를 조회합니다.
+        /// <summary>
+        /// 마지막 VisionPosition을 조회합니다.
         /// </summary>
         bool PeekVisionPosition(VisionPosition& outPos) const override;
 
         /// <summary>
-        /// 하위 호환성을 위한 문자열 파라미터 조회 (권장되지 않음)
-        /// @deprecated 새로운 코드에서는 Task별 파라미터 구조체 전용 함수를 사용하세요.
+        /// 하위 호환성을 위한 문자열 파라미터 조회
+        /// @deprecated 새로운 코드에서는 GetExecutionParam()을 사용하세요.
         /// </summary>
         std::string GetParam(const std::string& key) const override;
 
         /// <summary>
-        /// 하위 호환성을 위한 타입 변환 파라미터 조회 (권장되지 않음)
-        /// @deprecated 새로운 코드에서는 Task별 파라미터 구조체 전용 함수를 사용하세요.
+        /// 하위 호환성을 위한 타입 변환 파라미터 조회
+        /// @deprecated 새로운 코드에서는 GetExecutionParamAs()를 사용하세요.
         /// </summary>
         template <typename T>
         T GetTaskParamAs(const std::string& key, const T& defaultValue = T()) const
         {
-            auto params = GetTaskParams();
-            auto it = params.visionParams.find(key);
-            if (it != params.visionParams.end())
-            {
-                T converted;
-                if (detail::ParamConverter<T>::Convert(it->second, converted))
-                    return converted;
-            }
+            std::string value = GetParam(key);
+            if (value.empty())
+                return defaultValue;
+
+            T converted;
+            if (detail::ParamConverter<T>::Convert(value, converted))
+                return converted;
             return defaultValue;
         }
 
-private:
+    private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
         TaskParams              m_taskParams;
-        
+
         mutable std::mutex      m_mutex;
         std::string             m_lastError;
         bool                    m_isStopRequested;

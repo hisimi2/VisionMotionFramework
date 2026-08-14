@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Context.h"
 #include "IParamProvider.h"
 
@@ -32,7 +32,7 @@ namespace VMF
     void Context::SetLastError(const std::string& error)
     {
         LockGuardType guard(m_mutex);
-        m_lastError = error; 
+        m_lastError = error;
     }
 
     std::string Context::GetLastError() const
@@ -44,13 +44,13 @@ namespace VMF
     void Context::SetStopRequested(bool stop)
     {
         LockGuardType guard(m_mutex);
-        m_isStopRequested = stop; 
+        m_isStopRequested = stop;
     }
 
     bool Context::GetStopRequested() const
     {
         LockGuardType guard(m_mutex);
-        return m_isStopRequested; 
+        return m_isStopRequested;
     }
 
     bool Context::ExecuteVisionCommand(VisionCommand cmd)
@@ -62,14 +62,14 @@ namespace VMF
 
         bool ret = false;
 
-		switch (cmd)
-		{
-		case Measure:       ret = m_processor->RequestMeasureAsync(StringMap());     break;
-		case SetCok:        ret = m_processor->RequestSetCokAsync(StringMap());      break;
-		case InspReady:     ret = m_processor->RequestInspReadyAsync(StringMap());   break;
-		case DeviceCheck:   ret = m_processor->RequestDeviceCheckAsync(StringMap()); break;
-		case Light:         ret = m_processor->RequestLightAsync(StringMap());       break;
-		}
+        switch (cmd)
+        {
+        case Measure:       ret = m_processor->RequestMeasureAsync(StringMap());     break;
+        case SetCok:        ret = m_processor->RequestSetCokAsync(StringMap());      break;
+        case InspReady:     ret = m_processor->RequestInspReadyAsync(StringMap());   break;
+        case DeviceCheck:   ret = m_processor->RequestDeviceCheckAsync(StringMap()); break;
+        case Light:         ret = m_processor->RequestLightAsync(StringMap());       break;
+        }
         return ret;
     }
 
@@ -98,22 +98,31 @@ namespace VMF
         return m_taskParams;
     }
 
-    SetPlate1PLVISetupParams Context::GetSetupParams() const
+    std::string Context::GetExecutionParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
-        return m_taskParams.setup;
+        auto it = m_taskParams.executionParams.find(key);
+        if (it != m_taskParams.executionParams.end())
+            return it->second;
+        return "";
     }
 
-    SetPlate1PLVIExecuteScanParams Context::GetExecuteScanParams() const
+    void Context::SetExecutionParam(const std::string& key, const std::string& value)
     {
         LockGuardType guard(m_mutex);
-        return m_taskParams.executeScan;
+        m_taskParams.executionParams[key] = value;
     }
 
-    SetPlate1PLVIFinishParams Context::GetFinishParams() const
+    void Context::SetExecutionParam(const std::string& key, int value)
     {
         LockGuardType guard(m_mutex);
-        return m_taskParams.finish;
+        m_taskParams.executionParams[key] = std::to_string(value);
+    }
+
+    void Context::SetExecutionParam(const std::string& key, double value)
+    {
+        LockGuardType guard(m_mutex);
+        m_taskParams.executionParams[key] = std::to_string(value);
     }
 
     std::vector<VisionPosition> Context::GetVisionPositions() const
@@ -134,8 +143,8 @@ namespace VMF
     std::string Context::GetParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
-        auto it = m_taskParams.visionParams.find(key);
-        if (it != m_taskParams.visionParams.end())
+        auto it = m_taskParams.executionParams.find(key);
+        if (it != m_taskParams.executionParams.end())
             return it->second;
         return "";
     }

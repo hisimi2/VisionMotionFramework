@@ -2,7 +2,6 @@
 
 #include "DefaultSetupStrategy.h"
 #include "VMFEquipmentPluginExport.h"
-#include "types.h"
 #include "Types.h"  // TaskParams 사용을 위해 추가
 #include "IParamProvider.h"
 
