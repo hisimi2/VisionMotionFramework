@@ -75,20 +75,86 @@ VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetN
 VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
 {
     VMF::TaskParams params;
+    
+    // Task별 파라미터 추가
+    VMF::TaskParams setupParams = GetDefaultSetupParams();
+    for (const auto& pair : setupParams.executionParams)
+    {
+        params.SetExecutionParam(pair.first, pair.second);
+    }
+    params.visionPositions = setupParams.visionPositions;
+    
+    VMF::TaskParams executeScanParams = GetDefaultExecuteScanParams();
+    for (const auto& pair : executeScanParams.executionParams)
+    {
+        params.SetExecutionParam(pair.first, pair.second);
+    }
+    
+    VMF::TaskParams finishParams = GetDefaultFinishParams();
+    for (const auto& pair : finishParams.executionParams)
+    {
+        params.SetExecutionParam(pair.first, pair.second);
+    }
+    
+    // 공통 Vision 파라미터 추가
+    VMF::TaskParams visionParams = GetDefaultVisionParams();
+    for (const auto& pair : visionParams.executionParams)
+    {
+        params.SetExecutionParam(pair.first, pair.second);
+    }
+    
+    return params;
+}
 
-    // ── Setup Task 전용 파라미터 ──
+// ── Setup Task 전용 기본 파라미터 ──
+VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultSetupParams() const
+{
+    VMF::TaskParams params;
+    
+    // Setup Task 전용 파라미터
     params.SetExecutionParam(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
     params.SetExecutionParam(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 2.0);
+    
+    // VisionPositions 설정 (시작 위치)
+    VMF::VisionPosition startPos;
+    startPos.pos = {0.0, 0.0, 0.0};  // X=0, Y=0, Z=0
+    startPos.locateId = 0;
+    startPos.visionRequestId = 1;
+    params.visionPositions.push_back(startPos);
+    
+    return params;
+}
 
-    // ── ExecuteScan Task 전용 파라미터 ──
+// ── ExecuteScan Task 전용 기본 파라미터 ──
+VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultExecuteScanParams() const
+{
+    VMF::TaskParams params;
+    
+    // ExecuteScan Task 전용 파라미터
     params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
     params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
     params.SetExecutionParam(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
+    
+    return params;
+}
 
-    // ── Finish Task 전용 파라미터 ──
+// ── Finish Task 전용 기본 파라미터 ──
+VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultFinishParams() const
+{
+    VMF::TaskParams params;
+    
+    // Finish Task 전용 파라미터
     params.SetExecutionParam(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
+    
+    return params;
+}
 
-    // ── 공통 Vision 파라미터 ──
+// ── 공통 Vision 파라미터 기본값 ──
+VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultVisionParams() const
+{
+    VMF::TaskParams params;
+    
+    // 공통 Vision 파라미터
     params.SetExecutionParam(ParamKeys::Vision::HAND_ID, "1");
     params.SetExecutionParam(ParamKeys::Vision::PKG_ID, "1");
     params.SetExecutionParam(ParamKeys::Vision::PLVI_POSITION, "0");
@@ -112,14 +178,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
         std::string key = std::string(ParamKeys::Vision::DEVICE_INFO_PREFIX) + std::to_string(i);
         params.SetExecutionParam(key, "99");
     }
-
-    // ── VisionPositions 설정 (시작 위치) ──
-    VMF::VisionPosition startPos;
-    startPos.pos = {0.0, 0.0, 0.0};  // X=0, Y=0, Z=0
-    startPos.locateId = 0;
-    startPos.visionRequestId = 1;
-    params.visionPositions.push_back(startPos);
-
+    
     return params;
 }
 
@@ -130,31 +189,17 @@ void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
     VMF::TaskParams defaultParams = GetDefaultTaskParams();
     ctx.SetTaskParams(defaultParams);  // 하위 호환성용 기본 파라미터
 
-    // Setup Task 전용 파라미터
-    {
-        VMF::TaskParams setupParams;
-        setupParams.SetExecutionParam(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
-        setupParams.SetExecutionParam(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 2.0);
-        // VisionPositions는 기본 파라미터에서 복사
-        setupParams.visionPositions = defaultParams.visionPositions;
-        ctx.SetTaskParams("Task_PLVI_Setup", setupParams);
-    }
+    // Task별 파라미터 설정 (헬퍼 메서드 사용)
+    SetTaskParamsForTask(ctx, "Task_PLVI_Setup", GetDefaultSetupParams());
+    SetTaskParamsForTask(ctx, "Task_PLVI_ExecuteScan", GetDefaultExecuteScanParams());
+    SetTaskParamsForTask(ctx, "Task_PLVI_Finish", GetDefaultFinishParams());
+}
 
-    // ExecuteScan Task 전용 파라미터
-    {
-        VMF::TaskParams executeScanParams;
-        executeScanParams.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
-        executeScanParams.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
-        executeScanParams.SetExecutionParam(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
-        ctx.SetTaskParams("Task_PLVI_ExecuteScan", executeScanParams);
-    }
-
-    // Finish Task 전용 파라미터
-    {
-        VMF::TaskParams finishParams;
-        finishParams.SetExecutionParam(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
-        ctx.SetTaskParams("Task_PLVI_Finish", finishParams);
-    }
+// ── Task별 파라미터 설정 헬퍼 메서드 ──
+void SetPlate1PLVIStrategy::SetTaskParamsForTask(VMF::Context& ctx, 
+    const std::string& taskName, const VMF::TaskParams& params) const
+{
+    ctx.SetTaskParams(taskName, params);
 }
 
 // ── 4단계 리팩토링: Builder 없이 Context에 직접 파라미터 설정 ──

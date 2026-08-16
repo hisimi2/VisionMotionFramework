@@ -7,24 +7,20 @@
 #include "src\Tasks\SetPlate1PLVIExecuteScan.h"
 #include "src\Tasks\SetPlate1PLVIFinish.h"
 
+#include <cassert>  // assert 사용
+
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
 void SetPlate1PLVISequenceBuilder::ConfigureContext(VMF::Context& ctx)
 {
-    if (m_strategy)
-    {
-        // ✅ Strategy의 SetTaskParamsByTask()를 호출하여 Task별 파라미터 설정
-        // Strategy가 Task별 파라미터를 Context에 분리하여 저장
-        m_strategy->SetTaskParamsByTask(ctx);
-    }
-    else
-    {
-        // Strategy가 없는 경우 기본 파라미터 사용 (하위 호환성)
-        // SetPlate1PLVIStrategy::GetDefaultTaskParams()는 Strategy가 있을 때만 접근 가능
-        // Strategy가 없으면 빈 TaskParams 사용
-        ctx.SetTaskParams(VMF::TaskParams());
-    }
+    // Strategy는 필수이므로 assert로 검증
+    // Strategy가 설정되지 않은 경우 오류를 조기에 발견
+    assert(m_strategy && "SetPlate1PLVISequenceBuilder: m_strategy must be set before ConfigureContext()");
+    
+    // ✅ Strategy의 SetTaskParamsByTask()를 호출하여 Task별 파라미터 설정
+    // Strategy가 Task별 파라미터를 Context에 분리하여 저장
+    m_strategy->SetTaskParamsByTask(ctx);
 }
 
 VMF::SequencePtr SetPlate1PLVISequenceBuilder::BuildSequence(const std::string& sequenceName)

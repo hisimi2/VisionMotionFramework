@@ -93,6 +93,46 @@ namespace VMF_PLUGIN
         VMF::TaskParams GetDefaultTaskParams() const;
 
         /// <summary>
+        /// Setup Task 전용 기본 파라미터를 반환합니다.
+        /// </summary>
+        /// <details>
+        /// Setup Task에 필요한 기본 파라미터만 반환합니다.
+        /// GetDefaultTaskParams()에서 Setup 관련 파라미터를 추출하여 사용합니다.
+        /// </details>
+        /// <returns>Setup Task용 기본 TaskParams</returns>
+        VMF::TaskParams GetDefaultSetupParams() const;
+
+        /// <summary>
+        /// ExecuteScan Task 전용 기본 파라미터를 반환합니다.
+        /// </summary>
+        /// <details>
+        /// ExecuteScan Task에 필요한 기본 파라미터만 반환합니다.
+        /// GetDefaultTaskParams()에서 ExecuteScan 관련 파라미터를 추출하여 사용합니다.
+        /// </details>
+        /// <returns>ExecuteScan Task용 기본 TaskParams</returns>
+        VMF::TaskParams GetDefaultExecuteScanParams() const;
+
+        /// <summary>
+        /// Finish Task 전용 기본 파라미터를 반환합니다.
+        /// </summary>
+        /// <details>
+        /// Finish Task에 필요한 기본 파라미터만 반환합니다.
+        /// GetDefaultTaskParams()에서 Finish 관련 파라미터를 추출하여 사용합니다.
+        /// </details>
+        /// <returns>Finish Task용 기본 TaskParams</returns>
+        VMF::TaskParams GetDefaultFinishParams() const;
+
+        /// <summary>
+        /// 공통 Vision 파라미터 기본값을 반환합니다.
+        /// </summary>
+        /// <details>
+        /// 모든 Task에서 공통으로 사용하는 Vision 파라미터를 반환합니다.
+        /// GetDefaultTaskParams()에서 Vision 관련 파라미터를 추출하여 사용합니다.
+        /// </details>
+        /// <returns>공통 Vision 파라미터가 포함된 TaskParams</returns>
+        VMF::TaskParams GetDefaultVisionParams() const;
+
+        /// <summary>
         /// Task별 파라미터를 Context에 설정합니다. (Task별 격리)
         /// </summary>
         /// <details>
@@ -109,7 +149,7 @@ namespace VMF_PLUGIN
         /// <param name="ctx">Context 참조</param>
         void SetTaskParamsByTask(VMF::Context& ctx) const;
 
-        /// <summary>
+/// <summary>
         /// Builder 없이 Context에 파라미터를 직접 설정합니다. (4단계 리팩토링)
         /// </summary>
         /// <details>
@@ -121,5 +161,17 @@ namespace VMF_PLUGIN
         /// </details>
         /// <param name="ctx">Context 참조</param>
         void ConfigureContext(VMF::Context& ctx) override;
+
+        /// <summary>
+        /// Task별 파라미터 설정 헬퍼 메서드
+        /// </summary>
+        /// <details>
+        /// 지정된 Task 이름과 파라미터로 Context에 Task별 파라미터를 설정합니다.
+        /// SetTaskParamsByTask()에서 반복 패턴을 추상화하기 위해 사용됩니다.
+        /// </details>
+        /// <param name="ctx">Context 참조</param>
+        /// <param name="taskName">파라미터를 설정할 Task 이름</param>
+        /// <param name="params">설정할 TaskParams</param>
+        void SetTaskParamsForTask(VMF::Context& ctx, const std::string& taskName, const VMF::TaskParams& params) const;
     };
 }
