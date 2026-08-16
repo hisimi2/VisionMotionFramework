@@ -7,7 +7,7 @@ using namespace VMF;
 using namespace VMF_PLUGIN;
 
 SetPlate1PLVIFinish::SetPlate1PLVIFinish()
-    : m_moveTimeoutMs(7000)
+    : m_params()  // 구조체 기본값으로 초기화
 {
 }
 
@@ -17,7 +17,13 @@ void SetPlate1PLVIFinish::OnInitialize(VMF::Context& ctx)
 {
     // IParamProvider 인터페이스를 통해 실행 파라미터를 조회
     const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
-    m_moveTimeoutMs = provider.GetTaskParams().GetExecutionParam<int>(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
+    
+    // ✅ 3단계 리팩토링: Task 이름 기반 파라미터 조회 (Task별 격리)
+    // 자신의 Task 이름으로 파라미터를 조회하여 Task 간 격리 강화
+    const auto& taskParams = provider.GetTaskParams(GetName());
+    
+    // ✅ Task별 파라미터 구조체 사용
+    m_params.timeoutMoveMs = taskParams.GetExecutionParam<int>(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
     EnterState(MoveSafeZ);
 }
 
@@ -43,7 +49,7 @@ VMF::TaskResult SetPlate1PLVIFinish::HandleMoveSafeZ(VMF::Context& ctx, VMF::IAc
     if (actuator->MoveToZ(0.0) != ActError::ActOk)
         return SetErrorAndReturn(ctx, "PLVI_Finish: MoveToZ safe failed.");
 
-    EnterStateWithTimeout(WaitSafeZ, m_moveTimeoutMs);
+    EnterStateWithTimeout(WaitSafeZ, m_params.timeoutMoveMs);
     return TR_KEEP;
 }
 
@@ -60,7 +66,7 @@ VMF::TaskResult SetPlate1PLVIFinish::HandleWaitSafeZ(VMF::Context& ctx, VMF::IAc
         return TR_KEEP;
     }
 
-    EnterStateWithTimeout(MoveHome, m_moveTimeoutMs);
+    EnterStateWithTimeout(MoveHome, m_params.timeoutMoveMs);
     return TR_KEEP;
 }
 
@@ -73,7 +79,7 @@ VMF::TaskResult SetPlate1PLVIFinish::HandleMoveHome(VMF::Context& ctx, VMF::IAct
     if (actuator->MoveToHomePosition() != ActError::ActOk)
         return SetErrorAndReturn(ctx, "PLVI_Finish: MoveToHomePosition failed.");
 
-    EnterStateWithTimeout(WaitHome, m_moveTimeoutMs);
+    EnterStateWithTimeout(WaitHome, m_params.timeoutMoveMs);
     return TR_KEEP;
 }
 

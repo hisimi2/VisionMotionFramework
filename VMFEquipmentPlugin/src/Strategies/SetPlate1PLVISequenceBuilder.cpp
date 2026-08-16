@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "SetPlate1PLVISequenceBuilder.h"
+#include "SetPlate1PLVIStrategy.h"
 #include "Context.h"
 
 #include "src\Tasks\SetPlate1PLVISetup.h"
@@ -9,16 +10,21 @@
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-void SetPlate1PLVISequenceBuilder::SetTaskParams(const VMF::TaskParams& params)
-{
-    m_taskParams = params;
-}
-
 void SetPlate1PLVISequenceBuilder::ConfigureContext(VMF::Context& ctx)
 {
-    // Strategy에서 설정한 기본 파라미터(m_taskParams)를 Context에 전달
-    // m_taskParams는 SetTaskParams()를 통해 Strategy::GetDefaultTaskParams()에서 설정됨
-    ctx.SetTaskParams(m_taskParams);
+    if (m_strategy)
+    {
+        // ✅ Strategy의 SetTaskParamsByTask()를 호출하여 Task별 파라미터 설정
+        // Strategy가 Task별 파라미터를 Context에 분리하여 저장
+        m_strategy->SetTaskParamsByTask(ctx);
+    }
+    else
+    {
+        // Strategy가 없는 경우 기본 파라미터 사용 (하위 호환성)
+        // SetPlate1PLVIStrategy::GetDefaultTaskParams()는 Strategy가 있을 때만 접근 가능
+        // Strategy가 없으면 빈 TaskParams 사용
+        ctx.SetTaskParams(VMF::TaskParams());
+    }
 }
 
 VMF::SequencePtr SetPlate1PLVISequenceBuilder::BuildSequence(const std::string& sequenceName)

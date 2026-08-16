@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 
 namespace VMF
 {
@@ -86,23 +87,46 @@ namespace VMF
     }
 
     // ── Task 파라미터 관리 구현 (IParamProvider 인터페이스 구현) ──
+
+    // 하위 호환성: 기본 파라미터 설정
     void Context::SetTaskParams(const TaskParams& params)
     {
         LockGuardType guard(m_mutex);
-        m_taskParams = params;
+        m_defaultTaskParams = params;
+        // 빈 Task 이름으로 기본 파라미터 저장
+        m_taskParamsMap[""] = params;
     }
 
+    // Task 이름 기반 파라미터 설정
+    void Context::SetTaskParams(const std::string& taskName, const TaskParams& params)
+    {
+        LockGuardType guard(m_mutex);
+        m_taskParamsMap[taskName] = params;
+    }
+
+    // 하위 호환성: 기본 파라미터 조회
     TaskParams Context::GetTaskParams() const
     {
         LockGuardType guard(m_mutex);
-        return m_taskParams;
+        return m_defaultTaskParams;
+    }
+
+    // Task 이름 기반 파라미터 조회
+    TaskParams Context::GetTaskParams(const std::string& taskName) const
+    {
+        LockGuardType guard(m_mutex);
+        auto it = m_taskParamsMap.find(taskName);
+        if (it != m_taskParamsMap.end())
+            return it->second;
+        // Task 이름이 없는 경우 기본 파라미터 반환
+        return m_defaultTaskParams;
     }
 
     std::string Context::GetExecutionParam(const std::string& key) const
     {
         LockGuardType guard(m_mutex);
-        auto it = m_taskParams.executionParams.find(key);
-        if (it != m_taskParams.executionParams.end())
+        auto it = m_defaultTaskParams.executionParams.find(key);
+        if (it != m_defaultTaskParams.executionParams.end())
             return it->second;
         return "";
     }
@@ -110,33 +134,33 @@ namespace VMF
     void Context::SetExecutionParam(const std::string& key, const std::string& value)
     {
         LockGuardType guard(m_mutex);
-        m_taskParams.executionParams[key] = value;
+        m_defaultTaskParams.executionParams[key] = value;
     }
 
     void Context::SetExecutionParam(const std::string& key, int value)
     {
         LockGuardType guard(m_mutex);
-        m_taskParams.executionParams[key] = std::to_string(value);
+        m_defaultTaskParams.executionParams[key] = std::to_string(value);
     }
 
     void Context::SetExecutionParam(const std::string& key, double value)
     {
         LockGuardType guard(m_mutex);
-        m_taskParams.executionParams[key] = std::to_string(value);
+        m_defaultTaskParams.executionParams[key] = std::to_string(value);
     }
 
     std::vector<VisionPosition> Context::GetVisionPositions() const
     {
         LockGuardType guard(m_mutex);
-        return m_taskParams.visionPositions;
+        return m_defaultTaskParams.visionPositions;
     }
 
     bool Context::PeekVisionPosition(VisionPosition& outPos) const
     {
         LockGuardType guard(m_mutex);
-        if (m_taskParams.visionPositions.empty())
+        if (m_defaultTaskParams.visionPositions.empty())
             return false;
-        outPos = m_taskParams.visionPositions.back();
+        outPos = m_defaultTaskParams.visionPositions.back();
         return true;
     }
 

@@ -35,9 +35,16 @@ VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 {
     auto builder = std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
     
-    // Strategy가 기본 파라미터를 Builder에 설정
-    // 이를 통해 Builder는 Strategy의 기본 파라미터를 Context에 적용할 수 있습니다.
-    builder->SetTaskParams(GetDefaultTaskParams());
+    // Builder에 Strategy 참조 전달 (Task별 파라미터 설정을 위해 필요)
+    // SetTaskParams() 메서드 제거에 따른 변경: Builder가 GetDefaultTaskParams()를 직접 호출
+    // 이를 통해 Builder의 m_taskParams 멤버 변수 불필요
+    
+    // ✅ 3단계 리팩토링: Strategy 참조를 Builder에 전달
+    // Builder가 Strategy의 SetTaskParamsByTask()를 호출하여 Task별 파라미터 설정
+auto castedBuilder = std::static_pointer_cast<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>(builder);
+    // shared_from_this()는 enable_shared_from_this<SetPlate1PLVIStrategy>에서 제공하므로
+    // 바로 shared_ptr<SetPlate1PLVIStrategy> 반환 (static_pointer_cast 불필요)
+    castedBuilder->m_strategy = shared_from_this();
     
     return builder;
 }
@@ -114,6 +121,48 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
     params.visionPositions.push_back(startPos);
 
     return params;
+}
+
+// ── Task별 파라미터 분리 설정 ──
+void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
+{
+    // 기본 파라미터 (공통 Vision 파라미터 포함)
+    VMF::TaskParams defaultParams = GetDefaultTaskParams();
+    ctx.SetTaskParams(defaultParams);  // 하위 호환성용 기본 파라미터
+
+    // Setup Task 전용 파라미터
+    {
+        VMF::TaskParams setupParams;
+        setupParams.SetExecutionParam(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
+        setupParams.SetExecutionParam(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 2.0);
+        // VisionPositions는 기본 파라미터에서 복사
+        setupParams.visionPositions = defaultParams.visionPositions;
+        ctx.SetTaskParams("Task_PLVI_Setup", setupParams);
+    }
+
+    // ExecuteScan Task 전용 파라미터
+    {
+        VMF::TaskParams executeScanParams;
+        executeScanParams.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
+        executeScanParams.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
+        executeScanParams.SetExecutionParam(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
+        ctx.SetTaskParams("Task_PLVI_ExecuteScan", executeScanParams);
+    }
+
+    // Finish Task 전용 파라미터
+    {
+        VMF::TaskParams finishParams;
+        finishParams.SetExecutionParam(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
+        ctx.SetTaskParams("Task_PLVI_Finish", finishParams);
+    }
+}
+
+// ── 4단계 리팩토링: Builder 없이 Context에 직접 파라미터 설정 ──
+void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
+{
+    // Builder 중간 단계 없이 Strategy가 직접 Context에 파라미터를 설정
+    // SetTaskParamsByTask()를 호출하여 Task별 파라미터를 Context에 설정
+    SetTaskParamsByTask(ctx);
 }
 
 

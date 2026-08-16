@@ -10,6 +10,7 @@
 #include <sstream>
 #include <memory> // std::enable_shared_from_this 사용 목적
 #include <mutex>  // std::mutex 사용 목적
+#include <unordered_map>
 
 namespace VMF
 {
@@ -73,17 +74,45 @@ namespace VMF
 
         // ── Task 파라미터 관리 ──
         /// <summary>
-        /// Task별 파라미터를 설정합니다.
-        /// SequenceBuilder가 시퀀스 실행 전에 필요한 파라미터를 설정합니다.
-        /// Task가 다양해질 것을 대비하여 제네릭 StringMap 기반 파라미터 저장소를 사용합니다.
+        /// Task별 파라미터를 설정합니다. (하위 호환성 유지)
         /// </summary>
+        /// <details>
+        /// 기존 코드와의 호환성을 위해 유지됩니다.
+        /// Task 이름 기반 파라미터 설정이 필요한 경우 SetTaskParams(taskName, params)를 사용하세요.
+        /// </details>
         void SetTaskParams(const TaskParams& params);
 
         /// <summary>
-        /// Task별 파라미터를 반환합니다.
-        /// Task가 Context를 통해 파라미터를 읽어올 때 사용합니다.
+        /// 지정된 Task 이름의 파라미터를 설정합니다.
         /// </summary>
+        /// <details>
+        /// Task별 파라미터 격리를 위해 Task 이름을 지정하여 파라미터를 설정합니다.
+        /// Task 이름이 비어있는 경우 기본 파라미터로 설정됩니다.
+        /// </details>
+        /// <param name="taskName">파라미터를 설정할 Task 이름</param>
+        /// <param name="params">설정할 TaskParams</param>
+        void SetTaskParams(const std::string& taskName, const TaskParams& params);
+
+        /// <summary>
+        /// Task별 파라미터를 반환합니다. (하위 호환성 유지)
+        /// </summary>
+        /// <details>
+        /// 기존 코드와의 호환성을 위해 유지됩니다.
+        /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
+        /// </details>
         TaskParams GetTaskParams() const;
+
+        /// <summary>
+        /// 지정된 Task 이름의 파라미터를 반환합니다.
+        /// </summary>
+        /// <details>
+        /// Task별 파라미터 격리를 위해 Task 이름을 지정하여 파라미터를 조회합니다.
+        /// Task 이름이 비어있는 경우 기본 파라미터를 반환합니다.
+        /// Task 이름이 등록되지 않은 경우 빈 TaskParams를 반환합니다.
+        /// </details>
+        /// <param name="taskName">파라미터를 조회할 Task 이름</param>
+        /// <returns>지정된 Task의 파라미터</returns>
+        TaskParams GetTaskParams(const std::string& taskName) const;
 
         /// <summary>
         /// 실행 파라미터 조회 (문자열)
@@ -118,7 +147,10 @@ namespace VMF
 private:
         VisionProcessorPtr      m_processor;
         DataRepositoryPtr       m_repo;
-        TaskParams              m_taskParams;
+        
+        // ✅ Task별 파라미터 맵으로 분리 (Task 간 파라미터 격리)
+        std::unordered_map<std::string, TaskParams> m_taskParamsMap;
+        TaskParams              m_defaultTaskParams;  // 기본 파라미터 (하위 호환용)
 
         mutable std::mutex      m_mutex;
         std::string             m_lastError;

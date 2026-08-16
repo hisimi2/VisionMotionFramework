@@ -66,5 +66,40 @@ namespace VMF_PLUGIN
             constexpr const char* CTRAY_Y = "Vision.CTRAY_Y";
             constexpr const char* DEVICE_INFO_PREFIX = "Vision.DEVICE_INFO_PREFIX";
         }
+
+        // ─────────────────────────────────────────────────────────────────────────
+        // Task별 파라미터 구조체 (타입 안전성 및 가독성 향상)
+        // ─────────────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Setup Task 파라미터 구조체
+        /// </summary>
+        struct SetupParams
+        {
+            int timeoutMoveMs = 7000;
+            double triggerIntervalMm = 1.8;
+            double scanStartX = 0.0;
+            double scanStartY = 0.0;
+            double scanStartZ = 0.0;
+        };
+
+        /// <summary>
+        /// ExecuteScan Task 파라미터 구조체
+        /// </summary>
+        struct ExecuteScanParams
+        {
+            int timeoutMoveMs = 7000;
+            int timeoutResultMs = 10000;
+            double scanEndY = 200.0;
+            double scanSpeedMmS = 100.0;
+        };
+
+        /// <summary>
+        /// Finish Task 파라미터 구조체
+        /// </summary>
+        struct FinishParams
+        {
+            int timeoutMoveMs = 7000;
+        };
     } // namespace ParamKeys
 } // namespace VMF_PLUGIN

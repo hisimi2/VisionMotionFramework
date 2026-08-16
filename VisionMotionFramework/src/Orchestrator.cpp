@@ -3,6 +3,7 @@
 #include "RunController.h"
 #include "Context.h"
 #include "AsyncExecutor.h"
+#include "DefaultSetupStrategy.h"
 
 #include <memory>
 #include <mutex>

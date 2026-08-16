@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Types.h"
+#include <string>
 
 namespace VMF
 {
@@ -18,9 +19,24 @@ namespace VMF
         virtual ~IParamProvider() = default;
 
         /// <summary>
-        /// Task 실행 파라미터를 조회합니다.
+        /// Task 실행 파라미터를 조회합니다. (하위 호환성 유지)
         /// </summary>
+        /// <details>
+        /// 기존 코드와의 호환성을 위해 유지됩니다.
+        /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
+        /// </details>
         virtual TaskParams GetTaskParams() const = 0;
+
+        /// <summary>
+        /// 지정된 Task 이름의 실행 파라미터를 조회합니다.
+        /// </summary>
+        /// <details>
+        /// Task별 파라미터 격리를 위해 Task 이름을 지정하여 파라미터를 조회합니다.
+        /// Task 이름이 비어있거나 등록되지 않은 경우 빈 TaskParams를 반환합니다.
+        /// </details>
+        /// <param name="taskName">파라미터를 조회할 Task 이름</param>
+        /// <returns>지정된 Task의 파라미터 (없으면 빈 TaskParams)</returns>
+        virtual TaskParams GetTaskParams(const std::string& taskName) const = 0;
 
         /// <summary>
         /// 실행 파라미터 조회 (문자열)

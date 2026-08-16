@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "NonBlockingTaskBase.h"
 #include "IParamProvider.h"
+#include "ParamKeys.h"
 
 namespace VMF_PLUGIN
 {
@@ -64,8 +65,7 @@ namespace VMF_PLUGIN
         VMF::TaskResult HandleWaitResult(VMF::Context& ctx, VMF::IActuator* actuator);
         VMF::TaskResult HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator);
 
-        double              m_scanEndY;
-        long                m_timeoutMoveMs;
-        long                m_timeoutResultMs;
+        // ✅ Task별 파라미터 구조체 사용 (타입 안전성 및 가독성 향상)
+        ParamKeys::ExecuteScanParams m_params;
     };
 }

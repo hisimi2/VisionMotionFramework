@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "NonBlockingTaskBase.h"
 #include "IParamProvider.h"
+#include "ParamKeys.h"
 
 namespace VMF_PLUGIN
 {
@@ -67,10 +68,7 @@ private:
         VMF::TaskResult HandleSetupTrigger(VMF::Context& ctx, VMF::IActuator* actuator);
         VMF::TaskResult HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator);
 
-        double              m_scanStartX;
-        double              m_scanStartY;
-        double              m_scanStartZ;
-        double              m_triggerIntervalMm;
-        long                m_moveTimeoutMs;
+        // ✅ Task별 파라미터 구조체 사용 (타입 안전성 및 가독성 향상)
+        ParamKeys::SetupParams m_params;
     };
 }
