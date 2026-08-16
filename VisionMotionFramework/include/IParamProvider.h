@@ -18,8 +18,8 @@ namespace VMF
     public:
         virtual ~IParamProvider() = default;
 
-        /// <summary>
-        /// Task 실행 파라미터를 조회합니다. (하위 호환성 유지)
+/// <summary>
+        /// [DEPRECATED] Task 실행 파라미터를 조회합니다. (하위 호환성 유지)
         /// </summary>
         /// <details>
         /// 기존 코드와의 호환성을 위해 유지됩니다.

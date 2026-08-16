@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -74,13 +74,22 @@ namespace VMF
 
         // ── Task 파라미터 관리 ──
         /// <summary>
-        /// Task별 파라미터를 설정합니다. (하위 호환성 유지)
+        /// [DEPRECATED] Task별 파라미터를 설정합니다. (하위 호환성 유지)
         /// </summary>
         /// <details>
         /// 기존 코드와의 호환성을 위해 유지됩니다.
         /// Task 이름 기반 파라미터 설정이 필요한 경우 SetTaskParams(taskName, params)를 사용하세요.
         /// </details>
         void SetTaskParams(const TaskParams& params);
+
+        /// <summary>
+        /// [DEPRECATED] Task별 파라미터를 반환합니다. (하위 호환성 유지)
+        /// </summary>
+        /// <details>
+        /// 기존 코드와의 호환성을 위해 유지됩니다.
+        /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
+        /// </details>
+        TaskParams GetTaskParams() const;
 
         /// <summary>
         /// 지정된 Task 이름의 파라미터를 설정합니다.
@@ -92,15 +101,6 @@ namespace VMF
         /// <param name="taskName">파라미터를 설정할 Task 이름</param>
         /// <param name="params">설정할 TaskParams</param>
         void SetTaskParams(const std::string& taskName, const TaskParams& params);
-
-        /// <summary>
-        /// Task별 파라미터를 반환합니다. (하위 호환성 유지)
-        /// </summary>
-        /// <details>
-        /// 기존 코드와의 호환성을 위해 유지됩니다.
-        /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
-        /// </details>
-        TaskParams GetTaskParams() const;
 
         /// <summary>
         /// 지정된 Task 이름의 파라미터를 반환합니다.

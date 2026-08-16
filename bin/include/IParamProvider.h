@@ -18,13 +18,14 @@ namespace VMF
     public:
         virtual ~IParamProvider() = default;
 
-        /// <summary>
-        /// Task 실행 파라미터를 조회합니다. (하위 호환성 유지)
+/// <summary>
+        /// [DEPRECATED] Task 실행 파라미터를 조회합니다. (하위 호환성 유지)
         /// </summary>
         /// <details>
         /// 기존 코드와의 호환성을 위해 유지됩니다.
         /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
         /// </details>
+        [[deprecated("Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.")]]
         virtual TaskParams GetTaskParams() const = 0;
 
         /// <summary>
