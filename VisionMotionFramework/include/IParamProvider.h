@@ -13,7 +13,7 @@ namespace VMF
      * @note Task가 다양해질 것을 대비하여 제네릭 StringMap 기반 파라미터 접근을 제공합니다.
      *       기능별 파라미터 키는 플러그인에서 네임스페이스로 정의합니다.
      */
-    class IParamProvider
+    class VMF_API IParamProvider
     {
     public:
         virtual ~IParamProvider() = default;

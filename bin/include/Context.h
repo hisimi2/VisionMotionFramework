@@ -72,9 +72,7 @@ namespace VMF
         /// </summary>
         bool ExecuteVisionCommand(VisionCommand cmd);
 
-// ── Task 파라미터 관리 ──
-#pragma warning(push)
-#pragma warning(disable: 4996)  // [[deprecated]] 함수 오버라이드 시 C4996 억제
+        // ── Task 파라미터 관리 ──
         /// <summary>
         /// [DEPRECATED] Task별 파라미터를 설정합니다. (하위 호환성 유지)
         /// </summary>
@@ -82,7 +80,6 @@ namespace VMF
         /// 기존 코드와의 호환성을 위해 유지됩니다.
         /// Task 이름 기반 파라미터 설정이 필요한 경우 SetTaskParams(taskName, params)를 사용하세요.
         /// </details>
-        [[deprecated("Task 이름 기반 파라미터 설정이 필요한 경우 SetTaskParams(taskName, params)를 사용하세요.")]]
         void SetTaskParams(const TaskParams& params);
 
         /// <summary>
@@ -92,9 +89,7 @@ namespace VMF
         /// 기존 코드와의 호환성을 위해 유지됩니다.
         /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
         /// </details>
-        [[deprecated("Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.")]]
         TaskParams GetTaskParams() const;
-#pragma warning(pop)
 
         /// <summary>
         /// 지정된 Task 이름의 파라미터를 설정합니다.

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Types.h"
 #include <string>
 
@@ -13,7 +13,7 @@ namespace VMF
      * @note Task가 다양해질 것을 대비하여 제네릭 StringMap 기반 파라미터 접근을 제공합니다.
      *       기능별 파라미터 키는 플러그인에서 네임스페이스로 정의합니다.
      */
-    class IParamProvider
+    class VMF_API IParamProvider
     {
     public:
         virtual ~IParamProvider() = default;
@@ -25,7 +25,6 @@ namespace VMF
         /// 기존 코드와의 호환성을 위해 유지됩니다.
         /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
         /// </details>
-        [[deprecated("Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.")]]
         virtual TaskParams GetTaskParams() const = 0;
 
         /// <summary>
