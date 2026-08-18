@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VisionCommAPI.h"
 #include "IVisionPacket.h" 
@@ -17,7 +17,7 @@ namespace VC
 {
     class SecsMessageDispatcher; // 전방 선언
 
-    class VISION_COMM_API Controller 
+    class VC_API Controller 
     {
     public:
         Controller();

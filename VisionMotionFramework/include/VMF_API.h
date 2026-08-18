@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // VMF.Core는 정적 라이브러리(.lib)로 배포됩니다.
 // NuGet 패키지의 .targets 파일이 VMF_STATIC_LIB를 자동 정의합니다.
@@ -15,5 +15,3 @@
 #else
     #define VMF_API __declspec(dllimport)
 #endif
-
-

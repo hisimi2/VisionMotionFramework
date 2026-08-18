@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IVisionPacket.h"
 #include "SECSPacket.h"
@@ -17,7 +17,7 @@ namespace VC
     using ByteArray = std::vector<uint8_t>;
     using PacketHandler = std::function<void(int /*S*/, int /*F*/, ByteArray&& /*body*/, int /*serverIndex*/)>;
 
-    class VISION_COMM_API SecsMessageDispatcher
+    class VC_API SecsMessageDispatcher
     {
     public:
         explicit SecsMessageDispatcher();
