@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "NonBlockingTaskBase.h"
 #include "IParamProvider.h"
 #include "ParamKeys.h"
@@ -13,15 +13,15 @@ namespace VMF_PLUGIN
      * @details
      * 이 Task는 4개의 SubStep으로 구성되어 측정 영역으로 이동하고 결과를 수신합니다.
      * 
-     * ┌─────────────────────────────────────────────────────────────┐
-     * │ SubStep                 │ 설명                             │
-     * ├─────────────────────────┼──────────────────────────────────┤
-     * │ MoveMeasurementArea     │ 측정 영역으로 이동               │
-     * │ WaitMeasurementArea     │ 측정 영역 도착 대기              │
-     * │ RequestResult           │ 측정 결과 요청                   │
-     * │ WaitResult              │ 측정 결과 수신 대기              │
-     * │ Complete                │ Task 완료                        │
-     * └─────────────────────────┴──────────────────────────────────┘
+     * ┌─────────────────────────────────────────────────────────
+     * │ SubStep                 │ 설명                           
+     * ├─────────────────────────┼───────────────────────────────
+     * │ MoveMeasurementArea     │ 측정 영역으로 이동               
+     * │ WaitMeasurementArea     │ 측정 영역 도착 대기              
+     * │ RequestResult           │ 측정 결과 요청                  
+     * │ WaitResult              │ 측정 결과 수신 대기              
+     * │ Complete                │ Task 완료                      
+     * └─────────────────────────┴───────────────────────────────
      * 
      * @note 총 4개의 SubStep으로 구성됨
      * 
@@ -65,7 +65,7 @@ namespace VMF_PLUGIN
         VMF::TaskResult HandleWaitResult(VMF::Context& ctx, VMF::IActuator* actuator);
         VMF::TaskResult HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator);
 
-        // ✅ Task별 파라미터 구조체 사용 (타입 안전성 및 가독성 향상)
+        // Task별 파라미터 구조체 사용 (타입 안전성 및 가독성 향상)
         ParamKeys::ExecuteScanParams m_params;
     };
 }
