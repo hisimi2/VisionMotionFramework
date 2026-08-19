@@ -15,5 +15,3 @@
 #else
     #define VMF_API __declspec(dllimport)
 #endif
-
-

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 #include "SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
@@ -33,20 +33,9 @@ VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVisionProcessor()
 
 VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 {
-    auto builder = std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
-    
-    // Builder에 Strategy 참조 전달 (Task별 파라미터 설정을 위해 필요)
-    // SetTaskParams() 메서드 제거에 따른 변경: Builder가 GetDefaultTaskParams()를 직접 호출
-    // 이를 통해 Builder의 m_taskParams 멤버 변수 불필요
-    
-    // ✅ 3단계 리팩토링: Strategy 참조를 Builder에 전달
-    // Builder가 Strategy의 SetTaskParamsByTask()를 호출하여 Task별 파라미터 설정
-    auto castedBuilder = std::static_pointer_cast<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>(builder);
-    // shared_from_this()는 enable_shared_from_this<SetPlate1PLVIStrategy>에서 제공하므로
-    // 바로 shared_ptr<SetPlate1PLVIStrategy> 반환 (static_pointer_cast 불필요)
-    castedBuilder->m_strategy = shared_from_this();
-    
-    return builder;
+    // Builder는 Task 조립만 담당 (파라미터 설정은 Strategy::ConfigureContext()에서 수행)
+    // Builder에 Strategy 참조를 전달할 필요 없음 (m_strategy 멤버 제거됨)
+    return std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
 }
 
 void SetPlate1PLVIStrategy::ConfigureParams(VMF::VisionContextPtr ctx)

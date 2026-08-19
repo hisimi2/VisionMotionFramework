@@ -149,7 +149,7 @@ namespace VMF_PLUGIN
         /// <param name="ctx">Context 참조</param>
         void SetTaskParamsByTask(VMF::Context& ctx) const;
 
-/// <summary>
+        /// <summary>
         /// Builder 없이 Context에 파라미터를 직접 설정합니다. (4단계 리팩토링)
         /// </summary>
         /// <details>
@@ -160,7 +160,7 @@ namespace VMF_PLUGIN
         /// Builder를 사용하지 않는 경우 이 메서드를 통해 Context에 파라미터를 설정합니다.
         /// </details>
         /// <param name="ctx">Context 참조</param>
-        void ConfigureContext(VMF::Context& ctx) override;
+        void ConfigureContext(VMF::Context& ctx);
 
         /// <summary>
         /// Task별 파라미터 설정 헬퍼 메서드
