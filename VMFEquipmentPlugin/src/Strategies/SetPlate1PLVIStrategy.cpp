@@ -185,7 +185,7 @@ void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
 }
 
 // ── Task별 파라미터 설정 헬퍼 메서드 ──
-void SetPlate1PLVIStrategy::SetTaskParamsForTask(VMF::Context& ctx, 
+void SetPlate1PLVIStrategy::SetTaskParamsForTask(VMF::Context& ctx,
     const std::string& taskName, const VMF::TaskParams& params) const
 {
     ctx.SetTaskParams(taskName, params);
