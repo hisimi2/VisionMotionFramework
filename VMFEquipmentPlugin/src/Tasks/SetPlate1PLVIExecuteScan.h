@@ -13,14 +13,14 @@ namespace VMF_PLUGIN
      * @details
      * 이 Task는 4개의 SubStep으로 구성되어 측정 영역으로 이동하고 결과를 수신합니다.
      * 
-     * ┌─────────────────────────────────────────────────────────
-     * │ SubStep                 │ 설명                           
+     * ┌─────────────────────────────────────────────────────────┐
+     * │ SubStep                 │ 설명                            │
      * ├─────────────────────────┼───────────────────────────────
-     * │ MoveMeasurementArea     │ 측정 영역으로 이동               
-     * │ WaitMeasurementArea     │ 측정 영역 도착 대기              
-     * │ RequestResult           │ 측정 결과 요청                  
-     * │ WaitResult              │ 측정 결과 수신 대기              
-     * │ Complete                │ Task 완료                      
+     * │ MoveMeasurementArea     │ 측정 영역으로 이동              │
+     * │ WaitMeasurementArea     │ 측정 영역 도착 대기             │
+     * │ RequestResult           │ 측정 결과 요청                 │
+     * │ WaitResult              │ 측정 결과 수신 대기             │
+     * │ Complete                │ Task 완료                     │
      * └─────────────────────────┴───────────────────────────────
      * 
      * @note 총 4개의 SubStep으로 구성됨
@@ -28,7 +28,7 @@ namespace VMF_PLUGIN
      * @note 사용하는 파라미터 (IParamProvider를 통해 조회):
      *   - timeoutMoveMs (int): 이동 타임아웃 [ms], 기본값 7000
      *   - timeoutResultMs (int): 결과 수신 타임아웃 [ms], 기본값 10000
-     *   - scanEndY (double): 측정 종료 Y좌표 [mm], 기본값 200.0
+     *   - visionPositions[1]: 측정 종료 위치 (VisionPosition, visionRequestId=3)
      * 
      * @note 테스트 용이성:
      *   IParamProvider 인터페이스를 통해 파라미터를 조회하므로,
@@ -65,7 +65,11 @@ namespace VMF_PLUGIN
         VMF::TaskResult HandleWaitResult(VMF::Context& ctx, VMF::IActuator* actuator);
         VMF::TaskResult HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator);
 
-        // Task별 파라미터 구조체 사용 (타입 안전성 및 가독성 향상)
-        ParamKeys::ExecuteScanParams m_params;
+        // ✅ Task 파라미터
+        int m_timeoutMoveMs;
+        int m_timeoutResultMs;
+        
+        // ✅ VisionPosition 기반 측정 종료 위치 (scanEndY 대체)
+        VMF::VisionPosition m_scanEndPos;
     };
 }

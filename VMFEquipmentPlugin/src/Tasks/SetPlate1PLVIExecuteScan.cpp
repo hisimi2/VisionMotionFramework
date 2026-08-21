@@ -7,7 +7,8 @@ using namespace VMF;
 using namespace VMF_PLUGIN;
 
 SetPlate1PLVIExecuteScan::SetPlate1PLVIExecuteScan()
-    : m_params()  // 구조체 기본값으로 초기화
+    : m_timeoutMoveMs(7000)
+    , m_timeoutResultMs(10000)
 {
 }
 
@@ -22,10 +23,16 @@ void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
     // 자신의 Task 이름으로 파라미터를 조회하여 Task 간 격리 강화
     const auto& taskParams = provider.GetTaskParams(GetName());
     
-    // ✅ Task별 파라미터 구조체 사용
-    m_params.timeoutMoveMs = taskParams.GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
-    m_params.timeoutResultMs = taskParams.GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
-    m_params.scanEndY = taskParams.GetExecutionParam<double>(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
+    // ✅ Task 파라미터 조회
+    m_timeoutMoveMs = taskParams.GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
+    m_timeoutResultMs = taskParams.GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
+
+    // VisionPositions에서 측정 종료 위치 조회 (visionRequestId=3)
+    const auto& positions = provider.GetVisionPositions();
+    if (positions.size() > 1 && positions[1].visionRequestId == 3)
+    {
+        m_scanEndPos = positions[1];  // VisionPosition 전체 저장
+    }
 
     EnterState(MoveMeasurementArea);
 }
@@ -49,14 +56,11 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleMoveMeasurementArea(VMF::Context
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: actuator is null.");
 
-    // IActuator에는 MoveToY가 없으므로 MeasurementPosition 사용
-    VisionPosition targetPos;
-    targetPos.pos = { 0.0, m_params.scanEndY, 0.0 };  // X=0, Y=scanEndY, Z=0
-
-    if (actuator->MoveToMeasurementPosition(targetPos) != ActError::ActOk)
+    // ✅ VisionPosition 직접 사용 (scanEndY 제거)
+    if (actuator->MoveToMeasurementPosition(m_scanEndPos) != ActError::ActOk)
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: MoveToMeasurementPosition failed.");
 
-    EnterStateWithTimeout(WaitMeasurementArea, m_params.timeoutMoveMs);
+    EnterStateWithTimeout(WaitMeasurementArea, m_timeoutMoveMs);
     return TR_KEEP;
 }
 
@@ -66,10 +70,8 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleWaitMeasurementArea(VMF::Context
     if (!actuator)
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: actuator is null.");
 
-    VisionPosition targetPos;
-    targetPos.pos = { 0.0, m_params.scanEndY, 0.0 };
-
-    if (actuator->IsAtMeasurementPosition(targetPos) != ActError::ActOk)
+    // ✅ VisionPosition 직접 사용
+    if (actuator->IsAtMeasurementPosition(m_scanEndPos) != ActError::ActOk)
     {
         if (IsDeadlineExpired())
             return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: MoveY timeout.");
@@ -96,7 +98,7 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleRequestResult(VMF::Context& ctx,
     if (!ctx.ExecuteVisionCommand(VMF::InspReady))
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: InspReady request failed.");
 
-    EnterStateWithTimeout(WaitResult, m_params.timeoutResultMs);
+    EnterStateWithTimeout(WaitResult, m_timeoutResultMs);
     return TR_KEEP;
 }
 

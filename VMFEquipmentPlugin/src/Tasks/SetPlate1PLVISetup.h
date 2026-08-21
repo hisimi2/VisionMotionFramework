@@ -29,7 +29,7 @@ namespace VMF_PLUGIN
      * @note 사용하는 파라미터 (IParamProvider를 통해 조회):
      *   - timeoutMoveMs (int): 이동 타임아웃 [ms], 기본값 7000
      *   - triggerIntervalMm (double): 트리거 간격 [mm], 기본값 1.8
-     *   - startPos (VisionPosition): 시작 위치
+     *   - visionPositions[0]: 시작 위치 (VisionPosition)
      * 
      * @note 테스트 용이성:
      *   IParamProvider 인터페이스를 통해 파라미터를 조회하므로,
@@ -50,7 +50,7 @@ namespace VMF_PLUGIN
         void OnInitialize(VMF::Context& ctx) override;
         VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) override;
 
-private:
+    private:
         enum SubStep
         {
             MoveSafeZ = 0,
@@ -68,7 +68,11 @@ private:
         VMF::TaskResult HandleSetupTrigger(VMF::Context& ctx, VMF::IActuator* actuator);
         VMF::TaskResult HandleComplete(VMF::Context& ctx, VMF::IActuator* actuator);
 
-        // ✅ Task별 파라미터 구조체 사용 (타입 안전성 및 가독성 향상)
-        ParamKeys::SetupParams m_params;
+        // ✅ Task 파라미터
+        int m_timeoutMoveMs;
+        double m_triggerIntervalMm;
+        
+        // ✅ VisionPosition 기반 시작 위치 (scanStartX/Y/Z 대체)
+        VMF::VisionPosition m_startPos;
     };
 }

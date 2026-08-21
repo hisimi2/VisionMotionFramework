@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 #include "SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
@@ -69,13 +69,12 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
 {
     VMF::TaskParams params;
     
-    // Task별 파라미터 추가
+    // Task별 파라미터 추가 (실행 파라미터만 통합)
     VMF::TaskParams setupParams = GetDefaultSetupParams();
     for (const auto& pair : setupParams.executionParams)
     {
         params.SetExecutionParam(pair.first, pair.second);
     }
-    params.visionPositions = setupParams.visionPositions;
     
     VMF::TaskParams executeScanParams = GetDefaultExecuteScanParams();
     for (const auto& pair : executeScanParams.executionParams)
@@ -95,6 +94,9 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
     {
         params.SetExecutionParam(pair.first, pair.second);
     }
+    
+    // VisionPositions는 각 Task별로 분리 관리되므로 GetDefaultTaskParams()에는 포함하지 않음
+    // 각 Task는 SetTaskParamsByTask()를 통해 자신의 visionPositions를 Context에서 조회
     
     return params;
 }
@@ -126,7 +128,20 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultExecuteScanParams() const
     // ExecuteScan Task 전용 파라미터
     params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
     params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
-    params.SetExecutionParam(ParamKeys::ExecuteScan::SCAN_END_Y, 200.0);
+    
+    // VisionPositions 설정 (측정 시작/종료 위치)
+    // visionRequestId: 2=측정 시작 위치, 3=측정 종료 위치
+    VMF::VisionPosition scanStartPos;
+    scanStartPos.pos = {0.0, 0.0, 0.0};
+    scanStartPos.locateId = 0;
+    scanStartPos.visionRequestId = 2;
+    params.visionPositions.push_back(scanStartPos);
+    
+    VMF::VisionPosition scanEndPos;
+    scanEndPos.pos = {0.0, 200.0, 0.0};
+    scanEndPos.locateId = 0;
+    scanEndPos.visionRequestId = 3;
+    params.visionPositions.push_back(scanEndPos);
     
     return params;
 }
@@ -138,6 +153,20 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultFinishParams() const
     
     // Finish Task 전용 파라미터
     params.SetExecutionParam(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
+    
+    // VisionPositions 설정 (안전 Z/홈 위치)
+    // visionRequestId: 4=안전 Z 위치, 5=홈 위치
+    VMF::VisionPosition safeZPos;
+    safeZPos.pos = {0.0, 0.0, 0.0};
+    safeZPos.locateId = 0;
+    safeZPos.visionRequestId = 4;
+    params.visionPositions.push_back(safeZPos);
+    
+    VMF::VisionPosition homePos;
+    homePos.pos = {0.0, 0.0, 0.0};
+    homePos.locateId = 0;
+    homePos.visionRequestId = 5;
+    params.visionPositions.push_back(homePos);
     
     return params;
 }

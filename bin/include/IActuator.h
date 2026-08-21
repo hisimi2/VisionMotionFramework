@@ -42,38 +42,38 @@ namespace VMF
 
         // ── 홈 위치 이동 및 확인 ──
         // Vision 측정을 완료한 후, Z축을 제외한 나머지 축(X, Y 등)을 회피 또는 대기 위치로 이동시킵니다.
-        virtual ActError MoveToHomePosition() = 0;
-        virtual ActError IsAtHomePosition() = 0;
+        virtual ActError MoveToHomePosition(const VisionPosition& target) = 0;
+        virtual ActError IsAtHomePosition(const VisionPosition& target) = 0;
 
         // ── Z축 이동 및 확인 ──
-        virtual ActError MoveToZ(double targetZ) = 0;
-        virtual ActError IsAtZ(double targetZ) = 0;
+        virtual ActError MoveToZ(const VisionPosition& target) = 0;
+        virtual ActError IsAtZ(const VisionPosition& target) = 0;
 
         // ── 조명/레이저 제어 ──
-        virtual ActError SetLaserState(int laserChannel, bool on) = 0;
-        virtual ActError GetLaserState(int laserChannel, bool& outOn) = 0;
-        virtual ActError SetLightState(int camIndex, bool on) = 0;
-        virtual ActError GetLightState(int camIndex, bool& outOn) = 0;
+        virtual ActError SetLaserState(int laserChannel, bool on, int laserIndex = 0) = 0;
+        virtual ActError GetLaserState(int laserChannel, bool& outOn, int laserIndex = 0) = 0;
+        virtual ActError SetLightState(int camIndex, bool on, int lightIndex = 0) = 0;
+        virtual ActError GetLightState(int camIndex, bool& outOn, int lightIndex = 0) = 0;
 
         // ── 트리거 제어 ──
-        virtual ActError SetTriggerState(bool enable, double intervalMm) = 0;
-        virtual ActError GetTriggerState(bool& outEnabled, double& outIntervalMm) = 0;
+        virtual ActError SetTriggerState(bool enable, double intervalMm, int triggerIndex = 0) = 0;
+        virtual ActError GetTriggerState(bool& outEnabled, double& outIntervalMm, int triggerIndex = 0) = 0;
 
         // ── 충돌 방지 및 안전 이동 ──
         // MoveMeasurementLocation() 수행 시 충돌을 방지하기 위해 Z축 또는 실린더를 회피 위치로 이동시킵니다.
-        virtual ActError MoveToZSafe() = 0;
-        virtual ActError IsAtZSafe(double targetZ) = 0;
+        virtual ActError MoveToZSafe(const VisionPosition& target) = 0;
+        virtual ActError IsAtZSafe(const VisionPosition& target) = 0;
 
         /// 측정 준비 동작: 실린더 클램프 + Gripper Safety 위치로 이동
         /// Robot 구성에 따라 내부적으로 모터/실린더를 조합하여 수행
-        virtual ActError PrepareForInspection() = 0;
+        virtual ActError PrepareForInspection(const VisionPosition& target) = 0;
         /// 측정 준비 완료 여부 확인
-        virtual ActError IsAtPrepareForInspection() = 0;
+        virtual ActError IsAtPrepareForInspection(const VisionPosition& target) = 0;
 
         /// 측정 완료 동작: 실린더 언클램프 + 후진
         /// Robot 구성에 따라 내부적으로 모터/실린더를 조합하여 수행
-        virtual ActError CompleteInspection() = 0;
+        virtual ActError CompleteInspection(const VisionPosition& target) = 0;
         /// 측정 완료 여부 확인
-        virtual ActError IsAtCompleteInspection() = 0;
+        virtual ActError IsAtCompleteInspection(const VisionPosition& target) = 0;
     };
 } // namespace VMF
