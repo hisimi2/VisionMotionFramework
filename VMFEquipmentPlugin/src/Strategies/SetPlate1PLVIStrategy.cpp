@@ -34,9 +34,13 @@ VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVisionProcessor()
 VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 {
     // Builder는 Task 조립만 담당 (파라미터 설정은 Strategy::ConfigureContext()에서 수행)
-    // Builder에 Strategy 참조를 전달할 필요 없음 (m_strategy 멤버 제거됨)
     return std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
 }
+
+
+
+
+
 
 void SetPlate1PLVIStrategy::ConfigureParams(VMF::VisionContextPtr ctx)
 {
