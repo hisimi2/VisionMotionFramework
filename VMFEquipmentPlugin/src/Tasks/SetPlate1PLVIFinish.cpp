@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVIFinish.h"
 #include "IParamProvider.h"
 #include "ParamKeys.h"
@@ -17,11 +17,11 @@ void SetPlate1PLVIFinish::OnInitialize(VMF::Context& ctx)
 {
     // IParamProvider 인터페이스를 통해 실행 파라미터를 조회
     const IParamProvider& provider = static_cast<const IParamProvider&>(ctx);
-    
+
     // ✅ 3단계 리팩토링: Task 이름 기반 파라미터 조회 (Task별 격리)
     // 자신의 Task 이름으로 파라미터를 조회하여 Task 간 격리 강화
     const auto& taskParams = provider.GetTaskParams(GetName());
-    
+
     // ✅ Task 파라미터 조회
     m_timeoutMoveMs = taskParams.GetExecutionParam<int>(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
 
