@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 #include "SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
@@ -69,15 +69,6 @@ void SetPlate1PLVIStrategy::ConfigureParams(VMF::VisionContextPtr ctx)
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// 비전 프리셋 파라미터 반환 (현재 빈 맵 반환)
-// ═══════════════════════════════════════════════════════════════════
-VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetName) const
-{
-    VMF::StringMap p;
-    return VMF::StringMap();
-}
-
-// ═══════════════════════════════════════════════════════════════════
 // 기본 Task 파라미터 정의 (하위 호환용 통합 파라미터)
 // ═══════════════════════════════════════════════════════════════════
 // 
@@ -93,37 +84,37 @@ VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetN
 // - ExecuteScan: visionPositions[0]=측정 시작, [1]=측정 종료 (visionRequestId=2,3)
 // - Finish: visionPositions[0]=안전 Z, [1]=홈 위치 (visionRequestId=4,5)
 //
-VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
+VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultParams() const
 {
     VMF::TaskParams params;
 
     // Task별 파라미터 추가 (실행 파라미터만 통합)
-    VMF::TaskParams setupParams = GetDefaultSetupParams();
+    VMF::TaskParams setupParams = GetSetupParams();
     for (const auto& pair : setupParams.executionParams)
     {
         params.SetExecutionParam(pair.first, pair.second);
     }
 
-    VMF::TaskParams executeScanParams = GetDefaultExecuteScanParams();
+    VMF::TaskParams executeScanParams = GetExecuteScanParams();
     for (const auto& pair : executeScanParams.executionParams)
     {
         params.SetExecutionParam(pair.first, pair.second);
     }
 
-    VMF::TaskParams finishParams = GetDefaultFinishParams();
+    VMF::TaskParams finishParams = GetFinishParams();
     for (const auto& pair : finishParams.executionParams)
     {
         params.SetExecutionParam(pair.first, pair.second);
     }
 
     // 공통 Vision 파라미터 추가
-    VMF::TaskParams visionParams = GetDefaultVisionParams();
+    VMF::TaskParams visionParams = GetVisionParams();
     for (const auto& pair : visionParams.executionParams)
     {
         params.SetExecutionParam(pair.first, pair.second);
     }
 
-    // VisionPositions는 각 Task별로 분리 관리되므로 GetDefaultTaskParams()에는 포함하지 않음
+    // VisionPositions는 각 Task별로 분리 관리되므로 GetDefaultParams()에는 포함하지 않음
     // 각 Task는 SetTaskParamsByTask()를 통해 자신의 visionPositions를 Context에서 조회
 
     return params;
@@ -143,7 +134,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultTaskParams() const
 // - TRIGGER_INTERVAL_MM (double): 트리거 간격 [mm], 기본값 2.0
 // - visionPositions[0]: 시작 위치 (VisionPosition, visionRequestId=1)
 //
-VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultSetupParams() const
+VMF::TaskParams SetPlate1PLVIStrategy::GetSetupParams() const
 {
     VMF::TaskParams params;
 
@@ -176,7 +167,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultSetupParams() const
 // - visionPositions[0]: 측정 시작 위치 (VisionPosition, visionRequestId=2)
 // - visionPositions[1]: 측정 종료 위치 (VisionPosition, visionRequestId=3)
 //
-VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultExecuteScanParams() const
+VMF::TaskParams SetPlate1PLVIStrategy::GetExecuteScanParams() const
 {
     VMF::TaskParams params;
 
@@ -214,7 +205,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultExecuteScanParams() const
 // - visionPositions[0]: 안전 Z 위치 (VisionPosition, visionRequestId=4)
 // - visionPositions[1]: 홈 위치 (VisionPosition, visionRequestId=5)
 //
-VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultFinishParams() const
+VMF::TaskParams SetPlate1PLVIStrategy::GetFinishParams() const
 {
     VMF::TaskParams params;
 
@@ -249,7 +240,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultFinishParams() const
 // - CTRAY_X, CTRAY_Y (Handler 트레이 크기)
 // - DEVICE_INFO_0 ~ DEVICE_INFO_31 (Handler 포켓별 Device 정보)
 //
-VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultVisionParams() const
+VMF::TaskParams SetPlate1PLVIStrategy::GetVisionParams() const
 {
     VMF::TaskParams params;
 
@@ -286,7 +277,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultVisionParams() const
 // ═══════════════════════════════════════════════════════════════════
 //
 // 파라미터 설정 흐름:
-// 1. GetDefaultTaskParams()로 하위 호환용 기본 파라미터 설정
+// 1. GetDefaultParams()로 하위 호환용 기본 파라미터 설정
 // 2. SetTaskParamsForTask()로 Task별 파라미터 설정
 //    - "Task_PLVI_Setup": Setup Task 파라미터 (visionPositions[0] 포함)
 //    - "Task_PLVI_ExecuteScan": ExecuteScan Task 파라미터 (visionPositions[0,1] 포함)
@@ -304,13 +295,13 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultVisionParams() const
 void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
 {
     // 기본 파라미터 (공통 Vision 파라미터 포함)
-    VMF::TaskParams defaultParams = GetDefaultTaskParams();
+    VMF::TaskParams defaultParams = GetDefaultParams();
     ctx.SetTaskParams(defaultParams);  // 하위 호환성용 기본 파라미터
 
     // Task별 파라미터 설정 (헬퍼 메서드 사용)
-    SetTaskParamsForTask(ctx, "Task_PLVI_Setup", GetDefaultSetupParams());
-    SetTaskParamsForTask(ctx, "Task_PLVI_ExecuteScan", GetDefaultExecuteScanParams());
-    SetTaskParamsForTask(ctx, "Task_PLVI_Finish", GetDefaultFinishParams());
+    SetTaskParamsForTask(ctx, "Task_PLVI_Setup", GetSetupParams());
+    SetTaskParamsForTask(ctx, "Task_PLVI_ExecuteScan", GetExecuteScanParams());
+    SetTaskParamsForTask(ctx, "Task_PLVI_Finish", GetFinishParams());
 }
 
 // ═══════════════════════════════════════════════════════════════════

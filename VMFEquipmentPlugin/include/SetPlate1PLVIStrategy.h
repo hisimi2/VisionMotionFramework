@@ -72,8 +72,6 @@ namespace VMF_PLUGIN
         /// <param name="ctx">VisionContext 포인터</param>
         void ConfigureParams(VMF::VisionContextPtr ctx) override;
         
-        VMF::StringMap GetVisionParams(const std::string& presetName) const override;
-
         /// <summary>
         /// PLVI 측정 시퀀스에 필요한 기본 Task 파라미터를 반환합니다.
         /// </summary>
@@ -90,47 +88,47 @@ namespace VMF_PLUGIN
         /// @note 파라미터 값이 변경될 경우 이 메서드만 수정하면 됩니다.
         /// </details>
         /// <returns>PLVI 측정용 기본 TaskParams</returns>
-        VMF::TaskParams GetDefaultTaskParams() const;
+        VMF::TaskParams GetDefaultParams() const;
 
         /// <summary>
         /// Setup Task 전용 기본 파라미터를 반환합니다.
         /// </summary>
         /// <details>
         /// Setup Task에 필요한 기본 파라미터만 반환합니다.
-        /// GetDefaultTaskParams()에서 Setup 관련 파라미터를 추출하여 사용합니다.
+        /// GetDefaultParams()에서 Setup 관련 파라미터를 추출하여 사용합니다.
         /// </details>
         /// <returns>Setup Task용 기본 TaskParams</returns>
-        VMF::TaskParams GetDefaultSetupParams() const;
+        VMF::TaskParams GetSetupParams() const;
 
         /// <summary>
         /// ExecuteScan Task 전용 기본 파라미터를 반환합니다.
         /// </summary>
         /// <details>
         /// ExecuteScan Task에 필요한 기본 파라미터만 반환합니다.
-        /// GetDefaultTaskParams()에서 ExecuteScan 관련 파라미터를 추출하여 사용합니다.
+        /// GetDefaultParams()에서 ExecuteScan 관련 파라미터를 추출하여 사용합니다.
         /// </details>
         /// <returns>ExecuteScan Task용 기본 TaskParams</returns>
-        VMF::TaskParams GetDefaultExecuteScanParams() const;
+        VMF::TaskParams GetExecuteScanParams() const;
 
         /// <summary>
         /// Finish Task 전용 기본 파라미터를 반환합니다.
         /// </summary>
         /// <details>
         /// Finish Task에 필요한 기본 파라미터만 반환합니다.
-        /// GetDefaultTaskParams()에서 Finish 관련 파라미터를 추출하여 사용합니다.
+        /// GetDefaultParams()에서 Finish 관련 파라미터를 추출하여 사용합니다.
         /// </details>
         /// <returns>Finish Task용 기본 TaskParams</returns>
-        VMF::TaskParams GetDefaultFinishParams() const;
+        VMF::TaskParams GetFinishParams() const;
 
         /// <summary>
         /// 공통 Vision 파라미터 기본값을 반환합니다.
         /// </summary>
         /// <details>
         /// 모든 Task에서 공통으로 사용하는 Vision 파라미터를 반환합니다.
-        /// GetDefaultTaskParams()에서 Vision 관련 파라미터를 추출하여 사용합니다.
+        /// GetDefaultParams()에서 Vision 관련 파라미터를 추출하여 사용합니다.
         /// </details>
         /// <returns>공통 Vision 파라미터가 포함된 TaskParams</returns>
-        VMF::TaskParams GetDefaultVisionParams() const;
+        VMF::TaskParams GetVisionParams() const;
 
         /// <summary>
         /// Task별 파라미터를 Context에 설정합니다. (Task별 격리)
