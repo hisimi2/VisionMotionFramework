@@ -60,7 +60,7 @@ namespace VMF
         return repo;
     }
 
-    VisionProcessorPtr DefaultSetupStrategy::CreateVisionProcessor()
+    VisionProcessorPtr DefaultSetupStrategy::CreateVision()
     {
         // [ConnectionManager 모드]
         // SetConnectionConfig()로 연결 설정이 주입되면 ConnectionManager를 통해

@@ -10,7 +10,7 @@
 
 namespace VMF
 {
-Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
+    Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
                                 const VisionConnectionConfig& connectionConfig,
                                 IActuator* actuator)
         : m_pVisionEngine()
@@ -23,10 +23,9 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
             m_strategy.get(),
             actuator,
             hasConfig ? &connectionConfig : nullptr,
-            m_strategy,   // presetStrategy
+            m_strategy, // presetStrategy
             false);     // runSequence = false (시퀀스는 별도 호출)
     }
-
 
     Orchestrator::~Orchestrator()
     {
@@ -149,10 +148,10 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
     // 공통 컴포넌트 조립 로직 (리팩토링: 최종 통합 버전)
     // ============================================================================
 
-    bool Orchestrator::CreateComponentsAndRun(IComponentSetup* factory,
+    bool Orchestrator::CreateComponentsAndRun(DefaultSetupStrategy* factory,
                                               IActuator* actuator,
                                               const VisionConnectionConfig* connectionConfig,
-                                                StrategyPtr presetStrategy,
+                                              StrategyPtr presetStrategy,
                                               bool runSequence,
                                               std::function<SequenceBuilderPtr()> builderFactory)
     {
@@ -176,7 +175,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
         try
         {
             repo = factory->CreateRepository();
-            vp = factory->CreateVisionProcessor();
+            vp = factory->CreateVision();
         }
         catch (...)
         {
@@ -250,7 +249,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
     // InitializeComponents (기존 유지보수 호환용 — CreateComponentsAndRun 호출)
     // ============================================================================
 
-bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* actuator,
+    bool Orchestrator::InitializeComponents(DefaultSetupStrategy* factory, IActuator* actuator,
                                              bool runSequence,
                                              const VisionConnectionConfig* connectionConfig)
     {
@@ -270,12 +269,11 @@ bool Orchestrator::InitializeComponents(IComponentSetup* factory, IActuator* act
                 false);
         }
     }
-
+    
     // ============================================================================
     // RunSequence (팩토리 기반)
     // ============================================================================
-
-bool Orchestrator::RunSequence(IActuator* actuator,
+    bool Orchestrator::RunSequence(IActuator* actuator,
                                     const VisionConnectionConfig& connectionConfig)
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
@@ -303,7 +301,7 @@ bool Orchestrator::RunSequence(IActuator* actuator,
     // RunSequence (무인자) — 생성자에서 이미 Actuator/Config가 주입된 경우 사용
     // ============================================================================
 
-bool Orchestrator::RunSequence()
+    bool Orchestrator::RunSequence()
     {
         std::lock_guard<std::mutex> guard(m_seqMutex);
 
@@ -371,7 +369,7 @@ bool Orchestrator::RunSequence()
         return ctx->ExecuteVisionCommand(cmd);
     }
 
-bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params)
+    bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap& params)
     {
         auto ctx = GetOrCreateContext();
         if (!ctx) return false;
@@ -389,5 +387,4 @@ bool Orchestrator::ExecuteDirectVisionCommand(VisionCommand cmd, const StringMap
         // 기존 (cmd, params) 오버로드로 위임
         return ExecuteDirectVisionCommand(cmd, params);
     }
-
 } // namespace VMF

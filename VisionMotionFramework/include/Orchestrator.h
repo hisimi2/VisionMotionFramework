@@ -82,7 +82,7 @@ namespace VMF
 
 		void StopSequence();
 
-// Repository accessor
+        // Repository accessor
 		DataRepositoryPtr GetDataRepository();
 
 		// --- [직접 모드] VisionProcessor/Repository/Context 사용 ---
@@ -100,9 +100,10 @@ namespace VMF
 		/// <summary>
 		/// 공통 컴포넌트 조립 로직: factory를 통해 Repository, VP, Context 생성
 		/// </summary>
-		bool InitializeComponents(IComponentSetup* factory, IActuator* actuator,
+		bool InitializeComponents(DefaultSetupStrategy* factory, IActuator* actuator,
 		                          bool runSequence,
 		                          const VisionConnectionConfig* connectionConfig = nullptr);
+
 
 		/// <summary>
 		/// [Refactored] 공통 컴포넌트 생성 + 선택적 시퀀스 실행
@@ -114,7 +115,7 @@ namespace VMF
 		/// <param name="presetStrategy">preset 조회용 전략 (m_pCurrentStrategy에 저장)</param>
 		/// <param name="runSequence">true=시퀀스 실행 모드, false=직접 모드</param>
 		/// <param name="builderFactory">Builder 생성 콜백 (runSequence=true 일 때 필요)</param>
-		bool CreateComponentsAndRun(IComponentSetup* factory,
+		bool CreateComponentsAndRun(DefaultSetupStrategy* factory,
 		                            IActuator* actuator,
 		                            const VisionConnectionConfig* connectionConfig,
                                     StrategyPtr presetStrategy,
@@ -126,8 +127,8 @@ namespace VMF
 
 		// --- [직접 모드] VisionProcessor/Repository 직접 보관 ---
 		VisionProcessorPtr m_directVisionProcessor;
-		DataRepositoryPtr     m_directDataRepository;
-		VisionContextPtr         m_directContext;
+		DataRepositoryPtr  m_directDataRepository;
+		VisionContextPtr   m_directContext;
 
 		// 주입된 단일 전략 (IComponentSetup + ISequenceSetup 통합)
 		std::shared_ptr<DefaultSetupStrategy> m_strategy;

@@ -48,7 +48,7 @@ namespace VMF
 
         void ConfigureParams(VisionContextPtr context) override;
         DataRepositoryPtr CreateRepository() override;
-        VisionProcessorPtr CreateVisionProcessor() override;
+        VisionProcessorPtr CreateVision() override;
 
         // ISequenceSetup 순수 가상 함수 — 파생 클래스에서 반드시 구현
         virtual SequenceBuilderPtr CreateBuilder() override = 0;

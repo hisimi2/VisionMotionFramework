@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 
 #include "SqliteDataRepository.h"
@@ -27,7 +27,7 @@ VMF::DataRepositoryPtr SetPlate1PLVIStrategy::CreateRepository()
 }
 
 /* 3. Vision processor creation – starts the vision engine */
-VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVisionProcessor()
+VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVision()
 {
     VMF::VisionConnectionConfig config("127.0.0.1", 8000, 3000);
     auto vm = std::make_shared<VisionPlviProcessor>();
@@ -56,7 +56,10 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultParams() const
     VMF::TaskParams params;
 
     // Merge Setup, ExecuteScan, and Finish parameter sets
-    for (const auto& pair : GetSetupParams().executionParams)   params.SetExecutionParam(pair.first, pair.second);
+    for (const auto& pair : GetSetupParams().executionParams)
+    {
+        params.SetExecutionParam(pair.first, pair.second);
+    }
 
     for (const auto& pair : GetExecuteScanParams().executionParams)
     {

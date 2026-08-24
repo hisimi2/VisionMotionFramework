@@ -11,8 +11,6 @@
 
 namespace VMF
 {
-    class IComponentSetup;
-    class ISequenceSetup;
     class IDataRepository;
     class IVisionClient;
     class ISequence;
@@ -199,18 +197,17 @@ namespace VMF
         };
     } // namespace detail
 
-    using ComponentSetupPtr = std::shared_ptr<IComponentSetup>;
-    using SequenceSetupPtr = std::shared_ptr<ISequenceSetup>;
-    using StrategyPtr   = std::shared_ptr<DefaultSetupStrategy>;
-    using VisionEnginePtr = std::shared_ptr<RunController>;
-    using DataRepositoryPtr = std::shared_ptr<IDataRepository>;
-    using VisionProcessorPtr = std::shared_ptr<IVisionClient>;
-    using SequenceBuilderPtr = std::shared_ptr<SequenceBuilderBase>;
-    using VisionContextPtr = std::shared_ptr<Context>;
-    using AsyncExecutorPtr = std::shared_ptr<AsyncExecutor>;
-    using SequencePtr = std::unique_ptr<ISequence>;
-    using LockGuardType = std::lock_guard<std::mutex>;
-    using UniqueLockType = std::unique_lock<std::mutex>;
+
+    using StrategyPtr           = std::shared_ptr<DefaultSetupStrategy>;
+    using VisionEnginePtr       = std::shared_ptr<RunController>;
+    using DataRepositoryPtr     = std::shared_ptr<IDataRepository>;
+    using VisionProcessorPtr    = std::shared_ptr<IVisionClient>;
+    using SequenceBuilderPtr    = std::shared_ptr<SequenceBuilderBase>;
+    using VisionContextPtr      = std::shared_ptr<Context>;
+    using AsyncExecutorPtr      = std::shared_ptr<AsyncExecutor>;
+    using SequencePtr           = std::unique_ptr<ISequence>;
+    using LockGuardType         = std::lock_guard<std::mutex>;
+    using UniqueLockType        = std::unique_lock<std::mutex>;
     using ConditionVariableType = std::condition_variable;
-    using VisionActuatorPtr = IActuator*;  // raw pointer (소유권 없음, Orchestrator/RunController가 생명주기 관리)
+    using VisionActuatorPtr     = IActuator*;  
 } // namespace VMF

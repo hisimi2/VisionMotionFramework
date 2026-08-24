@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DefaultSetupStrategy.h"
 #include "ParamKeys.h"
@@ -21,7 +21,7 @@ namespace VMF_PLUGIN
     public:
         std::string GetSequenceName() const override;
         VMF::DataRepositoryPtr CreateRepository() override;
-        VMF::VisionProcessorPtr CreateVisionProcessor() override;
+        VMF::VisionProcessorPtr CreateVision() override;
         VMF::SequenceBuilderPtr CreateBuilder() override;
         void ConfigureContext(VMF::Context& ctx) override;
     };

@@ -28,7 +28,7 @@ namespace VMF
         /// <summary>
         /// VisionEventHandler 인스턴스를 생성합니다.
         /// </summary>
-        virtual VisionProcessorPtr CreateVisionProcessor() = 0;
+        virtual VisionProcessorPtr CreateVision() = 0;
 
         /// <summary>
         /// 생성된 Context에 파라미터를 설정합니다.
