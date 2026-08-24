@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Orchestrator.h"
 #include "RunController.h"
 #include "Context.h"
@@ -152,7 +152,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
     bool Orchestrator::CreateComponentsAndRun(IComponentSetup* factory,
                                               IActuator* actuator,
                                               const VisionConnectionConfig* connectionConfig,
-                                              SequenceSetupPtr presetStrategy,
+                                              ComponentSetupPtr presetStrategy,
                                               bool runSequence,
                                               std::function<SequenceBuilderPtr()> builderFactory)
     {
@@ -225,7 +225,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
             runner->SetResultSink(this);
             m_pVisionEngine->SetRunner(runner);
 
-            std::string seqName = presetStrategy ? presetStrategy->GetSequenceName() : "";
+            std::string seqName = reinterpret_cast<ISequenceSetup*>(m_pCurrentStrategy.get())->GetSequenceName();
             if (!m_pVisionEngine->RunSequence(seqName))
             {
                 m_pVisionEngine->StopSequence();

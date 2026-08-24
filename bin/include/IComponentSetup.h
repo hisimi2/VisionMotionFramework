@@ -56,5 +56,10 @@ namespace VMF
         /// 저장된 연결 설정을 반환합니다.
         /// </summary>
         virtual const VisionConnectionConfig& GetConnectionConfig() const = 0;
+
+        /// <summary>
+       /// Equipment에 카메라별 Preset 파라미터 제공 (신규)
+       /// </summary>
+        virtual StringMap GetVisionParams(const std::string& presetName) const = 0;
     };
 }

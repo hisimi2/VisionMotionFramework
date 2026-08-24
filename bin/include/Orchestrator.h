@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
@@ -117,11 +117,11 @@ namespace VMF
 		bool CreateComponentsAndRun(IComponentSetup* factory,
 		                            IActuator* actuator,
 		                            const VisionConnectionConfig* connectionConfig,
-		                            SequenceSetupPtr presetStrategy,
+                                    ComponentSetupPtr presetStrategy,
 		                            bool runSequence,
 		                            std::function<SequenceBuilderPtr()> builderFactory = nullptr);
 
-		SequenceSetupPtr m_pCurrentStrategy;  // 현재 전략 (직접 모드에서 preset 조회용)
+        ComponentSetupPtr m_pCurrentStrategy;  // 현재 전략 (직접 모드에서 preset 조회용)
 		VisionEnginePtr m_pVisionEngine;
 
 		// --- [직접 모드] VisionProcessor/Repository 직접 보관 ---
