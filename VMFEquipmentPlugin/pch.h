@@ -18,7 +18,7 @@
 // ============================================================================
 #include "NonBlockingTaskBase.h"
 #include "SequenceBuilderBase.h"
-#include "ComponentSetupBase.h"
+#include "DefaultSetupStrategy.h"
 #include "IDataRepository.h"
 #include "IVisionClient.h"
 #include "IActuator.h"

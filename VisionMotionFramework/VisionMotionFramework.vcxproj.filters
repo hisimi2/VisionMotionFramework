@@ -22,7 +22,7 @@
     <ClCompile Include="src\Context.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\ComponentSetupBase.cpp">
+    <ClCompile Include="src\DefaultSetupStrategy.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="src\Sequence.cpp">
@@ -79,9 +79,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="include\IComponentSetup.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ComponentSetupBase.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="include\ISequenceSetup.h">

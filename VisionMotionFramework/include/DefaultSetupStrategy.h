@@ -1,8 +1,15 @@
 #pragma once
 
 #include "VMF_API.h"
-#include "ComponentSetupBase.h"
+#include "IComponentSetup.h"
 #include "ISequenceSetup.h"
+#include "ConnectionManager.h"
+#include "IActuator.h"
+#include "Controller.h"
+#include "IVisionClient.h"
+#include "IDataRepository.h"
+#include "SqliteDataRepository.h"
+#include "Mock/CMockVisionEventHandler.h"
 #include <string>
 #include <memory>
 
@@ -12,14 +19,36 @@ namespace VMF
     /// 기본 설정 전략 (Default Setup Strategy)
     /// </summary>
     /// <details>
-    /// ComponentSetupBase와 ISequenceSetup을 상속받는 기본 전략 클래스입니다.
+    /// IComponentSetup과 ISequenceSetup을 상속받는 기본 전략 클래스입니다.
     /// 파생 클래스에서 필요한 메서드를 오버라이드하여 사용합니다.
+    /// ComponentSetupBase의 기능을 직접 구현하여 중간 클래스를 제거했습니다.
     
-    class VMF_API DefaultSetupStrategy : public ComponentSetupBase, public ISequenceSetup
+    class VMF_API DefaultSetupStrategy : public IComponentSetup, public ISequenceSetup
     {
+    private:
+        IActuator* m_adapter;
+        VisionConnectionConfig m_connectionConfig;
+
     public:
-        DefaultSetupStrategy() = default;
+        DefaultSetupStrategy();
         virtual ~DefaultSetupStrategy() = default;
+
+        // IComponentSetup
+        void SetActuator(IActuator* adapter) override;
+        IActuator* GetActuator() override;
+
+        void SetConnectionConfig(const VisionConnectionConfig& config) override;
+        const VisionConnectionConfig& GetConnectionConfig() const override;
+
+        /// ConnectionManager 사용 여부 판단
+        bool IsUsingConnectionManager() const;
+
+        /// ConnectionManager로부터 공유 Controller 획득
+        std::shared_ptr<VC::Controller> GetOrCreateSharedController();
+
+        void ConfigureParams(VisionContextPtr context) override;
+        DataRepositoryPtr CreateRepository() override;
+        VisionProcessorPtr CreateVisionProcessor() override;
 
         // ISequenceSetup 순수 가상 함수 — 파생 클래스에서 반드시 구현
         virtual SequenceBuilderPtr CreateBuilder() override = 0;

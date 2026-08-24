@@ -141,7 +141,7 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClCompile Include="src\Sequence.cpp" />
     <ClCompile Include="src\ConnectionManager.cpp" />
     <ClCompile Include="src\Context.cpp" />
-    <ClCompile Include="src\ComponentSetupBase.cpp" />
+    <ClCompile Include="src\DefaultSetupStrategy.cpp" />
     <ClCompile Include="src\VisionCommunicationManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -181,7 +181,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\RunController.h" />
     <ClInclude Include="include\ConnectionManager.h" />
     <ClInclude Include="include\Context.h" />
-    <ClInclude Include="include\ComponentSetupBase.h" />
     <ClInclude Include="include\VisionCommunicationManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
