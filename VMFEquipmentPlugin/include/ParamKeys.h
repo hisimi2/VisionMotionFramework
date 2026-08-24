@@ -20,11 +20,11 @@ namespace VMF_PLUGIN
         /// </summary>
         namespace Setup
         {
-            constexpr const char* TIMEOUT_MOVE_MS = "Setup.TIMEOUT_MOVE_MS";
-            constexpr const char* TRIGGER_INTERVAL_MM = "Setup.TRIGGER_INTERVAL_MM";
-            constexpr const char* START_POS_X = "Setup.START_POS_X";
-            constexpr const char* START_POS_Y = "Setup.START_POS_Y";
-            constexpr const char* START_POS_Z = "Setup.START_POS_Z";
+            constexpr const char* TIMEOUT_MOVE_MS       = "Setup.TIMEOUT_MOVE_MS";
+            constexpr const char* TRIGGER_INTERVAL_MM   = "Setup.TRIGGER_INTERVAL_MM";
+            constexpr const char* START_POS_X           = "Setup.START_POS_X";
+            constexpr const char* START_POS_Y           = "Setup.START_POS_Y";
+            constexpr const char* START_POS_Z           = "Setup.START_POS_Z";
         }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace VMF_PLUGIN
         /// </summary>
         namespace ExecuteScan
         {
-            constexpr const char* TIMEOUT_MOVE_MS = "ExecuteScan.TIMEOUT_MOVE_MS";
-            constexpr const char* TIMEOUT_RESULT_MS = "ExecuteScan.TIMEOUT_RESULT_MS";
-            constexpr const char* SCAN_END_Y = "ExecuteScan.SCAN_END_Y";
-            constexpr const char* SCAN_SPEED_MM_S = "ExecuteScan.SCAN_SPEED_MM_S";
+            constexpr const char* TIMEOUT_MOVE_MS       = "ExecuteScan.TIMEOUT_MOVE_MS";
+            constexpr const char* TIMEOUT_RESULT_MS     = "ExecuteScan.TIMEOUT_RESULT_MS";
+            constexpr const char* SCAN_END_Y            = "ExecuteScan.SCAN_END_Y";
+            constexpr const char* SCAN_SPEED_MM_S       = "ExecuteScan.SCAN_SPEED_MM_S";
         }
 
         /// <summary>

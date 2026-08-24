@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "DefaultSetupStrategy.h"
 #include "ParamKeys.h"
@@ -17,14 +17,13 @@ namespace VMF_PLUGIN
         VMF::TaskParams GetVisionParams() const;
         void SetTaskParamsByTask(VMF::Context& ctx) const;
         void SetTaskParamsForTask(VMF::Context& ctx, const std::string& taskName, const VMF::TaskParams& params) const;
-
+         
     public:
         std::string GetSequenceName() const override;
         VMF::DataRepositoryPtr CreateRepository() override;
         VMF::VisionProcessorPtr CreateVisionProcessor() override;
         VMF::SequenceBuilderPtr CreateBuilder() override;
         void ConfigureContext(VMF::Context& ctx) override;
-       
     };
 }
 

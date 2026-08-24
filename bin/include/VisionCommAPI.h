@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #if defined(VC_STATIC_LIB)
     #define VC_API

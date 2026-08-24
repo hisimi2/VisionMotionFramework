@@ -1,5 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
+
 #include "SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
 #include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
@@ -10,13 +11,13 @@
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-/* 1️⃣ Sequence name – identifies the measurement sequence */
+/* 1️. Sequence name – identifies the measurement sequence */
 std::string SetPlate1PLVIStrategy::GetSequenceName() const
 {
     return "SetPlate1PLVI";
 }
 
-/* 2️⃣ Repository creation – persists measurement data */
+/* 2. Repository creation – persists measurement data */
 VMF::DataRepositoryPtr SetPlate1PLVIStrategy::CreateRepository()
 {
     auto repo = std::make_shared<VMF::SqliteDataRepository>(
@@ -25,7 +26,7 @@ VMF::DataRepositoryPtr SetPlate1PLVIStrategy::CreateRepository()
     return repo;
 }
 
-/* 2️⃣ Vision processor creation – starts the vision engine */
+/* 3. Vision processor creation – starts the vision engine */
 VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVisionProcessor()
 {
     VMF::VisionConnectionConfig config("127.0.0.1", 8000, 3000);
@@ -34,14 +35,14 @@ VMF::VisionProcessorPtr SetPlate1PLVIStrategy::CreateVisionProcessor()
     return vm;
 }
 
-/* 3️⃣ Builder creation – only assembles Tasks (no parameter logic) */
+/* 4. Builder creation – only assembles Tasks (no parameter logic) */
 VMF::SequenceBuilderPtr SetPlate1PLVIStrategy::CreateBuilder()
 {
     // Builder only assembles Tasks; parameter configuration is done directly
     return std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
 }
 
-/* 4️⃣ Parameter configuration – Strategy directly injects parameters
+/* 5. Parameter configuration – Strategy directly injects parameters
  *    into the Context (no Builder needed). */
 void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
 {
@@ -49,28 +50,34 @@ void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
     // This replaces the former Builder-based approach.
     SetTaskParamsByTask(ctx);
 }
+
 VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultParams() const
 {
     VMF::TaskParams params;
 
     // Merge Setup, ExecuteScan, and Finish parameter sets
     for (const auto& pair : GetSetupParams().executionParams)   params.SetExecutionParam(pair.first, pair.second);
-    for (const auto& pair : GetExecuteScanParams().executionParams) {
+
+    for (const auto& pair : GetExecuteScanParams().executionParams)
+    {
         params.SetExecutionParam(pair.first, pair.second);
     }
-    for (const auto& pair : GetFinishParams().executionParams) {
+
+    for (const auto& pair : GetFinishParams().executionParams)
+    {
         params.SetExecutionParam(pair.first, pair.second);
     }
 
     // Add common Vision parameters (shared across all Tasks)
-    for (const auto& pair : GetVisionParams().executionParams) {
+    for (const auto& pair : GetVisionParams().executionParams)
+    {
         params.SetExecutionParam(pair.first, pair.second);
     }
 
     return params;
 }
 
-/* 2️⃣ Setup Task – start position and trigger interval */
+/* Setup Task – start position and trigger interval */
 VMF::TaskParams SetPlate1PLVIStrategy::GetSetupParams() const
 {
     VMF::TaskParams params;
@@ -89,7 +96,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetSetupParams() const
     return params;
 }
 
-/* 2️⃣ ExecuteScan Task – measurement start/end positions */
+/* ExecuteScan Task – measurement start/end positions */
 VMF::TaskParams SetPlate1PLVIStrategy::GetExecuteScanParams() const
 {
     VMF::TaskParams params;
@@ -102,19 +109,19 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetExecuteScanParams() const
     VMF::VisionPosition startPos;
     startPos.pos = { 0.0, 0.0, 0.0 };
     startPos.locateId = 0;
-    startPos.visionRequestId = 2;          // start position
+    startPos.visionRequestId = 2;               // start position
     params.visionPositions.push_back(startPos);
 
     VMF::VisionPosition scanEndPos;
     scanEndPos.pos = { 0.0, 200.0, 0.0 };
     scanEndPos.locateId = 0;
-    scanEndPos.visionRequestId = 3;            // end position
+    scanEndPos.visionRequestId = 3;             // end position
     params.visionPositions.push_back(scanEndPos);
 
     return params;
 }
 
-/* 3️⃣ Finish Task – safe‑Z and home positions */
+/* Finish Task – safe‑Z and home positions */
 VMF::TaskParams SetPlate1PLVIStrategy::GetFinishParams() const
 {
     VMF::TaskParams params;
@@ -138,7 +145,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetFinishParams() const
     return params;
 }
 
-/* 4️⃣ Common Vision parameters shared by all Tasks */
+/* Common Vision parameters shared by all Tasks */
 VMF::TaskParams SetPlate1PLVIStrategy::GetVisionParams() const
 {
     VMF::TaskParams params;
@@ -171,7 +178,7 @@ VMF::TaskParams SetPlate1PLVIStrategy::GetVisionParams() const
     return params;
 }
 
-/* 5️⃣ SetTaskParamsByTask – inject default parameters into Context */
+/* 5️ SetTaskParamsByTask – inject default parameters into Context */
 void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
 {
     // Integrated default parameters (including Vision params)
@@ -184,7 +191,7 @@ void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
     SetTaskParamsForTask(ctx, "Task_PLVI_Finish", GetFinishParams());
 }
 
-/* 6️⃣ Helper: set a single Task’s parameters by name */
+/* 6️ Helper: set a single Task’s parameters by name */
 void SetPlate1PLVIStrategy::SetTaskParamsForTask(VMF::Context& ctx,
     const std::string& taskName,
     const VMF::TaskParams& params) const

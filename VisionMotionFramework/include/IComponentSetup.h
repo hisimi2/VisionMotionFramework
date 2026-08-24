@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "VMF_API.h"
 #include "Types.h"
@@ -16,6 +16,7 @@ namespace VMF
     /// </summary>
     class VMF_API IComponentSetup
     {
+
     public:
         virtual ~IComponentSetup() = default;
 

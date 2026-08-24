@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -8,13 +8,12 @@
 
 #include <cstdlib>
 #include <sstream>
-#include <memory> // std::enable_shared_from_this 사용 목적
 #include <mutex>  // std::mutex 사용 목적
 #include <unordered_map>
 
 namespace VMF
 {
-    class VMF_API Context : public std::enable_shared_from_this<Context>, public IParamProvider
+    class VMF_API Context : public IParamProvider
     {
     public:
         /// <summary>

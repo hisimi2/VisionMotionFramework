@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
 #include "Context.h"
@@ -7,6 +7,7 @@
 
 namespace VMF
 {
+
     /// <summary>
     /// 시퀀스(Sequence) 생성 및 이름 반환을 위한 인터페이스.
     /// 컴포넌트(VisionProcessor, DataRepository) 생성은 IComponentSetup을 참조하세요.
