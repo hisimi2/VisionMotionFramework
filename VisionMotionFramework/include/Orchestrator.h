@@ -117,11 +117,11 @@ namespace VMF
 		bool CreateComponentsAndRun(IComponentSetup* factory,
 		                            IActuator* actuator,
 		                            const VisionConnectionConfig* connectionConfig,
-                                    ComponentSetupPtr presetStrategy,
+                                    StrategyPtr presetStrategy,
 		                            bool runSequence,
 		                            std::function<SequenceBuilderPtr()> builderFactory = nullptr);
 
-        ComponentSetupPtr m_pCurrentStrategy;  // 현재 전략 (직접 모드에서 preset 조회용)
+        StrategyPtr m_pCurrentStrategy;  
 		VisionEnginePtr m_pVisionEngine;
 
 		// --- [직접 모드] VisionProcessor/Repository 직접 보관 ---

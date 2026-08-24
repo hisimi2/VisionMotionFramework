@@ -152,7 +152,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
     bool Orchestrator::CreateComponentsAndRun(IComponentSetup* factory,
                                               IActuator* actuator,
                                               const VisionConnectionConfig* connectionConfig,
-                                              ComponentSetupPtr presetStrategy,
+                                                StrategyPtr presetStrategy,
                                               bool runSequence,
                                               std::function<SequenceBuilderPtr()> builderFactory)
     {
@@ -225,7 +225,7 @@ Orchestrator::Orchestrator(std::shared_ptr<DefaultSetupStrategy> strategy,
             runner->SetResultSink(this);
             m_pVisionEngine->SetRunner(runner);
 
-            std::string seqName = reinterpret_cast<ISequenceSetup*>(m_pCurrentStrategy.get())->GetSequenceName();
+            std::string seqName = m_pCurrentStrategy->GetSequenceName();
             if (!m_pVisionEngine->RunSequence(seqName))
             {
                 m_pVisionEngine->StopSequence();
