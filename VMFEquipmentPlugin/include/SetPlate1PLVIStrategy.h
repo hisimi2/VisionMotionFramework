@@ -19,7 +19,7 @@ namespace VMF_PLUGIN
         void SetTaskParamsForTask(VMF::Context& ctx, const std::string& taskName, const VMF::TaskParams& params) const;
          
     public:
-        std::string GetSequenceName() const override;
+        std::string GetName() const override;
         VMF::DataRepositoryPtr CreateRepository() override;
         VMF::VisionProcessorPtr CreateVision() override;
         VMF::SequenceBuilderPtr CreateBuilder() override;

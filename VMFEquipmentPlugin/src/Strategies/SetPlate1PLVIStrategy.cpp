@@ -12,7 +12,7 @@ using namespace VMF;
 using namespace VMF_PLUGIN;
 
 /* 1️. Sequence name – identifies the measurement sequence */
-std::string SetPlate1PLVIStrategy::GetSequenceName() const
+std::string SetPlate1PLVIStrategy::GetName() const
 {
     return "SetPlate1PLVI";
 }

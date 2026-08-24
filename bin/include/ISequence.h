@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "ITask.h"
 #include <string>
@@ -18,7 +18,7 @@ namespace VMF
 
         virtual bool Execute(Context& context, IActuator* actuator) = 0;
         virtual void Abort() = 0;
-        virtual std::string GetSequenceName() const = 0;
+        virtual std::string GetName() const = 0;
         virtual std::string GetTaskName() const = 0;
         virtual void AddTask(TaskPtr step) = 0;
     };

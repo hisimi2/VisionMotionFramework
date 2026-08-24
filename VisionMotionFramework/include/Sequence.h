@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "ISequence.h" 
 #include "ITask.h"
@@ -24,7 +24,7 @@ namespace VMF
 
         bool Execute(Context& context, IActuator* actuator) override;
         void Abort() override;
-        std::string GetSequenceName() const override;
+        std::string GetName() const override;
         std::string GetTaskName() const override;
 
         void AddTask(TaskPtr step) override;

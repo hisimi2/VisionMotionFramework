@@ -41,7 +41,7 @@ namespace VMF
 		using ObserverId = std::uint64_t;
 		using VisionResultObserver = std::function<void(const VisionResultPayload& payload)>;
         
-/// <summary>
+        /// <summary>
 		/// 생성자: DefaultSetupStrategy + Actuator + ConnectionConfig를 한 번에 주입하여
 		/// 생성 시점에 Repository, VisionProcessor, Context를 미리 조립합니다.
 		/// 상태머신 모드: 생성 후 RunSequence() 호출
@@ -54,8 +54,6 @@ namespace VMF
 		             const VisionConnectionConfig& connectionConfig = VisionConnectionConfig(),
 		             IActuator* actuator = nullptr);
 
-		
-
 		~Orchestrator() override;
 
 		// IResultSink 구현
@@ -67,7 +65,7 @@ namespace VMF
 		void ClearObservers();
 
 		// ---- Sequence control (상태머신 모드) ----
-/// <summary>
+        /// <summary>
 		/// 주입된 팩토리(IComponentSetup + ISequenceSetup)를 사용하여
 		/// 컴포넌트를 조립하고 시퀀스를 실행합니다.
 		/// </summary>
@@ -79,10 +77,9 @@ namespace VMF
 		/// 인자 없이 시퀀스를 실행합니다.
 		/// </summary>
 		bool RunSequence();
-
 		void StopSequence();
 
-// Repository accessor
+        // Repository accessor
 		DataRepositoryPtr GetDataRepository();
 
 		// --- [직접 모드] VisionProcessor/Repository/Context 사용 ---

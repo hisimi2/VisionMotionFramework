@@ -18,7 +18,7 @@ namespace VMF
         virtual ~ISequenceSetup() = default;
 
         /// 실행할 시퀀스 이름 반환
-        virtual std::string GetSequenceName() const = 0;
+        virtual std::string GetName() const = 0;
 
        
 

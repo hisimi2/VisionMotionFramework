@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 
 #include "Sequence.h"
 #include "ITask.h"
@@ -34,7 +34,7 @@ namespace VMF
         LogTask(makeLogPrefix(m_SequenceName) + "AddTask: " + (task ? task->GetName() : "<null>"));
     }
 
-    std::string Sequence::GetSequenceName() const
+    std::string Sequence::GetName() const
     {
         return m_SequenceName;
     }

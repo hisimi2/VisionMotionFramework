@@ -173,7 +173,6 @@ xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(ProjectDir)..\bin\include\"</Comman
     <ClInclude Include="include\RepositoryFactory.h" />
     <ClInclude Include="include\SaveUtils.h" />
     <ClInclude Include="include\DefaultSetupStrategy.h" />
-    <ClInclude Include="include\SequenceFactoryBase.h" />
     <ClInclude Include="include\SequenceBuilderBase.h" />
     <ClInclude Include="include\SqliteDataRepository.h" />
     <ClInclude Include="include\Sequence.h" />

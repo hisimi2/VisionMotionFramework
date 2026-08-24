@@ -22,9 +22,6 @@
     <ClCompile Include="src\Context.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\DefaultSetupStrategy.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sequence.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -55,6 +52,7 @@
     <ClCompile Include="src\VisionCommunicationManager.cpp">
       <Filter>VisionProcessor</Filter>
     </ClCompile>
+    <ClCompile Include="src\DefaultSetupStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CMockDataRepository.h">
@@ -82,9 +80,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="include\ISequenceSetup.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SequenceFactoryBase.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="include\SequenceBuilderBase.h">

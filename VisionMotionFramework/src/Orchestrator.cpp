@@ -224,7 +224,7 @@ namespace VMF
             runner->SetResultSink(this);
             m_pVisionEngine->SetRunner(runner);
 
-            std::string seqName = m_pCurrentStrategy->GetSequenceName();
+            std::string seqName = m_pCurrentStrategy->GetName();
             if (!m_pVisionEngine->RunSequence(seqName))
             {
                 m_pVisionEngine->StopSequence();

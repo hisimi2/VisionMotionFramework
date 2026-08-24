@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVISequenceBuilder.h"
 #include "SetPlate1PLVIStrategy.h"
 #include "Context.h"
@@ -16,6 +16,11 @@ VMF::SequencePtr SetPlate1PLVISequenceBuilder::BuildSequence(const std::string& 
 {
     VMF::SequencePtr seq(new VMF::Sequence(sequenceName));
 
+    seq->AddTask(std::make_shared<SetPlate1PLVISetup>());
+    seq->AddTask(std::make_shared<SetPlate1PLVIExecuteScan>());
+    seq->AddTask(std::make_shared<SetPlate1PLVIFinish>());
+
+    /*
     // 1. Setup Task
     {
         auto task = std::make_shared<SetPlate1PLVISetup>();
@@ -33,6 +38,7 @@ VMF::SequencePtr SetPlate1PLVISequenceBuilder::BuildSequence(const std::string& 
         auto task = std::make_shared<SetPlate1PLVIFinish>();
         seq->AddTask(task);
     }
+    */
 
     return seq;
 }

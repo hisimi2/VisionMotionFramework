@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "AsyncExecutor.h"
 #include "Context.h"
 
@@ -114,7 +114,7 @@ namespace VMF
         if (m_currentSeq)
         {
             std::vector<std::string> msg;
-            msg.push_back(std::string("Sequence: ") + m_currentSeq->GetSequenceName());
+            msg.push_back(std::string("Sequence: ") + m_currentSeq->GetName());
             msg.push_back(std::string("Task: ") + m_currentSeq->GetTaskName());
             msg.push_back(std::string("Status: ") + status);
             SendResultToSink(requestId, msg);
