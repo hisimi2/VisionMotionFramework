@@ -32,42 +32,42 @@ namespace VMF
     VMF::ActError LoadPPAdapter::IsReadyToMove()
     {
         // TODO: 도어, 압력, Gripper 등 모든 안전 조건 확인 후 ActOk 반환
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 
     // 실제 Z축 이동 제어
     VMF::ActError LoadPPAdapter::MoveZ(double targetZ)
     {
         // TODO: m_parts->MoveAxis(AXIS_Z, targetZ, SPEED_HIGH) 호출 후 ActOk/ActError 반환
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 
     // 다축 이동 명령 처리
     VMF::ActError LoadPPAdapter::Move(VMF::MotionCommand& cmd)
     {
         // TODO: cmd에 포함된 각 축을 m_parts->MoveAxis() 로 이동
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 
     // Z축 목표 위치 도달 여부 확인
     VMF::ActError LoadPPAdapter::isMoveZ(double targetZ)
     {
         // TODO: m_parts->IsAxisInPosition(AXIS_Z, targetZ, TOL) 로 확인 후 ActOk/ActError 반환
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 
     // 다축 목표 위치 도달 여부 확인
     VMF::ActError LoadPPAdapter::isMove(VMF::MotionCommand& cmd)
     {
         // TODO: cmd에 포함된 각 축이 목표 위치에 도달했는지 확인
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 
     // 비상 정지/이동 중단
     VMF::ActError LoadPPAdapter::Stop()
     {
         // TODO: m_parts->StopAllAxes() 호출 후 ActOk 반환
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 
     // 현재 위치 반환
@@ -127,7 +127,7 @@ namespace VMF
         // TODO: 실제 트리거 상태 조회 로직 구현
         outEnabled = false;
         outIntervalMm = 0.0;
-        return VMF::ActOk;
+        return VMF::ActError::ActOk;
     }
 } // namespace VMF_PLUGIN
 

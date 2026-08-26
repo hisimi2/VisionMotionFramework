@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "RunController.h"
 #include "DefaultSetupStrategy.h"
@@ -64,6 +64,32 @@ namespace VMF
 		bool RemoveObserver(ObserverId id);
 		void ClearObservers();
 
+        // ---- Error handling ----
+        /// <summary>
+        /// 컴포넌트 생성 오류 정보
+        /// </summary>
+        struct VMF_API ComponentCreationError
+        {
+            std::string errorMessage;           // 오류 상세 메시지
+            std::string failedComponent;        // 실패한 컴포넌트 이름 (Repository/VisionProcessor)
+            std::string stackTrace;             // 선택적 스택 트레이스 (디버그 빌드용)
+
+            ComponentCreationError() = default;
+            ComponentCreationError(const std::string& msg, const std::string& component)
+                : errorMessage(msg), failedComponent(component) {}
+        };
+
+        /// <summary>
+        /// 마지막 컴포넌트 생성 오류 조회
+        /// </summary>
+        /// <returns>마지막 오류 정보 (오류가 없으면 빈 값)</returns>
+        const ComponentCreationError& GetLastError() const;
+
+        /// <summary>
+        /// 마지막 오류 정보 초기화
+        /// </summary>
+        void ClearError();
+
 		// ---- Sequence control (상태머신 모드) ----
         /// <summary>
 		/// 주입된 팩토리(IComponentSetup + ISequenceSetup)를 사용하여
@@ -121,6 +147,9 @@ namespace VMF
 
         StrategyPtr m_pCurrentStrategy;  
 		VisionEnginePtr m_pVisionEngine;
+
+		// 마지막 컴포넌트 생성 오류 정보
+		ComponentCreationError m_lastError;
 
 		// --- [직접 모드] VisionProcessor/Repository 직접 보관 ---
 		VisionProcessorPtr m_directVisionProcessor;

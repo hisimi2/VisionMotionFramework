@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Orchestrator.h"
 #include "RunController.h"
 #include "Context.h"
@@ -79,6 +79,16 @@ namespace VMF
     {
         std::lock_guard<std::mutex> lk(m_observerMutex);
         m_observers.clear();
+    }
+
+    const Orchestrator::ComponentCreationError& Orchestrator::GetLastError() const
+    {
+        return m_lastError;
+    }
+
+    void Orchestrator::ClearError()
+    {
+        m_lastError = ComponentCreationError();
     }
 
     void Orchestrator::NotifyVisionResult(int requestId, const std::vector<std::string>& results)
@@ -175,24 +185,73 @@ namespace VMF
         try
         {
             repo = factory->CreateRepository();
-            vp = factory->CreateVision();
+        }
+        catch (const std::exception& e)
+        {
+            m_lastError = ComponentCreationError(
+                std::string("CreateRepository failed: ") + e.what(),
+                "DataRepository");
+            return false;
         }
         catch (...)
         {
+            m_lastError = ComponentCreationError(
+                "CreateRepository failed: unknown exception",
+                "DataRepository");
             return false;
         }
 
-        if (!repo || !vp) return false;
+        try
+        {
+            vp = factory->CreateVision();
+        }
+        catch (const std::exception& e)
+        {
+            m_lastError = ComponentCreationError(
+                std::string("CreateVision failed: ") + e.what(),
+                "VisionProcessor");
+            return false;
+        }
+        catch (...)
+        {
+            m_lastError = ComponentCreationError(
+                "CreateVision failed: unknown exception",
+                "VisionProcessor");
+            return false;
+        }
+
+        if (!repo || !vp)
+        {
+            if (!repo)
+                m_lastError = ComponentCreationError("CreateRepository returned null", "DataRepository");
+            else
+                m_lastError = ComponentCreationError("CreateVision returned null", "VisionProcessor");
+            return false;
+        }
 
         auto ctx = CreateContext(vp, repo);
-        if (!ctx) return false;
+        if (!ctx)
+        {
+            m_lastError = ComponentCreationError("CreateContext returned null", "Context");
+            return false;
+        }
 
         try
         {
             factory->ConfigureParams(ctx);
         }
+        catch (const std::exception& e)
+        {
+            m_lastError = ComponentCreationError(
+                std::string("ConfigureParams failed: ") + e.what(),
+                "Context");
+            return false;
+        }
         catch (...)
         {
+            m_lastError = ComponentCreationError(
+                "ConfigureParams failed: unknown exception",
+                "Context");
             return false;
         }
 
@@ -200,13 +259,20 @@ namespace VMF
         {
             // 시퀀스 모드: Builder 필요
             if (!builderFactory)
+            {
+                m_lastError = ComponentCreationError("builderFactory is null", "SequenceBuilder");
                 return false;
+            }
 
             SequenceBuilderPtr builder = builderFactory();
-            if (!builder) return false;
+            if (!builder)
+            {
+                m_lastError = ComponentCreationError("builderFactory returned null", "SequenceBuilder");
+                return false;
+            }
 
             // m_pCurrentStrategy 저장 (preset 조회용)
-            m_pCurrentStrategy = presetStrategy;
+            m_pCurrentStrategy = presetStrategy ? presetStrategy : m_strategy;
 
             VisionActuatorPtr act = factory->GetActuator();
 
@@ -214,8 +280,19 @@ namespace VMF
             {
                 m_pVisionEngine = std::make_shared<RunController>(builder, ctx, act);
             }
+            catch (const std::exception& e)
+            {
+                m_lastError = ComponentCreationError(
+                    std::string("RunController creation failed: ") + e.what(),
+                    "RunController");
+                m_pCurrentStrategy.reset();
+                return false;
+            }
             catch (...)
             {
+                m_lastError = ComponentCreationError(
+                    "RunController creation failed: unknown exception",
+                    "RunController");
                 m_pCurrentStrategy.reset();
                 return false;
             }
@@ -239,7 +316,7 @@ namespace VMF
             m_directVisionProcessor = vp;
             m_directDataRepository = repo;
             m_directContext = ctx;
-            m_pCurrentStrategy = presetStrategy;  // [버그 수정] 누락된 m_pCurrentStrategy 저장
+            m_pCurrentStrategy = presetStrategy ? presetStrategy : m_strategy;  // [버그 수정] 누락된 m_pCurrentStrategy 저장
         }
 
         return true;
@@ -265,7 +342,7 @@ namespace VMF
         {
             return CreateComponentsAndRun(
                 factory, actuator, connectionConfig,
-                nullptr,   // presetStrategy = nullptr
+                m_strategy,   // presetStrategy = m_strategy (직접 모드에서도 preset 조회 가능하도록)
                 false);
         }
     }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string> 
 #include <map> 
@@ -210,4 +210,24 @@ namespace VMF
     using UniqueLockType        = std::unique_lock<std::mutex>;
     using ConditionVariableType = std::condition_variable;
     using VisionActuatorPtr     = IActuator*;  
+
+    // ── Equipment2015 호환을 위한 타입 ──
+    enum class PitchType
+    {
+        Fixed,      // 고정 피치
+        Variable,   // 가변 피치
+        Unknown     // 알 수 없음
+    };
+
+    struct MotionCommand
+    {
+        std::string axisName;       // 축 이름 (예: "X", "Y", "Z")
+        double targetPosition;     // 목표 위치
+        double speed;              // 속도
+        bool relative;             // 상대 이동 여부
+
+        MotionCommand() 
+            : targetPosition(0.0), speed(0.0), relative(false) {}
+    };
+
 } // namespace VMF

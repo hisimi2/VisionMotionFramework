@@ -17,7 +17,7 @@ namespace VMF_PLUGIN
         VMF::TaskParams GetVisionParams() const;
         void SetTaskParamsByTask(VMF::Context& ctx) const;
         void SetTaskParamsForTask(VMF::Context& ctx, const std::string& taskName, const VMF::TaskParams& params) const;
-         
+        
     public:
         std::string GetName() const override;
         VMF::DataRepositoryPtr CreateRepository() override;

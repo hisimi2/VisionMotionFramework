@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "DefaultSetupStrategy.h"
 #include "ConnectionManager.h"
 #include "SqliteDataRepository.h"

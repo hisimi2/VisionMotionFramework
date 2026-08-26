@@ -20,8 +20,6 @@ namespace VMF
         /// 실행할 시퀀스 이름 반환
         virtual std::string GetName() const = 0;
 
-       
-
         /// 사용할 SequenceBuilder 생성
         virtual SequenceBuilderPtr CreateBuilder() = 0;
 
