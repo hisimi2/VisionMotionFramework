@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "VMF_API.h"
 #include "Types.h"
 
@@ -27,7 +27,8 @@ namespace VMF
         ActStateMismatch // 상태 불일치
     };
 
-    class VMF_API IActuator {
+    class VMF_API IActuator
+    {
     public:
         IActuator() = default;
         virtual ~IActuator() = default;

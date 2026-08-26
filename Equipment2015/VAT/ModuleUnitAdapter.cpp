@@ -1,213 +1,178 @@
 #include "stdafx.h"
 #include "ModuleUnitAdapter.h"
 
-namespace VMF_6SIDE
+using namespace VMF;
+
+ModuleUnitAdapter::ModuleUnitAdapter(VisionUnitParts* parts)
+	: m_parts(parts)
+{}
+
+ModuleUnitAdapter::~ModuleUnitAdapter() {}
+
+// ── IActuator 인터페이스 구현 ──────────────────────────────
+
+ActError ModuleUnitAdapter::MoveToMeasurementPosition(const VisionPosition& target)
 {
-	ModuleUnitAdapter::ModuleUnitAdapter(VisionUnitParts* parts)
-		: m_parts(parts)
-	{}
-
-	ModuleUnitAdapter::~ModuleUnitAdapter() {}
-
-	VMF::PitchType ModuleUnitAdapter::GetPitchType()
+	if (!m_parts) return ActError::ActFail;
+	if (target.pos.size() >= 4)
 	{
-		return VMF::PitchType::Variable;
+		m_parts->Turn180.Move(target.pos[0]);
+		m_parts->Turn360.Move(target.pos[1]);
+		m_parts->Gripper.Move(target.pos[2]);
+		m_parts->CameraZ.Move(target.pos[3]);
 	}
+	return ActError::ActOk;
+}
 
-	VMF::ActError ModuleUnitAdapter::IsReadyToMove()
+ActError ModuleUnitAdapter::IsAtMeasurementPosition(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	bool allDone = true;
+	if (target.pos.size() >= 4)
 	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		return VMF::ActError::ActOk;
+		allDone &= m_parts->Turn180.MotionDone();
+		allDone &= m_parts->Turn360.MotionDone();
+		allDone &= m_parts->Gripper.MotionDone();
+		allDone &= m_parts->CameraZ.MotionDone();
 	}
+	return allDone ? ActError::ActOk : ActError::ActBusy;
+}
 
-	VMF::ActError ModuleUnitAdapter::MoveZ(double targetZ)
+ActError ModuleUnitAdapter::MoveToHomePosition(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (target.pos.size() >= 4)
 	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		m_parts->CameraZ.Move(targetZ);
-		return VMF::ActError::ActOk;
+		m_parts->Turn180.Move(target.pos[0]);
+		m_parts->Turn360.Move(target.pos[1]);
+		m_parts->Gripper.Move(target.pos[2]);
+		m_parts->CameraZ.Move(target.pos[3]);
 	}
+	return ActError::ActOk;
+}
 
-	VMF::ActError ModuleUnitAdapter::isMoveZ(double targetZ)
+ActError ModuleUnitAdapter::IsAtHomePosition(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	bool allDone = true;
+	if (target.pos.size() >= 4)
 	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		return m_parts->CameraZ.MotionDone()
-			? VMF::ActError::ActOk
-			: VMF::ActError::ActBusy;
+		allDone &= m_parts->Turn180.MotionDone();
+		allDone &= m_parts->Turn360.MotionDone();
+		allDone &= m_parts->Gripper.MotionDone();
+		allDone &= m_parts->CameraZ.MotionDone();
 	}
+	return allDone ? ActError::ActOk : ActError::ActBusy;
+}
 
-	// MotionCommand 축 이름 규칙:
-	//   "Turn180"  ? Turn180 축
-	//   "Turn360"  ? Turn360 축
-	//   "Gripper"  ? Gripper 축
-	//   "CameraZ"  ? CameraZ 축
-	VMF::ActError ModuleUnitAdapter::Move(VMF::MotionCommand& cmd)
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
+ActError ModuleUnitAdapter::MoveToZ(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (target.pos.size() >= 1)
+		m_parts->CameraZ.Move(target.pos[0]);
+	return ActError::ActOk;
+}
 
-		double pos = 0.0;
-		if (cmd.Get("Turn180"))  m_parts->Turn180.Move(pos);
-		if (cmd.Get("Turn360"))  m_parts->Turn360.Move(pos);
-		if (cmd.Get("Gripper"))  m_parts->Gripper.Move(pos);
-		if (cmd.Get("CameraZ"))  m_parts->CameraZ.Move(pos);
+ActError ModuleUnitAdapter::IsAtZ(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (target.pos.size() >= 1)
+		return m_parts->CameraZ.MotionDone() ? ActError::ActOk : ActError::ActBusy;
+	return ActError::ActOk;
+}
 
-		return VMF::ActError::ActOk;
-	}
+ActError ModuleUnitAdapter::SetLaserState(int laserChannel, bool on, int laserIndex)
+{
+	return ActError::ActFail;
+}
 
-	VMF::ActError ModuleUnitAdapter::isMove(VMF::MotionCommand& cmd)
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
+ActError ModuleUnitAdapter::GetLaserState(int laserChannel, bool& outOn, int laserIndex)
+{
+	outOn = false;
+	return ActError::ActFail;
+}
 
-		bool allDone = true;
+ActError ModuleUnitAdapter::SetLightState(int camIndex, bool on, int lightIndex)
+{
+	if (!m_parts) return ActError::ActFail;
+	m_parts->VisionLight.SetStatus(on);
+	return ActError::ActOk;
+}
 
-		if (cmd.Get("Turn180"))
-			allDone &= m_parts->Turn180.MotionDone();
-		if (cmd.Get("Turn360"))
-			allDone &= m_parts->Turn360.MotionDone();
-		if (cmd.Get("Gripper"))
-			allDone &= m_parts->Gripper.MotionDone();
-		if (cmd.Get("CameraZ"))
-			allDone &= m_parts->CameraZ.MotionDone();
+ActError ModuleUnitAdapter::GetLightState(int camIndex, bool& outOn, int lightIndex)
+{
+	if (!m_parts) return ActError::ActFail;
+	outOn = m_parts->VisionLight.GetStatus();
+	return ActError::ActOk;
+}
 
-		return allDone ? VMF::ActError::ActOk : VMF::ActError::ActBusy;
-	}
+ActError ModuleUnitAdapter::SetTriggerState(bool enable, double intervalMm, int triggerIndex)
+{
+	return ActError::ActFail;
+}
 
-	VMF::ActError ModuleUnitAdapter::Stop()
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		/*m_parts->Turn180.Stop();
-		m_parts->Turn360.Stop();
-		m_parts->Gripper.Stop();
-		m_parts->CameraZ.Stop();*/
-		return VMF::ActError::ActOk;
-	}
+ActError ModuleUnitAdapter::GetTriggerState(bool& outEnabled, double& outIntervalMm, int triggerIndex)
+{
+	outEnabled = false;
+	outIntervalMm = 0.0;
+	return ActError::ActFail;
+}
 
+ActError ModuleUnitAdapter::MoveToZSafe(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (target.pos.size() >= 1)
+		m_parts->CameraZ.Move(target.pos[0]);
+	return ActError::ActOk;
+}
 
-	int ModuleUnitAdapter::SetLightState(int camIndex, bool on)
-	{
-		if (!m_parts) return -1;
-		m_parts->VisionLight.SetStatus(on);
-		return 0;
-	}
+ActError ModuleUnitAdapter::IsAtZSafe(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (target.pos.size() >= 1)
+		return m_parts->CameraZ.MotionDone() ? ActError::ActOk : ActError::ActBusy;
+	return ActError::ActOk;
+}
 
-	int ModuleUnitAdapter::GetLightState(int camIndex, bool& outOn)
-	{
-		if (!m_parts) return -1;
-		outOn = m_parts->VisionLight.GetStatus();
-		return 0;
-	}
+ActError ModuleUnitAdapter::PrepareForInspection(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	m_parts->Gripper.Move(0.0);
+	m_parts->GripUngrip.actA(true);
+	m_parts->TurnForBack.actA(true);
+	return ActError::ActOk;
+}
 
+ActError ModuleUnitAdapter::IsAtPrepareForInspection(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (m_parts->Gripper.GetEncoder() != 0.0)
+		return ActError::ActFail;
+	if (m_parts->TurnForBack.actA(true))
+		return ActError::ActOk;
+	if (m_parts->TurnForBack.actB(true))
+		return ActError::ActFail;
+	return ActError::ActOk;
+}
 
-	VMF::ActError ModuleUnitAdapter::SetTriggerState(bool enable, double intervalMm)
-	{
-		return VMF::ActError::ActFail;
-	}
+ActError ModuleUnitAdapter::CompleteInspection(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	m_parts->GripUngrip.actB(true);
+	m_parts->TurnForBack.actB(true);
+	return ActError::ActOk;
+}
 
-	VMF::ActError ModuleUnitAdapter::GetTriggerState(bool& outEnabled, double& outIntervalMm)
-	{
-		return VMF::ActError::ActFail;
-	}
-
-	// ── 실린더 제어 ──────────────────────────────────────────────
-
-	VMF::ActError ModuleUnitAdapter::DoCylTurnForBack(bool forward)
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		forward ? m_parts->TurnForBack.actA(true)
-			: m_parts->TurnForBack.actB(true);
-		return VMF::ActError::ActOk;
-	}
-
-	VMF::ActError ModuleUnitAdapter::ChkCylTurnForBack(bool forward)
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		bool done = forward ? m_parts->TurnForBack.actA(true)
-			: m_parts->TurnForBack.actB(true);
-		return done ? VMF::ActError::ActOk : VMF::ActError::ActBusy;
-	}
-
-VMF::ActError ModuleUnitAdapter::DoCylGripUngrip(bool grip)
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		grip ? m_parts->GripUngrip.actA(true)
-			: m_parts->GripUngrip.actB(true);
-		return VMF::ActError::ActOk;
-	}
-
-VMF::ActError ModuleUnitAdapter::ChkCylGripUngrip(bool grip)
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-		bool done = grip ? m_parts->GripUngrip.actA(true)
-			: m_parts->GripUngrip.actB(true);
-		return done ? VMF::ActError::ActOk : VMF::ActError::ActBusy;
-	}
-
-	// IActuator 인터페이스 구현: PrepareForInspection 관련 체크 메서드
-	VMF::ActError ModuleUnitAdapter::IsAtPrepareForInspection()
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-
-		// Gripper Safety 위치에 도달했는지 확인 (Gripper 위치가 0.0인지)
-		if (m_parts->Gripper.GetEncoder() != 0.0)
-			return VMF::ActError::ActFail;
-
-		// TurnForBack 실린더가 전진 위치에 있는지 확인
-		if (m_parts->TurnForBack.actA(true)) // actA(true) = 전진 위치
-			return VMF::ActError::ActOk;
-		if (m_parts->TurnForBack.actB(true)) // actB(true) = 후진 위치
-			return VMF::ActError::ActFail;
-
-		return VMF::ActError::ActOk;
-	}
-
-	// IActuator 인터페이스 구현: CompleteInspection 관련 체크 메서드
-	VMF::ActError ModuleUnitAdapter::IsAtCompleteInspection()
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-
-		// Gripper가 언클램프 상태인지 확인 (actB(true) = 언클램프)
-		if (m_parts->GripUngrip.actB(true)) // actB(true) = 언클램프
-			return VMF::ActError::ActOk;
-		if (m_parts->GripUngrip.actA(true)) // actA(true) = 클램프 상태
-			return VMF::ActError::ActFail;
-
-		// TurnForBack 실린더가 후진 위치에 있는지 확인
-		if (m_parts->TurnForBack.actB(true)) // actB(true) = 후진 위치
-			return VMF::ActError::ActOk;
-		if (m_parts->TurnForBack.actA(true)) // actA(true) = 전진 위치
-			return VMF::ActError::ActFail;
-
-		return VMF::ActError::ActFail;
-	}
-
-	// ── IActuator 인터페이스 구현: PrepareForInspection ──
-	VMF::ActError ModuleUnitAdapter::PrepareForInspection()
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-
-		// 1. Gripper Safety 위치로 이동
-		m_parts->Gripper.Move(0.0);  // Safety position
-
-		// 2. 실린더 클램프 (GripUngrip.actA)
-		m_parts->GripUngrip.actA(true);
-
-		// 3. TurnForBack 실린더 전진 (앞쪽 고정)
-		m_parts->TurnForBack.actA(true);
-
-		return VMF::ActError::ActOk;
-	}
-
-	// ── IActuator 인터페이스 구현: CompleteInspection ──
-	VMF::ActError ModuleUnitAdapter::CompleteInspection()
-	{
-		if (!m_parts) return VMF::ActError::ActFail;
-
-		// 1. 실린더 언클램프 (GripUngrip.actB)
-		m_parts->GripUngrip.actB(true);
-
-		// 2. TurnForBack 실린더 후진
-		m_parts->TurnForBack.actB(true);
-
-		return VMF::ActError::ActOk;
-	}
-
-} // namespace VMF_6SIDE
+ActError ModuleUnitAdapter::IsAtCompleteInspection(const VisionPosition& target)
+{
+	if (!m_parts) return ActError::ActFail;
+	if (m_parts->GripUngrip.actB(true))
+		return ActError::ActOk;
+	if (m_parts->GripUngrip.actA(true))
+		return ActError::ActFail;
+	if (m_parts->TurnForBack.actB(true))
+		return ActError::ActOk;
+	if (m_parts->TurnForBack.actA(true))
+		return ActError::ActFail;
+	return ActError::ActFail;
+}

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Actuators\CAxisController.h"
 #include "Actuators\CylinderTypes.h"
 #include "Actuators\CLamp.h"
@@ -10,8 +10,7 @@ public:
 
     Load1Parts();
     ~Load1Parts();
-
-    // 주요 축
+    
     OneAxis                             AxisX;
     OneAxis                             AxisY;
     OneAxis                             AxisZ;

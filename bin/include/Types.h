@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string> 
 #include <map> 
@@ -25,6 +25,7 @@ namespace VMF
 
     struct VisionPosition
     {
+
         std::vector<double> pos;
         int locateId;
         int visionRequestId;

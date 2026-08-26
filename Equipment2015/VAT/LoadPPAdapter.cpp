@@ -1,133 +1,408 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "LoadPPAdapter.h"
 
-namespace VMF
+using namespace VMF;
+
+// ── 생성자/소멸자 ──
+LoadPPAdapter::LoadPPAdapter(Load1Parts* parts)
+    : m_parts(parts)
 {
-    // 축 인덱스 (pos 벡터 순서)
-    // X=0, Y=1, Z=2, TABLE1=3, TABLE2=4
+}
 
-    static const char* AXIS_X = "X";
-    static const char* AXIS_Y = "Y";
-    static const char* AXIS_Z = "Z";
-    static const char* AXIS_TABLE1 = "TABLE1";
-    static const char* AXIS_TABLE2 = "TABLE2";
+LoadPPAdapter::~LoadPPAdapter()
+{
+}
 
-    // 생성자는 실제 장비 Parts 객체를 받아야 함
-    LoadPPAdapter::LoadPPAdapter()
+// ── 측정 위치 이동 (VisionPosition 기반) ──
+ActError LoadPPAdapter::MoveToMeasurementPosition(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // X축 이동
+    if (target.pos.size() > 0)
     {
+        m_parts->AxisX.Move(target.pos[0]);
     }
 
-    LoadPPAdapter::~LoadPPAdapter()
+    // Y축 이동
+    if (target.pos.size() > 1)
     {
+        m_parts->AxisY.Move(target.pos[1]);
     }
 
-    // 실제 장비의 PitchType을 반환
-    VMF::PitchType LoadPPAdapter::GetPitchType()
+    // Z축 이동
+    if (target.pos.size() > 2)
     {
-        // TODO: 장비의 실제 PitchType 반환 (예: m_parts->GetCurrentPitchType())
-        return VMF::Variable;
+        m_parts->AxisZ.Move(target.pos[2]);
     }
 
-    // 장비의 안전 조건을 모두 검사
-    VMF::ActError LoadPPAdapter::IsReadyToMove()
+    // Table1축 이동
+    if (target.pos.size() > 3)
     {
-        // TODO: 도어, 압력, Gripper 등 모든 안전 조건 확인 후 ActOk 반환
-        return VMF::ActError::ActOk;
+        m_parts->AxisTable1.Move(target.pos[3]);
     }
 
-    // 실제 Z축 이동 제어
-    VMF::ActError LoadPPAdapter::MoveZ(double targetZ)
+    // Table2축 이동
+    if (target.pos.size() > 4)
     {
-        // TODO: m_parts->MoveAxis(AXIS_Z, targetZ, SPEED_HIGH) 호출 후 ActOk/ActError 반환
-        return VMF::ActError::ActOk;
+        m_parts->AxisTable2.Move(target.pos[4]);
     }
 
-    // 다축 이동 명령 처리
-    VMF::ActError LoadPPAdapter::Move(VMF::MotionCommand& cmd)
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::IsAtMeasurementPosition(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // X축 도착 확인
+    if (target.pos.size() > 0)
     {
-        // TODO: cmd에 포함된 각 축을 m_parts->MoveAxis() 로 이동
-        return VMF::ActError::ActOk;
+        double xDiff = std::abs(m_parts->AxisX.GetEncoder() - target.pos[0]);
+        if (xDiff > 1.0)
+            return ActError::ActWait;
     }
 
-    // Z축 목표 위치 도달 여부 확인
-    VMF::ActError LoadPPAdapter::isMoveZ(double targetZ)
+    // Y축 도착 확인
+    if (target.pos.size() > 1)
     {
-        // TODO: m_parts->IsAxisInPosition(AXIS_Z, targetZ, TOL) 로 확인 후 ActOk/ActError 반환
-        return VMF::ActError::ActOk;
+        double yDiff = std::abs(m_parts->AxisY.GetEncoder() - target.pos[1]);
+        if (yDiff > 1.0)
+            return ActError::ActWait;
     }
 
-    // 다축 목표 위치 도달 여부 확인
-    VMF::ActError LoadPPAdapter::isMove(VMF::MotionCommand& cmd)
+    // Z축 도착 확인
+    if (target.pos.size() > 2)
     {
-        // TODO: cmd에 포함된 각 축이 목표 위치에 도달했는지 확인
-        return VMF::ActError::ActOk;
+        double zDiff = std::abs(m_parts->AxisZ.GetEncoder() - target.pos[2]);
+        if (zDiff > 1.0)
+            return ActError::ActWait;
     }
 
-    // 비상 정지/이동 중단
-    VMF::ActError LoadPPAdapter::Stop()
+    // Table1축 도착 확인
+    if (target.pos.size() > 3)
     {
-        // TODO: m_parts->StopAllAxes() 호출 후 ActOk 반환
-        return VMF::ActError::ActOk;
+        double t1Diff = std::abs(m_parts->AxisTable1.GetEncoder() - target.pos[3]);
+        if (t1Diff > 1.0)
+            return ActError::ActWait;
     }
 
-    // 현재 위치 반환
-    std::vector<double> LoadPPAdapter::getPosition()
+    // Table2축 도착 확인
+    if (target.pos.size() > 4)
     {
-        // TODO: m_parts->GetAxisPosition() 로 각 축 위치 반환
-        return std::vector<double>();
+        double t2Diff = std::abs(m_parts->AxisTable2.GetEncoder() - target.pos[4]);
+        if (t2Diff > 1.0)
+            return ActError::ActWait;
     }
 
-    // 현재 펄스 위치 반환
-    std::vector<double> LoadPPAdapter::getPulse()
+    return ActError::ActOk;
+}
+
+// ── 홈 위치 이동 (VisionPosition 기반) ──
+ActError LoadPPAdapter::MoveToHomePosition(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // Y축 후퇴
+    if (target.pos.size() > 1)
     {
-        // TODO: m_parts->GetAxisPulse() 로 각 축 펄스 반환
-        return std::vector<double>();
+        m_parts->AxisY.Move(target.pos[1]);
     }
 
-    // 조명 제어 (켜기/끄기)
-    int LoadPPAdapter::SetLightState(int cameraId, bool on)
+    // Z축 안전 높이 이동
+    if (target.pos.size() > 2)
     {
-        // TODO: m_parts->TurnOnLight(cameraId) 또는 TurnOffLight(cameraId) 호출
-        return 0; // 성공
+        m_parts->AxisZ.Move(target.pos[2]);
     }
 
-    // 조명 상태 조회
-    int LoadPPAdapter::GetLightState(int camIndex, bool& outOn)
+    // Table1축 대기 위치
+    if (target.pos.size() > 3)
     {
-        // TODO: m_parts->IsLightOn(camIndex) 로 상태 반환
-        outOn = false;
-        return 0;
+        m_parts->AxisTable1.Move(target.pos[3]);
     }
 
-    // 레이저 제어 (설정)
-    VMF::ActError LoadPPAdapter::SetLaserState(int laserChannel, bool on)
+    // Table2축 대기 위치
+    if (target.pos.size() > 4)
     {
-        // TODO: 실제 레이저 제어 로직 구현
-        return VMF::ActOk;
+        m_parts->AxisTable2.Move(target.pos[4]);
     }
 
-    // 레이저 상태 조회
-    VMF::ActError LoadPPAdapter::GetLaserState(int laserChannel, bool& outOn)
+    // Buffer 실린더 후진 (안전 확보)
+    m_parts->CylBuffer.backward(true);
+
+    // Y축 Pitch 실린더 확장
+    m_parts->CylYPitch.wide(true);
+
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::IsAtHomePosition(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // Y축 도착 확인
+    if (target.pos.size() > 1)
     {
-        // TODO: 실제 레이저 상태 조회 로직 구현
-        outOn = false;
-        return VMF::ActOk;
+        double yDiff = std::abs(m_parts->AxisY.GetEncoder() - target.pos[1]);
+        if (yDiff > 1.0)
+            return ActError::ActWait;
     }
 
-    // 트리거 제어 (설정)
-    VMF::ActError LoadPPAdapter::SetTriggerState(bool enable, double intervalMm)
+    // Z축 도착 확인
+    if (target.pos.size() > 2)
     {
-        // TODO: 실제 트리거 제어 로직 구현
-        return VMF::ActOk;
+        double zDiff = std::abs(m_parts->AxisZ.GetEncoder() - target.pos[2]);
+        if (zDiff > 1.0)
+            return ActError::ActWait;
     }
 
-    // 트리거 상태 조회
-    VMF::ActError LoadPPAdapter::GetTriggerState(bool& outEnabled, double& outIntervalMm)
+    // Table1축 도착 확인
+    if (target.pos.size() > 3)
     {
-        // TODO: 실제 트리거 상태 조회 로직 구현
-        outEnabled = false;
-        outIntervalMm = 0.0;
-        return VMF::ActError::ActOk;
+        double t1Diff = std::abs(m_parts->AxisTable1.GetEncoder() - target.pos[3]);
+        if (t1Diff > 1.0)
+            return ActError::ActWait;
     }
-} // namespace VMF_PLUGIN
+
+    // Table2축 도착 확인
+    if (target.pos.size() > 4)
+    {
+        double t2Diff = std::abs(m_parts->AxisTable2.GetEncoder() - target.pos[4]);
+        if (t2Diff > 1.0)
+            return ActError::ActWait;
+    }
+
+    // Buffer 실린더 후진 확인
+    if (!m_parts->CylBuffer.isBackward())
+        return ActError::ActWait;
+
+    // Y축 Pitch 실린더 확장 확인
+    if (!m_parts->CylYPitch.isWide())
+        return ActError::ActWait;
+
+    return ActError::ActOk;
+}
+
+// ── Z축 이동/확인 (VisionPosition 기반) ──
+ActError LoadPPAdapter::MoveToZ(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    double targetZ = 0.0;
+    if (target.pos.size() > 2)
+        targetZ = target.pos[2];
+
+    m_parts->AxisZ.Move(targetZ);
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::IsAtZ(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    double targetZ = 0.0;
+    if (target.pos.size() > 2)
+        targetZ = target.pos[2];
+
+    double zDiff = std::abs(m_parts->AxisZ.GetEncoder() - targetZ);
+    return (zDiff <= 1.0) ? ActError::ActOk : ActError::ActWait;
+}
+
+// ── 안전 Z 이동/확인 (VisionPosition 기반) ──
+ActError LoadPPAdapter::MoveToZSafe(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // 안전 Z 위치 이동
+    double safeZ = 0.0;
+    if (target.pos.size() > 2)
+        safeZ = target.pos[2];
+
+    m_parts->AxisZ.Move(safeZ);
+
+    // Buffer 실린더 후진 (안전 확보)
+    m_parts->CylBuffer.backward(true);
+
+    // Y축 Pitch 실린더 확장
+    m_parts->CylYPitch.wide(true);
+
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::IsAtZSafe(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    double safeZ = 0.0;
+    if (target.pos.size() > 2)
+        safeZ = target.pos[2];
+
+    double zDiff = std::abs(m_parts->AxisZ.GetEncoder() - safeZ);
+    if (zDiff > 1.0)
+        return ActError::ActWait;
+
+    // Buffer 실린더 후진 확인
+    if (!m_parts->CylBuffer.isBackward())
+        return ActError::ActWait;
+
+    // Y축 Pitch 실린더 확장 확인
+    if (!m_parts->CylYPitch.isWide())
+        return ActError::ActWait;
+
+    return ActError::ActOk;
+}
+
+// ── 조명/레이저 제어 ──
+ActError LoadPPAdapter::SetLightState(int camIndex, bool on, int lightIndex)
+{
+    (void)lightIndex;
+    if (!m_parts) return ActError::ActFail;
+
+    switch (camIndex)
+    {
+    case 0: m_parts->LampLeft.SetStatus(on); break;
+    case 1: m_parts->LampRight.SetStatus(on); break;
+    case 2: m_parts->LampLower.SetStatus(on); break;
+    default: return ActError::ActFail;
+    }
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::GetLightState(int camIndex, bool& outOn, int lightIndex)
+{
+    (void)lightIndex;
+    if (!m_parts) return ActError::ActFail;
+
+    switch (camIndex)
+    {
+    case 0: outOn = m_parts->LampLeft.GetStatus(); break;
+    case 1: outOn = m_parts->LampRight.GetStatus(); break;
+    case 2: outOn = m_parts->LampLower.GetStatus(); break;
+    default: return ActError::ActFail;
+    }
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::SetLaserState(int laserChannel, bool on, int laserIndex)
+{
+    (void)laserIndex;
+    (void)laserChannel;
+    (void)on;
+    // TODO: 실제 레이저 제어 구현
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::GetLaserState(int laserChannel, bool& outOn, int laserIndex)
+{
+    (void)laserIndex;
+    (void)laserChannel;
+    outOn = false;
+    // TODO: 실제 레이저 상태 조회 구현
+    return ActError::ActOk;
+}
+
+// ── 트리거 제어 ──
+ActError LoadPPAdapter::SetTriggerState(bool enable, double intervalMm, int triggerIndex)
+{
+    (void)triggerIndex;
+    (void)enable;
+    (void)intervalMm;
+    // TODO: 실제 트리거 제어 구현
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::GetTriggerState(bool& outEnabled, double& outIntervalMm, int triggerIndex)
+{
+    (void)triggerIndex;
+    outEnabled = false;
+    outIntervalMm = 0.0;
+    // TODO: 실제 트리거 상태 조회 구현
+    return ActError::ActOk;
+}
+
+// ── 준비/완료 동작 (VisionPosition 기반) ──
+ActError LoadPPAdapter::PrepareForInspection(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // Buffer 실린더 후진 (안전 확보)
+    m_parts->CylBuffer.backward(true);
+
+    // Y축 Pitch 실린더 확장
+    m_parts->CylYPitch.wide(true);
+
+    // Z축 안전 위치 이동
+    double safeZ = 0.0;
+    if (target.pos.size() > 2)
+        safeZ = target.pos[2];
+    m_parts->AxisZ.Move(safeZ);
+
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::IsAtPrepareForInspection(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // Buffer 실린더 후진 확인
+    if (!m_parts->CylBuffer.isBackward())
+        return ActError::ActWait;
+
+    // Y축 Pitch 실린더 확장 확인
+    if (!m_parts->CylYPitch.isWide())
+        return ActError::ActWait;
+
+    // Z축 위치 확인
+    double safeZ = 0.0;
+    if (target.pos.size() > 2)
+        safeZ = target.pos[2];
+    double zDiff = std::abs(m_parts->AxisZ.GetEncoder() - safeZ);
+    if (zDiff > 1.0)
+        return ActError::ActWait;
+
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::CompleteInspection(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // Buffer 실린더 전진
+    m_parts->CylBuffer.backward(false);
+
+    // Y축 Pitch 실린더 수축
+    m_parts->CylYPitch.wide(false);
+
+    // 홈 위치로 Y축 이동
+    double homeY = 0.0;
+    if (target.pos.size() > 1)
+        homeY = target.pos[1];
+    m_parts->AxisY.Move(homeY);
+
+    return ActError::ActOk;
+}
+
+ActError LoadPPAdapter::IsAtCompleteInspection(const VisionPosition& target)
+{
+    if (!m_parts) return ActError::ActFail;
+
+    // Buffer 실린더 전진 확인
+    if (m_parts->CylBuffer.isBackward())
+        return ActError::ActWait;
+
+    // Y축 Pitch 실린더 수축 확인
+    if (m_parts->CylYPitch.isWide())
+        return ActError::ActWait;
+
+    // Y축 홈 위치 확인
+    double homeY = 0.0;
+    if (target.pos.size() > 1)
+        homeY = target.pos[1];
+    double yDiff = std::abs(m_parts->AxisY.GetEncoder() - homeY);
+    if (yDiff > 1.0)
+        return ActError::ActWait;
+
+    return ActError::ActOk;
+}
+
 

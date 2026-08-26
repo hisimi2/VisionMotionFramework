@@ -1,38 +1,51 @@
-﻿#pragma once
+#pragma once
 
 #include "IActuator.h"
+#include "Actuators\Load1Parts.h"
+#include <vector>
 
 namespace VMF
 {
-    /// IActuator 구현체 (HW Parts Adapter) – 실제 장비의 Load1Parts 객체를 IActuator 인터페이스로 연결
-    class LoadPPAdapter : public VMF::IActuator
+    class LoadPPAdapter : public IActuator
     {
+        Load1Parts* m_parts;
+
     public:
-        // 생성자는 실제 장비 Parts 객체를 받아야 함
-        explicit LoadPPAdapter();
+        explicit LoadPPAdapter(Load1Parts* parts);
         virtual ~LoadPPAdapter();
 
-        // 실제 장비의 PitchType을 반환
-        VMF::PitchType GetPitchType()       override;
-        VMF::ActError  IsReadyToMove()      override;
+        // ── 측정 위치 이동 (VisionPosition 기반) ──
+        ActError MoveToMeasurementPosition(const VisionPosition& target) override;
+        ActError IsAtMeasurementPosition(const VisionPosition& target) override;
 
-        VMF::ActError  MoveZ(double targetZ)          override;
-        VMF::ActError  Move(VMF::MotionCommand& cmd) override;
-        VMF::ActError  isMoveZ(double targetZ)         override;
-        VMF::ActError  isMove(VMF::MotionCommand& cmd)override;
-        VMF::ActError  Stop()                          override;
+        // ── 홈 위치 이동 (VisionPosition 기반) ──
+        ActError MoveToHomePosition(const VisionPosition& target) override;
+        ActError IsAtHomePosition(const VisionPosition& target) override;
 
-        std::vector<double> getPosition() override;
-        std::vector<double> getPulse()    override;
+        // ── Z축 이동/확인 (VisionPosition 기반) ──
+        ActError MoveToZ(const VisionPosition& target) override;
+        ActError IsAtZ(const VisionPosition& target) override;
 
-        // int 반환: IActuator 인터페이스와 일치
-        int  SetLightState(int cameraId, bool on) override;
-        int  GetLightState(int camIndex, bool& outOn) override;
+        // ── 안전 Z 이동/확인 (VisionPosition 기반) ──
+        ActError MoveToZSafe(const VisionPosition& target) override;
+        ActError IsAtZSafe(const VisionPosition& target) override;
 
-        VMF::ActError SetLaserState(int laserChannel, bool on) override;
-        VMF::ActError GetLaserState(int laserChannel, bool& outOn) override;
+        // ── 조명/레이저 제어 ──
+        ActError SetLaserState(int laserChannel, bool on, int laserIndex = 0) override;
+        ActError GetLaserState(int laserChannel, bool& outOn, int laserIndex = 0) override;
+        ActError SetLightState(int camIndex, bool on, int lightIndex = 0) override;
+        ActError GetLightState(int camIndex, bool& outOn, int lightIndex = 0) override;
 
-        VMF::ActError SetTriggerState(bool enable, double intervalMm) override;
-        VMF::ActError GetTriggerState(bool& outEnabled, double& outIntervalMm) override;
+        // ── 트리거 제어 ──
+        ActError SetTriggerState(bool enable, double intervalMm, int triggerIndex = 0) override;
+        ActError GetTriggerState(bool& outEnabled, double& outIntervalMm, int triggerIndex = 0) override;
+
+        // ── 준비/완료 동작 (VisionPosition 기반) ──
+        ActError PrepareForInspection(const VisionPosition& target) override;
+        ActError IsAtPrepareForInspection(const VisionPosition& target) override;
+        ActError CompleteInspection(const VisionPosition& target) override;
+        ActError IsAtCompleteInspection(const VisionPosition& target) override;
     };
-} // namespace VMF_PLUGIN
+
+}
+
