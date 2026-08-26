@@ -109,9 +109,15 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\bin\Win32\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)bin\ThirdParty\sqlite3\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(SolutionDir)bin\include" mkdir "$(SolutionDir)bin\include"
+xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(SolutionDir)bin\include"
+if not exist "$(SolutionDir)bin\$(Platform)\$(configuration)" mkdir "$(SolutionDir)bin\$(Platform)\$(configuration)"
+xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)\$(configuration)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

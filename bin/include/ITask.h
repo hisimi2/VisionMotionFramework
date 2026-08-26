@@ -1,14 +1,11 @@
 ﻿#pragma once
-#include "VMF_API.h"
 
 #include <string>
 #include <memory>
-#include "Context.h"
 
-namespace VMF
+namespace EC
 {
-    class IActuator;
-    class IDataRepository;
+    class Context;
 
     enum TaskResult
     {
@@ -18,28 +15,26 @@ namespace VMF
         TR_DONE,    // 전체 Task 완료(명시적)
         TR_ERROR    // 에러 발생(시퀀스 중단)
     };
-    
-    /**
-     * @class ITask
-     * @brief 시퀀스를 구성하는 단위 작업(Step) 인터페이스
-     */
-    class VMF_API ITask
+
+    /// <summary>
+    /// Task 실행 인터페이스
+    /// 각 Task는 Execute()가 반복 호출되며 상태머신을 통해 단계별 작업을 수행합니다.
+    /// </summary>
+    class ITask
     {
     public:
         virtual ~ITask() = default;
 
-        // 비차단 실행 함수: 호출할 때마다 짧게 실행되어야 함.
-        virtual TaskResult Execute(Context& ctx, IActuator* actuator) = 0;
-        virtual TaskResult SetErrorAndReturn(Context& ctx, const std::string& msg) = 0;
+        /// <summary>
+        /// Task 실행 (Activity에 의해 반복 호출됨)
+        /// </summary>
+        virtual TaskResult Execute(Context& ctx) = 0;
 
-        virtual void OnInitialize(VMF::Context& ctx) = 0;
-        virtual VMF::TaskResult OnPoll(VMF::Context& ctx, VMF::IActuator* actuator) = 0;
-
-        // 중단 시 필요한 정리 작업(하드웨어 안전 복귀 등)
-        virtual void Abort() = 0;
-        virtual void EnterState(int newState) = 0;
+        /// <summary>
+        /// Task 이름 반환
+        /// </summary>
         virtual std::string GetName() const = 0;
     };
 
     using TaskPtr = std::shared_ptr<ITask>;
-} // namespace VMF
+}

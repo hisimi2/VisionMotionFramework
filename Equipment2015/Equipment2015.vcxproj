@@ -92,13 +92,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)VisionComm\include;$(SolutionDir)VisionMotionFramework\include;$(SolutionDir)Bin\thirdparty\sqlite3\include;$(SolutionDir)EquipmentCore\include;$(SolutionDir)VMFEquipmentPlugin\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)bin\include;$(SolutionDir)bin\thirdparty\sqlite3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)bin\ThirdParty\sqlite3\lib\;$(SolutionDir)VMFEquipmentPlugin\$(Platform)\$(Configuration)\;$(SolutionDir)EquipmentCore\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)bin\thirdparty\sqlite3\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>VisionMotionFramework.lib;VisionComm.lib;sqlite3.lib;EquipmentCore.lib;VMFEquipmentPlugin.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>

@@ -201,3 +201,20 @@ void SetPlate1PLVIStrategy::SetTaskParamsForTask(VMF::Context& ctx,
 {
     ctx.SetTaskParams(taskName, params);
 }
+
+
+/* IComponentSetup 인터페이스 구현: preset별 Vision 파라미터 제공 */
+VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetName) const
+{
+    // presetName에 따라 다른 파라미터를 반환할 수 있음
+    // 현재는 모든 preset에 동일한 공통 Vision 파라미터 반환
+    VMF::StringMap params;
+    
+    VMF::TaskParams visionParams = GetVisionParams();
+    for (const auto& pair : visionParams.executionParams)
+    {
+        params[pair.first] = pair.second;
+    }
+    
+    return params;
+}

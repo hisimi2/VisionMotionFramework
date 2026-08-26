@@ -75,8 +75,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(ProjectDir)$(Platform)\</IntDir>
-    <OutDir>$(ProjectDir)$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)$(Platform)\$(configuration)\</IntDir>
+    <OutDir>$(ProjectDir)$(Platform)\$(configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -110,8 +110,11 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if not exist "$(SolutionDir)bin\include" mkdir "$(SolutionDir)bin\include"
+xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(SolutionDir)bin\include"
+if not exist "$(SolutionDir)bin\$(Platform)\$(configuration)" mkdir "$(SolutionDir)bin\$(Platform)\$(configuration)"
+xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)\$(configuration)"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

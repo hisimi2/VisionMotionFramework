@@ -5,7 +5,7 @@
 #include <cstdarg>
 #include <mutex> // Win32 CRITICAL_SECTION 대신 C++11 표준 라이브러리 사용
 
-namespace VMF
+namespace EC
 {
     // 기존 시스템과의 호환성을 위해 전통적 enum 유지
     enum LogLevel
@@ -30,13 +30,8 @@ namespace VMF
         // 기본 로그
         void Log(LogLevel level, const std::string& message);
 
-// 포맷 로그 (printf 스타일)
-    void LogF(LogLevel level, const char* format, ...);
-
-    /// <summary>
-    /// LogF에서 사용하는 내부 버퍼의 기본 크기 (바이트)
-    /// </summary>
-    static const int LOG_BUFFER_SIZE = 2048;
+        // 포맷 로그 (printf 스타일)
+        void LogF(LogLevel level, const char* format, ...);
 
         Logger(const Logger&) = delete;
         Logger& operator=(const Logger&) = delete;
@@ -58,4 +53,4 @@ namespace VMF
         bool consoleOutput_;
     };
 
-} // namespace VMF
+} // namespace EC
