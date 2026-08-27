@@ -71,4 +71,4 @@ namespace VMF_PLUGIN
 		void InitDefaultMockData();
 	};
 
-} // namespace VMF_PLUGIN_SOCKET_CONDITION
+} // namespace VMF_PLUGIN

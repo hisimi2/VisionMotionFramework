@@ -11,13 +11,6 @@ namespace VMF_PLUGIN
         constexpr const char* CtrayY       = "CTRAY_Y";
         constexpr const char* DeviceInfo   = "PLVI_DEVICE_INFO";
         // "0,99,99,0,..." 형태 콤마 구분 문자열 (0=없음, 99=존재)
-        
-        // 호환성을 위한 별칭 (기존 코드 지원)
-        constexpr const char* PlviPosition = "PLVI_POSITION";
-        constexpr const char* PlviPkgName  = "PLVI_PKG_NAME";
-        constexpr const char* PlviCtrayX   = "CTRAY_X";
-        constexpr const char* PlviCtrayY   = "CTRAY_Y";
-        constexpr const char* PlviDeviceInfo = "PLVI_DEVICE_INFO";
     }
 
     // ── PLVI Response Keys ──

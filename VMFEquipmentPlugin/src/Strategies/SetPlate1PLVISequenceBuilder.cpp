@@ -7,8 +7,6 @@
 #include "src\Tasks\SetPlate1PLVIExecuteScan.h"
 #include "src\Tasks\SetPlate1PLVIFinish.h"
 
-#include <cassert>   // nullptr 체크 등
-
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
