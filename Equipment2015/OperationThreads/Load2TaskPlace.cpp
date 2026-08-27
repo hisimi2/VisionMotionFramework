@@ -4,7 +4,7 @@
 
 
 #include "EquipmentCore\Context.h"
-#include "EquipmentCore\TaskBase.h"
+
 
 namespace EC
 {

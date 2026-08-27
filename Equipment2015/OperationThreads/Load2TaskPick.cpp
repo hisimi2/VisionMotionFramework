@@ -3,7 +3,7 @@
 #include "Actuators\Load2Parts.h"
 
 #include "EquipmentCore\Context.h"
-#include "EquipmentCore\TaskBase.h"
+
 
 namespace EC
 {

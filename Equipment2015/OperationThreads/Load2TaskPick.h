@@ -1,8 +1,9 @@
 #pragma once
 
+#include "EquipmentCore\TaskBase.h"
+
 namespace EC
 {
-    class TaskBase;
     class Context;
     class Load2Parts;
 
