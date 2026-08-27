@@ -186,7 +186,7 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
   <ItemGroup>
     <ClInclude Include="include\ParamKeys.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
-    <ClInclude Include="include\VMFEquipmentPluginExport.h" />
+    <ClInclude Include="include\PlugInAPI.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="src\Protocol\CMockSocketConditionVisionProcessor.h" />
     <ClInclude Include="src\Protocol\VisionPacket.h" />

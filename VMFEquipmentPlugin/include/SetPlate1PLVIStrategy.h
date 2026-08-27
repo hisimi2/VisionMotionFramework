@@ -1,14 +1,15 @@
 #pragma once
-
-#include "VisionMotionFramework\DefaultSetupStrategy.h"
+#include "PlugInAPI.h"
 #include "ParamKeys.h"
 #include <string>
 #include <memory>
 #include <vector>
 
+#include "VisionMotionFramework/DefaultSetupStrategy.h"
+
 namespace VMF_PLUGIN
 {
-    class SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
+    class VMF_PLUGIN_API SetPlate1PLVIStrategy : public VMF::DefaultSetupStrategy
     {
         VMF::TaskParams GetDefaultParams() const;
         VMF::TaskParams GetSetupParams() const;
