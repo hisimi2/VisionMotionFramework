@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Load1TaskPick.h"
-
+#include "EquipmentCore\Context.h"
 #include "Actuators\Load1Parts.h"
 
 namespace EC

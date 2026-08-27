@@ -1,11 +1,12 @@
 #pragma once
-
 #include "EquipmentCore\TaskBase.h"
 
+class Load1Parts;
 namespace EC
 {
+    
+
     class Context;
-    class Load1Parts;
 
     /// <summary>
     /// Load1 Pick & Place 시퀀스 상태머신

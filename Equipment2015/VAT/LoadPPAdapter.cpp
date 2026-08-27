@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "LoadPPAdapter.h"
 
+#include "Actuators\Load1Parts.h"
+
 using namespace VMF;
 
 // ── 생성자/소멸자 ──

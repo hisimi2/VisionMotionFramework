@@ -117,14 +117,14 @@ CEquipment2015Dlg::CEquipment2015Dlg(CWnd* pParent /*=NULL*/)
         // EquipmentParts에서 Stacker 부품만 추출하여 StackerParts 생성
         auto load1Parts = std::make_shared<Load1Parts>();
 
-        auto stackerBuilder = std::make_shared<OperationThread::CLoad1ActivityBuilder>();
+        auto stackerBuilder = std::make_shared<EC::CLoad1ActivityBuilder>();
         stackerBuilder->SetParts(load1Parts);
         m_threadsMgr->RegisterBuilder("Load1Activity", stackerBuilder);
     }
     {
         // EquipmentParts에서 Sorter 부품만 추출하여 SorterParts 생성
         auto load2Parts = std::make_shared<Load2Parts>();
-        auto sorterBuilder = std::make_shared<OperationThread::CLoad2ActivityBuilder>();
+        auto sorterBuilder = std::make_shared<EC::CLoad2ActivityBuilder>();
         sorterBuilder->SetParts(load2Parts);
         m_threadsMgr->RegisterBuilder("Load2Activity", sorterBuilder);
     }

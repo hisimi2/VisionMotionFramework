@@ -2,6 +2,7 @@
 #include "Load1TaskPlace.h"
 
 #include "Actuators\Load1Parts.h"
+#include "EquipmentCore\Context.h"
 
 namespace EC
 {

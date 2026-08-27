@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Load2ActivityBuilder.h"
 
+#include "Actuators\Load2Parts.h"
 #include "Load2TaskPick.h"
 #include "Load2TaskPlace.h"
 

@@ -2,10 +2,12 @@
 
 #include "EquipmentCore\TaskBase.h"
 
+class Load2Parts;
+
 namespace EC
 {
     class Context;
-    class Load2Parts;
+    
 
     /// <summary>
     /// Load2 Pick 시퀀스 상태머신

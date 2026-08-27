@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PLVIAdapterSetPlate1.h"
+#include "Actuators\SetPlate1Parts.h"
 
 using namespace VMF;
 

@@ -2,10 +2,12 @@
 
 #include "EquipmentCore\TaskBase.h"
 
+class Load1Parts;
+
 namespace EC
 {
     class Context;
-    class Load1Parts;
+    
 
     class Load1TaskPlace : public TaskBase
     {

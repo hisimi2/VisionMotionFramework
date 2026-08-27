@@ -3,6 +3,8 @@
 #include "VisionMotionFramework\IActuator.h"
 #include "Actuators\VisionUnitParts.h"
 
+class VisionUnitParts;
+
 namespace VMF
 {
 	// ----------------------------------------------------------------

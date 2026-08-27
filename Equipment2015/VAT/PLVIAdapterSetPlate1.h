@@ -1,6 +1,6 @@
 #pragma once
 #include "VisionMotionFramework\IActuator.h"
-#include "Actuators\SetPlate1Parts.h"
+class SetPlate1Parts;
 #include <vector>
 
 namespace VMF

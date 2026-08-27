@@ -2,9 +2,10 @@
 
 #include "VisionMotionFramework\IActuator.h"
 
+class Load1Parts;
+
 namespace VMF
 {
-    class Load1Parts;
     class LoadPPAdapter : public IActuator
     {
         Load1Parts* m_parts;

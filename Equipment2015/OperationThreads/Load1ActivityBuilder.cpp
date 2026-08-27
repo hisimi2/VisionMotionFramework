@@ -3,6 +3,7 @@
 
 #include "Load1TaskPick.h"
 #include "Load1TaskPlace.h"
+#include "Actuators\Load1Parts.h"
 
 #include "EquipmentCore\Context.h"
 #include "EquipmentCore\Activity.h"

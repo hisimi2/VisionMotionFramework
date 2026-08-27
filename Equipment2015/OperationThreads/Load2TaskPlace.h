@@ -1,9 +1,12 @@
 #pragma once
+
 #include "EquipmentCore\TaskBase.h"
+
+class Load2Parts;
+
 namespace EC
 {
     class Context;
-    class Load2Parts;
 
     /// <summary>
     /// Load2 Place 시퀀스 상태머신
