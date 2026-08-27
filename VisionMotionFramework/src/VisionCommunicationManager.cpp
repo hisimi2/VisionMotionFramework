@@ -1,11 +1,11 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <vector>   
 #include <map>
 #include <string>
 
 #include "VisionCommunicationManager.h"
-#include "SecsMessageDispatcher.h"
-#include "SECSPacket.h"
+#include "VisionComm\SecsMessageDispatcher.h"
+#include "VisionComm\SECSPacket.h"
 #include "IResultSink.h"
 
 #include <thread>

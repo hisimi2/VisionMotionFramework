@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include "visioncommunicationmanager.h"
+#include "VisionMotionFramework\visioncommunicationmanager.h"
 #include "VMFEquipmentPluginExport.h"
 
 namespace VMF_PLUGIN

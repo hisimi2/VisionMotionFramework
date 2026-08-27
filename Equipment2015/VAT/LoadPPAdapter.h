@@ -1,11 +1,10 @@
 #pragma once
 
-#include "IActuator.h"
-#include "Actuators\Load1Parts.h"
-#include <vector>
+#include "VisionMotionFramework\IActuator.h"
 
 namespace VMF
 {
+    class Load1Parts;
     class LoadPPAdapter : public IActuator
     {
         Load1Parts* m_parts;

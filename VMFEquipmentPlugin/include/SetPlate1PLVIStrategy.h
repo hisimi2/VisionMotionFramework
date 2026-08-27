@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DefaultSetupStrategy.h"
+#include "VisionMotionFramework\DefaultSetupStrategy.h"
 #include "ParamKeys.h"
 #include <string>
 #include <memory>

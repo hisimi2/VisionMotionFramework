@@ -1,6 +1,6 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "ConnectionManager.h"
-#include "Controller.h"
+#include "VisionComm\Controller.h"
 
 namespace VMF
 {

@@ -1,6 +1,6 @@
-﻿#pragma once
-#include "NonBlockingTaskBase.h"
-#include "IParamProvider.h"
+#pragma once
+#include "VisionMotionFramework\NonBlockingTaskBase.h"
+#include "VisionMotionFramework\IParamProvider.h"
 #include "ParamKeys.h"
 
 namespace VMF_PLUGIN

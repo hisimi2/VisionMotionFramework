@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "VisionVatProcessor.h"
-#include "SecsMessageDispatcher.h"
-#include "SECSPacket.h"
+#include "VisionComm\SecsMessageDispatcher.h"
+#include "VisionComm\SECSPacket.h"
 #include "VisionParamKeysVAT.h"
 #include "VisionPacket.h"
 

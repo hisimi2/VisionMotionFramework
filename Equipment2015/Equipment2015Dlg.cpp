@@ -5,8 +5,8 @@
 #include "Equipment2015Dlg.h"
 #include "afxdialogex.h"
 
-#include "Orchestrator.h"
-#include "SetPlate1PLVIStrategy.h"
+#include "VisionMotionFramework\Orchestrator.h"
+#include "VMFEquipmentPlugin\SetPlate1PLVIStrategy.h"
 
 #include "Actuators\Load1Parts.h"
 #include "Actuators\Load2Parts.h"

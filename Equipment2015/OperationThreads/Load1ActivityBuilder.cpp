@@ -1,12 +1,17 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1ActivityBuilder.h"
 
-#include "Activity.h"
-#include "../../EquipmentCore/include/Context.h"
 #include "Load1TaskPick.h"
 #include "Load1TaskPlace.h"
 
-namespace OperationThread
+#include "EquipmentCore\Context.h"
+#include "EquipmentCore\Activity.h"
+#include "EquipmentCore\ActivityBuilderBase.h"
+
+#include <memory>
+#include <string>
+
+namespace EC
 {
     ActivityPtr CLoad1ActivityBuilder::Build()
     {

@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1TaskPlace.h"
-#include "../../EquipmentCore/include/Context.h"
-#include <sstream>
 
-namespace OperationThread
+#include "Actuators\Load1Parts.h"
+
+namespace EC
 {
     Load1TaskPlace::Load1TaskPlace(std::shared_ptr<Load1Parts> parts)
         : TaskBase("Load1TaskPlace")

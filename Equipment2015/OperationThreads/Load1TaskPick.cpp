@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1TaskPick.h"
-#include "../../EquipmentCore/include/Context.h"
-#include <sstream>
 
-namespace OperationThread
+#include "Actuators\Load1Parts.h"
+
+namespace EC
 {
     Load1TaskPick::Load1TaskPick(std::shared_ptr<Load1Parts> parts)
         : TaskBase("Load1TaskPick")

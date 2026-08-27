@@ -9,20 +9,6 @@
 
 #pragma warning(disable: 4251)
 
-// ============================================================================
-// VMF Core Headers (NuGet Package: VisionMotionFramework.Core.v140)
-// NuGet 패키지를 참조하면 이 헤더들을 include 경로에서 찾을 수 있습니다.
-// NuGet 복원이 완료되면 자동으로 include 경로가 설정됩니다.
-// ============================================================================
-#include "NonBlockingTaskBase.h"
-#include "SequenceBuilderBase.h"
-#include "DefaultSetupStrategy.h"
-#include "IDataRepository.h"
-#include "IVisionClient.h"
-#include "IActuator.h"
-#include "Context.h"
-#include "Sequence.h"
-#include "Types.h"
 
 #endif //PCH_H
 

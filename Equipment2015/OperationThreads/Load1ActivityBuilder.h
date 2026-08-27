@@ -1,11 +1,10 @@
-﻿#pragma once
-#include "ActivityBuilderBase.h"
-#include "Actuators\Load1Parts.h"
+#pragma once
 
-
-namespace OperationThread
+namespace EC
 {
-    using namespace EC;
+    class ActivityBuilderBase;
+    class Context;
+    class Load1Parts;
 
     /// <summary>
     /// Load1 Activity Builder

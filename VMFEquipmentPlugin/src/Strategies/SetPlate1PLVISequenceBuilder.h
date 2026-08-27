@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 
-#include "SequenceBuilderBase.h"
+#include "VisionMotionFramework\SequenceBuilderBase.h"
 #include "VMFEquipmentPluginExport.h"
-#include "Types.h"
+#include "VisionMotionFramework\Types.h"
 #include "ParamKeys.h"
 
 #include <memory>

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -10,7 +10,7 @@
 #include "VMF_API.h"
 #include "IVisionClient.h"
 #include "IResultSink.h"
-#include "Controller.h"
+#include "VisionComm\Controller.h"
 
 namespace VMF
 {

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SetPlate1PLVISequenceBuilder.h"
 #include "SetPlate1PLVIStrategy.h"
-#include "Context.h"
+#include "VisionMotionFramework\Context.h"
 
 #include "src\Tasks\SetPlate1PLVISetup.h"
 #include "src\Tasks\SetPlate1PLVIExecuteScan.h"

@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load1Parts.h"
 
-#include "Utils.h"
+#include "EquipmentCore\Utils.h"
 #include <sstream>
 
 static const int SETPLATE_COUNT = 2;

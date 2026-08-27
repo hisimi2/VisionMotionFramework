@@ -1,10 +1,11 @@
-﻿#pragma once
-#include "Actuators/Load1Parts.h"
-#include "TaskBase.h"
+#pragma once
 
-namespace OperationThread
+#include "EquipmentCore\TaskBase.h"
+
+namespace EC
 {
-    using namespace EC;
+    class Context;
+    class Load1Parts;
 
     /// <summary>
     /// Load1 Pick & Place 시퀀스 상태머신
@@ -19,7 +20,7 @@ namespace OperationThread
     /// 6. Vacuum On
     /// 7. Move to Safe Z
     /// </summary>
-class Load1TaskPick : public TaskBase
+    class Load1TaskPick : public TaskBase
     {
     public:
         /// <summary>

@@ -1,7 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 
-#include "SqliteDataRepository.h"
+#include "VisionMotionFramework\SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
 #include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
 #include "ParamKeys.h"

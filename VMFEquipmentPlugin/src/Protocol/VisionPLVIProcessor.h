@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include "visioncommunicationmanager.h"
+#include "VisionMotionFramework\visioncommunicationmanager.h"
 #include "VisionPacket.h"
 #include "VMFEquipmentPluginExport.h"
 

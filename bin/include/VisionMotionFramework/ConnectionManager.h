@@ -1,7 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "VMF_API.h"
-#include "Controller.h"
+#include "VisionComm\Controller.h"
 #include <memory>
 #include <string>
 #include <map>

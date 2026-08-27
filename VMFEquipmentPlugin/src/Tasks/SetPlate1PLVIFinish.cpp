@@ -1,6 +1,6 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "SetPlate1PLVIFinish.h"
-#include "IParamProvider.h"
+#include "VisionMotionFramework\IParamProvider.h"
 #include "ParamKeys.h"
 
 using namespace VMF;

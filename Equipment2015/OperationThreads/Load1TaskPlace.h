@@ -1,10 +1,11 @@
-﻿#pragma once
-#include "Actuators/Load1Parts.h"
-#include "TaskBase.h"
+#pragma once
 
-namespace OperationThread
+#include "EquipmentCore\TaskBase.h"
+
+namespace EC
 {
-    using namespace EC;
+    class Context;
+    class Load1Parts;
 
     class Load1TaskPlace : public TaskBase
     {
