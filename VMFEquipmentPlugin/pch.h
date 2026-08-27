@@ -9,6 +9,8 @@
 
 #pragma warning(disable: 4251)
 
+#include <windows.h>
 
 #endif //PCH_H
+
 
