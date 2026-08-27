@@ -1,5 +1,5 @@
 #pragma once
-#include "IActuator.h"
+#include "VisionMotionFramework\IActuator.h"
 #include "Actuators\SetPlate1Parts.h"
 #include <vector>
 
@@ -45,5 +45,5 @@ namespace VMF
         ActError CompleteInspection(const VisionPosition& target) override;
         ActError IsAtCompleteInspection(const VisionPosition& target) override;
     };
-} // namespace PlviSetPlate1
+} // namespace VMF
 

@@ -1,9 +1,12 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load2TaskPlace.h"
-#include "../../EquipmentCore/include/Context.h"
-#include <sstream>
+#include "Actuators\Load2Parts.h"
 
-namespace OperationThread
+
+#include "EquipmentCore\Context.h"
+#include "EquipmentCore\TaskBase.h"
+
+namespace EC
 {
     Load2TaskPlace::Load2TaskPlace(std::shared_ptr<Load2Parts> parts)
         : TaskBase("Load2TaskPlace")
@@ -89,6 +92,7 @@ namespace OperationThread
         m_parts->AxisX.Move(m_placeX);
 
         EnterStateWithTimeout(PusherForward, m_moveTimeoutMs);
+
         return TR_KEEP;
     }
 

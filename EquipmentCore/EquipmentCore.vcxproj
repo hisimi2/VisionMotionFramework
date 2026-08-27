@@ -110,8 +110,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>if not exist "$(SolutionDir)bin\include" mkdir "$(SolutionDir)bin\include"
-xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(SolutionDir)bin\include"
+      <Command>if not exist "$(SolutionDir)bin\include\$(ProjectName)" mkdir "$(SolutionDir)bin\include\$(ProjectName)"
+xcopy /Y /E /I "$(ProjectDir)Include\*.*" "$(SolutionDir)bin\include\$(ProjectName)"
 if not exist "$(SolutionDir)bin\$(Platform)\$(configuration)" mkdir "$(SolutionDir)bin\$(Platform)\$(configuration)"
 xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)\$(configuration)"
 </Command>

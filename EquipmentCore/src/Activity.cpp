@@ -1,4 +1,4 @@
-﻿#include "StdAfx.h"
+#include "StdAfx.h"
 #include "Activity.h"
 
 #include "Utils.h"
@@ -26,6 +26,7 @@ namespace EC
 
     void Activity::AddTask(TaskPtr task)
     {
+
         std::lock_guard<std::mutex> lock(m_taskMutex);
         m_tasks.push_back(task);
         LogTask(makeLogPrefix(m_ActivityName) + "AddTask: " + (task ? task->GetName() : "<null>"));

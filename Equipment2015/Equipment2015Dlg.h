@@ -2,10 +2,10 @@
 //
 #pragma once
 
-#include "Actuators/COPSwitch.h"
+#include "Actuators\COPSwitch.h"
 #include <memory> 
 #include <vector> 
-#include "ThreadsManager.h"
+#include "EquipmentCore\ThreadsManager.h"
 
 #include "VAT/LoadPPAdapter.h"
 

@@ -1,14 +1,14 @@
-﻿#pragma once
-#include "Actuators/Load2Parts.h"
-#include "TaskBase.h"
+#pragma once
 
-namespace OperationThread
+namespace EC
 {
-    using namespace EC;
+    class TaskBase;
+    class Context;
+    class Load2Parts;
 
     /// <summary>
     /// Load2 Pick 시퀀스 상태머신
-    /// EC::TaskBase 기반 상태 기계 구현
+    /// TaskBase 기반 상태 기계 구현
     /// 
     /// Load2는 Load1과 달리 XY축 대신 X축 + XPitch를 사용합니다.
     /// 
@@ -77,7 +77,7 @@ namespace OperationThread
 
     protected:
         void OnInitialize(Context& ctx) override;
-        EC::TaskResult OnPoll(Context& ctx) override;
+        TaskResult OnPoll(Context& ctx) override;
 
     private:
         // 단계 처리 함수들

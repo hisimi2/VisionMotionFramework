@@ -1,10 +1,13 @@
-#pragma once
+﻿#pragma once
 
 #include "VMF_API.h"
 #include "Types.h"
 #include <memory>
 #include <vector>
 #include <string>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 namespace VMF 
 {
@@ -13,13 +16,12 @@ namespace VMF
     class IActuator;
     class IResultSink;
 
-    class VMF_API AsyncSequenceRunner 
+    class VMF_API AsyncExecutor 
     {
     public:
-        AsyncSequenceRunner();
+        AsyncExecutor();
         
-        // 가상 함수가 존재하므로 안전한 상속을 위해 가상 소멸자로 변경하는 것을 권장합니다.
-        virtual ~AsyncSequenceRunner();
+        virtual ~AsyncExecutor();
 
         bool Start(std::unique_ptr<ISequence> seq, std::shared_ptr<Context> ctx, IActuator* actuator);
         
@@ -33,9 +35,14 @@ namespace VMF
         void SendResult(int requestId, const std::string& status);
 
     private:
-        struct Impl;
-        
-        std::unique_ptr<Impl> m_impl;
+        std::thread                     m_thread;
+        std::atomic<bool>               m_running;
+        mutable std::mutex              m_mutex;
+
+        std::unique_ptr<ISequence>      m_currentSeq;
+        std::shared_ptr<Context>        m_currentCtx;
+
+        IResultSink*                    m_resultSink;
 
         void SendResultToSink(int requestId, const std::vector<std::string>& results);
     };

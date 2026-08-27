@@ -1,20 +1,26 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Load2ActivityBuilder.h"
-#include "Activity.h"
-#include "../../EquipmentCore/include/Context.h"
 
 #include "Load2TaskPick.h"
 #include "Load2TaskPlace.h"
 
-namespace OperationThread
+#include "EquipmentCore\Context.h"
+#include "EquipmentCore\Activity.h"
+#include "EquipmentCore\ActivityBuilderBase.h"
+
+#include <memory>
+#include <string>
+
+
+namespace EC
 {
     ActivityPtr CLoad2ActivityBuilder::Build()
     {
         m_parts = std::make_shared<Load2Parts>();
 
         auto activity = std::make_unique<Activity>("Load2Activity");
-        activity->AddTask(std::make_shared<Load2TaskPick>(m_parts));
-        activity->AddTask(std::make_shared<Load2TaskPlace>(m_parts));
+        activity->AddTask(std::static_pointer_cast<ITask>(std::make_shared<Load2TaskPick>(m_parts)));
+        activity->AddTask(std::static_pointer_cast<ITask>(std::make_shared<Load2TaskPlace>(m_parts)));
 
         return activity;
     }

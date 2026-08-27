@@ -1,14 +1,14 @@
-﻿#pragma once
-#include "Actuators/Load2Parts.h"
-#include "TaskBase.h"
+#pragma once
 
-namespace OperationThread
+namespace EC
 {
-    using namespace EC;
+    class TaskBase;
+    class Context;
+    class Load2Parts;
 
     /// <summary>
     /// Load2 Place 시퀀스 상태머신
-    /// EC::TaskBase 기반 상태 기계 구현
+    /// TaskBase 기반 상태 기계 구현
     /// 
     /// 작업 흐름:
     /// 1. Move to Place Position (X)
@@ -70,7 +70,7 @@ namespace OperationThread
 
     protected:
         void OnInitialize(Context& ctx) override;
-        EC::TaskResult OnPoll(Context& ctx) override;
+        TaskResult OnPoll(Context& ctx) override;
 
     private:
         // 단계 처리 함수들
@@ -89,9 +89,5 @@ namespace OperationThread
         double m_safeZ;
         int m_vacuumIndex;
         long m_moveTimeoutMs;
-
-        // 유틸리티
     };
-
-    using Load2TaskPlacePtr = std::shared_ptr<Load2TaskPlace>;
-}
+} // namespace EC
