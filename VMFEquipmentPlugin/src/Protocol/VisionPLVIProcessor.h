@@ -40,12 +40,12 @@ namespace VMF_PLUGIN
 		VisionPlviProcessor();
 		~VisionPlviProcessor() override;
 
-// ── Request 함수 ─────────────────────────────────────────────
+        // ── Request 함수 ─────────────────────────────────────────────
 		// 검사 시작 요청 (1차 REQ_MEASURE, S107/F5)
 		// params 필요 키:
 		//   PLVI::Position, PLVI::PkgName, PLVI::CtrayX, PLVI::CtrayY,
 		//   PLVI::DeviceInfo ("0,99,99,0,..." 콤마 구분)
-bool RequestMeasureAsync(const VMF::StringMap& params) override;
+        bool RequestMeasureAsync(const VMF::StringMap& params) override;
 
 		// 결과 요청 (2차 REQ_MEASURE, S107/F5)
 		// params: 필요 없음 (nDataID만 전송)

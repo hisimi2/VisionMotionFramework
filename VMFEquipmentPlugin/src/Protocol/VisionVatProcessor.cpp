@@ -11,7 +11,6 @@
 using namespace VMF;
 using namespace VMF_PLUGIN;
 
-
 VisionVatProcessor::VisionVatProcessor()
 {
     VC::SecsMessageDispatcher& disp = m_ctrl.GetDispatcher();

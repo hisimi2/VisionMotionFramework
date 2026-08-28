@@ -10,7 +10,7 @@
 
 namespace VMF_PLUGIN
 {
-    /* 1️. Sequence name – identifies the measurement sequence */
+    /* 1. Sequence name – identifies the measurement sequence */
     std::string SetPlate1PLVIStrategy::GetName() const
     {
         return "SetPlate1PLVI";
@@ -180,7 +180,7 @@ namespace VMF_PLUGIN
         return params;
     }
 
-    /* 5️ SetTaskParamsByTask – inject default parameters into Context */
+    /* 5. SetTaskParamsByTask – inject default parameters into Context */
     void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
     {
         // Integrated default parameters (including Vision params)
@@ -188,19 +188,10 @@ namespace VMF_PLUGIN
         ctx.SetTaskParams(defaultParams);  // store for later retrieval
 
         // Task‑specific parameter sets
-        SetTaskParamsForTask(ctx, "Task_PLVI_Setup", GetSetupParams());
-        SetTaskParamsForTask(ctx, "Task_PLVI_ExecuteScan", GetExecuteScanParams());
-        SetTaskParamsForTask(ctx, "Task_PLVI_Finish", GetFinishParams());
+        ctx.SetTaskParams("Task_PLVI_Setup", GetSetupParams());
+        ctx.SetTaskParams("Task_PLVI_ExecuteScan", GetExecuteScanParams());
+        ctx.SetTaskParams("Task_PLVI_Finish", GetFinishParams());
     }
-
-    /* 6️ Helper: set a single Task’s parameters by name */
-    void SetPlate1PLVIStrategy::SetTaskParamsForTask(VMF::Context& ctx,
-        const std::string& taskName,
-        const VMF::TaskParams& params) const
-    {
-        ctx.SetTaskParams(taskName, params);
-    }
-
 
     /* IComponentSetup 인터페이스 구현: preset별 Vision 파라미터 제공 */
     VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetName) const
