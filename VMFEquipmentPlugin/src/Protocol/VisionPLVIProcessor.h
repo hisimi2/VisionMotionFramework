@@ -24,7 +24,7 @@ namespace VMF_PLUGIN
 		enum class Function : int
 		{
 			Request = 5,   // H→V REQ_MEASURE
-			Result = 6    // V→H REQ_RESULT
+			Result  = 6    // V→H REQ_RESULT
 		};
 		static const VC::VisionProtocolId PLVIRequest(
 			static_cast<int>(Stream::Measure),
@@ -34,7 +34,7 @@ namespace VMF_PLUGIN
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API VisionPlviProcessor : public VMF::VisionClientManager
+    class VisionPlviProcessor : public VMF::VisionClientManager
 	{
 	public:
 		VisionPlviProcessor();
@@ -70,7 +70,7 @@ namespace VMF_PLUGIN
 		VisionPlviProcessor(const VisionPlviProcessor&) = delete;
 		VisionPlviProcessor& operator=(const VisionPlviProcessor&) = delete;
 
-// Pocket 결과 배열 → 콤마 구분 문자열 파싱 헬퍼
+        // Pocket 결과 배열 → 콤마 구분 문자열 파싱 헬퍼
 		// ex) "0,99,1,2,11" 형태로 DataMap에 저장
 		static std::string ParsePocketResult(const CPacketBody_S107F6& pkt,
 			int ctrayX, int ctrayY);

@@ -2,7 +2,7 @@
 #include "VisionPlviProcessor.h"
 #include "VisionComm\SecsMessageDispatcher.h"
 #include "VisionComm\SECSPacket.h"
-#include "VisionParamKeysPLVI.h"
+#include "VisionEquipmentParamKeys.h"
 
 #include <cstring>
 

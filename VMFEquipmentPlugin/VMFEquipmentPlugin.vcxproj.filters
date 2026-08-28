@@ -51,7 +51,7 @@
     <ClInclude Include="src\Protocol\VisionEquipmentPacket.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="src\Protocol\VisionParamKeysPLVI.h">
+    <ClInclude Include="src\Protocol\VisionEquipmentParamKeys.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h">
@@ -61,7 +61,7 @@
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="include\ParamKeys.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>SetplateUnit\PLVI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

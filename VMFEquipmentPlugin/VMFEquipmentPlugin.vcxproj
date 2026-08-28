@@ -189,7 +189,7 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     <ClInclude Include="include\PlugInAPI.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="src\Protocol\VisionEquipmentPacket.h" />
-    <ClInclude Include="src\Protocol\VisionParamKeysPLVI.h" />
+    <ClInclude Include="src\Protocol\VisionEquipmentParamKeys.h" />
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h" />
     <ClInclude Include="src\Strategies\SetPlate1PLVISequenceBuilder.h" />
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h" />
