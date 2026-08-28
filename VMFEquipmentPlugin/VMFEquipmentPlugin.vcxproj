@@ -188,8 +188,7 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
     <ClInclude Include="include\PlugInAPI.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="src\Protocol\CMockSocketConditionVisionProcessor.h" />
-    <ClInclude Include="src\Protocol\VisionPacket.h" />
+    <ClInclude Include="src\Protocol\VisionEquipmentPacket.h" />
     <ClInclude Include="src\Protocol\VisionParamKeysPLVI.h" />
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h" />
     <ClInclude Include="src\Strategies\SetPlate1PLVISequenceBuilder.h" />
@@ -205,7 +204,6 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Protocol\CMockSocketConditionVisionProcessor.cpp" />
     <ClCompile Include="src\Protocol\VisionPLVIProcessor.cpp" />
     <ClCompile Include="src\Strategies\SetPlate1PLVISequenceBuilder.cpp" />
     <ClCompile Include="src\Strategies\SetPlate1PLVIStrategy.cpp" />

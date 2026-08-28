@@ -48,10 +48,7 @@
     <ClInclude Include="src\Tasks\SetPlate1PLVISetup.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="src\Protocol\CMockSocketConditionVisionProcessor.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Protocol\VisionPacket.h">
+    <ClInclude Include="src\Protocol\VisionEquipmentPacket.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\VisionParamKeysPLVI.h">
@@ -85,9 +82,6 @@
     </ClCompile>
     <ClCompile Include="src\Tasks\SetPlate1PLVISetup.cpp">
       <Filter>SetplateUnit\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Protocol\CMockSocketConditionVisionProcessor.cpp">
-      <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="src\Protocol\VisionPLVIProcessor.cpp">
       <Filter>Protocol</Filter>

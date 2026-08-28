@@ -3,7 +3,7 @@
 #include "VisionComm\SecsMessageDispatcher.h"
 #include "VisionComm\SECSPacket.h"
 #include "VisionParamKeysPLVI.h"
-#include "VisionPacket.h"
+
 #include <cstring>
 
 using namespace VMF;
