@@ -56,7 +56,7 @@ namespace VMF
 
         /// <summary>
         /// 외부에서 공유되는 Controller를 사용하여 초기화합니다.
-        /// ConnectionManager를 통해 공유 소켓 연결을 사용할 때 호출됩니다.
+        /// VisionConnectionManager를 통해 공유 소켓 연결을 사용할 때 호출됩니다.
         /// 기본 구현은 Initialize(config)를 호출합니다.
         /// </summary>
         virtual VC::Status InitializeWithSharedController(

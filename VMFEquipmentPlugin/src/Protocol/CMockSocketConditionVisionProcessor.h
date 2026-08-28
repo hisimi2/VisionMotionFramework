@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VisionMotionFramework\VisionCommunicationManager.h"
+#include "VisionMotionFramework\VisionClientManager.h"
 
 namespace VMF_PLUGIN
 {
@@ -18,7 +18,7 @@ namespace VMF_PLUGIN
 	//   1106 DeviceCheck    → 전체 결과 발행
 	//                         (미리 등록된 MockFailSlots 사용)
 	// ----------------------------------------------------------------
-	class CMockSocketConditionVisionProcessor : public VMF::VisionCommunicationManager
+	class CMockSocketConditionVisionProcessor : public VMF::VisionClientManager
 	{
 	public:
 		CMockSocketConditionVisionProcessor();

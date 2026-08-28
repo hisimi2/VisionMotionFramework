@@ -1,5 +1,4 @@
-﻿#pragma once
-
+#pragma once
 
 namespace VMF_PLUGIN
 {
@@ -149,5 +148,4 @@ namespace VMF_PLUGIN
                 strncpy_s(cData[index], STR_LEN, pValue, _TRUNCATE);
         }
     };
-
 } // namespace VMF_PLUGIN

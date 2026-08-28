@@ -15,14 +15,14 @@ namespace VMF
     /// 다른 서버에 대해서는 각각 독립적인 연결을 유지합니다.
     /// 
     /// 사용 예:
-    ///   auto ctrl = ConnectionManager::GetInstance().GetOrCreateConnection("192.168.1.100", 5000, 5000);
-    ///   auto ctrl2 = ConnectionManager::GetInstance().GetOrCreateConnection("192.168.1.100", 5000, 5000); // 같은 소켓 공유
-    ///   auto ctrl3 = ConnectionManager::GetInstance().GetOrCreateConnection("10.0.0.50", 6000, 5000);   // 다른 서버 - 별도 소켓
+    ///   auto ctrl = VisionConnectionManager::GetInstance().GetOrCreateConnection("192.168.1.100", 5000, 5000);
+    ///   auto ctrl2 = VisionConnectionManager::GetInstance().GetOrCreateConnection("192.168.1.100", 5000, 5000); // 같은 소켓 공유
+    ///   auto ctrl3 = VisionConnectionManager::GetInstance().GetOrCreateConnection("10.0.0.50", 6000, 5000);   // 다른 서버 - 별도 소켓
     /// </summary>
-    class VMF_API ConnectionManager
+    class VisionConnectionManager
     {
     public:
-        static ConnectionManager& GetInstance();
+        static VisionConnectionManager& GetInstance();
 
         /// <summary>
         /// IP:Port에 해당하는 Controller를 반환합니다.
@@ -48,10 +48,10 @@ namespace VMF
         static std::string MakeConnectionKey(const std::string& ip, int port);
 
     private:
-        ConnectionManager() = default;
-        ~ConnectionManager();
-        ConnectionManager(const ConnectionManager&) = delete;
-        ConnectionManager& operator=(const ConnectionManager&) = delete;
+        VisionConnectionManager() = default;
+        ~VisionConnectionManager();
+        VisionConnectionManager(const VisionConnectionManager&) = delete;
+        VisionConnectionManager& operator=(const VisionConnectionManager&) = delete;
 
         std::mutex m_mutex;
         // key("IP:Port") → weak_ptr<Controller>

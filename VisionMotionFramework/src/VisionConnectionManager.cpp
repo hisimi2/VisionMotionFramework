@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "ConnectionManager.h"
+#include "VisionConnectionManager.h"
 #include "VisionComm\Controller.h"
 
 namespace VMF
 {
-    ConnectionManager& ConnectionManager::GetInstance()
+    VisionConnectionManager& VisionConnectionManager::GetInstance()
     {
-        static ConnectionManager instance;
+        static VisionConnectionManager instance;
         return instance;
     }
 
-    ConnectionManager::~ConnectionManager()
+    VisionConnectionManager::~VisionConnectionManager()
     {
         DisconnectAll();
     }
 
-    std::shared_ptr<VC::Controller> ConnectionManager::GetOrCreateConnection(
+    std::shared_ptr<VC::Controller> VisionConnectionManager::GetOrCreateConnection(
         const std::string& ip, int port, int timeoutMs)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -38,19 +38,19 @@ namespace VMF
         return ctrl;
     }
 
-    void ConnectionManager::ReleaseConnection(const std::string& key)
+    void VisionConnectionManager::ReleaseConnection(const std::string& key)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_connections.erase(key);
     }
 
-    void ConnectionManager::DisconnectAll()
+    void VisionConnectionManager::DisconnectAll()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_connections.clear();
     }
 
-    std::string ConnectionManager::MakeConnectionKey(const std::string& ip, int port)
+    std::string VisionConnectionManager::MakeConnectionKey(const std::string& ip, int port)
     {
         return ip + ":" + std::to_string(port);
     }

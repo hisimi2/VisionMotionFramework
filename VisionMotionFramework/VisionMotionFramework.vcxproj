@@ -133,9 +133,8 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Mock\CMockDataRepository.cpp" />
-    <ClCompile Include="src\Mock\CMockVisionEventHandler.cpp" />
-    <ClCompile Include="src\Mock\CMockVisionProcessor.cpp" />
+    <ClCompile Include="src\Mock\CMockRepository.cpp" />
+    <ClCompile Include="src\Mock\CMockVisionClient.cpp" />
     <ClCompile Include="src\Orchestrator.cpp" />
     <ClCompile Include="src\SqliteDataRepository.cpp" />
     <ClCompile Include="VisionMotionFramework.cpp" />
@@ -145,10 +144,10 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     <ClCompile Include="src\RepositoryFactory.cpp" />
     <ClCompile Include="src\RunController.cpp" />
     <ClCompile Include="src\Sequence.cpp" />
-    <ClCompile Include="src\ConnectionManager.cpp" />
+    <ClCompile Include="src\VisionConnectionManager.cpp" />
     <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\DefaultSetupStrategy.cpp" />
-    <ClCompile Include="src\VisionCommunicationManager.cpp" />
+    <ClCompile Include="src\VisionClientManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -156,12 +155,11 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AsyncExecutor.h" />
-    <ClInclude Include="include\CMockDataRepository.h" />
-    <ClInclude Include="include\CMockVisionEventHandler.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVisionOptional.h" />
     <ClInclude Include="include\IParamProvider.h" />
-    <ClInclude Include="include\Mock\CMockVisionProcessor.h" />
+    <ClInclude Include="include\Mock\CMockRepository.h" />
+    <ClInclude Include="include\Mock\CMockVisionClient.h" />
     <ClInclude Include="include\Orchestrator.h" />
     <ClInclude Include="include\VMF_API.h" />
     <ClInclude Include="include\FileDataRepository.h" />
@@ -184,9 +182,9 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     <ClInclude Include="include\Sequence.h" />
     <ClInclude Include="include\Types.h" />
     <ClInclude Include="include\RunController.h" />
-    <ClInclude Include="include\ConnectionManager.h" />
+    <ClInclude Include="include\VisionConnectionManager.h" />
     <ClInclude Include="include\Context.h" />
-    <ClInclude Include="include\VisionCommunicationManager.h" />
+    <ClInclude Include="include\VisionClientManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

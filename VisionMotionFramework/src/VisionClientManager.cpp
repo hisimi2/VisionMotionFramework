@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include "VisionCommunicationManager.h"
+#include "VisionClientManager.h"
 #include "VisionComm\SecsMessageDispatcher.h"
 #include "VisionComm\SECSPacket.h"
 #include "IResultSink.h"
@@ -17,20 +17,20 @@
 
 namespace VMF
 {
-    VisionCommunicationManager::VisionCommunicationManager()
+    VisionClientManager::VisionClientManager()
         : m_processRunning(false)
         , m_mainRunning(false)
         , m_resultSink(nullptr)
     {
     }
 
-    VisionCommunicationManager::~VisionCommunicationManager()
+    VisionClientManager::~VisionClientManager()
     {
         StopProcessThread();
         Stop();
     }
 
-    void VisionCommunicationManager::Start()
+    void VisionClientManager::Start()
     {
         if (m_thread && m_thread->joinable())
         {
@@ -38,10 +38,10 @@ namespace VMF
         }
 
         m_mainRunning = true;
-        m_thread = std::make_unique<std::thread>(&VisionCommunicationManager::RunLoop, this);
+        m_thread = std::make_unique<std::thread>(&VisionClientManager::RunLoop, this);
     }
 
-    void VisionCommunicationManager::Stop()
+    void VisionClientManager::Stop()
     {
         m_mainRunning = false;
 
@@ -59,12 +59,12 @@ namespace VMF
         m_thread.reset();
     }
 
-    void VisionCommunicationManager::InitializeRecvThread()
+    void VisionClientManager::InitializeRecvThread()
     {
         m_ctrl.StartReceiving();
     }
 
-    void VisionCommunicationManager::RunLoop()
+    void VisionClientManager::RunLoop()
     {
         try
         {
@@ -78,12 +78,12 @@ namespace VMF
         }
     }
 
-    void VisionCommunicationManager::Process()
+    void VisionClientManager::Process()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    VC::Status VisionCommunicationManager::Initialize(const VisionConnectionConfig& config)
+    VC::Status VisionClientManager::Initialize(const VisionConnectionConfig& config)
     {
         m_ctrl.Initialize(const_cast<char*>(config.address.c_str()), config.port, 0, config.timeoutMs);
         InitializeRecvThread();
@@ -91,17 +91,17 @@ namespace VMF
         return VC::VisionOK;
     }
 
-    void VisionCommunicationManager::Disconnect()
+    void VisionClientManager::Disconnect()
     {
         m_ctrl.Disconnect();
     }
 
-    bool VisionCommunicationManager::IsConnected() const
+    bool VisionClientManager::IsConnected() const
     {
         return m_ctrl.IsConnected();
     }
 
-    VisionCommunicationManager::DataMap VisionCommunicationManager::GetLatestData(VisionCommand type) const
+    VisionClientManager::DataMap VisionClientManager::GetLatestData(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
 
@@ -114,21 +114,21 @@ namespace VMF
         return DataMap();
     }
 
-    void VisionCommunicationManager::SetLatestData(VisionCommand type, const DataMap& data)
+    void VisionClientManager::SetLatestData(VisionCommand type, const DataMap& data)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_latestData[type] = data;
         m_received[type] = true;
     }
 
-    void VisionCommunicationManager::ClearLatestData(VisionCommand type)
+    void VisionClientManager::ClearLatestData(VisionCommand type)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_latestData.erase(type);
         m_received.erase(type);
     }
 
-    bool VisionCommunicationManager::IsValid(VisionCommand type) const
+    bool VisionClientManager::IsValid(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
 
@@ -142,7 +142,7 @@ namespace VMF
         return (dataIt != m_latestData.end() && !dataIt->second.empty());
     }
 
-    bool VisionCommunicationManager::HasReceived(VisionCommand type) const
+    bool VisionClientManager::HasReceived(VisionCommand type) const
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
 
@@ -150,19 +150,19 @@ namespace VMF
         return (it != m_received.end()) ? it->second : false;
     }
 
-    void VisionCommunicationManager::SetReceived(VisionCommand type, bool received)
+    void VisionClientManager::SetReceived(VisionCommand type, bool received)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_received[type] = received;
     }
 
-    void VisionCommunicationManager::ClearReceived(VisionCommand type)
+    void VisionClientManager::ClearReceived(VisionCommand type)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_received.erase(type);
     }
 
-    void VisionCommunicationManager::StartProcessThread()
+    void VisionClientManager::StartProcessThread()
     {
         if (m_processThread && m_processThread->joinable())
         {
@@ -170,10 +170,10 @@ namespace VMF
         }
 
         m_processRunning = true;
-        m_processThread = std::make_unique<std::thread>(&VisionCommunicationManager::PacketLoop, this);
+        m_processThread = std::make_unique<std::thread>(&VisionClientManager::PacketLoop, this);
     }
 
-    void VisionCommunicationManager::StopProcessThread()
+    void VisionClientManager::StopProcessThread()
     {
         m_processRunning = false;
 
@@ -191,7 +191,7 @@ namespace VMF
         }
     }
 
-    void VisionCommunicationManager::PacketLoop()
+    void VisionClientManager::PacketLoop()
     {
         while (m_processRunning)
         {
@@ -200,13 +200,13 @@ namespace VMF
         }
     }
 
-    void VisionCommunicationManager::SetResultSink(IResultSink* sink)
+    void VisionClientManager::SetResultSink(IResultSink* sink)
     {
         std::lock_guard<std::mutex> lk(m_dataMutex);
         m_resultSink = sink;
     }
 
-    void VisionCommunicationManager::SendResultToSink(int requestId, const std::vector<std::string>& results)
+    void VisionClientManager::SendResultToSink(int requestId, const std::vector<std::string>& results)
     {
         IResultSink* sink = nullptr;
         {

@@ -150,7 +150,7 @@ BEGIN_MESSAGE_MAP(CEquipment2015Dlg, CDialogEx)
     ON_WM_TIMER()
     ON_MESSAGE(WM_ACTIVITY_RESULT, &CEquipment2015Dlg::OnActivityResult)
     ON_BN_CLICKED(IDC_VMF_STATE_MACHINE, &CEquipment2015Dlg::OnBnClickedVmfStateMachine)
-    ON_BN_CLICKED(IDC_VMF_CONNECTION_MANAGER, &CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager)
+    ON_BN_CLICKED(IDC_VMF_CONNECTION_MANAGER, &CEquipment2015Dlg::OnBnClickedVmfStateMachineWithVisionConnectionManager)
     ON_BN_CLICKED(IDC_VMF_MULTI_SERVER, &CEquipment2015Dlg::OnBnClickedVmfMultiServerExample)
     ON_BN_CLICKED(IDC_VMF_DIRECT, &CEquipment2015Dlg::OnBnClickedVmfDirect)
 END_MESSAGE_MAP()
@@ -282,9 +282,9 @@ LRESULT CEquipment2015Dlg::OnActivityResult(WPARAM wParam, LPARAM lParam)
 }
 
 //=============================================================================
-// [예제] VMF 상태머신 모드 - ConnectionManager 사용
+// [예제] VMF 상태머신 모드 - VisionConnectionManager 사용
 //=============================================================================
-void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
+void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithVisionConnectionManager()
 {
     /*
     m_orchestrator = CreateOrchestrator();
@@ -302,7 +302,7 @@ void CEquipment2015Dlg::OnBnClickedVmfStateMachineWithConnectionManager()
 
     if (started)
     {
-        AppendLog(_T("[CM StateMachine] Sequence started with ConnectionManager.\r\n"));
+        AppendLog(_T("[CM StateMachine] Sequence started with VisionConnectionManager.\r\n"));
         AppendLog(_T("  - Vision 서버: 192.168.1.100:5000 (단일 소켓 공유)\r\n"));
     }
     else

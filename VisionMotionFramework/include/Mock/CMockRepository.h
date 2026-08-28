@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "IDataRepository.h"
 
@@ -11,11 +11,11 @@ namespace VMF
 {
     // IDataRepository의 단순 모의 구현체
     // 테스트 중 저장/조회 동작을 시뮬레이션합니다.
-    class CMockDataRepository : public IDataRepository
+    class CMockRepository : public IDataRepository
     {
     public:
-        CMockDataRepository();
-        virtual ~CMockDataRepository();
+        CMockRepository();
+        virtual ~CMockRepository();
 
         // IDataRepository 구현
         virtual StorageError SaveParam(const std::string& recipe, const std::string& name, const std::string& value);

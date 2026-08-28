@@ -37,7 +37,7 @@ namespace VMF_PLUGIN
 		VisionSixSideProcessor();
 		~VisionSixSideProcessor() override;
 
-// ── Request 함수 ─────────────────────────────────────────────
+        // ── Request 함수 ─────────────────────────────────────────────
 		// 6면 검사 요청 (CMD 1102, S107/F1)
 		// params 필요 키:
 		//   SixSide::VisionType, SixSide::CamPosition,

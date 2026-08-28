@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VisionMotionFramework\visioncommunicationmanager.h"
+#include "VisionMotionFramework\VisionClientManager.h"
 #include "VisionPacket.h"
 #include "PlugInAPI.h"
 
@@ -34,7 +34,7 @@ namespace VMF_PLUGIN
 			static_cast<int>(Function::Result));
 	}
 
-    class VMF_PLUGIN_API VisionPlviProcessor : public VMF::VisionCommunicationManager
+    class VMF_PLUGIN_API VisionPlviProcessor : public VMF::VisionClientManager
 	{
 	public:
 		VisionPlviProcessor();

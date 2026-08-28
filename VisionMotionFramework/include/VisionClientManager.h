@@ -14,13 +14,13 @@
 
 namespace VMF
 {
-    class VMF_API VisionCommunicationManager : public IVisionClient
+    class VMF_API VisionClientManager : public IVisionClient
     {
     public:
         using DataMap = StringMap;
 
-        VisionCommunicationManager();
-        ~VisionCommunicationManager() override;
+        VisionClientManager();
+        ~VisionClientManager() override;
 
         void Start();
         void Stop();

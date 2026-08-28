@@ -3,13 +3,13 @@
 #include "VMF_API.h"
 #include "IComponentSetup.h"
 #include "ISequenceSetup.h"
-#include "ConnectionManager.h"
+#include "VisionConnectionManager.h"
 #include "IActuator.h"
 #include "VisionComm\Controller.h"
 #include "IVisionClient.h"
 #include "IDataRepository.h"
 #include "SqliteDataRepository.h"
-#include "Mock/CMockVisionEventHandler.h"
+#include "Mock/CMockVisionClient.h"
 #include <string>
 #include <memory>
 
@@ -46,7 +46,7 @@ namespace VMF
         virtual SequenceBuilderPtr CreateBuilder() override = 0;
 
     private:
-        bool IsUsingConnectionManager() const;
+        bool IsUsingVisionConnectionManager() const;
         std::shared_ptr<VC::Controller> GetOrCreateSharedController();
     };
 }

@@ -57,19 +57,7 @@
     <ClInclude Include="src\Protocol\VisionParamKeysPLVI.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="src\Protocol\VisionParamKeysSixSide.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Protocol\VisionParamKeysVAT.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Protocol\VisionSixSideProcessor.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Protocol\VisionVatProcessor.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h">
@@ -102,12 +90,6 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="src\Protocol\VisionPLVIProcessor.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Protocol\VisionSixSideProcessor.cpp">
-      <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Protocol\VisionVatProcessor.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="src\Tasks\SetPlate1PLVIExecuteScan.cpp">

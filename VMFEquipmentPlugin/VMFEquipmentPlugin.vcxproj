@@ -191,11 +191,7 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     <ClInclude Include="src\Protocol\CMockSocketConditionVisionProcessor.h" />
     <ClInclude Include="src\Protocol\VisionPacket.h" />
     <ClInclude Include="src\Protocol\VisionParamKeysPLVI.h" />
-    <ClInclude Include="src\Protocol\VisionParamKeysSixSide.h" />
-    <ClInclude Include="src\Protocol\VisionParamKeysVAT.h" />
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h" />
-    <ClInclude Include="src\Protocol\VisionSixSideProcessor.h" />
-    <ClInclude Include="src\Protocol\VisionVatProcessor.h" />
     <ClInclude Include="src\Strategies\SetPlate1PLVISequenceBuilder.h" />
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h" />
     <ClInclude Include="src\Tasks\SetPlate1PLVISetup.h" />
@@ -211,8 +207,6 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     </ClCompile>
     <ClCompile Include="src\Protocol\CMockSocketConditionVisionProcessor.cpp" />
     <ClCompile Include="src\Protocol\VisionPLVIProcessor.cpp" />
-    <ClCompile Include="src\Protocol\VisionSixSideProcessor.cpp" />
-    <ClCompile Include="src\Protocol\VisionVatProcessor.cpp" />
     <ClCompile Include="src\Strategies\SetPlate1PLVISequenceBuilder.cpp" />
     <ClCompile Include="src\Strategies\SetPlate1PLVIStrategy.cpp" />
     <ClCompile Include="src\Tasks\SetPlate1PLVIExecuteScan.cpp" />

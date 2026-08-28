@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "DefaultSetupStrategy.h"
-#include "ConnectionManager.h"
+#include "VisionConnectionManager.h"
 #include "SqliteDataRepository.h"
-#include "Mock/CMockVisionEventHandler.h"
+#include "Mock/CMockVisionClient.h"
 
 namespace VMF
 {
@@ -31,17 +31,17 @@ namespace VMF
         return m_connectionConfig;
     }
 
-    bool DefaultSetupStrategy::IsUsingConnectionManager() const
+    bool DefaultSetupStrategy::IsUsingVisionConnectionManager() const
     {
         return !m_connectionConfig.address.empty() && m_connectionConfig.port > 0;
     }
 
     std::shared_ptr<VC::Controller> DefaultSetupStrategy::GetOrCreateSharedController()
     {
-        if (!IsUsingConnectionManager())
+        if (!IsUsingVisionConnectionManager())
             return nullptr;
 
-        return ConnectionManager::GetInstance().GetOrCreateConnection(
+        return VisionConnectionManager::GetInstance().GetOrCreateConnection(
             m_connectionConfig.address,
             m_connectionConfig.port,
             m_connectionConfig.timeoutMs);
@@ -62,15 +62,15 @@ namespace VMF
 
     VisionProcessorPtr DefaultSetupStrategy::CreateVision()
     {
-        // [ConnectionManager 모드]
-        // SetConnectionConfig()로 연결 설정이 주입되면 ConnectionManager를 통해
+        // [VisionConnectionManager 모드]
+        // SetConnectionConfig()로 연결 설정이 주입되면 VisionConnectionManager를 통해
         // 공유 Controller를 사용하여 단일 소켓 연결을 유지합니다.
-        if (IsUsingConnectionManager())
+        if (IsUsingVisionConnectionManager())
         {
             auto sharedCtrl = GetOrCreateSharedController();
             if (sharedCtrl)
             {
-                auto vm = std::make_shared<CMockVisionEventHandler>();
+                auto vm = std::make_shared<CMockVisionClient>();
                 VC::Status status = vm->InitializeWithSharedController(
                     sharedCtrl, GetConnectionConfig());
 
@@ -79,7 +79,7 @@ namespace VMF
                     return vm;
                 }
             }
-            // ConnectionManager 실패 시 기본 방식으로 fallback
+            // VisionConnectionManager 실패 시 기본 방식으로 fallback
         }
 
         // [기본 모드] - 기존 방식: 직접 연결 생성
@@ -89,7 +89,7 @@ namespace VMF
         {
             localConfig = VisionConnectionConfig("127.0.0.1", 8080, 3000);
         }
-        auto vm = std::make_shared<CMockVisionEventHandler>();
+        auto vm = std::make_shared<CMockVisionClient>();
         vm->Initialize(localConfig);
 
         return vm;

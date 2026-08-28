@@ -55,7 +55,7 @@ public:
     CEdit m_LogEdit;
 	afx_msg void OnBnClickedVmfStateMachine();
 	afx_msg void OnBnClickedVmfDirect();
-    afx_msg void OnBnClickedVmfStateMachineWithConnectionManager();
+    afx_msg void OnBnClickedVmfStateMachineWithVisionConnectionManager();
     afx_msg void OnBnClickedVmfMultiServerExample();
 
     void AppendLog(LPCTSTR msg);

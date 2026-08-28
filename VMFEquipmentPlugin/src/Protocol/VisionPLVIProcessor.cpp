@@ -192,7 +192,7 @@ bool VisionPlviProcessor::RequestLightAsync(const StringMap&) { return false; }
 void VisionPlviProcessor::OnSetCok(ByteArray) {}
 void VisionPlviProcessor::OnDeviceCheck(ByteArray) {}
 void VisionPlviProcessor::OnLight(ByteArray) {}
-void VisionPlviProcessor::Process() { VisionCommunicationManager::Process(); }
+void VisionPlviProcessor::Process() { VisionClientManager::Process(); }
 
 // ================================================================
 // [ParsePocketResult] Pocket 결과 배열 파싱 헬퍼
