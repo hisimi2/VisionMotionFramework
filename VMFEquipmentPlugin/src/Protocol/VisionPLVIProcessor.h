@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VisionMotionFramework\VisionClientManager.h"
-#include "VisionEquipmentPacket.h"
+#include "VisionPacket.h"
 #include "PlugInAPI.h"
 
 namespace VMF_PLUGIN

@@ -1,7 +1,7 @@
 // D:\01GitHub_PROJECT\VisionMotionFramework\VMFEquipmentPlugin\include\SetPlate1PLVIStrategy.h
 #pragma once
 #include "PlugInAPI.h"
-#include "PLVIParamKeys.h"
+#include "SetPlate1PLVITaskParamKeys.h"
 #include <string>
 #include <memory>
 #include <vector>

@@ -2,32 +2,67 @@
 
 namespace VMF_PLUGIN
 {
-    // ── PLVI Request Keys ──
     namespace PLVI
     {
-        constexpr const char* Position = "PLVI_POSITION";      // Builder/Task에서 실제 사용 키
-        constexpr const char* PkgName = "PLVI_PKG_NAME";
-        constexpr const char* CtrayX = "CTRAY_X";
-        constexpr const char* CtrayY = "CTRAY_Y";
-        constexpr const char* DeviceInfo = "PLVI_DEVICE_INFO";
-        // "0,99,99,0,..." 형태 콤마 구분 문자열 (0=없음, 99=존재)
+        // ──────────────────────────────────────────────────────────────
+            // REQ_MEASURE 요청 (S107/F5, H→V) - cData 구성
+            // ──────────────────────────────────────────────────────────────
+
+            /// cData[0]: PLVI 위치
+            /// 값: 0=Set-Plate1, 1=Set-Plate2, 11=Shuttle Table1, 12=Shuttle Table2,
+            ///      21=Retest Buffer1, 22=Retest Buffer2
+        constexpr const char* PLVI_POSITION = "Vision.PLVI_POSITION";
+
+        /// cData[1]: PKG 명칭 (String)
+        constexpr const char* PKG_NAME = "Vision.PKG_NAME";
+
+        /// cData[2]: C-Tray 크기 "X,Y" 형태 문자열
+        constexpr const char* CTRAY_INFO = "Vision.CTRAY_INFO";
+
+        /// cData[2][0]: C-Tray X 수량 (별도 키, 필요시 사용)
+        constexpr const char* CTRAY_X = "Vision.CTRAY_X";
+
+        /// cData[2][1]: C-Tray Y 수량 (별도 키, 필요시 사용)
+        constexpr const char* CTRAY_Y = "Vision.CTRAY_Y";
+
+        /// cData[3]: Device 유무 배열 "0,99,99,0,..." 콤마 구분
+        constexpr const char* DEVICE_INFO = "Vision.DEVICE_INFO";
+
+        /// cData[3][0] ~: 개별 Device 정보 키 (인덱스별)
+        /// 키 형식: "Vision.DEVICE_INFO_0", "Vision.DEVICE_INFO_1", ...
+        constexpr const char* DEVICE_INFO_PREFIX = "Vision.DEVICE_INFO_";
+
+        /// nDataID: PLVI 요청 ID
+        constexpr const char* DATA_ID = "Vision.DATA_ID";
     }
 
     // ── PLVI Response Keys ──
     namespace PLVIResult
     {
-        constexpr const char* Status = "PlviStatus";
-        // "0"=ERROR, "1"=SUCCESS
-        constexpr const char* ErrCode = "PlviErrCode";
-        // "0"=BUSY, "1"=CAM_DISCONNECT, "2"=CAM_TIMEOUT
-        // "3"=CAM_STATUS_FAIL, "4"=LIGHT_ERROR, "5"=NO_TEACHING_DATA
-        constexpr const char* OverallResult = "PlviOverallResult";
-        // "0"=OK, "1"=NG
-        constexpr const char* ResultPosition = "PlviResultPosition";
-        // PLVI 위치 echo
-        constexpr const char* PocketResult = "PlviPocketResult";
-        // "0,99,1,2,11,12,..." 형태 콤마 구분 문자열
-        // 0=없음, 99=정상, 1=Leave, 2=Double, 11=Missing, 12=Mismatch
+        /// nDataID: 요청 Req ID + 1000
+        constexpr const char* RESULT_DATA_ID = "Vision.RESULT_DATA_ID";
+
+        /// nStatus: 0=STATUS_ERROR, 1=STATUS_SUCCESS
+        constexpr const char* RESULT_STATUS = "Vision.RESULT_STATUS";
+
+        /// cData[0]: 에러 코드
+        /// 값: 0=BUSY, 1=CAM_DISCONNECT, 2=CAM_TIMEOUT, 
+        ///      3=CAM_STATUS_FAIL, 4=LIGHT_ERROR, 5=NO_TEACHING_DATA
+        constexpr const char* RESULT_ERROR_CODE = "Vision.RESULT_ERROR_CODE";
+
+        /// cData[1]: 전체 결과
+        /// 값: "0"=OK, "1"=NG
+        constexpr const char* RESULT_TOTAL = "Vision.RESULT_TOTAL";
+
+        /// cData[2]: PLVI 위치 (요청 시와 동일한 값, echo)
+        constexpr const char* RESULT_PLVI_POSITION = "Vision.RESULT_PLVI_POSITION";
+
+        /// cData[3]: 개별 Pocket 상태 "0,99,1,2,11,..." 콤마 구분
+        constexpr const char* RESULT_POCKET_RESULT = "Vision.RESULT_POCKET_RESULT";
+
+        /// cData[3][0] ~: 개별 Pocket 결과 키 (인덱스별)
+        /// 키 형식: "Vision.RESULT_POCKET_0", "Vision.RESULT_POCKET_1", ...
+        constexpr const char* RESULT_POCKET_PREFIX = "Vision.RESULT_POCKET_";
     }
 
     // ── VAT Request Keys ──

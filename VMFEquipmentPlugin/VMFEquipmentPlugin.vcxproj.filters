@@ -48,10 +48,10 @@
     <ClInclude Include="src\Tasks\SetPlate1PLVISetup.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="src\Protocol\VisionEquipmentPacket.h">
+    <ClInclude Include="src\Protocol\VisionPacket.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="src\Protocol\VisionEquipmentParamKeys.h">
+    <ClInclude Include="src\Protocol\VisionParamKeys.h">
       <Filter>Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h">
@@ -60,7 +60,7 @@
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h">
       <Filter>SetplateUnit\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="include\PLVIParamKeys.h">
+    <ClInclude Include="include\SetPlate1PLVITaskParamKeys.h">
       <Filter>SetplateUnit\PLVI</Filter>
     </ClInclude>
   </ItemGroup>

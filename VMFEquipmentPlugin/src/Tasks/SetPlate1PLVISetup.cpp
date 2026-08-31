@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SetPlate1PLVISetup.h"
 #include "VisionMotionFramework\IParamProvider.h"
-#include "PLVIParamKeys.h"
+#include "SetPlate1PLVITaskParamKeys.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;

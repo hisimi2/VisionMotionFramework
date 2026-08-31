@@ -184,12 +184,12 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\PLVIParamKeys.h" />
+    <ClInclude Include="include\SetPlate1PLVITaskParamKeys.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
     <ClInclude Include="include\PlugInAPI.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="src\Protocol\VisionEquipmentPacket.h" />
-    <ClInclude Include="src\Protocol\VisionEquipmentParamKeys.h" />
+    <ClInclude Include="src\Protocol\VisionPacket.h" />
+    <ClInclude Include="src\Protocol\VisionParamKeys.h" />
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h" />
     <ClInclude Include="src\Strategies\SetPlate1PLVISequenceBuilder.h" />
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h" />

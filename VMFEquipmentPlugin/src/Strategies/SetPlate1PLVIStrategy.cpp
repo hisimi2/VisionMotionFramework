@@ -5,7 +5,8 @@
 #include "VisionMotionFramework\SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
 #include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
-#include "PLVIParamKeys.h"
+#include "SetPlate1PLVITaskParamKeys.h"
+#include "src\Protocol\VisionParamKeys.h"
 #include <sstream>
 #include <vector>
 
@@ -162,28 +163,20 @@ namespace VMF_PLUGIN
     {
         VMF::TaskParams params;
 
-        // Common Vision parameters (hand, package, device info, etc.)
-        params.SetExecutionParam(PLVI::Vision::HAND_ID, "1");
-        params.SetExecutionParam(PLVI::Vision::PKG_ID, "1");
-        params.SetExecutionParam(PLVI::Vision::PLVI_POSITION, "0");
-        params.SetExecutionParam(PLVI::Vision::TIMEOUT_MEASURE_MS, "5000");
-        params.SetExecutionParam(PLVI::Vision::TIMEOUT_SCAN_MS, "15000");
-        params.SetExecutionParam(PLVI::Vision::TIMEOUT_RESULT_MS, "10000");
-        params.SetExecutionParam(PLVI::Vision::TIMEOUT_MOVE_MS, "7000");
-        params.SetExecutionParam(PLVI::Vision::SCAN_SPEED_MM_S, "100.0");
-        params.SetExecutionParam(PLVI::Vision::TRIGGER_INTERVAL_MM, "2.0");
-        params.SetExecutionParam(PLVI::Vision::DATA_ID, "1");
-        params.SetExecutionParam(PLVI::Vision::PKG_NAME, "TEST_PKG");
+        // Common Vision parameters (only keys defined in VisionParamKeys.h)
+        params.SetExecutionParam(PLVI::PLVI_POSITION, "0");
+        params.SetExecutionParam(PLVI::PKG_NAME, "TEST_PKG");
+        params.SetExecutionParam(PLVI::DATA_ID, "1");
 
         int intX = 8, intY = 4;
-        params.SetExecutionParam(PLVI::Vision::CTRAY_X, std::to_string(intX));
-        params.SetExecutionParam(PLVI::Vision::CTRAY_Y, std::to_string(intY));
+        params.SetExecutionParam(PLVI::CTRAY_X, std::to_string(intX));
+        params.SetExecutionParam(PLVI::CTRAY_Y, std::to_string(intY));
 
         // Device info per pocket (default = 99)
         const int totalPockets = intX * intY;
         for (int i = 0; i < totalPockets; ++i)
         {
-            std::string key = std::string(PLVI::Vision::DEVICE_INFO_PREFIX) + std::to_string(i);
+            std::string key = std::string(PLVI::DEVICE_INFO_PREFIX) + std::to_string(i);
             params.SetExecutionParam(key, "99");
         }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "VisionMotionFramework\NonBlockingTaskBase.h"
 #include "VisionMotionFramework\IParamProvider.h"
-#include "PLVIParamKeys.h"
+#include "SetPlate1PLVITaskParamKeys.h"
 
 namespace VMF_PLUGIN
 {
