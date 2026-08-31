@@ -1,3 +1,4 @@
+// D:\01GitHub_PROJECT\VisionMotionFramework\VisionMotionFramework\src\DefaultSetupStrategy.cpp
 #include "stdafx.h"
 #include "DefaultSetupStrategy.h"
 #include "VisionConnectionManager.h"
@@ -93,5 +94,45 @@ namespace VMF
         vm->Initialize(localConfig);
 
         return vm;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 파라미터 관련 함수 (기본 구현)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    TaskParams DefaultSetupStrategy::GetDefaultParams() const
+    {
+        // 기본 구현: 빈 TaskParams 반환
+        // 파생 클래스에서 오버라이드하여 플러그인별 기본 파라미터를 제공
+        return TaskParams();
+    }
+
+
+    TaskParams DefaultSetupStrategy::GetVisionParams() const
+    {
+        // 기본 구현: 빈 TaskParams 반환
+        // 파생 클래스에서 오버라이드하여 공통 Vision 파라미터를 제공
+        return TaskParams();
+    }
+
+    void DefaultSetupStrategy::SetTaskParamsByTask(Context& ctx) const
+    {
+        // 기본 구현: GetDefaultParams()를 호출하여 공통 파라미터만 설정
+        // 파생 클래스에서 Task별 파라미터를 추가하도록 오버라이드 가능
+        TaskParams defaultParams = GetDefaultParams();
+        ctx.SetTaskParams(defaultParams);
+    }
+
+    StringMap DefaultSetupStrategy::GetVisionParams(const std::string& /*presetName*/) const
+    {
+        // 기본 구현: GetVisionParams()를 호출하여 공통 Vision 파라미터 반환
+        // presetName에 따른 분기는 파생 클래스에서 오버라이드 가능
+        StringMap params;
+        TaskParams visionParams = GetVisionParams();
+        for (const auto& pair : visionParams.executionParams)
+        {
+            params[pair.first] = pair.second;
+        }
+        return params;
     }
 }

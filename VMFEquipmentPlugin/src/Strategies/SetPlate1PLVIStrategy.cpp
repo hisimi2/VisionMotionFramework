@@ -1,3 +1,4 @@
+// D:\01GitHub_PROJECT\VisionMotionFramework\VMFEquipmentPlugin\src\Strategies\SetPlate1PLVIStrategy.cpp
 #include "pch.h"
 #include "SetPlate1PLVIStrategy.h"
 
@@ -41,9 +42,6 @@ namespace VMF_PLUGIN
         return std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
     }
 
-
-
-
     /* 5. Parameter configuration – Strategy directly injects parameters
      *    into the Context (no Builder needed). */
     void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
@@ -52,6 +50,10 @@ namespace VMF_PLUGIN
         // This replaces the former Builder-based approach.
         SetTaskParamsByTask(ctx);
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 파라미터 관련 함수 오버라이드 (DefaultSetupStrategy에서 일반화)
+    // ─────────────────────────────────────────────────────────────────────────
 
     VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultParams() const
     {
@@ -183,7 +185,7 @@ namespace VMF_PLUGIN
         return params;
     }
 
-    /* 5. SetTaskParamsByTask – inject default parameters into Context */
+    /* SetTaskParamsByTask – inject default parameters into Context */
     void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
     {
         // Integrated default parameters (including Vision params)
