@@ -62,13 +62,6 @@ namespace VMF
         /// </summary>
         virtual TaskParams GetVisionParams() const;
 
-        /// <summary>
-        /// Context에 Task별 파라미터를 주입합니다.
-        /// 기본 구현은 GetDefaultParams()를 호출하여 공통 파라미터를 설정합니다.
-        /// 파생 클래스에서 Task별 파라미터를 추가하도록 오버라이드할 수 있습니다.
-        /// </summary>
-        virtual void SetTaskParamsByTask(Context& ctx) const;
-
         // ── IComponentSetup 인터페이스 ──
         /// <summary>
         /// preset 이름에 따라 Vision 파라미터를 제공합니다.

@@ -46,9 +46,14 @@ namespace VMF_PLUGIN
      *    into the Context (no Builder needed). */
     void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
     {
-        // Strategy directly injects all required parameters into the Context.
-        // This replaces the former Builder-based approach.
-        SetTaskParamsByTask(ctx);
+        // Integrated default parameters (including Vision params)
+        VMF::TaskParams defaultParams = GetDefaultParams();
+        ctx.SetTaskParams(defaultParams);  // store for later retrieval
+
+        // Task‑specific parameter sets
+        ctx.SetTaskParams("Task_PLVI_Setup", GetSetupParams());
+        ctx.SetTaskParams("Task_PLVI_ExecuteScan", GetExecuteScanParams());
+        ctx.SetTaskParams("Task_PLVI_Finish", GetFinishParams());
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -185,32 +190,4 @@ namespace VMF_PLUGIN
         return params;
     }
 
-    /* SetTaskParamsByTask – inject default parameters into Context */
-    void SetPlate1PLVIStrategy::SetTaskParamsByTask(VMF::Context& ctx) const
-    {
-        // Integrated default parameters (including Vision params)
-        VMF::TaskParams defaultParams = GetDefaultParams();
-        ctx.SetTaskParams(defaultParams);  // store for later retrieval
-
-        // Task‑specific parameter sets
-        ctx.SetTaskParams("Task_PLVI_Setup", GetSetupParams());
-        ctx.SetTaskParams("Task_PLVI_ExecuteScan", GetExecuteScanParams());
-        ctx.SetTaskParams("Task_PLVI_Finish", GetFinishParams());
-    }
-
-    /* IComponentSetup 인터페이스 구현: preset별 Vision 파라미터 제공 */
-    VMF::StringMap SetPlate1PLVIStrategy::GetVisionParams(const std::string& presetName) const
-    {
-        // presetName에 따라 다른 파라미터를 반환할 수 있음
-        // 현재는 모든 preset에 동일한 공통 Vision 파라미터 반환
-        VMF::StringMap params;
-
-        VMF::TaskParams visionParams = GetVisionParams();
-        for (const auto& pair : visionParams.executionParams)
-        {
-            params[pair.first] = pair.second;
-        }
-
-        return params;
-    }
 }

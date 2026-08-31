@@ -115,14 +115,6 @@ namespace VMF
         return TaskParams();
     }
 
-    void DefaultSetupStrategy::SetTaskParamsByTask(Context& ctx) const
-    {
-        // 기본 구현: GetDefaultParams()를 호출하여 공통 파라미터만 설정
-        // 파생 클래스에서 Task별 파라미터를 추가하도록 오버라이드 가능
-        TaskParams defaultParams = GetDefaultParams();
-        ctx.SetTaskParams(defaultParams);
-    }
-
     StringMap DefaultSetupStrategy::GetVisionParams(const std::string& /*presetName*/) const
     {
         // 기본 구현: GetVisionParams()를 호출하여 공통 Vision 파라미터 반환

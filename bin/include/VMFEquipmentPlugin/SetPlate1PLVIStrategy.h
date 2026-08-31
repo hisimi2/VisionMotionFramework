@@ -26,7 +26,6 @@ namespace VMF_PLUGIN
         // ── 파라미터 관련 함수 오버라이드 (DefaultSetupStrategy에서 일반화) ──
         VMF::TaskParams GetDefaultParams() const override;
         VMF::TaskParams GetVisionParams() const override;
-        void SetTaskParamsByTask(VMF::Context& ctx) const override;
 
         // -- Task별 파라미터 제공 함수 (Strategy에서 직접 구현) --
         VMF::TaskParams GetSetupParams() const;
