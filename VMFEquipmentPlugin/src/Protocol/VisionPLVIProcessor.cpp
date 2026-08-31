@@ -1,4 +1,3 @@
-// D:\01GitHub_PROJECT\VisionMotionFramework\VMFEquipmentPlugin\src\Protocol\VisionPLVIProcessor.cpp
 #include "pch.h"
 #include "VisionPlviProcessor.h"
 #include "VisionComm\SecsMessageDispatcher.h"
@@ -126,13 +125,13 @@ bool VisionPlviProcessor::RequestInspReadyAsync(const StringMap& params)
 // [OnMeasure] 1차 응답 수신 → 검사 시작 ACK (S107/F6)
 //
 // 파싱:
-//   nStatus    → PLVIResult::RESULT_STATUS  ("0"=ERROR, "1"=SUCCESS)
-//   cData[0]   → PLVIResult::RESULT_ERROR_CODE
+//   nStatus    → PLVIResult::STATUS  ("0"=ERROR, "1"=SUCCESS)
+//   cData[0]   → PLVIResult::ERROR_CODE
 //
 // Task에서 사용:
 //   auto& data = vp->GetLatestData(Measure);
-//   data[PLVIResult::RESULT_STATUS]   → "1"이면 검사 시작 OK
-//   data[PLVIResult::RESULT_ERROR_CODE] → 에러 코드 확인
+//   data[PLVIResult::STATUS]   → "1"이면 검사 시작 OK
+//   data[PLVIResult::ERROR_CODE] → 에러 코드 확인
 // ================================================================
 void VisionPlviProcessor::OnMeasure(ByteArray body)
 {
@@ -144,8 +143,8 @@ void VisionPlviProcessor::OnMeasure(ByteArray body)
     std::memcpy(&pkt, body.data(), sizeof(pkt));
 
     DataMap data;
-    data[PLVIResult::RESULT_STATUS] = std::to_string(pkt.nStatus); // 0=ERROR, 1=SUCCESS
-    data[PLVIResult::RESULT_ERROR_CODE] = std::string(pkt.cData[0]);   // 에러 코드
+    data[PLVIResult::STATUS] = std::to_string(pkt.nStatus); // 0=ERROR, 1=SUCCESS
+    data[PLVIResult::ERROR_CODE] = std::string(pkt.cData[0]);   // 에러 코드
 
     SetLatestData(Measure, data);
     SetReceived(Measure, true);
@@ -155,17 +154,17 @@ void VisionPlviProcessor::OnMeasure(ByteArray body)
 // [OnInspReady] 2차 응답 수신 → PLVI 검사 결과 (S107/F6)
 //
 // 파싱:
-//   nStatus    → PLVIResult::RESULT_STATUS         ("0"=ERROR, "1"=SUCCESS)
-//   cData[0]   → PLVIResult::RESULT_ERROR_CODE       (에러 코드)
-//   cData[1]   → PLVIResult::RESULT_TOTAL ("0"=OK, "1"=NG)
-//   cData[2]   → PLVIResult::RESULT_PLVI_POSITION (PLVI 위치 echo)
-//   cData[3]   → PLVIResult::RESULT_POCKET_RESULT  (개별 Pocket 상태 콤마 구분)
+//   nStatus    → PLVIResult::STATUS         ("0"=ERROR, "1"=SUCCESS)
+//   cData[0]   → PLVIResult::ERROR_CODE       (에러 코드)
+//   cData[1]   → PLVIResult::TOTAL ("0"=OK, "1"=NG)
+//   cData[2]   → PLVIResult::PLVI_POSITION (PLVI 위치 echo)
+//   cData[3]   → PLVIResult::POCKET_RESULT  (개별 Pocket 상태 콤마 구분)
 //
 // Task에서 사용:
 //   auto& data = vp->GetLatestData(InspReady);
-//   data[PLVIResult::RESULT_STATUS]          → "1"이면 수신 성공
-//   data[PLVIResult::RESULT_TOTAL]  → "0"=OK, "1"=NG
-//   data[PLVIResult::RESULT_POCKET_RESULT]   → "0,99,1,2,11,..." 파싱
+//   data[PLVIResult::STATUS]          → "1"이면 수신 성공
+//   data[PLVIResult::TOTAL]  → "0"=OK, "1"=NG
+//   data[PLVIResult::POCKET_RESULT]   → "0,99,1,2,11,..." 파싱
 // ================================================================
 void VisionPlviProcessor::OnInspReady(ByteArray body)
 {
@@ -177,12 +176,12 @@ void VisionPlviProcessor::OnInspReady(ByteArray body)
     std::memcpy(&pkt, body.data(), sizeof(pkt));
 
     DataMap data;
-    data[PLVIResult::RESULT_STATUS] = std::to_string(pkt.nStatus);
-    data[PLVIResult::RESULT_ERROR_CODE] = std::string(pkt.cData[0]);
-    data[PLVIResult::RESULT_TOTAL] = std::string(pkt.cData[1]); // "0"=OK, "1"=NG
-    data[PLVIResult::RESULT_PLVI_POSITION] = std::string(pkt.cData[2]);
+    data[PLVIResult::STATUS] = std::to_string(pkt.nStatus);
+    data[PLVIResult::ERROR_CODE] = std::string(pkt.cData[0]);
+    data[PLVIResult::TOTAL] = std::string(pkt.cData[1]); // "0"=OK, "1"=NG
+    data[PLVIResult::PLVI_POSITION] = std::string(pkt.cData[2]);
     // cData[3]은 이미 "0,99,1,2,11,..." 형태로 콤마 구분되어 있음
-    data[PLVIResult::RESULT_POCKET_RESULT] = std::string(pkt.cData[3]);
+    data[PLVIResult::POCKET_RESULT] = std::string(pkt.cData[3]);
 
     SetLatestData(InspReady, data);
     SetReceived(InspReady, true);

@@ -27,11 +27,12 @@ namespace VMF_PLUGIN
 			Result  = 6    // V→H REQ_RESULT
 		};
 		static const VC::VisionProtocolId PLVIRequest(
-			static_cast<int>(Stream::Measure),
-			static_cast<int>(Function::Request));
+            static_cast<int>(Stream::Measure),
+            static_cast<int>(Function::Request));
+
 		static const VC::VisionProtocolId PLVIResult(
-			static_cast<int>(Stream::Measure),
-			static_cast<int>(Function::Result));
+            static_cast<int>(Stream::Measure),
+            static_cast<int>(Function::Result));
 	}
 
     class VisionPlviProcessor : public VMF::VisionClientManager
@@ -75,5 +76,4 @@ namespace VMF_PLUGIN
 		static std::string ParsePocketResult(const CPacketBody_S107F6& pkt,
 			int ctrayX, int ctrayY);
 	};
-
 } // namespace VMF_PLUGIN
