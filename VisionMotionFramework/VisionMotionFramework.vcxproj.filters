@@ -49,7 +49,9 @@
     <ClCompile Include="src\VisionClientManager.cpp">
       <Filter>VisionProcessor</Filter>
     </ClCompile>
-    <ClCompile Include="src\DefaultSetupStrategy.cpp" />
+    <ClCompile Include="src\DefaultSetupStrategy.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Orchestrator.h">

@@ -107,7 +107,9 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleWaitResult(VMF::Context& ctx, VM
 {
     auto vp = ctx.GetVisionProcessorInterface();
     if (!vp)
+    {
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: No VisionProcessor.");
+    }
 
     if (!vp->IsValid(VMF::InspReady))
     {

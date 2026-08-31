@@ -41,6 +41,9 @@ namespace VMF_PLUGIN
         return std::make_shared<VMF_PLUGIN::SetPlate1PLVISequenceBuilder>();
     }
 
+
+
+
     /* 5. Parameter configuration – Strategy directly injects parameters
      *    into the Context (no Builder needed). */
     void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
