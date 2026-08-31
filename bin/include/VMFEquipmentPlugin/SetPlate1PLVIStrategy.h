@@ -1,7 +1,7 @@
 // D:\01GitHub_PROJECT\VisionMotionFramework\VMFEquipmentPlugin\include\SetPlate1PLVIStrategy.h
 #pragma once
 #include "PlugInAPI.h"
-#include "ParamKeys.h"
+#include "PLVIParamKeys.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -18,9 +18,6 @@ namespace VMF_PLUGIN
         VMF::VisionProcessorPtr CreateVision() override;
         VMF::SequenceBuilderPtr CreateBuilder() override;
         void ConfigureContext(VMF::Context& ctx) override;
-
-        /// IComponentSetup interface implementation: provide Vision params by preset
-        VMF::StringMap GetVisionParams(const std::string& presetName) const override;
 
     protected:
         // ── 파라미터 관련 함수 오버라이드 (DefaultSetupStrategy에서 일반화) ──

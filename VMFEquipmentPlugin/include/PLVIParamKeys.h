@@ -4,27 +4,24 @@
 
 namespace VMF_PLUGIN
 {
-    /**
-     * @brief SetPlate1PLVI 측정용 파라미터 키 네임스페이스
-     *
-     * 기능별 파라미터 키를 네임스페이스로 구분하여 관리합니다.
-     * 키 충돌 방지, 코드 일관성, 오타 방지를 위해 상수화합니다.
-     *
-     * @note 키 명명 규칙: [기능].[파라미터명]
-     *       예: "Setup.TIMEOUT_MOVE_MS", "ExecuteScan.SCAN_END_Y"
-     */
-    namespace ParamKeys
+    namespace PLVI
     {
+        namespace Default
+        {
+            constexpr const char* TIMEOUT_MOVE_MS = "Setup.TIMEOUT_MOVE_MS";
+            constexpr const char* TRIGGER_INTERVAL_MM = "Setup.TRIGGER_INTERVAL_MM";
+            constexpr const char* START_POS_X = "Setup.START_POS_X";
+            constexpr const char* START_POS_Y = "Setup.START_POS_Y";
+            constexpr const char* START_POS_Z = "Setup.START_POS_Z";
+        }
+
         /// <summary>
         /// Setup Task 파라미터 키
         /// </summary>
         namespace Setup
         {
-            constexpr const char* TIMEOUT_MOVE_MS       = "Setup.TIMEOUT_MOVE_MS";
-            constexpr const char* TRIGGER_INTERVAL_MM   = "Setup.TRIGGER_INTERVAL_MM";
-            constexpr const char* START_POS_X           = "Setup.START_POS_X";
-            constexpr const char* START_POS_Y           = "Setup.START_POS_Y";
-            constexpr const char* START_POS_Z           = "Setup.START_POS_Z";
+            constexpr const char* TIMEOUT_MOVE_MS = "Setup.TIMEOUT_MOVE_MS";
+            constexpr const char* TRIGGER_INTERVAL_MM = "Setup.TRIGGER_INTERVAL_MM";
         }
 
         /// <summary>
@@ -32,10 +29,8 @@ namespace VMF_PLUGIN
         /// </summary>
         namespace ExecuteScan
         {
-            constexpr const char* TIMEOUT_MOVE_MS       = "ExecuteScan.TIMEOUT_MOVE_MS";
-            constexpr const char* TIMEOUT_RESULT_MS     = "ExecuteScan.TIMEOUT_RESULT_MS";
-            constexpr const char* SCAN_END_Y            = "ExecuteScan.SCAN_END_Y";
-            constexpr const char* SCAN_SPEED_MM_S       = "ExecuteScan.SCAN_SPEED_MM_S";
+            constexpr const char* TIMEOUT_MOVE_MS = "ExecuteScan.TIMEOUT_MOVE_MS";
+            constexpr const char* TIMEOUT_RESULT_MS = "ExecuteScan.TIMEOUT_RESULT_MS";
         }
 
         /// <summary>
@@ -66,6 +61,5 @@ namespace VMF_PLUGIN
             constexpr const char* CTRAY_Y = "Vision.CTRAY_Y";
             constexpr const char* DEVICE_INFO_PREFIX = "Vision.DEVICE_INFO_PREFIX";
         }
-
     } // namespace ParamKeys
 } // namespace VMF_PLUGIN

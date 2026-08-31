@@ -3,7 +3,7 @@
 #include "VisionMotionFramework\SequenceBuilderBase.h"
 #include "PlugInAPI.h"
 #include "VisionMotionFramework\Types.h"
-#include "ParamKeys.h"
+#include "PLVIParamKeys.h"
 
 #include <memory>
 

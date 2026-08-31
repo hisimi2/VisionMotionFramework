@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SetPlate1PLVISetup.h"
 #include "VisionMotionFramework\IParamProvider.h"
-#include "ParamKeys.h"
+#include "PLVIParamKeys.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
@@ -24,8 +24,8 @@ void SetPlate1PLVISetup::OnInitialize(VMF::Context& ctx)
     const auto& taskParams = provider.GetTaskParams(GetName());
 
     // ✅ Task 파라미터 조회
-    m_timeoutMoveMs = taskParams.GetExecutionParam<int>(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
-    m_triggerIntervalMm = taskParams.GetExecutionParam<double>(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 1.8);
+    m_timeoutMoveMs = taskParams.GetExecutionParam<int>(PLVI::Setup::TIMEOUT_MOVE_MS, 7000);
+    m_triggerIntervalMm = taskParams.GetExecutionParam<double>(PLVI::Setup::TRIGGER_INTERVAL_MM, 1.8);
 
     // VisionPositions에서 시작 위치 조회 (visionRequestId=1)
     const auto& positions = provider.GetVisionPositions();

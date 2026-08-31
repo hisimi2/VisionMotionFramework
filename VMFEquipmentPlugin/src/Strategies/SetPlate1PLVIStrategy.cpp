@@ -5,7 +5,7 @@
 #include "VisionMotionFramework\SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
 #include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
-#include "ParamKeys.h"
+#include "PLVIParamKeys.h"
 #include <sstream>
 #include <vector>
 
@@ -95,8 +95,8 @@ namespace VMF_PLUGIN
         VMF::TaskParams params;
 
         // Execution parameters
-        params.SetExecutionParam(ParamKeys::Setup::TIMEOUT_MOVE_MS, 7000);
-        params.SetExecutionParam(ParamKeys::Setup::TRIGGER_INTERVAL_MM, 2.0);
+        params.SetExecutionParam(PLVI::Setup::TIMEOUT_MOVE_MS, 7000);
+        params.SetExecutionParam(PLVI::Setup::TRIGGER_INTERVAL_MM, 2.0);
 
         // Vision position for start location
         VMF::VisionPosition startPos;
@@ -114,8 +114,8 @@ namespace VMF_PLUGIN
         VMF::TaskParams params;
 
         // Execution parameters
-        params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
-        params.SetExecutionParam(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
+        params.SetExecutionParam(PLVI::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
+        params.SetExecutionParam(PLVI::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
 
         // Vision positions: start and end locations
         VMF::VisionPosition startPos;
@@ -139,7 +139,7 @@ namespace VMF_PLUGIN
         VMF::TaskParams params;
 
         // Execution timeout
-        params.SetExecutionParam(ParamKeys::Finish::TIMEOUT_MOVE_MS, 7000);
+        params.SetExecutionParam(PLVI::Finish::TIMEOUT_MOVE_MS, 7000);
 
         // Vision positions for safe Z and home locations
         VMF::VisionPosition safeZPos;
@@ -163,27 +163,27 @@ namespace VMF_PLUGIN
         VMF::TaskParams params;
 
         // Common Vision parameters (hand, package, device info, etc.)
-        params.SetExecutionParam(ParamKeys::Vision::HAND_ID, "1");
-        params.SetExecutionParam(ParamKeys::Vision::PKG_ID, "1");
-        params.SetExecutionParam(ParamKeys::Vision::PLVI_POSITION, "0");
-        params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_MEASURE_MS, "5000");
-        params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_SCAN_MS, "15000");
-        params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_RESULT_MS, "10000");
-        params.SetExecutionParam(ParamKeys::Vision::TIMEOUT_MOVE_MS, "7000");
-        params.SetExecutionParam(ParamKeys::Vision::SCAN_SPEED_MM_S, "100.0");
-        params.SetExecutionParam(ParamKeys::Vision::TRIGGER_INTERVAL_MM, "2.0");
-        params.SetExecutionParam(ParamKeys::Vision::DATA_ID, "1");
-        params.SetExecutionParam(ParamKeys::Vision::PKG_NAME, "TEST_PKG");
+        params.SetExecutionParam(PLVI::Vision::HAND_ID, "1");
+        params.SetExecutionParam(PLVI::Vision::PKG_ID, "1");
+        params.SetExecutionParam(PLVI::Vision::PLVI_POSITION, "0");
+        params.SetExecutionParam(PLVI::Vision::TIMEOUT_MEASURE_MS, "5000");
+        params.SetExecutionParam(PLVI::Vision::TIMEOUT_SCAN_MS, "15000");
+        params.SetExecutionParam(PLVI::Vision::TIMEOUT_RESULT_MS, "10000");
+        params.SetExecutionParam(PLVI::Vision::TIMEOUT_MOVE_MS, "7000");
+        params.SetExecutionParam(PLVI::Vision::SCAN_SPEED_MM_S, "100.0");
+        params.SetExecutionParam(PLVI::Vision::TRIGGER_INTERVAL_MM, "2.0");
+        params.SetExecutionParam(PLVI::Vision::DATA_ID, "1");
+        params.SetExecutionParam(PLVI::Vision::PKG_NAME, "TEST_PKG");
 
         int intX = 8, intY = 4;
-        params.SetExecutionParam(ParamKeys::Vision::CTRAY_X, std::to_string(intX));
-        params.SetExecutionParam(ParamKeys::Vision::CTRAY_Y, std::to_string(intY));
+        params.SetExecutionParam(PLVI::Vision::CTRAY_X, std::to_string(intX));
+        params.SetExecutionParam(PLVI::Vision::CTRAY_Y, std::to_string(intY));
 
         // Device info per pocket (default = 99)
         const int totalPockets = intX * intY;
         for (int i = 0; i < totalPockets; ++i)
         {
-            std::string key = std::string(ParamKeys::Vision::DEVICE_INFO_PREFIX) + std::to_string(i);
+            std::string key = std::string(PLVI::Vision::DEVICE_INFO_PREFIX) + std::to_string(i);
             params.SetExecutionParam(key, "99");
         }
 

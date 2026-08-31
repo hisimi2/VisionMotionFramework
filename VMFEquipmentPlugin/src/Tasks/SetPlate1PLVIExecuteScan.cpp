@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SetPlate1PLVIExecuteScan.h"
 #include "VisionMotionFramework\IParamProvider.h"
-#include "ParamKeys.h"
+#include "PLVIParamKeys.h"
 
 using namespace VMF;
 using namespace VMF_PLUGIN;
@@ -24,8 +24,8 @@ void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
     const auto& taskParams = provider.GetTaskParams(GetName());
 
     // ✅ Task 파라미터 조회
-    m_timeoutMoveMs = taskParams.GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
-    m_timeoutResultMs = taskParams.GetExecutionParam<int>(ParamKeys::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
+    m_timeoutMoveMs = taskParams.GetExecutionParam<int>(PLVI::ExecuteScan::TIMEOUT_MOVE_MS, 7000);
+    m_timeoutResultMs = taskParams.GetExecutionParam<int>(PLVI::ExecuteScan::TIMEOUT_RESULT_MS, 10000);
 
     // VisionPositions에서 측정 종료 위치 조회 (visionRequestId=3)
     const auto& positions = provider.GetVisionPositions();
