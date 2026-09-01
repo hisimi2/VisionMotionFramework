@@ -5,7 +5,7 @@
 #include "VisionMotionFramework\SqliteDataRepository.h"
 #include "..\Protocol\VisionPlviProcessor.h"
 #include "..\Strategies\SetPlate1PLVISequenceBuilder.h"
-#include "SetPlate1PLVITaskParamKeys.h"
+#include "PLVITaskParamKeys.h"
 #include "src\Protocol\VisionParamKeys.h"
 #include <sstream>
 #include <vector>

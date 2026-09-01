@@ -1,15 +1,13 @@
 #pragma once
 
-#include <string>
-
 namespace VMF_PLUGIN
 {
     namespace PLVI
     {
         namespace Default
         {
-            constexpr const char* TIMEOUT_MOVE_MS = "TIMEOUT_MOVE_MS";
-            constexpr const char* TRIGGER_INTERVAL_MM = "TRIGGER_INTERVAL_MM";
+            constexpr const char* TIMEOUT_MOVE_MS       = "TIMEOUT_MOVE_MS";
+            constexpr const char* TRIGGER_INTERVAL_MM   = "TRIGGER_INTERVAL_MM";
         }
 
         /// <summary>
@@ -17,8 +15,8 @@ namespace VMF_PLUGIN
         /// </summary>
         namespace Setup
         {
-            constexpr const char* TIMEOUT_MOVE_MS = "TIMEOUT_MOVE_MS";
-            constexpr const char* TRIGGER_INTERVAL_MM = "TRIGGER_INTERVAL_MM";
+            constexpr const char* TIMEOUT_MOVE_MS       = "TIMEOUT_MOVE_MS";
+            constexpr const char* TRIGGER_INTERVAL_MM   = "TRIGGER_INTERVAL_MM";
         }
 
         /// <summary>
@@ -26,8 +24,8 @@ namespace VMF_PLUGIN
         /// </summary>
         namespace ExecuteScan
         {
-            constexpr const char* TIMEOUT_MOVE_MS = "TIMEOUT_MOVE_MS";
-            constexpr const char* TIMEOUT_RESULT_MS = "TIMEOUT_RESULT_MS";
+            constexpr const char* TIMEOUT_MOVE_MS       = "TIMEOUT_MOVE_MS";
+            constexpr const char* TIMEOUT_RESULT_MS     = "TIMEOUT_RESULT_MS";
         }
 
         /// <summary>
@@ -35,7 +33,7 @@ namespace VMF_PLUGIN
         /// </summary>
         namespace Finish
         {
-            constexpr const char* TIMEOUT_MOVE_MS = "TIMEOUT_MOVE_MS";
+            constexpr const char* TIMEOUT_MOVE_MS       = "TIMEOUT_MOVE_MS";
         }
     } // namespace PLVI
 } // namespace VMF_PLUGIN

@@ -60,7 +60,7 @@
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h">
       <Filter>SetplateUnit\PLVI\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="include\SetPlate1PLVITaskParamKeys.h">
+    <ClInclude Include="include\PLVITaskParamKeys.h">
       <Filter>SetplateUnit\PLVI</Filter>
     </ClInclude>
   </ItemGroup>

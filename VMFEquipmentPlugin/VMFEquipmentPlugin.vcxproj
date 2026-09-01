@@ -184,7 +184,7 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\SetPlate1PLVITaskParamKeys.h" />
+    <ClInclude Include="include\PLVITaskParamKeys.h" />
     <ClInclude Include="include\SetPlate1PLVIStrategy.h" />
     <ClInclude Include="include\PlugInAPI.h" />
     <ClInclude Include="pch.h" />
