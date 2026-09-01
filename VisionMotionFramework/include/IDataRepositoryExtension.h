@@ -118,5 +118,4 @@ namespace VMF
             return StorageNotFound;
         }
     };
-
 } // namespace VMF
