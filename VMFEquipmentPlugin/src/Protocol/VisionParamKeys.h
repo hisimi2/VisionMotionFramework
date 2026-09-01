@@ -17,7 +17,8 @@ namespace VMF_PLUGIN
         constexpr const char* PKG_NAME = "PKG_NAME";
 
         /// cData[2]: C-Tray 크기 "X,Y" 형태 문자열
-        constexpr const char* CTRAY_INFO = "CTRAY_INFO";
+        /// (CTRAY_INFO는 CTRAY_X, CTRAY_Y 개별 키로 대체되어 미사용)
+        // constexpr const char* CTRAY_INFO = "CTRAY_INFO";  // 미사용 - 제거 권장
 
         /// cData[2][0]: C-Tray X 수량 (별도 키, 필요시 사용)
         constexpr const char* CTRAY_X = "CTRAY_X";
@@ -130,3 +131,4 @@ namespace VMF_PLUGIN
         // 결과 면 번호 echo
     }
 }
+

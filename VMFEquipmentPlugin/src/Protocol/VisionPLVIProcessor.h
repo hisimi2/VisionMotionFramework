@@ -13,9 +13,10 @@ namespace VMF_PLUGIN
 	// S107/F5 (REQ_MEASURE) 로 검사 시작 및 결과 요청.
 	// S107/F6 (REQ_RESULT)  로 응답 수신.
 	//
-	// VisionCommand 매핑:
-	//   Measure   → 검사 시작 요청 (1차 REQ_MEASURE)
-	//   InspReady → 결과 요청     (2차 REQ_MEASURE)
+	// VisionCommand 매핑 (3가지 핵심 인터페이스):
+	//   Measure        → 검사 시작 요청 (1차 REQ_MEASURE, S107/F5)
+	//   RequestResult  → 결과 요청/수신 (2차 REQ_MEASURE, S107/F5 → S107/F6 수신)
+	//   SetInformation → 미사용 (필요시: SET_COK, Orientation, Piggyback 등)
 	// ================================================================
 	namespace VisionPLVIProtocol
 	{
@@ -41,30 +42,28 @@ namespace VMF_PLUGIN
 		VisionPlviProcessor();
 		~VisionPlviProcessor() override;
 
-        // ── Request 함수 ─────────────────────────────────────────────
-		// 검사 시작 요청 (1차 REQ_MEASURE, S107/F5)
-		// params 필요 키:
-		//   PLVI::Position, PLVI::PkgName, PLVI::CtrayX, PLVI::CtrayY,
-		//   PLVI::DeviceInfo ("0,99,99,0,..." 콤마 구분)
-        bool RequestMeasureAsync(const VMF::StringMap& params) override;
+        // ── 3가지 핵심 Request 함수 ─────────────────────────────────────────────
+        // 검사 시작 요청 (1차 REQ_MEASURE, S107/F5)
+        // params 필요 키:
+        //   PLVI::PLVI_POSITION, PLVI::PKG_NAME, PLVI::CTRAY_X, PLVI::CTRAY_Y,
+        //   PLVI::DEVICE_INFO ("0,99,99,0,..." 콤마 구분), PLVI::DATA_ID
+        bool MeasureAsync(const VMF::StringMap& params) override;
 
-		// 결과 요청 (2차 REQ_MEASURE, S107/F5)
-		// params: 필요 없음 (nDataID만 전송)
-		bool RequestInspReadyAsync(const VMF::StringMap& params) override;
+        // 결과 요청/수신 (2차 REQ_MEASURE, S107/F5 → S107/F6 수신)
+        // params: 필요 없음 (nDataID만 전송)
+        bool RequestResultAsync(const VMF::StringMap& params) override;
 
-		// 미사용
-		bool RequestSetCokAsync(const VMF::StringMap& params) override;
-		bool RequestDeviceCheckAsync(const VMF::StringMap& params) override;
-		bool RequestLightAsync(const VMF::StringMap& params) override;
+        // 정보 설정 (미사용 - 필요시 확장)
+        bool SetInformationAsync(const VMF::StringMap& params) override;
 
-		// ── On 함수 (수신 콜백) ──────────────────────────────────────
-		// 1차 응답 수신 (검사 시작 ACK)
-		void OnMeasure(VMF::ByteArray body) override;
-		// 2차 응답 수신 (결과)
-		void OnInspReady(VMF::ByteArray body) override;
-		void OnSetCok(VMF::ByteArray body) override;
-		void OnDeviceCheck(VMF::ByteArray body) override;
-		void OnLight(VMF::ByteArray body) override;
+        // ── 3가지 핵심 On 함수 (수신 콜백) ──────────────────────────────────────
+        // 1차 응답 수신 (검사 시작 ACK)
+        void OnMeasure(VMF::ByteArray body) override;
+        // 2차 응답 수신 (결과)
+        void OnRequestResult(VMF::ByteArray body) override;
+        // 정보 설정 결과 수신 (미사용)
+        void OnSetInformation(VMF::ByteArray body) override;
+
 		void Process() override;
 
 	private:
@@ -77,3 +76,4 @@ namespace VMF_PLUGIN
 			int ctrayX, int ctrayY);
 	};
 } // namespace VMF_PLUGIN
+

@@ -12,7 +12,7 @@ SetPlate1PLVIExecuteScan::SetPlate1PLVIExecuteScan()
 {
 }
 
-SetPlate1PLVIExecuteScan::~SetPlate1PLVIExecuteScan() {}
+SetPlate1PLVIExecuteScan::~SetPlate1PLVIExecuteScan() { }
 
 void SetPlate1PLVIExecuteScan::OnInitialize(VMF::Context& ctx)
 {
@@ -93,10 +93,10 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleRequestResult(VMF::Context& ctx,
     if (!vp)
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: No VisionProcessor.");
 
-    vp->ClearLatestData(VMF::InspReady);
+    vp->ClearLatestData(VMF::RequestResult);  // InspReady → RequestResult
 
-    if (!ctx.ExecuteVisionCommand(VMF::InspReady))
-        return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: InspReady request failed.");
+    if (!ctx.ExecuteVisionCommand(VMF::RequestResult))  // InspReady → RequestResult
+        return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: RequestResult request failed.");
 
     EnterStateWithTimeout(WaitResult, m_timeoutResultMs);
     return TR_KEEP;
@@ -111,7 +111,7 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleWaitResult(VMF::Context& ctx, VM
         return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: No VisionProcessor.");
     }
 
-    if (!vp->IsValid(VMF::InspReady))
+    if (!vp->IsValid(VMF::RequestResult))  // InspReady → RequestResult
     {
         if (IsDeadlineExpired())
             return SetErrorAndReturn(ctx, "PLVI_ExecuteScan: Result timeout.");
@@ -128,3 +128,4 @@ VMF::TaskResult SetPlate1PLVIExecuteScan::HandleComplete(VMF::Context& ctx, VMF:
     (void)actuator;
     return TR_NEXT;
 }
+

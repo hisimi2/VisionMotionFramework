@@ -18,15 +18,6 @@ namespace VMF
     public:
         virtual ~IParamProvider() = default;
 
-/// <summary>
-        /// [DEPRECATED] Task 실행 파라미터를 조회합니다. (하위 호환성 유지)
-        /// </summary>
-        /// <details>
-        /// 기존 코드와의 호환성을 위해 유지됩니다.
-        /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
-        /// </details>
-        virtual TaskParams GetTaskParams() const = 0;
-
         /// <summary>
         /// 지정된 Task 이름의 실행 파라미터를 조회합니다.
         /// </summary>
@@ -49,16 +40,6 @@ namespace VMF
         virtual void SetExecutionParam(const std::string& key, const std::string& value) = 0;
 
         /// <summary>
-        /// 실행 파라미터 설정 (정수)
-        /// </summary>
-        virtual void SetExecutionParam(const std::string& key, int value) = 0;
-
-        /// <summary>
-        /// 실행 파라미터 설정 (실수)
-        /// </summary>
-        virtual void SetExecutionParam(const std::string& key, double value) = 0;
-
-        /// <summary>
         /// VisionPositions 목록을 조회합니다.
         /// </summary>
         virtual std::vector<VisionPosition> GetVisionPositions() const = 0;
@@ -68,5 +49,5 @@ namespace VMF
         /// </summary>
         virtual bool PeekVisionPosition(VisionPosition& outPos) const = 0;
 
-};
+    };
 } // namespace VMF

@@ -65,11 +65,13 @@ namespace VMF
 
         switch (cmd)
         {
-        case Measure:       ret = m_processor->RequestMeasureAsync(StringMap());     break;
-        case SetCok:        ret = m_processor->RequestSetCokAsync(StringMap());      break;
-        case InspReady:     ret = m_processor->RequestInspReadyAsync(StringMap());   break;
-        case DeviceCheck:   ret = m_processor->RequestDeviceCheckAsync(StringMap()); break;
-        case Light:         ret = m_processor->RequestLightAsync(StringMap());       break;
+        case Measure:           ret = m_processor->MeasureAsync(StringMap());     break;
+        case SetInformation:    ret = m_processor->SetInformationAsync(StringMap()); break;
+        case RequestResult:     ret = m_processor->RequestResultAsync(StringMap()); break;
+        case Unknown:
+        default:
+            ret = false;
+            break;
         }
         return ret;
     }
@@ -88,27 +90,11 @@ namespace VMF
 
     // ── Task 파라미터 관리 구현 (IParamProvider 인터페이스 구현) ──
 
-    // 하위 호환성: 기본 파라미터 설정
-    void Context::SetTaskParams(const TaskParams& params)
-    {
-        LockGuardType guard(m_mutex);
-        m_defaultTaskParams = params;
-        // 빈 Task 이름으로 기본 파라미터 저장
-        m_taskParamsMap[""] = params;
-    }
-
     // Task 이름 기반 파라미터 설정
     void Context::SetTaskParams(const std::string& taskName, const TaskParams& params)
     {
         LockGuardType guard(m_mutex);
         m_taskParamsMap[taskName] = params;
-    }
-
-    // 하위 호환성: 기본 파라미터 조회
-    TaskParams Context::GetTaskParams() const
-    {
-        LockGuardType guard(m_mutex);
-        return m_defaultTaskParams;
     }
 
     // Task 이름 기반 파라미터 조회
@@ -137,18 +123,6 @@ namespace VMF
         m_defaultTaskParams.executionParams[key] = value;
     }
 
-    void Context::SetExecutionParam(const std::string& key, int value)
-    {
-        LockGuardType guard(m_mutex);
-        m_defaultTaskParams.executionParams[key] = std::to_string(value);
-    }
-
-    void Context::SetExecutionParam(const std::string& key, double value)
-    {
-        LockGuardType guard(m_mutex);
-        m_defaultTaskParams.executionParams[key] = std::to_string(value);
-    }
-
     std::vector<VisionPosition> Context::GetVisionPositions() const
     {
         LockGuardType guard(m_mutex);
@@ -165,3 +139,4 @@ namespace VMF
     }
 
 }
+

@@ -48,10 +48,25 @@ namespace VMF
             m_connectionConfig.timeoutMs);
     }
 
-    void DefaultSetupStrategy::ConfigureParams(VMF::VisionContextPtr /*context*/)
+    /// <summary>
+    /// IComponentSetup::ConfigureParams 구현.
+    /// VisionContextPtr을 Context&로 변환하여 ConfigureContext를 호출합니다.
+    /// </summary>
+    void DefaultSetupStrategy::ConfigureParams(VisionContextPtr context)
+    {
+        if (context)
+            ConfigureContext(*context);
+    }
+
+    /// <summary>
+    /// Context에 파라미터를 설정하는 가상 메서드 (기본 구현: 빈 동작).
+    /// 파생 클래스에서 오버라이드하여 Task별 파라미터를 설정합니다.
+    /// </summary>
+    void DefaultSetupStrategy::ConfigureContext(Context& ctx)
     {
         // 기본 구현: 아무 동작도 하지 않음
         // 파생 클래스에서 필요한 경우 오버라이드하여 사용
+        (void)ctx;
     }
 
     DataRepositoryPtr DefaultSetupStrategy::CreateRepository()
@@ -115,10 +130,12 @@ namespace VMF
         return TaskParams();
     }
 
+    /// <summary>
+    /// preset 이름에 따라 Vision 파라미터를 제공합니다.
+    /// 기본 구현은 GetVisionParams()를 호출하여 StringMap으로 변환합니다.
+    /// </summary>
     StringMap DefaultSetupStrategy::GetVisionParams(const std::string& /*presetName*/) const
     {
-        // 기본 구현: GetVisionParams()를 호출하여 공통 Vision 파라미터 반환
-        // presetName에 따른 분기는 파생 클래스에서 오버라이드 가능
         StringMap params;
         TaskParams visionParams = GetVisionParams();
         for (const auto& pair : visionParams.executionParams)

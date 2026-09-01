@@ -42,35 +42,23 @@ namespace VMF
 		return m_connected;
 	}
 
-	bool CMockVisionClient::RequestSetCokAsync(const StringMap& params)
+	// ── 3가지 핵심 Request 함수 ──
+
+	bool CMockVisionClient::SetInformationAsync(const StringMap& params)
 	{
 		std::lock_guard<std::mutex> lg(m_mutex);
 		m_lastRequestParams = params;
 		return m_requestResult;
 	}
 
-	bool CMockVisionClient::RequestInspReadyAsync(const StringMap& params)
+	bool CMockVisionClient::RequestResultAsync(const StringMap& params)
 	{
 		std::lock_guard<std::mutex> lg(m_mutex);
 		m_lastRequestParams = params;
 		return m_requestResult;
 	}
 
-	bool CMockVisionClient::RequestMeasureAsync(const StringMap& params)
-	{
-		std::lock_guard<std::mutex> lg(m_mutex);
-		m_lastRequestParams = params;
-		return m_requestResult;
-	}
-
-	bool CMockVisionClient::RequestDeviceCheckAsync(const StringMap& params)
-	{
-		std::lock_guard<std::mutex> lg(m_mutex);
-		m_lastRequestParams = params;
-		return m_requestResult;
-	}
-
-	bool CMockVisionClient::RequestLightAsync(const StringMap& params)
+	bool CMockVisionClient::MeasureAsync(const StringMap& params)
 	{
 		std::lock_guard<std::mutex> lg(m_mutex);
 		m_lastRequestParams = params;
@@ -110,22 +98,24 @@ namespace VMF
 	{
 	}
 
-	void CMockVisionClient::OnSetCok(ByteArray body)
+	// ── 3가지 핵심 On 콜백 ──
+
+	void CMockVisionClient::OnSetInformation(ByteArray body)
 	{
 		std::lock_guard<std::mutex> lg(m_mutex);
 		StringMap m;
 		m["body"] = BodyToString(body);
-		m_latestData[SetCok] = m;
-		m_receivedFlags[SetCok] = true;
+		m_latestData[SetInformation] = m;
+		m_receivedFlags[SetInformation] = true;
 	}
 
-	void CMockVisionClient::OnInspReady(ByteArray body)
+	void CMockVisionClient::OnRequestResult(ByteArray body)
 	{
 		std::lock_guard<std::mutex> lg(m_mutex);
 		StringMap m;
 		m["body"] = BodyToString(body);
-		m_latestData[InspReady] = m;
-		m_receivedFlags[InspReady] = true;
+		m_latestData[RequestResult] = m;
+		m_receivedFlags[RequestResult] = true;
 	}
 
 	void CMockVisionClient::OnMeasure(ByteArray body)
@@ -135,24 +125,6 @@ namespace VMF
 		m["body"] = BodyToString(body);
 		m_latestData[Measure] = m;
 		m_receivedFlags[Measure] = true;
-	}
-
-	void CMockVisionClient::OnDeviceCheck(ByteArray body)
-	{
-		std::lock_guard<std::mutex> lg(m_mutex);
-		StringMap m;
-		m["body"] = BodyToString(body);
-		m_latestData[DeviceCheck] = m;
-		m_receivedFlags[DeviceCheck] = true;
-	}
-
-	void CMockVisionClient::OnLight(ByteArray body)
-	{
-		std::lock_guard<std::mutex> lg(m_mutex);
-		StringMap m;
-		m["body"] = BodyToString(body);
-		m_latestData[Light] = m;
-		m_receivedFlags[Light] = true;
 	}
 
 	void CMockVisionClient::SetRequestResult(bool ok)
@@ -174,3 +146,4 @@ namespace VMF
 	}
 
 } // namespace VMF
+
