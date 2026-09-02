@@ -157,7 +157,6 @@ xcopy /Y /E /I "$(Platform)\$(configuration)\*.*" "$(SolutionDir)bin\$(Platform)
     <ClInclude Include="include\AsyncExecutor.h" />
     <ClInclude Include="include\CompatUtils.h" />
     <ClInclude Include="include\CVisionOptional.h" />
-    <ClInclude Include="include\IDataRepositoryExtension.h" />
     <ClInclude Include="include\IParamProvider.h" />
     <ClInclude Include="include\Mock\CMockRepository.h" />
     <ClInclude Include="include\Mock\CMockVisionClient.h" />

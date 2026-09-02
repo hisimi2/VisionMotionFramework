@@ -1,4 +1,4 @@
-﻿// SqliteDataRepository.cpp
+// SqliteDataRepository.cpp
 #include "StdAfx.h"
 #include "SqliteDataRepository.h"
 #include "FileUtils.h"
@@ -402,44 +402,7 @@ namespace VMF {
         return StorageSuccess;
     }
 
-    StorageError SqliteDataRepository::SaveSequenceRun(const std::string& sequenceName, const std::string& summary)
-    {
-        std::lock_guard<std::mutex> lg(mutex_);
-        if (!initialized_) return StorageWriteFailed;
-
-        if (!beginTransaction(db_)) return StorageWriteFailed;
-
-        const char* sql = "INSERT INTO sequence_runs(name, result_summary, created_at, status) VALUES(?,?,?,?);";
-        sqlite3_stmt* stmt = nullptr;
-        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
-        if (rc != SQLITE_OK) {
-            if (stmt) sqlite3_finalize(stmt);
-            rollbackTransaction(db_);
-            return StorageWriteFailed;
-        }
-
-        std::time_t t = std::time(nullptr);
-        std::string ts = formatIsoTime(t);
-
-        sqlite3_bind_text(stmt, 1, sequenceName.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt, 2, summary.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt, 3, ts.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt, 4, "finished", -1, SQLITE_TRANSIENT);
-
-        rc = sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-        if (rc != SQLITE_DONE) {
-            rollbackTransaction(db_);
-            return StorageWriteFailed;
-        }
-
-        if (!commitTransaction(db_)) {
-            rollbackTransaction(db_);
-            return StorageWriteFailed;
-        }
-
-        return StorageSuccess;
-    }
+    // SaveSequenceRun 제거됨 (IDataRepository 인터페이스에서 삭제됨)
 
     StorageError SqliteDataRepository::CreateSequenceRun(const std::string& sequenceName, const std::string& paramsJson, int& outRunId)
     {
@@ -1145,7 +1108,355 @@ namespace VMF {
             return StorageWriteFailed;
         }
 
+return StorageSuccess;
+    }
+
+    // ─────────────────────────────────────────────
+    // 검사 실행 이력 관리 (신규)
+    // ─────────────────────────────────────────────
+
+    StorageError SqliteDataRepository::CreateInspectionRun(InspectionType type, const std::string& runId,
+        const std::string& paramsJson, int& outDbRunId)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        outDbRunId = -1;
+        if (!initialized_) return StorageWriteFailed;
+
+        if (!beginTransaction(db_)) return StorageWriteFailed;
+
+        std::string typeStr;
+        switch (type) {
+        case InspectionType::PLVI: typeStr = "PLVI"; break;
+        case InspectionType::Orientation: typeStr = "Orientation"; break;
+        case InspectionType::COK_ID: typeStr = "COK_ID"; break;
+        case InspectionType::VAT: typeStr = "VAT"; break;
+        case InspectionType::Piggyback: typeStr = "Piggyback"; break;
+        case InspectionType::BallInspection: typeStr = "BallInspection"; break;
+        case InspectionType::SetCok: typeStr = "SetCok"; break;
+        case InspectionType::ZFocus: typeStr = "ZFocus"; break;
+        case InspectionType::CalibrationPos: typeStr = "CalibrationPos"; break;
+        case InspectionType::PickerCamDistance: typeStr = "PickerCamDistance"; break;
+        case InspectionType::HandPitch: typeStr = "HandPitch"; break;
+        case InspectionType::Teaching: typeStr = "Teaching"; break;
+        default: typeStr = "Unknown"; break;
+        }
+
+        const char* sql = "INSERT INTO inspection_runs(type_code, run_id, params_json, status, created_at) VALUES(?,?,?,?,?);";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        std::time_t t = std::time(nullptr);
+        std::string ts = formatIsoTime(t);
+
+        sqlite3_bind_text(stmt, 1, typeStr.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, runId.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 3, paramsJson.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 4, "running", -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 5, ts.c_str(), -1, SQLITE_TRANSIENT);
+
+        rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+        if (rc != SQLITE_DONE) {
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_int64 rowid = sqlite3_last_insert_rowid(db_);
+        if (!commitTransaction(db_)) {
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        outDbRunId = static_cast<int>(rowid);
         return StorageSuccess;
     }
 
+    StorageError SqliteDataRepository::UpdateInspectionRunStatus(int dbRunId, const std::string& status,
+        const std::string& resultJson, int errorCode)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageWriteFailed;
+
+        if (!beginTransaction(db_)) return StorageWriteFailed;
+
+        std::time_t t = std::time(nullptr);
+        std::string ts = formatIsoTime(t);
+        std::string finishedAt = (status == "finished" || status == "error") ? ts : "";
+
+        const char* sql = "UPDATE inspection_runs SET status = ?, result_json = ?, error_code = ?, finished_at = ? WHERE id = ?;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_bind_text(stmt, 1, status.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, resultJson.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 3, errorCode);
+        sqlite3_bind_text(stmt, 4, finishedAt.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 5, dbRunId);
+
+        rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+        if (rc != SQLITE_DONE) {
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        if (!commitTransaction(db_)) {
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        return StorageSuccess;
+    }
+
+    StorageError SqliteDataRepository::LoadInspectionRun(int dbRunId, std::string& outTypeCode, std::string& outRunId,
+        std::string& outStatus, std::string& outResultJson, int& outErrorCode)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageFileNotFound;
+
+        const char* sql = "SELECT type_code, run_id, status, result_json, error_code FROM inspection_runs WHERE id = ?;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_bind_int(stmt, 1, dbRunId);
+
+        rc = sqlite3_step(stmt);
+        if (rc == SQLITE_ROW) {
+            const unsigned char* type = sqlite3_column_text(stmt, 0);
+            const unsigned char* run = sqlite3_column_text(stmt, 1);
+            const unsigned char* status = sqlite3_column_text(stmt, 2);
+            const unsigned char* result = sqlite3_column_text(stmt, 3);
+            outTypeCode = type ? reinterpret_cast<const char*>(type) : std::string();
+            outRunId = run ? reinterpret_cast<const char*>(run) : std::string();
+            outStatus = status ? reinterpret_cast<const char*>(status) : std::string();
+            outResultJson = result ? reinterpret_cast<const char*>(result) : std::string();
+            outErrorCode = sqlite3_column_int(stmt, 4);
+            sqlite3_finalize(stmt);
+            return StorageSuccess;
+        }
+
+        sqlite3_finalize(stmt);
+        return StorageNotFound;
+    }
+
+    // ─────────────────────────────────────────────
+    // 검사 결과 상세 저장/로드 (신규)
+    // ─────────────────────────────────────────────
+
+    StorageError SqliteDataRepository::SaveInspectionResult(int dbRunId, const std::string& resultType,
+        int resultIndex, const std::string& resultJson)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageWriteFailed;
+
+        if (!beginTransaction(db_)) return StorageWriteFailed;
+
+        const char* sql = "INSERT INTO inspection_results(run_id, result_type, result_index, result_json) VALUES(?,?,?,?);";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_bind_int(stmt, 1, dbRunId);
+        sqlite3_bind_text(stmt, 2, resultType.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 3, resultIndex);
+        sqlite3_bind_text(stmt, 4, resultJson.c_str(), -1, SQLITE_TRANSIENT);
+
+        rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+        if (rc != SQLITE_DONE) {
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        if (!commitTransaction(db_)) {
+            rollbackTransaction(db_);
+            return StorageWriteFailed;
+        }
+
+        return StorageSuccess;
+    }
+
+    StorageError SqliteDataRepository::LoadInspectionResults(int dbRunId, std::vector<InspectionResultItem>& outResults)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageFileNotFound;
+
+        outResults.clear();
+
+        const char* sql = "SELECT id, result_type, result_index, result_json FROM inspection_results WHERE run_id = ? ORDER BY result_type, result_index;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_bind_int(stmt, 1, dbRunId);
+
+        while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+            InspectionResultItem item;
+            item.runId = dbRunId;
+            const unsigned char* type = sqlite3_column_text(stmt, 1);
+            item.resultType = type ? reinterpret_cast<const char*>(type) : std::string();
+            item.resultIndex = sqlite3_column_int(stmt, 2);
+            const unsigned char* data = sqlite3_column_text(stmt, 3);
+            item.resultJson = data ? reinterpret_cast<const char*>(data) : std::string();
+            outResults.push_back(item);
+        }
+
+        sqlite3_finalize(stmt);
+
+        if (outResults.empty())
+            return StorageNotFound;
+
+        return StorageSuccess;
+    }
+
+    // ─────────────────────────────────────────────
+    // 검사 위치 마스터 (신규)
+    // ─────────────────────────────────────────────
+
+    StorageError SqliteDataRepository::LoadInspectionLocation(int locationCode, std::string& outLocationName,
+        std::string& outLocationType)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageFileNotFound;
+
+        const char* sql = "SELECT location_name, location_type FROM inspection_locations WHERE location_code = ?;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_bind_int(stmt, 1, locationCode);
+
+        rc = sqlite3_step(stmt);
+        if (rc == SQLITE_ROW) {
+            const unsigned char* name = sqlite3_column_text(stmt, 0);
+            const unsigned char* type = sqlite3_column_text(stmt, 1);
+            outLocationName = name ? reinterpret_cast<const char*>(name) : std::string();
+            outLocationType = type ? reinterpret_cast<const char*>(type) : std::string();
+            sqlite3_finalize(stmt);
+            return StorageSuccess;
+        }
+
+        sqlite3_finalize(stmt);
+        return StorageNotFound;
+    }
+
+    StorageError SqliteDataRepository::LoadAllInspectionLocations(std::vector<InspectionLocationInfo>& outLocations)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageFileNotFound;
+
+        outLocations.clear();
+
+        const char* sql = "SELECT location_code, location_name, location_type FROM inspection_locations ORDER BY location_code;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            return StorageWriteFailed;
+        }
+
+        while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+            InspectionLocationInfo info;
+            info.locationCode = sqlite3_column_int(stmt, 0);
+            const unsigned char* name = sqlite3_column_text(stmt, 1);
+            info.locationName = name ? reinterpret_cast<const char*>(name) : std::string();
+            const unsigned char* type = sqlite3_column_text(stmt, 2);
+            info.locationType = type ? reinterpret_cast<const char*>(type) : std::string();
+            info.isActive = true;
+            outLocations.push_back(info);
+        }
+
+        sqlite3_finalize(stmt);
+
+        if (outLocations.empty())
+            return StorageNotFound;
+
+        return StorageSuccess;
+    }
+
+    // ─────────────────────────────────────────────
+    // Socket 마스터 (신규)
+    // ─────────────────────────────────────────────
+
+    StorageError SqliteDataRepository::LoadSocketMaster(int socketNo, int& outSocketType, int& outStationNo)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageFileNotFound;
+
+        const char* sql = "SELECT socket_type, station_no FROM socket_masters WHERE socket_no = ?;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            return StorageWriteFailed;
+        }
+
+        sqlite3_bind_int(stmt, 1, socketNo);
+
+        rc = sqlite3_step(stmt);
+        if (rc == SQLITE_ROW) {
+            outSocketType = sqlite3_column_int(stmt, 0);
+            outStationNo = sqlite3_column_int(stmt, 1);
+            sqlite3_finalize(stmt);
+            return StorageSuccess;
+        }
+
+        sqlite3_finalize(stmt);
+        return StorageNotFound;
+    }
+
+    StorageError SqliteDataRepository::LoadAllSocketMasters(std::vector<SocketMasterInfo>& outSockets)
+    {
+        std::lock_guard<std::mutex> lg(mutex_);
+        if (!initialized_) return StorageFileNotFound;
+
+        outSockets.clear();
+
+        const char* sql = "SELECT socket_no, socket_type, station_no FROM socket_masters ORDER BY socket_no;";
+        sqlite3_stmt* stmt = nullptr;
+        int rc = sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            if (stmt) sqlite3_finalize(stmt);
+            return StorageWriteFailed;
+        }
+
+        while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+            SocketMasterInfo info;
+            info.socketNo = sqlite3_column_int(stmt, 0);
+            info.socketType = sqlite3_column_int(stmt, 1);
+            info.stationNo = sqlite3_column_int(stmt, 2);
+            outSockets.push_back(info);
+        }
+
+        sqlite3_finalize(stmt);
+
+        if (outSockets.empty())
+            return StorageNotFound;
+
+        return StorageSuccess;
+    }
 } // namespace VMF

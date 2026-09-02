@@ -6,6 +6,7 @@
 #include "afxdialogex.h"
 
 #include "VisionMotionFramework\Orchestrator.h"
+#include "VisionMotionFramework\IDataRepository.h"
 #include "VMFEquipmentPlugin\SetPlate1PLVIStrategy.h"
 
 #include "Actuators\Load1Parts.h"
@@ -88,12 +89,12 @@ void CEquipment2015Dlg::OnBnClickedVmfDirect()
 
     VMF::StringMap params;
     params["ExtraParam"] = "DirectModeTest";
-    bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::SetCok, params);
+bool cmdOk = m_orchestrator->ExecuteDirectVisionCommand(VMF::VisionCommand::Measure, params);
 
     VMF::VisionProcessorPtr vp = m_orchestrator->GetVisionProcessor();
     if (vp)
     {
-        auto latestData = vp->GetLatestData(VMF::SetCok);
+        auto latestData = vp->GetLatestData(VMF::VisionCommand::Measure);
     }
 }
 

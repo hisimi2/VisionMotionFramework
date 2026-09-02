@@ -156,9 +156,6 @@
     <ClInclude Include="include\Mock\CMockRepository.h">
       <Filter>Mocks</Filter>
     </ClInclude>
-    <ClInclude Include="include\IDataRepositoryExtension.h">
-      <Filter>Data</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt">
