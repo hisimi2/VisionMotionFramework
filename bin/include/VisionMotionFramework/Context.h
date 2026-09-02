@@ -73,24 +73,6 @@ namespace VMF
 
         // ── Task 파라미터 관리 ──
         /// <summary>
-        /// [DEPRECATED] Task별 파라미터를 설정합니다. (하위 호환성 유지)
-        /// </summary>
-        /// <details>
-        /// 기존 코드와의 호환성을 위해 유지됩니다.
-        /// Task 이름 기반 파라미터 설정이 필요한 경우 SetTaskParams(taskName, params)를 사용하세요.
-        /// </details>
-        void SetTaskParams(const TaskParams& params);
-
-        /// <summary>
-        /// [DEPRECATED] Task별 파라미터를 반환합니다. (하위 호환성 유지)
-        /// </summary>
-        /// <details>
-        /// 기존 코드와의 호환성을 위해 유지됩니다.
-        /// Task 이름 기반 파라미터 조회가 필요한 경우 GetTaskParams(taskName)을 사용하세요.
-        /// </details>
-        TaskParams GetTaskParams() const;
-
-        /// <summary>
         /// 지정된 Task 이름의 파라미터를 설정합니다.
         /// </summary>
         /// <details>
@@ -122,16 +104,6 @@ namespace VMF
         /// 실행 파라미터 설정 (문자열)
         /// </summary>
         void SetExecutionParam(const std::string& key, const std::string& value) override;
-
-        /// <summary>
-        /// 실행 파라미터 설정 (정수)
-        /// </summary>
-        void SetExecutionParam(const std::string& key, int value) override;
-
-        /// <summary>
-        /// 실행 파라미터 설정 (실수)
-        /// </summary>
-        void SetExecutionParam(const std::string& key, double value) override;
 
         /// <summary>
         /// VisionPositions 목록을 조회합니다.

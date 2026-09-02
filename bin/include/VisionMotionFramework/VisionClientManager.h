@@ -60,7 +60,7 @@ namespace VMF
         std::map<VisionCommand, bool> m_received;
         std::map<VisionCommand, DataMap> m_latestData;
 
-mutable std::mutex m_dataMutex;
+        mutable std::mutex m_dataMutex;
         std::atomic<bool> m_processRunning;
         std::atomic<bool> m_mainRunning;
         
@@ -73,4 +73,5 @@ mutable std::mutex m_dataMutex;
         void PacketLoop();
     };
 } // namespace VMF
+
 

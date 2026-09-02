@@ -47,10 +47,6 @@ namespace VMF_PLUGIN
      *    into the Context (no Builder needed). */
     void SetPlate1PLVIStrategy::ConfigureContext(VMF::Context& ctx)
     {
-        // Integrated default parameters (including Vision params)
-        VMF::TaskParams defaultParams = GetDefaultParams();
-        ctx.SetTaskParams(defaultParams);  // store for later retrieval
-
         // Task‑specific parameter sets
         ctx.SetTaskParams("Task_PLVI_Setup", GetSetupParams());
         ctx.SetTaskParams("Task_PLVI_ExecuteScan", GetExecuteScanParams());
@@ -60,35 +56,6 @@ namespace VMF_PLUGIN
     // ─────────────────────────────────────────────────────────────────────────
     // 파라미터 관련 함수 오버라이드 (DefaultSetupStrategy에서 일반화)
     // ─────────────────────────────────────────────────────────────────────────
-
-    VMF::TaskParams SetPlate1PLVIStrategy::GetDefaultParams() const
-    {
-        VMF::TaskParams params;
-
-        // Merge Setup, ExecuteScan, and Finish parameter sets
-        for (const auto& pair : GetSetupParams().executionParams)
-        {
-            params.SetExecutionParam(pair.first, pair.second);
-        }
-
-        for (const auto& pair : GetExecuteScanParams().executionParams)
-        {
-            params.SetExecutionParam(pair.first, pair.second);
-        }
-
-        for (const auto& pair : GetFinishParams().executionParams)
-        {
-            params.SetExecutionParam(pair.first, pair.second);
-        }
-
-        // Add common Vision parameters (shared across all Tasks)
-        for (const auto& pair : GetVisionParams().executionParams)
-        {
-            params.SetExecutionParam(pair.first, pair.second);
-        }
-
-        return params;
-    }
 
     /* Setup Task – start position and trigger interval */
     VMF::TaskParams SetPlate1PLVIStrategy::GetSetupParams() const

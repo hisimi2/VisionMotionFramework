@@ -25,11 +25,10 @@ namespace VMF
         void       Disconnect() override;
         bool       IsConnected() const override;
 
-        bool RequestSetCokAsync(const StringMap& params) override;
-        bool RequestInspReadyAsync(const StringMap& params) override;
-        bool RequestMeasureAsync(const StringMap& params) override;
-        bool RequestDeviceCheckAsync(const StringMap& params) override;
-        bool RequestLightAsync(const StringMap& params) override;
+        // ── 3가지 핵심 Request 함수 (IVisionClient 인터페이스) ──
+        bool SetInformationAsync(const StringMap& params) override;
+        bool RequestResultAsync(const StringMap& params) override;
+        bool MeasureAsync(const StringMap& params) override;
 
         DataMap    GetLatestData(VisionCommand type) const override;
         void       ClearLatestData(VisionCommand type) override;
@@ -38,17 +37,16 @@ namespace VMF
 
         void       InitializeRecvThread() override;
 
-        void OnSetCok(ByteArray body) override;
-        void OnInspReady(ByteArray body) override;
+        // ── 3가지 핵심 On 콜백 ──
+        void OnSetInformation(ByteArray body) override;
+        void OnRequestResult(ByteArray body) override;
         void OnMeasure(ByteArray body) override;
-        void OnDeviceCheck(ByteArray body) override;
-        void OnLight(ByteArray body) override;
 
         // 테스트 헬퍼
         void      SetRequestResult(bool ok);
         StringMap GetLastRequestParams()        const;
 
-private:
+    private:
         mutable std::mutex       m_mutex;
         bool                     m_connected;
         bool                     m_requestResult;
@@ -61,3 +59,4 @@ private:
         static std::string BodyToString(const ByteArray& b);
     };
 } // namespace VMF
+

@@ -6,9 +6,6 @@
 #include <string>
 #include <vector>
 
-// 확장 인터페이스 포함 (IDataRepositoryExtension 클래스 정의 필요)
-#include "IDataRepositoryExtension.h"
-
 namespace VMF 
 {
     enum StorageError 
@@ -22,6 +19,13 @@ namespace VMF
         StorageGeneral,
         StorageNotImplemented = -100  // 확장 메서드 기본 반환값
     };
+
+    /// <summary>
+    /// 데이터 저장소의 확장 인터페이스.
+    /// 구조화된 검사 결과 저장/로드를 위한 메서드들을 제공합니다.
+    /// 기본 구현은 StorageNotImplemented를 반환하며, 필요 시 구현체에서 오버라이드합니다.
+    /// </summary>
+    class VMF_API IDataRepositoryExtension;
 
     /// <summary>
     /// 데이터 저장소의 핵심 인터페이스.
@@ -54,8 +58,5 @@ namespace VMF
         // ── 확장 메서드 (기본 구현 제공, 필요 시 오버라이드) ──
         // 상세는 IDataRepositoryExtension 참조
     };
-
-    // IDataRepositoryExtension 클래스는 IDataRepositoryExtension.h에서 정의됨
-    // (중복 정의 방지를 위해 여기서는 선언하지 않음)
 
 } // namespace VMF
