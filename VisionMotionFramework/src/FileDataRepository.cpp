@@ -29,16 +29,21 @@ namespace VMF
         return StorageSuccess;
     }
 
-    StorageError FileDataRepository::LoadParam(const std::string& recipe, const std::string& name, std::string& outValue) {
+    StorageError FileDataRepository::LoadParam(const std::string& recipe, const std::string& name, std::string& outValue)
+    {
         std::lock_guard<std::mutex> lg(mutex_);
         std::ifstream ifs(FileUtils::MakeParamPath(basePath_, recipe).c_str());
-        if (!ifs) {
+
+        if (!ifs)
+        {
             std::cerr << "[FileDataRepository] Failed to open file for reading: " << FileUtils::MakeParamPath(basePath_, recipe) << std::endl;
             return StorageFileNotFound;
         }
 
-    std::string line;
-        while (std::getline(ifs, line)) {
+        std::string line;
+
+        while (std::getline(ifs, line))
+        {
             // 빈 줄은 건너뜀
             if (line.empty()) continue;
 
@@ -48,7 +53,8 @@ namespace VMF
 
             // 키 이름의 길이가 '='의 위치와 일치하는지 확인하여 정확한 매칭 보장
             // (예: name="abc"일 때 "abcde=value"는 일치하지 않아야 함)
-            if (pos == name.length() && line.substr(0, pos) == name) {
+            if (pos == name.length() && line.substr(0, pos) == name)
+            {
                 outValue = line.substr(pos + 1);
                 return StorageSuccess;
             }
@@ -56,7 +62,8 @@ namespace VMF
         return StorageFileNotFound;
     }
 
-    StorageError FileDataRepository::SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath) {
+    StorageError FileDataRepository::SaveImage(const std::string& contextTag, const std::vector<uint8_t>& imageData, std::string& outPath)
+    {
         std::lock_guard<std::mutex> lg(mutex_);
         outPath = FileUtils::MakeImagePath(basePath_, contextTag);
         std::ofstream ofs(outPath.c_str(), std::ios::binary);
@@ -65,7 +72,8 @@ namespace VMF
             return StorageWriteFailed;
         }
 
-        if (!imageData.empty()) {
+        if (!imageData.empty())
+        {
             ofs.write(reinterpret_cast<const char*>(&imageData[0]), static_cast<std::streamsize>(imageData.size()));
         }
         return StorageSuccess;
@@ -206,7 +214,6 @@ namespace VMF
 	    return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
     }
 
-
     StorageError FileDataRepository::LoadPickerCamDistance(
 	    int camIndex,
 	    int pkgId,
@@ -222,7 +229,6 @@ namespace VMF
 	    wideLeft = 0.0;
 	    return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
     }
-
 
     StorageError FileDataRepository::LoadHandPitch(
 	    int handId,
@@ -241,7 +247,6 @@ namespace VMF
 	    wideY = 0.0;
 	    return StorageNotFound; // FileDataRepository는 검사 결과 로드를 지원하지 않음
     }
-
 
     StorageError FileDataRepository::LoadTeachingResult(
 	    int handId,
@@ -294,12 +299,13 @@ namespace VMF
 
         std::string logPath = FileUtils::JoinPath(basePath_, "sequence_runs.log");
         std::ofstream ofs(logPath.c_str(), std::ios::app);
-        if (!ofs) {
+
+        if (!ofs)
+        {
             std::cerr << "[FileDataRepository] Failed to open sequence_runs.log for UpdateSequenceRunStatus\n";
             return StorageWriteFailed;
         }
         ofs << ss.str();
         return StorageSuccess;
     }
-
 } // namespace VMF

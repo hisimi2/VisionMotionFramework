@@ -1,0 +1,138 @@
+Server / IP	Port Num	Direction	Ass'y	Messages				Parameters			Action	Remark		
+				Name		S	F	#	Name	Description				
+				MESSAGES	ID									
+PC1~2	8000 ~8001	H → V	PLVI	REQ_MEASURE		107	5	1	nDataID	ID 값 사용	PLVI 검사를 요청한다.			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : PLVI 위치	0 = Set-Plate1, 1 = Set-Plate2, … 11 = Shuttle Table1, 12 = Shuttle Table2, … 21 = Retest Buffer1, 22 = Retest Buffer2, …	Retest Buffer 번호 추가 (Retest Buffer에 대한 PLVI는 미정)		
+										cData[1] : PKG name	현재 검사하는 PKG			
+										cData[2] : C-Tray 정보	[2][0] : C-Tray X [2][1] : C-Tray Y	X, Y 수량 일치 확인 (동일 PKG 확인)		
+										cData[3] : 개별 Device 정보	개별 Device에 대한 정보 [3][0] : 0 = Device 없음, 99 = Device 존재 [3][1], …	수량 정보는 C-tray X, C-tray Y값으로 계산		
+		V → H		REQ_RESULT		107	6	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET, 2=CAM_TIMEOUT, 3=CAM_STATUS_FAIL, 4=LIGHT_ERROR, 5=NO_TEACHING_DATA	PLVI 검사 위치의 Teaching Data가 없는 경우: 5		
+		H → V		REQ_MEASURE		107	5	1	nDataID	ID 값 사용	PLVI 검사 결과를 요청한다.			
+								2	nStatus					
+								3	cData[10][64]					
+		V → H		REQ_RESULT		107	6	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET, 2=CAM_TIMEOUT, 3=CAM_STATUS_FAIL, 4=LIGHT_ERROR			
+										cData[1] : 결과	[ '0' : OK ] [ '1' : NG ]	PLVI 전체 결과		
+										cData[2] : PLVI 위치	0 = Set-Plate1, 1 = Set-Plate2, … 11 = Shuttle Table1, 12 = Shuttle Table2, … 21 = Retest Buffer1, 22 = Retest Buffer2, …	PLVI 검사 위치 Retest Buffer 번호 추가 (Retest Buffer에 대한 PLVI는 미정)		
+										cData[3] : 결과 Description	개별 Device에 대한 검사 결과 [3][0] : 0 = Device 없음, 99 = Device 존재 1 = Pocket Leave, 2 = Pocket Double, 11 = Device Missing,  12 = Device Missmatch [3][1], …	결과 포맷 유지 예정(PLVI에서 공통적으로 사용중) Device Missing : Handler정보에 Device가 존재하나 검사결과 Device가 없는 경우 Device Missmatch : Handler 정보에 Device가 없으나 검사 결과 Device가 존재 하는 경우 검사 결과 순서 :  스캔 시작 위치 왼쪽부터 오른쪽 순으로 지그재그형태 (표 아래 그림 참조)		
+		H → V		REQ_MEASURE		107	5	1	nDataID	ID 값 사용	검사 취소 			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : PLVI 위치	0 = Set-Plate1, 1 = Set-Plate2, … 11 = Shuttle Table1, 12 = Shuttle Table2, … 21 = Retest Buffer1, 22 = Retest Buffer2, …			
+		V → H		REQ_RESULT		107	6	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET, 2=CAM_TIMEOUT, 3=CAM_STATUS_FAIL, 4=LIGHT_ERROR			
+										cData[1] : 결과	[ '0' : OK ] [ '1' : NG ] 			
+		H → V	Orientation Check (A1 index mark)	REQ_MEASURE		107	7	1	nDataID	ID 값 사용	Orientation(A1 index mark) 검사 요청을 한다.			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : Position Info.	0 = UP_LEFT, 1 = UP_RIGHT, 2 = DOWN_RIGHT, 3 = DOWN_LEFT			
+										cData[1] : Setplate Position Info.	0 = Set-Plate1, 1 = Set-Plate2, … 11 = Shuttle Table1, 12 = Shuttle Table2, …	Orientation 검사 위치		
+		V → H		REQ_RESULT		107	8	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET			
+										cData[1] : 결과	[ '0' : OK ] [ '1' : NG ]	전달 정보와 일치시 OK		
+										cData[2] : 결과 Description	0 = UP_LEFT, 1 = UP_RIGHT, 2 = DOWN_RIGHT, 3 = DOWN_LEFT	 UP_LEFT 기준 시계방향		
+		H → V	COK ID	REQ_MEASURE		107	7	1	nDataID	ID 값 사용	COK ID 검사 요청을 한다. 			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : PKG COK info	COK ID 정보	하나의 COK ID만 촬영		
+		V → H		REQ_RESULT		107	8	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET			
+										cData[1] : 결과	[ '0' : OK ] [ '1' : NG ]	동일 ID시 OK		
+										cData[2] : 결과 Description	COK ID 리딩값			
+		H → V	VAT	REQ_MEASURE		107	7	1	nDataID	ID 값 사용	Vision Auto Teaching 검사 요청을 한다.			Rotation Picker 1번 기준
+								2	nStatus	status	0 = Picker 1 = C-Tray 2 = Shuttle Table 3 = Socket 4 = Camera Calibration 5 = Auto Focus 6 = Auto Resolution 7 = Rotation	검사 종류		
+								3	cData[10][64]					
+		V → H		REQ_RESULT		107	8	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET			
+										cData[1] : Offset Data X	 (X Axis, mm단위)			
+										cData[2] : Offset Data Y	 (Y Axis, mm단위)			
+										cData[3] : Picker Rotation	 0 = 0도, 1 = 90도, 2 = 180도, 3 = 270도			
+		H → V	Piggyback	REQ_MEASURE		107	7	1	nDataID	ID 값 사용	Piggyback 검사 요청을 한다			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : 검사 종류 정보	0 = Empty Check, 1 = Exist Check			
+										cData[1] : 검사 위치 정보	1 = Station No.1, 2 = Station No.2, …	Station Numbering 참조 (표 아래 그림)		
+										cData[2] : PKG name	현재 검사하는 PKG			
+										cData[3] : Socket Type 정보	0 : Single Type, 1 : Dual Type - 가로배치, 2 : Dual type - 세로배치			
+										cData[4] : Scoket 검사 위치	cData[4][0] (Socket 1번)  = 1 -> 검사, 0 -> 검사 X cData[4][1] (Socket 2번)  = 1 -> 검사, 0 -> 검사 X ……  cData[4][31] (Socket 32번)  = 1 -> 검사, 0 -> 검사 X	검사 요청 위치 전달		
+		V → H		REQ_RESULT		107	8	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET, 2=VISION_LIGHT_OFF			
+										cData[1] : 결과	[ '0' : OK ] [ '1' : NG ]	검사 요청 종류 전체 결과		
+										cData[2] : 결과 Description	cData[2][0] : Socket 1번, 0 = OK, 1 = NG, 2 = LEAVE (Empty 검사 요청시 OK : Empty, NG : Exist) (Exist 검사 요청시 OK : Exist, NG : Empty) cData[2][1] : Socket 2번, 0 = OK, 1 = NG, 2 = LEAVE, cData[2][2] : Socket 3번, 0 = OK, 1 = NG, 2 = LEAVE, … cData[2][31] : Socket 32번, 0 = OK, 1 = NG, 2 = LEAVE	Socket Numbering 참조 (표 아래 그림) 검사 요청에 맞춰 OK/NG/LEAVE 판정		
+		H → V	Ball Inspection	REQ_MEASURE		107	9	1	nDataID	ID 값 사용	Ball Inspection 검사 요청을 한다			
+								2	nStatus					
+								3	cData[10][64]					
+		V → H		REQ_RESULT		107	10	1	nDataID	Req ID 형태로 보낸다.	Req ID + 1000			
+								2	nStatus	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS			
+								3	cData[10][64]	cData[0] : Error Description	0=BUSY, 1=CAM_DISCONNET			
+										cData[1] : 결과	[ '0' : OK ] [ '1' : NG ]			
+										cData[2] : 결과 Description	0 : Missing 1 : Ball Inspection 추가 기능용 예비			
+		H → V	Piggyback Inspection Ready	REQ_MEASURE		107	9	1	nDataID	ID 값 사용	Piggyback 검사 전 위치 정보를 준다.			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : 검사 위치 정보	1 = Station No.1, 2 = Station No.2, …			
+ * PC(n) Port Num = PC(n-1) Port Num + 1 Crack Inspection 미포함 : PLVI 포함시 PLVI Protocol에 포함 예정, 따로 구현시 Crack 관련 Protocol 추가 예정 (25.03.17 - Crack Inspection 앞으로도 할 일 없음)														
+														
+														
+Server / IP	Port Num	Direction	Ass'y	Messages				Parameters			Action	Remark		
+				Name		S	F	#	Name	Description				
+				MESSAGES	ID									
+PC1~2	8000 ~8001	H → V	SET_COK	REQ_MEASURE		107	11	1	nCmd		1000 : SET_COK			
+								2	nStatus					
+								3	cData[10][64]	cData[0] : PKG 수량	1 = 1PKG, 2 = 2PKG			
+										cData[1] : PKG1 Name				
+										cData[2][0] : PKG1 C-tray X cData[2][1] : PKG1 C-tray Y				
+										cData[3] : PKG1 Thickness				
+										cData[4] : PKG1 Shuttle Orientation	0 : Device 전체 0도 1 : Device 전체 90도 2 : Device 0도/90도 순서 3 : Device 90도/0도 순서	PLVI기준 0도 = 180도 90도 = 270도		
+										cData[5] : PKG2 Name				
+										cData[6][0] : PKG2 C-tray X cData[6][1] : PKG2 C-tray Y				
+										cData[7] : PKG2 Thickness				
+										cData[8] : PKG2 Shuttle Orientation	0 : Device 전체 0도 1 : Device 전체 90도 2 : Device 0도/90도 순서 3 : Device 90도/0도 순서	PLVI기준 0도 = 180도 90도 = 270도		
+		V → H		REQ_RESULT		107	12	1	nDataID		1000 : SET_COK			
+								2	nIndex	PC 번호	0 : Vision PC1 1 : Vision PC2			
+								3	nRCMDACK	status	0 = STATUS_ERROR 1 = STATUS_SUCCESS 2 = STATUS_NEWPACKAGE 3 = STATUS_NO_TEACHING_DATA			
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+														
+	25.03.17	장비 후면 확장 계획 없음												
