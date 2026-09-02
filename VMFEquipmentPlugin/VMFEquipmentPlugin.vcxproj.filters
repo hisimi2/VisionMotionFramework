@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Protocol">
-      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SetplateUnit">
       <UniqueIdentifier>{77a70b95-ed5e-43da-a7c7-85008ea0681e}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="SetplateUnit\PLVI\Tasks">
       <UniqueIdentifier>{f6a00aa4-5902-4ec1-8621-abb07377ce0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SetplateUnit\Protocol">
+      <UniqueIdentifier>{b3f1a8e2-4c7d-4a6e-9f2c-1d8e5a3b6f0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,13 +49,13 @@
       <Filter>SetplateUnit\PLVI\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\VisionPacket.h">
-      <Filter>Protocol</Filter>
+      <Filter>SetplateUnit\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\VisionParamKeys.h">
-      <Filter>Protocol</Filter>
+      <Filter>SetplateUnit\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Protocol\VisionPLVIProcessor.h">
-      <Filter>Protocol</Filter>
+      <Filter>SetplateUnit\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="src\Tasks\SetPlate1PLVIExecuteScan.h">
       <Filter>SetplateUnit\PLVI\Tasks</Filter>
@@ -84,7 +84,7 @@
       <Filter>SetplateUnit\PLVI\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="src\Protocol\VisionPLVIProcessor.cpp">
-      <Filter>Protocol</Filter>
+      <Filter>SetplateUnit\Protocol</Filter>
     </ClCompile>
     <ClCompile Include="src\Tasks\SetPlate1PLVIExecuteScan.cpp">
       <Filter>SetplateUnit\PLVI\Tasks</Filter>

@@ -71,7 +71,7 @@ namespace VMF
 
     DataRepositoryPtr DefaultSetupStrategy::CreateRepository()
     {
-        auto repo = std::make_shared<SqliteDataRepository>("Data\\VAT_DATABASE.db", "Data\\Images");
+        auto repo = std::make_shared<SqliteDataRepository>("Data\\vmf_data.db", "Data\\Images");
         repo->Initialize();
         return repo;
     }

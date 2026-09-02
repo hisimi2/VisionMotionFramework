@@ -22,7 +22,7 @@ namespace VMF_PLUGIN
     VMF::DataRepositoryPtr SetPlate1PLVIStrategy::CreateRepository()
     {
         auto repo = std::make_shared<VMF::SqliteDataRepository>(
-            "Data\\PLVI_DATABASE.db", "Data\\Images");
+            "Data\\vmf_data.db", "Data\\Images");
         repo->Initialize();
         return repo;
     }
